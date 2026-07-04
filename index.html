@@ -20,14 +20,14 @@
             box-sizing: border-box;
         }
 
-        /* Container for the menu */
+        /* Container for the menu - WIDENED to fit 3 columns */
         .container {
             background-color: #ffffff;
             padding: 30px;
             border-radius: 12px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
             width: 100%;
-            max-width: 450px;
+            max-width: 800px; /* Changed from 450px to 800px */
             text-align: center;
         }
 
@@ -35,17 +35,23 @@
             margin-top: 0;
             font-size: 24px;
             color: #222222;
+            margin-bottom: 25px;
         }
 
-        /* Menu item list styling */
+        /* Menu item list styling - TURNED INTO A 3-COLUMN GRID */
         ul {
             list-style-type: none;
             padding: 0;
-            margin: 20px 0 0 0;
+            margin: 0;
+            
+            display: grid; /* Tells the list to use a grid layout */
+            grid-template-columns: repeat(3, 1fr); /* Creates 3 columns of equal width */
+            gap: 15px; /* Puts a 15px space between all buttons */
         }
 
+        /* Removed 'margin-bottom' from "li" because the grid 'gap' handles it now */
         li {
-            margin-bottom: 15px;
+            margin: 0; 
         }
 
         /* Styling links to look like clean buttons */
@@ -72,17 +78,17 @@
 </head>
 
 <body>
-    <h1>Select a Practice Exam</h1>
-    <ul>
-        <li><a href="nremt_interactive_exam.html">Tutor Resources</a></li>
-        <li><a href="nremt_multiple_choice_questions.html">Multiple Choice Questions</a></li>
-        <li><a href="medical_terminology_quiz.html">Medical Terminology Quiz</a></li>
-        <li><a href="dragdrop_example-2.html">Drag & Drop Example 2</a></li>
-        <li><a href="nremt_opioid_overdose_question.html">Opiod Overdose Question</a></li>
-        <li><a href="nremt_study_guide.html">Study Guide</a></li>
-        <li><a href="nremt_simulator.html">Simulator</a></li>
-        <li><a href="blank.html">Blank Place Holder</a></li>
-        <li><a href="YOUR_SHARE_LINK_HERE" target="_blank">Lesson 1 Slides (Google Slides)</a></li>
-    </ul>
+    <!-- Added the 'container' wrapper so your styles apply correctly -->
+    <div class="container">
+        <h1>Select a Math Practice Exam</h1>
+        <ul>
+            <li><a href="trigonometry.html">Trigonometry</a></li>
+            <li><a href="pre_calculus.html">Pre-Calculus</a></li>
+            <li><a href="math_2.html">Math 2</a></li>
+            <li><a href="algebra_1.html">Algebra 1</a></li>
+            <li><a href="geometry.html">Geometry</a></li>
+            <li><a href="calculus.html">Calculus</a></li>
+        </ul>
+    </div>
 </body>
 </html>
