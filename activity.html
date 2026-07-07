@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Math Session 1 — Decimals & Rounding</title>
+<title>Math Session 1 — Place Value</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -49,7 +49,6 @@
     padding: 32px 20px 80px;
   }
 
-  /* ── HEADER ── */
   .header {
     display: flex;
     align-items: center;
@@ -83,7 +82,6 @@
   .phase-dot.done { background: var(--accent); }
   .phase-dot.active { background: var(--accent2); }
 
-  /* ── CARDS ── */
   .card {
     background: var(--card);
     border: 1px solid var(--border);
@@ -111,10 +109,9 @@
   .section { display: none; }
   .section.active { display: block; }
 
-  /* ── PLACE VALUE TABLE ── */
   .pv-table {
     width: 100%; border-collapse: collapse;
-    margin: 18px 0; font-size: 15px;
+    margin: 18px 0;
   }
   .pv-table th {
     background: var(--card2);
@@ -136,74 +133,28 @@
     color: var(--accent);
     border-color: var(--accent);
   }
-  .pv-table td.empty {
-    color: var(--border);
-  }
+  .pv-table td.empty { color: var(--border); }
 
-  /* ── NUMBER LINE ── */
-  .number-line-wrap {
-    background: var(--card2); border-radius: 12px;
-    padding: 24px 20px; margin: 16px 0;
-    text-align: center;
+  .rule-box {
+    background: rgba(79,195,247,0.08);
+    border: 1px solid rgba(79,195,247,0.3);
+    border-radius: 10px; padding: 16px 18px;
+    margin: 14px 0;
   }
-  .nl-labels {
-    display: flex; justify-content: space-between;
-    font-family: 'Syne', sans-serif; font-weight: 700;
-    font-size: 16px; color: var(--accent2);
-    margin-bottom: 10px;
+  .rule-box .rule-title {
+    font-family: 'Syne', sans-serif; font-size: 12px;
+    font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--accent2); margin-bottom: 8px;
   }
-  .nl-track {
-    position: relative; height: 6px;
-    background: var(--border); border-radius: 3px;
-    margin: 0 4px;
-  }
-  .nl-dot {
-    position: absolute; top: 50%; transform: translateY(-50%);
-    width: 14px; height: 14px; border-radius: 50%;
-    background: var(--accent);
-    transition: left 0.5s cubic-bezier(.34,1.56,.64,1);
-  }
-  .nl-dot::after {
-    content: attr(data-val);
-    position: absolute; bottom: 18px; left: 50%;
-    transform: translateX(-50%);
-    font-family: 'Syne', sans-serif; font-weight: 700;
-    font-size: 13px; color: var(--accent);
-    white-space: nowrap;
-  }
-  .nl-caption {
-    margin-top: 14px; font-size: 14px; color: var(--muted);
-  }
+  .rule-box p { font-size: 15px; color: #dde; line-height: 1.6; }
+  .rule-box strong { color: var(--accent); }
 
-  /* ── PRACTICE PROBLEMS ── */
-  .problem-card {
-    background: var(--card2); border-radius: 12px;
-    padding: 20px 22px; margin-bottom: 12px;
-    border: 1px solid var(--border);
-    transition: border-color 0.3s;
+  .feedback {
+    margin-top: 10px; font-size: 14px; font-weight: 500;
+    min-height: 20px;
   }
-  .problem-card.correct { border-color: var(--correct); }
-  .problem-card.wrong   { border-color: var(--wrong); }
-
-  .problem-q {
-    font-family: 'Syne', sans-serif; font-weight: 700;
-    font-size: 16px; margin-bottom: 12px; line-height: 1.4;
-  }
-  .problem-context {
-    font-size: 13px; color: var(--muted);
-    margin-bottom: 12px;
-  }
-  .input-row {
-    display: flex; gap: 10px; align-items: center; flex-wrap: wrap;
-  }
-  .answer-input {
-    background: var(--bg); border: 1px solid var(--border);
-    border-radius: 8px; color: var(--text);
-    font-family: 'Syne', sans-serif; font-size: 18px;
-    font-weight: 700; padding: 10px 14px; width: 120px;
-    outline: none; transition: border-color 0.2s;
-  }
-  .answer-input:focus { border-color: var(--accent2); }
+  .feedback.ok { color: var(--correct); }
+  .feedback.no { color: var(--wrong); }
 
   .btn {
     background: var(--accent); color: #000;
@@ -227,49 +178,9 @@
     border: 1px solid var(--border);
   }
 
-  .feedback {
-    margin-top: 10px; font-size: 14px; font-weight: 500;
-    min-height: 20px;
-  }
-  .feedback.ok { color: var(--correct); }
-  .feedback.no { color: var(--wrong); }
-  .feedback.hint { color: var(--accent); }
-
-  .score-row {
-    display: flex; gap: 10px; align-items: center;
-    margin-bottom: 20px;
-  }
-  .score-badge {
-    background: rgba(249,168,37,0.15);
-    border: 1px solid var(--accent);
-    border-radius: 8px; padding: 8px 16px;
-    font-family: 'Syne', sans-serif; font-weight: 800;
-    font-size: 22px; color: var(--accent);
-  }
-  .score-label { color: var(--muted); font-size: 14px; }
-
-  .rule-box {
-    background: rgba(79,195,247,0.08);
-    border: 1px solid rgba(79,195,247,0.3);
-    border-radius: 10px; padding: 16px 18px;
-    margin: 16px 0;
-  }
-  .rule-box .rule-title {
-    font-family: 'Syne', sans-serif; font-size: 12px;
-    font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
-    color: var(--accent2); margin-bottom: 8px;
-  }
-  .rule-box p { font-size: 15px; color: #dde; line-height: 1.6; }
-  .rule-box strong { color: var(--accent); }
-
-  .emoji-burst {
-    font-size: 28px; animation: pop 0.4s ease;
-    display: inline-block;
-  }
-  @keyframes pop {
-    0%   { transform: scale(0); }
-    70%  { transform: scale(1.3); }
-    100% { transform: scale(1); }
+  .nav-row {
+    display: flex; justify-content: space-between;
+    gap: 12px; margin-top: 24px;
   }
 
   textarea.reflect {
@@ -287,14 +198,6 @@
     margin-top: 14px; margin-bottom: 2px; display: block;
   }
 
-  .nav-row {
-    display: flex; justify-content: space-between;
-    gap: 12px; margin-top: 24px;
-  }
-
-  .bonus .problem-q { color: var(--accent); }
-  .bonus { border-color: rgba(249,168,37,0.4) !important; }
-
   .congrats-banner {
     text-align: center; padding: 32px 20px;
   }
@@ -304,6 +207,29 @@
     font-size: 28px; margin-bottom: 10px;
   }
   .congrats-banner p { color: #b0b0c0; font-size: 16px; }
+
+  .score-row {
+    display: flex; gap: 10px; align-items: center;
+    justify-content: center; margin-top: 20px;
+  }
+  .score-badge {
+    background: rgba(249,168,37,0.15);
+    border: 1px solid var(--accent);
+    border-radius: 8px; padding: 8px 16px;
+    font-family: 'Syne', sans-serif; font-weight: 800;
+    font-size: 22px; color: var(--accent);
+  }
+  .score-label { color: var(--muted); font-size: 14px; }
+
+  .emoji-burst {
+    font-size: 28px; animation: pop 0.4s ease;
+    display: inline-block;
+  }
+  @keyframes pop {
+    0%   { transform: scale(0); }
+    70%  { transform: scale(1.3); }
+    100% { transform: scale(1); }
+  }
 
   .next-up {
     background: rgba(165,214,167,0.08);
@@ -316,6 +242,14 @@
     color: var(--accent3); margin-bottom: 8px;
   }
   .next-up p { font-size: 14px; color: #c0d0c0; }
+
+  .score-mini {
+    display: inline-block;
+    font-family: 'Syne', sans-serif; font-weight: 700;
+    font-size: 13px; color: var(--muted);
+    margin-bottom: 16px;
+  }
+  .score-mini span { color: var(--accent); }
 </style>
 </head>
 <body>
@@ -325,18 +259,17 @@
   <div class="header">
     <div class="header-icon">🔢</div>
     <div class="header-text">
-      <h1>Session 1 — Decimals & Rounding</h1>
+      <h1>Session 1 — Place Value</h1>
       <p>Let's build something real today.</p>
     </div>
   </div>
 
-  <!-- PROGRESS BAR -->
+  <!-- PROGRESS BAR (4 dots) -->
   <div class="phase-bar" id="phasebar">
     <div class="phase-dot active" id="pd0"></div>
     <div class="phase-dot" id="pd1"></div>
     <div class="phase-dot" id="pd2"></div>
     <div class="phase-dot" id="pd3"></div>
-    <div class="phase-dot" id="pd4"></div>
   </div>
 
   <!-- ───────── SECTION 0: WARM-UP ───────── -->
@@ -370,30 +303,8 @@
     </div>
   </div>
 
-  <!-- ───────── SECTION 1: FOUNDATION ───────── -->
+  <!-- ───────── SECTION 1: PLACE VALUE ROUND 1 ───────── -->
   <div class="section" id="sec1">
-    <div class="card">
-      <div class="card-label">Your Foundation</div>
-      <h2>You already know more than you think.</h2>
-      <p>Your 3rd and 4th grade math is basically locked in — <strong style="color:var(--accent)">99% and 97%</strong>. That's a real base to build on.</p>
-      <p style="margin-top:12px;">5th grade introduces fractions, decimals, and geometry. Some of it's unfamiliar — that's exactly what we're here for. One piece at a time.</p>
-    </div>
-
-    <div class="card">
-      <div class="card-label">Today's Goal</div>
-      <h2>Decimal Rounding</h2>
-      <p>You can already <strong style="color:var(--accent2)">read and write decimals</strong> — the assessment confirmed it. Today we take the next step: <strong style="color:var(--accent)">rounding them</strong>.</p>
-      <p style="margin-top:10px;">Rounding shows up everywhere — money, sports times, measurements. Let's make it click.</p>
-
-      <div class="nav-row">
-        <button class="btn nav" onclick="goTo(0)">← Back</button>
-        <button class="btn" onclick="goTo(2)">Place Value Review →</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ───────── SECTION 2: PLACE VALUE ───────── -->
-  <div class="section" id="sec2">
     <div class="card">
       <div class="card-label">Place Value Review</div>
       <h2>Let's look at 4,738</h2>
@@ -409,200 +320,168 @@
         </tr>
         <tr>
           <td class="empty">—</td>
-          <td id="pvThousands">4</td>
-          <td id="pvHundreds">7</td>
-          <td id="pvTens">3</td>
-          <td id="pvOnes">8</td>
+          <td id="r1pvThousands">4</td>
+          <td id="r1pvHundreds">7</td>
+          <td id="r1pvTens">3</td>
+          <td id="r1pvOnes">8</td>
         </tr>
       </table>
 
-      <!-- Q1: thousands -->
-      <div class="rule-box" style="margin-top:18px;">
+      <div class="score-mini">Progress: <span id="r1score">0</span> / 4 correct</div>
+
+      <!-- Q1 -->
+      <div class="rule-box">
         <div class="rule-title">Question 1 of 4</div>
         <p>Which digit is in the <strong>thousands</strong> place?</p>
-        <div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap;" id="pvBtns0">
-          <button class="btn secondary" onclick="checkPVQ(0,this,'4')">4</button>
-          <button class="btn secondary" onclick="checkPVQ(0,this,'7')">7</button>
-          <button class="btn secondary" onclick="checkPVQ(0,this,'3')">3</button>
-          <button class="btn secondary" onclick="checkPVQ(0,this,'8')">8</button>
+        <div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap;" id="r1Btns0">
+          <button class="btn secondary" onclick="checkQ(1,0,this,'4')">4</button>
+          <button class="btn secondary" onclick="checkQ(1,0,this,'7')">7</button>
+          <button class="btn secondary" onclick="checkQ(1,0,this,'3')">3</button>
+          <button class="btn secondary" onclick="checkQ(1,0,this,'8')">8</button>
         </div>
-        <div id="pvFeedback0" class="feedback" style="margin-top:10px;"></div>
+        <div id="r1fb0" class="feedback"></div>
       </div>
 
-      <!-- Q2: hundreds -->
-      <div class="rule-box" style="margin-top:14px;">
+      <!-- Q2 -->
+      <div class="rule-box">
         <div class="rule-title">Question 2 of 4</div>
         <p>Which digit is in the <strong>hundreds</strong> place?</p>
-        <div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap;" id="pvBtns1">
-          <button class="btn secondary" onclick="checkPVQ(1,this,'4')">4</button>
-          <button class="btn secondary" onclick="checkPVQ(1,this,'7')">7</button>
-          <button class="btn secondary" onclick="checkPVQ(1,this,'3')">3</button>
-          <button class="btn secondary" onclick="checkPVQ(1,this,'8')">8</button>
+        <div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap;" id="r1Btns1">
+          <button class="btn secondary" onclick="checkQ(1,1,this,'4')">4</button>
+          <button class="btn secondary" onclick="checkQ(1,1,this,'7')">7</button>
+          <button class="btn secondary" onclick="checkQ(1,1,this,'3')">3</button>
+          <button class="btn secondary" onclick="checkQ(1,1,this,'8')">8</button>
         </div>
-        <div id="pvFeedback1" class="feedback" style="margin-top:10px;"></div>
+        <div id="r1fb1" class="feedback"></div>
       </div>
 
-      <!-- Q3: tens -->
-      <div class="rule-box" style="margin-top:14px;">
+      <!-- Q3 -->
+      <div class="rule-box">
         <div class="rule-title">Question 3 of 4</div>
         <p>Which digit is in the <strong>tens</strong> place?</p>
-        <div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap;" id="pvBtns2">
-          <button class="btn secondary" onclick="checkPVQ(2,this,'4')">4</button>
-          <button class="btn secondary" onclick="checkPVQ(2,this,'7')">7</button>
-          <button class="btn secondary" onclick="checkPVQ(2,this,'3')">3</button>
-          <button class="btn secondary" onclick="checkPVQ(2,this,'8')">8</button>
+        <div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap;" id="r1Btns2">
+          <button class="btn secondary" onclick="checkQ(1,2,this,'4')">4</button>
+          <button class="btn secondary" onclick="checkQ(1,2,this,'7')">7</button>
+          <button class="btn secondary" onclick="checkQ(1,2,this,'3')">3</button>
+          <button class="btn secondary" onclick="checkQ(1,2,this,'8')">8</button>
         </div>
-        <div id="pvFeedback2" class="feedback" style="margin-top:10px;"></div>
+        <div id="r1fb2" class="feedback"></div>
       </div>
 
-      <!-- Q4: ones -->
-      <div class="rule-box" style="margin-top:14px;">
+      <!-- Q4 -->
+      <div class="rule-box">
         <div class="rule-title">Question 4 of 4</div>
         <p>Which digit is in the <strong>ones</strong> place?</p>
-        <div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap;" id="pvBtns3">
-          <button class="btn secondary" onclick="checkPVQ(3,this,'4')">4</button>
-          <button class="btn secondary" onclick="checkPVQ(3,this,'7')">7</button>
-          <button class="btn secondary" onclick="checkPVQ(3,this,'3')">3</button>
-          <button class="btn secondary" onclick="checkPVQ(3,this,'8')">8</button>
+        <div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap;" id="r1Btns3">
+          <button class="btn secondary" onclick="checkQ(1,3,this,'4')">4</button>
+          <button class="btn secondary" onclick="checkQ(1,3,this,'7')">7</button>
+          <button class="btn secondary" onclick="checkQ(1,3,this,'3')">3</button>
+          <button class="btn secondary" onclick="checkQ(1,3,this,'8')">8</button>
         </div>
-        <div id="pvFeedback3" class="feedback" style="margin-top:10px;"></div>
+        <div id="r1fb3" class="feedback"></div>
+      </div>
+
+      <div class="nav-row">
+        <button class="btn nav" onclick="goTo(0)">← Back</button>
+        <button class="btn" onclick="goTo(2)" id="r1Next" style="display:none">Next Practice →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ───────── SECTION 2: PLACE VALUE ROUND 2 ───────── -->
+  <div class="section" id="sec2">
+    <div class="card">
+      <div class="card-label">Place Value Practice</div>
+      <h2>Now try 36,205</h2>
+      <p style="margin-bottom:4px;">Same idea, new number. Answer all four to finish.</p>
+
+      <table class="pv-table">
+        <tr>
+          <th>Ten-Thousands</th>
+          <th>Thousands</th>
+          <th>Hundreds</th>
+          <th>Tens</th>
+          <th>Ones</th>
+        </tr>
+        <tr>
+          <td id="r2pvTenThousands">3</td>
+          <td id="r2pvThousands">6</td>
+          <td id="r2pvHundreds">2</td>
+          <td id="r2pvTens">0</td>
+          <td id="r2pvOnes">5</td>
+        </tr>
+      </table>
+
+      <div class="score-mini">Progress: <span id="r2score">0</span> / 4 correct</div>
+
+      <!-- Q1 -->
+      <div class="rule-box">
+        <div class="rule-title">Question 1 of 4</div>
+        <p>Which digit is in the <strong>ten-thousands</strong> place?</p>
+        <div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap;" id="r2Btns0">
+          <button class="btn secondary" onclick="checkQ(2,0,this,'3')">3</button>
+          <button class="btn secondary" onclick="checkQ(2,0,this,'6')">6</button>
+          <button class="btn secondary" onclick="checkQ(2,0,this,'2')">2</button>
+          <button class="btn secondary" onclick="checkQ(2,0,this,'5')">5</button>
+        </div>
+        <div id="r2fb0" class="feedback"></div>
+      </div>
+
+      <!-- Q2 -->
+      <div class="rule-box">
+        <div class="rule-title">Question 2 of 4</div>
+        <p>Which digit is in the <strong>hundreds</strong> place?</p>
+        <div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap;" id="r2Btns1">
+          <button class="btn secondary" onclick="checkQ(2,1,this,'3')">3</button>
+          <button class="btn secondary" onclick="checkQ(2,1,this,'6')">6</button>
+          <button class="btn secondary" onclick="checkQ(2,1,this,'2')">2</button>
+          <button class="btn secondary" onclick="checkQ(2,1,this,'5')">5</button>
+        </div>
+        <div id="r2fb1" class="feedback"></div>
+      </div>
+
+      <!-- Q3 -->
+      <div class="rule-box">
+        <div class="rule-title">Question 3 of 4</div>
+        <p>Which digit is in the <strong>tens</strong> place?</p>
+        <div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap;" id="r2Btns2">
+          <button class="btn secondary" onclick="checkQ(2,2,this,'3')">3</button>
+          <button class="btn secondary" onclick="checkQ(2,2,this,'6')">6</button>
+          <button class="btn secondary" onclick="checkQ(2,2,this,'0')">0</button>
+          <button class="btn secondary" onclick="checkQ(2,2,this,'5')">5</button>
+        </div>
+        <div id="r2fb2" class="feedback"></div>
+      </div>
+
+      <!-- Q4 -->
+      <div class="rule-box">
+        <div class="rule-title">Question 4 of 4</div>
+        <p>Which digit is in the <strong>thousands</strong> place?</p>
+        <div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap;" id="r2Btns3">
+          <button class="btn secondary" onclick="checkQ(2,3,this,'3')">3</button>
+          <button class="btn secondary" onclick="checkQ(2,3,this,'6')">6</button>
+          <button class="btn secondary" onclick="checkQ(2,3,this,'2')">2</button>
+          <button class="btn secondary" onclick="checkQ(2,3,this,'5')">5</button>
+        </div>
+        <div id="r2fb3" class="feedback"></div>
       </div>
 
       <div class="nav-row">
         <button class="btn nav" onclick="goTo(1)">← Back</button>
-        <button class="btn" onclick="goTo(3)" id="pvNext" style="display:none">Number Line →</button>
+        <button class="btn" onclick="goTo(3)" id="r2Next" style="display:none">Wrap Up →</button>
       </div>
     </div>
   </div>
 
-  <!-- ───────── SECTION 3: NUMBER LINE ───────── -->
+  <!-- ───────── SECTION 3: WRAP-UP ───────── -->
   <div class="section" id="sec3">
-    <div class="card">
-      <div class="card-label">Rounding — The Big Idea</div>
-      <h2>Which neighbor is it closer to?</h2>
-      <p>Rounding just asks: <em>which number is this closer to?</em> The number line makes it visual.</p>
-
-      <div class="number-line-wrap">
-        <div class="nl-labels">
-          <span>3.7</span>
-          <span>midpoint: 3.75</span>
-          <span>3.8</span>
-        </div>
-        <div class="nl-track">
-          <div class="nl-dot" id="nlDot" data-val="3.748" style="left: calc(48% - 7px)"></div>
-        </div>
-        <div class="nl-caption">3.748 — is it closer to <strong style="color:var(--accent2)">3.7</strong> or <strong style="color:var(--accent)">3.8</strong>?</div>
-      </div>
-
-      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:4px;" id="nlBtns">
-        <button class="btn secondary" onclick="checkNL(this,'3.7')">3.7</button>
-        <button class="btn secondary" onclick="checkNL(this,'3.8')">3.8</button>
-      </div>
-      <div id="nlFeedback" class="feedback"></div>
-
-      <div class="rule-box" style="margin-top:20px;">
-        <div class="rule-title">The Rounding Rule</div>
-        <p>Look at the digit to the <strong>RIGHT</strong> of where you're rounding.</p>
-        <p style="margin-top:6px;"><strong>5 or more → round UP &nbsp;|&nbsp; 4 or less → keep it the SAME</strong></p>
-        <p style="margin-top:8px;color:var(--muted);font-size:13px;">For 3.748 rounded to the <em>nearest tenth</em>: look at the hundredths digit → <strong style="color:var(--accent)">4</strong> → that's 4 or less, so the tenths digit (7) stays → <strong style="color:var(--accent2)">3.7</strong></p>
-      </div>
-
-      <div class="nav-row">
-        <button class="btn nav" onclick="goTo(2)">← Back</button>
-        <button class="btn" onclick="goTo(4)">Practice Problems →</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ───────── SECTION 4: PRACTICE ───────── -->
-  <div class="section" id="sec4">
-    <div class="card">
-      <div class="card-label">Practice</div>
-      <h2>Your turn. Take your time.</h2>
-      <p style="margin-bottom:4px; color:var(--muted); font-size:14px;">Type your answer and hit Check. You've got this.</p>
-    </div>
-
-    <div class="score-row">
-      <div class="score-badge" id="scoreDisplay">0 / 5</div>
-      <div class="score-label">problems correct</div>
-    </div>
-
-    <!-- Problem 1 -->
-    <div class="problem-card" id="pc0">
-      <div class="problem-q">Round <span style="color:var(--accent2)">4.63</span> to the nearest <strong>tenth</strong>.</div>
-      <div class="problem-context">💡 Look at the hundredths place to decide.</div>
-      <div class="input-row">
-        <input type="number" step="0.1" class="answer-input" id="ans0" placeholder="?" onkeydown="if(event.key==='Enter') checkAns(0)">
-        <button class="btn" onclick="checkAns(0)">Check</button>
-        <button class="btn secondary" onclick="giveHint(0)">Hint</button>
-      </div>
-      <div class="feedback" id="fb0"></div>
-    </div>
-
-    <!-- Problem 2 -->
-    <div class="problem-card" id="pc1">
-      <div class="problem-q">Round <span style="color:var(--accent2)">2.857</span> to the nearest <strong>hundredth</strong>.</div>
-      <div class="problem-context">💡 Look at the thousandths place.</div>
-      <div class="input-row">
-        <input type="number" step="0.01" class="answer-input" id="ans1" placeholder="?" onkeydown="if(event.key==='Enter') checkAns(1)">
-        <button class="btn" onclick="checkAns(1)">Check</button>
-        <button class="btn secondary" onclick="giveHint(1)">Hint</button>
-      </div>
-      <div class="feedback" id="fb1"></div>
-    </div>
-
-    <!-- Problem 3 -->
-    <div class="problem-card" id="pc2">
-      <div class="problem-q">Round <span style="color:var(--accent2)">12.345</span> to the nearest <strong>whole number</strong>.</div>
-      <div class="problem-context">💡 Look at the tenths place.</div>
-      <div class="input-row">
-        <input type="number" step="1" class="answer-input" id="ans2" placeholder="?" onkeydown="if(event.key==='Enter') checkAns(2)">
-        <button class="btn" onclick="checkAns(2)">Check</button>
-        <button class="btn secondary" onclick="giveHint(2)">Hint</button>
-      </div>
-      <div class="feedback" id="fb2"></div>
-    </div>
-
-    <!-- Problem 4 -->
-    <div class="problem-card" id="pc3">
-      <div class="problem-q">🏃 A runner's time is <span style="color:var(--accent2)">9.872</span> seconds. Round to the nearest <strong>tenth</strong>.</div>
-      <div class="problem-context">This is how they show times in the Olympics.</div>
-      <div class="input-row">
-        <input type="number" step="0.1" class="answer-input" id="ans3" placeholder="?" onkeydown="if(event.key==='Enter') checkAns(3)">
-        <button class="btn" onclick="checkAns(3)">Check</button>
-        <button class="btn secondary" onclick="giveHint(3)">Hint</button>
-      </div>
-      <div class="feedback" id="fb3"></div>
-    </div>
-
-    <!-- Problem 5 BONUS -->
-    <div class="problem-card bonus" id="pc4">
-      <div class="problem-q">⭐ BONUS: Round <span style="color:var(--accent)">6.999</span> to the nearest <strong>tenth</strong>.</div>
-      <div class="problem-context">Warning: the answer might surprise you. Trust the rule.</div>
-      <div class="input-row">
-        <input type="number" step="0.1" class="answer-input" id="ans4" placeholder="?" onkeydown="if(event.key==='Enter') checkAns(4)">
-        <button class="btn" onclick="checkAns(4)">Check</button>
-        <button class="btn secondary" onclick="giveHint(4)">Hint</button>
-      </div>
-      <div class="feedback" id="fb4"></div>
-    </div>
-
-    <div class="nav-row" style="margin-top:20px;">
-      <button class="btn nav" onclick="goTo(3)">← Back</button>
-      <button class="btn" onclick="goTo(5)">Wrap Up →</button>
-    </div>
-  </div>
-
-  <!-- ───────── SECTION 5: REFLECTION ───────── -->
-  <div class="section" id="sec5">
     <div class="card congrats-banner">
       <div class="big-emoji" id="congEmoji">🎯</div>
       <h2 id="congTitle">Session Complete!</h2>
       <p id="congMsg">You showed up, you worked through it, you did it.</p>
-
-      <div class="score-row" style="justify-content:center;margin-top:20px;">
-        <div class="score-badge" id="finalScore">— / 5</div>
-        <div class="score-label">problems correct</div>
+      <div class="score-row">
+        <div class="score-badge" id="finalScore">— / 8</div>
+        <div class="score-label">total correct</div>
       </div>
     </div>
 
@@ -622,7 +501,7 @@
 
     <div class="next-up">
       <div class="nu-title">Next Session</div>
-      <p>📌 <strong>Fractions with unlike denominators</strong> — adding and subtracting. Sounds intimidating. It's really not. See you then.</p>
+      <p>📌 <strong>Decimal place value</strong> — tenths, hundredths, thousandths. Same idea, different side of the decimal point. See you then.</p>
     </div>
 
     <button class="btn big" onclick="finish()" style="margin-top:20px;">✅ Done for Today</button>
@@ -635,7 +514,7 @@
 
 <script>
   // ── NAVIGATION ──
-  const TOTAL = 6;
+  const TOTAL = 4;
   let currentSection = 0;
 
   function goTo(n) {
@@ -644,7 +523,7 @@
     currentSection = n;
     updateBar();
     window.scrollTo({ top: 0, behavior: 'smooth' });
-    if (n === 5) updateFinalScore();
+    if (n === 3) updateFinalScore();
   }
 
   function updateBar() {
@@ -670,121 +549,87 @@
     document.getElementById('moodReply').textContent = replies[label] || '';
   }
 
-  // ── PLACE VALUE QUIZ (4 questions) ──
-  // Number: 4,738 — Thousands=4, Hundreds=7, Tens=3, Ones=8
-  const pvCorrect   = ['4', '7', '3', '8'];
-  const pvHighlight = ['pvThousands', 'pvHundreds', 'pvTens', 'pvOnes'];
-  const pvExplain = [
-    '✓ Right! The 4 is in the thousands place — its value is 4,000.',
-    '✓ Correct! The 7 is in the hundreds place — its value is 700.',
-    '✓ Yes! The 3 is in the tens place — its value is 30.',
-    '✓ Exactly! The 8 is in the ones place — its value is just 8.'
-  ];
-  const pvWrong = [
-    "Not quite — the thousands place is the fourth digit from the right: Ones, Tens, Hundreds, Thousands.",
-    "Not quite — the hundreds place is the third digit from the right.",
-    "Not quite — the tens place is the second digit from the right.",
-    "Not quite — the ones place is the very last digit on the right."
-  ];
-  let pvSolved = [false, false, false, false];
+  // ── PLACE VALUE DATA ──
+  const rounds = {
+    1: {
+      correct:   ['4', '7', '3', '8'],
+      highlight: ['r1pvThousands', 'r1pvHundreds', 'r1pvTens', 'r1pvOnes'],
+      explain: [
+        '✓ Right! The 4 is in the thousands place — its value is 4,000.',
+        '✓ Correct! The 7 is in the hundreds place — its value is 700.',
+        '✓ Yes! The 3 is in the tens place — its value is 30.',
+        '✓ Exactly! The 8 is in the ones place — its value is just 8.'
+      ],
+      wrong: [
+        "Not quite — count four places from the right: Ones, Tens, Hundreds, Thousands.",
+        "Not quite — the hundreds place is the third digit from the right.",
+        "Not quite — the tens place is the second digit from the right.",
+        "Not quite — the ones place is the very last digit on the right."
+      ],
+      nextBtn: 'r1Next',
+      scoreEl: 'r1score'
+    },
+    2: {
+      correct:   ['3', '2', '0', '6'],
+      highlight: ['r2pvTenThousands', 'r2pvHundreds', 'r2pvTens', 'r2pvThousands'],
+      explain: [
+        '✓ Right! The 3 is in the ten-thousands place — its value is 30,000.',
+        '✓ Correct! The 2 is in the hundreds place — its value is 200.',
+        '✓ Yes! The 0 is in the tens place — its value is 0 (a placeholder, but it still has a place!).',
+        '✓ Exactly! The 6 is in the thousands place — its value is 6,000.'
+      ],
+      wrong: [
+        "Not quite — ten-thousands is the fifth digit from the right, the very first digit here.",
+        "Not quite — the hundreds place is the third digit from the right.",
+        "Not quite — look at the tens place: it's the second digit from the right. What digit is there?",
+        "Not quite — the thousands place is the fourth digit from the right."
+      ],
+      nextBtn: 'r2Next',
+      scoreEl: 'r2score'
+    }
+  };
 
-  function checkPVQ(q, btn, val) {
-    const fb = document.getElementById('pvFeedback' + q);
-    if (pvSolved[q]) return;
-    if (val === pvCorrect[q]) {
-      pvSolved[q] = true;
+  const solved = { 1: [false,false,false,false], 2: [false,false,false,false] };
+  const scores = { 1: 0, 2: 0 };
+
+  function checkQ(round, q, btn, val) {
+    const r = rounds[round];
+    const fb = document.getElementById('r' + round + 'fb' + q);
+    if (solved[round][q]) return;
+
+    if (val === r.correct[q]) {
+      solved[round][q] = true;
+      scores[round]++;
+      document.getElementById(r.scoreEl).textContent = scores[round];
       fb.className = 'feedback ok';
-      fb.textContent = pvExplain[q];
-      document.getElementById(pvHighlight[q]).classList.add('highlight');
-      document.querySelectorAll('#pvBtns' + q + ' .btn').forEach(b => b.disabled = true);
-      if (pvSolved.every(Boolean)) {
-        document.getElementById('pvNext').style.display = 'inline-block';
+      fb.textContent = r.explain[q];
+      document.getElementById(r.highlight[q]).classList.add('highlight');
+      document.querySelectorAll('#r' + round + 'Btns' + q + ' .btn').forEach(b => b.disabled = true);
+      if (solved[round].every(Boolean)) {
+        document.getElementById(r.nextBtn).style.display = 'inline-block';
       }
     } else {
       fb.className = 'feedback no';
-      fb.textContent = pvWrong[q];
+      fb.textContent = r.wrong[q];
     }
   }
 
-  // ── NUMBER LINE ──
-  function checkNL(btn, val) {
-    const fb = document.getElementById('nlFeedback');
-    document.querySelectorAll('#nlBtns .btn').forEach(b => b.disabled = true);
-    if (val === '3.7') {
-      fb.className = 'feedback ok';
-      fb.innerHTML = '✓ Correct! The hundredths digit of 3.748 is <strong>4</strong> — that\'s 4 or less, so the tenths digit stays at 7. → <strong>3.7</strong>. And on the number line, 3.748 sits just before the midpoint (3.75), so 3.7 is the closer neighbor.';
-    } else {
-      fb.className = 'feedback no';
-      fb.innerHTML = 'Not quite — look at where 3.748 sits on the number line. The midpoint is 3.75. Since 3.748 is <em>before</em> the midpoint, it\'s closer to <strong>3.7</strong>. The hundredths digit (4) confirms it: 4 or less → keep the tenths digit the same.';
-    }
-  }
-
-  // ── PRACTICE PROBLEMS ──
-  const answers = [4.6, 2.86, 12, 9.9, 7.0];
-  const hints = [
-    "The hundredths digit of 4.63 is 3. That's 4 or less, so the tenths digit (6) stays. Answer: 4._",
-    "The thousandths digit of 2.857 is 7. That's 5 or more, so the hundredths digit (5) rounds up to 6. Answer: 2._6",
-    "The tenths digit of 12.345 is 3. That's 4 or less, so the ones digit (2) stays. Answer: 1_",
-    "The hundredths digit of 9.872 is 7. That's 5 or more, so the tenths digit (8) rounds up to 9. Answer: 9._",
-    "The hundredths digit of 6.999 is 9. Round up the tenths digit: 9 → 10! That means carry over: 7.0"
-  ];
-  let solved = new Array(5).fill(false);
-  let score = 0;
-
-  function checkAns(i) {
-    const input = document.getElementById('ans' + i);
-    const fb = document.getElementById('fb' + i);
-    const card = document.getElementById('pc' + i);
-    const val = parseFloat(input.value);
-    if (isNaN(val)) {
-      fb.className = 'feedback hint';
-      fb.textContent = 'Type a number first!';
-      return;
-    }
-    if (Math.abs(val - answers[i]) < 0.0001) {
-      if (!solved[i]) { solved[i] = true; score++; updateScore(); }
-      card.classList.add('correct'); card.classList.remove('wrong');
-      fb.className = 'feedback ok';
-      const msgs = [
-        '✓ Nice! The 3 in the hundredths place keeps the 6 the same → 4.6',
-        '✓ Correct! The 7 rounded the 5 up to 6 → 2.86',
-        '✓ Yes! 3 in the tenths keeps 12 the same → 12',
-        '✓ Right! 7 rounds the 8 up → 9.9 seconds',
-        '✓ 🤯 Exactly — 6.999 rounds all the way to 7.0! The carry surprised most people.'
-      ];
-      fb.textContent = msgs[i];
-      input.disabled = true;
-    } else {
-      card.classList.add('wrong'); card.classList.remove('correct');
-      fb.className = 'feedback no';
-      fb.textContent = `Not quite. Got ${val}, expected ${answers[i]}. Use the hint if you need it.`;
-    }
-  }
-
-  function giveHint(i) {
-    const fb = document.getElementById('fb' + i);
-    fb.className = 'feedback hint';
-    fb.textContent = '💡 ' + hints[i];
-  }
-
-  function updateScore() {
-    document.getElementById('scoreDisplay').textContent = score + ' / 5';
-  }
-
+  // ── FINAL SCORE ──
   function updateFinalScore() {
-    document.getElementById('finalScore').textContent = score + ' / 5';
+    const total = scores[1] + scores[2];
+    document.getElementById('finalScore').textContent = total + ' / 8';
     const emoji = document.getElementById('congEmoji');
     const title = document.getElementById('congTitle');
-    const msg = document.getElementById('congMsg');
-    if (score === 5) {
+    const msg   = document.getElementById('congMsg');
+    if (total === 8) {
       emoji.textContent = '🏆'; title.textContent = 'Perfect Score!';
-      msg.textContent = 'Every single one. You understood it, not just guessed it.';
-    } else if (score >= 3) {
+      msg.textContent = 'Every single one. You knew exactly where each digit lived.';
+    } else if (total >= 6) {
       emoji.textContent = '🎯'; title.textContent = 'Solid Work!';
-      msg.textContent = 'You got the core concept. The rest will come with practice.';
+      msg.textContent = "You've got the concept. A little more practice and it'll be automatic.";
     } else {
-      emoji.textContent = '💪'; title.textContent = 'First Session Done!';
-      msg.textContent = 'Showing up is step one. The skill builds from here.';
+      emoji.textContent = '💪'; title.textContent = 'Session Done!';
+      msg.textContent = 'First session in the books. The understanding builds from here.';
     }
   }
 
