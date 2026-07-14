@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fraction Island — Pirate Edition</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.development.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.development.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #061220; }
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: #061220; }
+  ::-webkit-scrollbar-thumb { background: #7b4f2e; border-radius: 3px; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const { useState, useRef, useEffect, useCallback } = React;
+
+const COLORS = {
+  bg: "#0c1a2e",
+  panel: "#112240",
+  accent: "#c8860a",
+  accent2: "#f0c040",
+  teal: "#06d6a0",
+  red: "#ef233c",
+  text: "#f5e6c8",
+  muted: "#9aadbe",
+  border: "#1e3a5f",
+  wood: "#7b4f2e",
+};
+
+const style = {
+  app: {
+    minHeight: "100vh",
+    background: "linear-gradient(180deg, #061220 0%, #0c1a2e 50%, #0a1828 100%)",
+    fontFamily: "'Georgia', serif",
+    color: "#f5e6c8",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    padding: "24px 16px 48px",
+    position: "relative",
+    overflow: "hidden",
+  },
+  waves: {
+    position: "fixed", bottom: 0, left: 0, width: "100%",
+    pointerEvents: "none", zIndex: 0, opacity: 0.18,
+  },
+  outerWrap: { maxWidth: "1180px", width: "100%", position: "relative", zIndex: 1 },
+  headerBar: {
+    background: "linear-gradient(90deg, #0a1828, #112240, #0a1828)",
+    border: "2px solid #c8860a",
+    borderBottom: "2px solid #7b4f2e",
+    borderRadius: "12px 12px 0 0",
+    padding: "16px 28px 14px",
+    display: "flex", alignItems: "center", justifyContent: "space-between", gap: "12px",
+  },
+  progress: { display: "flex", gap: "5px", flexWrap: "wrap", flex: 1 },
+  dot: (active, done) => ({
+    width: "20px", height: "6px", borderRadius: "3px",
+    background: done ? "#c8860a" : active ? "#f0c040" : "#1e3a5f",
+    transition: "background 0.3s",
+    boxShadow: done ? "0 0 6px #c8860a88" : "none",
+  }),
+  pageNum: { color: "#f0c040", fontSize: "13px", fontFamily: "Courier New", letterSpacing: "2px", whiteSpace: "nowrap" },
+  body: { display: "flex", alignItems: "stretch" },
+  contentCol: {
+    background: "linear-gradient(160deg, #112240 0%, #0e1e38 100%)",
+    border: "2px solid #c8860a",
+    borderTop: "1px solid #7b4f2e",
+    borderRight: "none",
+    borderRadius: "0 0 0 12px",
+    padding: "28px 32px",
+    flex: "1 1 0", minWidth: 0,
+    overflowY: "auto", maxHeight: "78vh",
+  },
+  drawCol: (open) => ({
+    background: "#080f1a",
+    border: "2px solid #c8860a",
+    borderTop: "1px solid #7b4f2e",
+    borderLeft: "1px solid #7b4f2e",
+    borderRadius: "0 0 12px 0",
+    width: open ? "340px" : "48px",
+    minWidth: open ? "340px" : "48px",
+    flexShrink: 0,
+    transition: "width 0.3s ease, min-width 0.3s ease",
+    display: "flex", flexDirection: "column",
+    overflow: "hidden", position: "relative",
+  }),
+  drawToggle: (open) => ({
+    position: "absolute", top: "50%",
+    left: open ? "10px" : "50%",
+    transform: open ? "translateY(-50%)" : "translate(-50%, -50%)",
+    background: "transparent",
+    border: "1px solid #c8860a77",
+    borderRadius: "8px", color: "#f0c040",
+    padding: open ? "6px 10px" : "10px 6px",
+    fontSize: "0.72rem", cursor: "pointer",
+    fontFamily: "Courier New", letterSpacing: "1px",
+    writingMode: open ? "horizontal-tb" : "vertical-rl",
+    zIndex: 2, whiteSpace: "nowrap", transition: "all 0.3s", lineHeight: 1.4,
+  }),
+  drawInner: { display: "flex", flexDirection: "column", padding: "12px", height: "100%", boxSizing: "border-box" },
+  badge: {
+    display: "inline-block",
+    background: "linear-gradient(90deg, #7b4f2e, #c8860a)",
+    color: "#fff", fontFamily: "Courier New", fontWeight: "bold",
+    fontSize: "11px", letterSpacing: "2px", padding: "3px 12px",
+    borderRadius: "4px", marginBottom: "14px", textTransform: "uppercase",
+    boxShadow: "0 2px 8px rgba(200,134,10,0.3)",
+  },
+  h1: { fontSize: "1.75rem", fontWeight: "bold", lineHeight: 1.15, marginBottom: "8px", color: "#f5e6c8" },
+  h2: { fontSize: "1.2rem", fontWeight: "bold", color: "#f0c040", marginBottom: "10px" },
+  muted: { color: "#9aadbe", fontSize: "0.95rem", lineHeight: 1.7, marginBottom: "16px" },
+  divider: { border: "none", borderTop: "1px solid #c8860a44", margin: "18px 0" },
+  input: {
+    background: "#06101e", border: "2px solid #1e3a5f", borderRadius: "6px",
+    color: "#f0c040", fontSize: "1.05rem", padding: "7px 12px",
+    width: "60px", textAlign: "center", fontFamily: "Georgia", outline: "none",
+  },
+  btn: {
+    background: "linear-gradient(135deg, #7b4f2e, #c8860a)",
+    color: "#fff", border: "1px solid #f0c04055", borderRadius: "8px",
+    padding: "9px 24px", fontSize: "0.95rem", fontWeight: "bold",
+    cursor: "pointer", fontFamily: "Courier New", letterSpacing: "1px", marginTop: "6px",
+    boxShadow: "0 3px 12px rgba(200,134,10,0.3)",
+  },
+  btnSecondary: {
+    background: "transparent", color: "#9aadbe", border: "1px solid #1e3a5f",
+    borderRadius: "8px", padding: "9px 20px", fontSize: "0.9rem",
+    cursor: "pointer", fontFamily: "Courier New", letterSpacing: "1px", marginTop: "6px",
+  },
+  btnRow: { display: "flex", gap: "10px", marginTop: "18px", flexWrap: "wrap", alignItems: "center" },
+  fraction: {
+    display: "inline-flex", flexDirection: "column", alignItems: "center",
+    fontFamily: "Georgia", fontSize: "1.35rem", lineHeight: 1.1,
+    margin: "0 5px", verticalAlign: "middle",
+  },
+  fractionBar: { width: "100%", borderTop: "2.5px solid #f5e6c8", margin: "2px 0" },
+  infoBox: {
+    background: "rgba(6,18,30,0.7)", border: "1px solid #c8860a44",
+    borderLeft: "3px solid #c8860a", borderRadius: "0 8px 8px 0",
+    padding: "12px 16px", marginBottom: "12px", color: "#f5e6c8",
+    fontSize: "0.93rem", lineHeight: 1.65,
+  },
+  correctMsg: { color: "#06d6a0", fontWeight: "bold", fontSize: "0.95rem", marginTop: "8px" },
+  wrongMsg: { color: "#ef233c", fontWeight: "bold", fontSize: "0.95rem", marginTop: "8px" },
+  nameInput: {
+    background: "#06101e", border: "2px solid #c8860a", borderRadius: "8px",
+    color: "#f0c040", fontSize: "1.05rem", padding: "9px 14px",
+    width: "100%", maxWidth: "280px", fontFamily: "Georgia", outline: "none",
+    marginBottom: "10px", boxSizing: "border-box",
+  },
+};
+
+const PEN_COLORS = [
+  { color: "#f0c040", label: "Gold" },
+  { color: "#c8860a", label: "Amber" },
+  { color: "#06d6a0", label: "Teal" },
+  { color: "#ef233c", label: "Red" },
+  { color: "#a78bfa", label: "Purple" },
+  { color: "#f5e6c8", label: "Parchment" },
+];
+
+const canvasStore = {};
+
+function DrawPanel({ pageKey }) {
+  const canvasRef = useRef(null);
+  const drawing = useRef(false);
+  const lastPos = useRef(null);
+  const historyRef = useRef(canvasStore[pageKey]?.history || []);
+  const [penColor, setPenColor] = useState("#f0c040");
+  const [penSize, setPenSize] = useState(3);
+  const [tool, setTool] = useState("pen");
+  const [textMode, setTextMode] = useState(false);
+  const [textInput, setTextInput] = useState("");
+  const [textPos, setTextPos] = useState(null);
+  const [histLen, setHistLen] = useState(historyRef.current.length);
+
+  useEffect(() => {
+    historyRef.current = canvasStore[pageKey]?.history || [];
+    setHistLen(historyRef.current.length);
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    const h = historyRef.current;
+    if (h.length > 0) {
+      const img = new Image();
+      img.src = h[h.length - 1];
+      img.onload = () => ctx.drawImage(img, 0, 0);
+    }
+  }, [pageKey]);
+
+  const pushSnapshot = useCallback(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const snap = canvas.toDataURL();
+    historyRef.current = [...historyRef.current, snap];
+    canvasStore[pageKey] = { history: historyRef.current };
+    setHistLen(historyRef.current.length);
+  }, [pageKey]);
+
+  const getPos = (e, canvas) => {
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+    const src = e.touches ? e.touches[0] : e;
+    return { x: (src.clientX - rect.left) * scaleX, y: (src.clientY - rect.top) * scaleY };
+  };
+
+  const startDraw = (e) => {
+    e.preventDefault();
+    const canvas = canvasRef.current;
+    if (tool === "text") { setTextPos(getPos(e, canvas)); setTextInput(""); setTextMode(true); return; }
+    drawing.current = true;
+    lastPos.current = getPos(e, canvas);
+  };
+
+  const drawMove = (e) => {
+    if (!drawing.current) return;
+    e.preventDefault();
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext("2d");
+    const pos = getPos(e, canvas);
+    ctx.beginPath();
+    ctx.moveTo(lastPos.current.x, lastPos.current.y);
+    ctx.lineTo(pos.x, pos.y);
+    ctx.strokeStyle = tool === "eraser" ? "#050d18" : penColor;
+    ctx.lineWidth = tool === "eraser" ? penSize * 7 : penSize;
+    ctx.lineCap = "round"; ctx.lineJoin = "round"; ctx.stroke();
+    lastPos.current = pos;
+  };
+
+  const endDraw = () => { if (drawing.current) { drawing.current = false; pushSnapshot(); } };
+
+  const commitText = () => {
+    if (!textPos || !textInput.trim()) { setTextMode(false); return; }
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext("2d");
+    ctx.font = `bold ${penSize * 4 + 12}px Georgia`;
+    ctx.fillStyle = penColor;
+    ctx.fillText(textInput, textPos.x, textPos.y);
+    pushSnapshot(); setTextMode(false); setTextInput(""); setTextPos(null);
+  };
+
+  const undo = () => {
+    const h = [...historyRef.current]; h.pop();
+    historyRef.current = h; canvasStore[pageKey] = { history: h }; setHistLen(h.length);
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext("2d");
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    if (h.length > 0) { const img = new Image(); img.src = h[h.length - 1]; img.onload = () => ctx.drawImage(img, 0, 0); }
+  };
+
+  const clearAll = () => {
+    historyRef.current = []; canvasStore[pageKey] = { history: [] }; setHistLen(0);
+    canvasRef.current?.getContext("2d").clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+  };
+
+  const toolBtn = (id) => ({
+    background: tool === id ? "#c8860a" : "#0a1828",
+    color: tool === id ? "#fff" : "#9aadbe",
+    border: `1px solid ${tool === id ? "#c8860a" : "#1e3a5f"}`,
+    borderRadius: "5px", padding: "3px 9px", fontSize: "0.72rem", cursor: "pointer", fontFamily: "Courier New",
+  });
+
+  return (
+    <div style={style.drawInner}>
+      <div style={{ color: "#f0c040", fontFamily: "Courier New", fontSize: "0.75rem", letterSpacing: "2px", marginBottom: "10px", textTransform: "uppercase" }}>
+        🗺️ Captain's Chart
+      </div>
+      <div style={{ display: "flex", gap: "5px", flexWrap: "wrap", alignItems: "center", marginBottom: "7px" }}>
+        {["pen","eraser","text"].map(id => (
+          <button key={id} onClick={() => { setTool(id); setTextMode(false); }} style={toolBtn(id)}>
+            {id === "pen" ? "🖊 Pen" : id === "eraser" ? "⬜ Erase" : "T Text"}
+          </button>
+        ))}
+        <select value={penSize} onChange={e => setPenSize(Number(e.target.value))}
+          style={{ background: "#0a1828", color: "#9aadbe", border: "1px solid #1e3a5f", borderRadius: "5px", padding: "3px 6px", fontSize: "0.72rem" }}>
+          <option value={2}>Thin</option><option value={4}>Med</option><option value={8}>Thick</option>
+        </select>
+      </div>
+      <div style={{ display: "flex", gap: "5px", alignItems: "center", marginBottom: "10px", flexWrap: "wrap" }}>
+        {PEN_COLORS.map(({ color, label }) => (
+          <button key={color} title={label} onClick={() => { setPenColor(color); if (tool !== "eraser") setTool("pen"); }}
+            style={{ width: "18px", height: "18px", borderRadius: "50%", background: color, padding: 0, cursor: "pointer",
+              border: penColor === color && tool === "pen" ? "2.5px solid #fff" : "2px solid #050d18" }} />
+        ))}
+        <button onClick={undo} disabled={histLen === 0}
+          style={{ background: "transparent", border: "1px solid #1e3a5f", borderRadius: "5px", padding: "3px 8px",
+            fontSize: "0.72rem", color: histLen === 0 ? "#1e3a5f" : "#9aadbe", cursor: histLen === 0 ? "default" : "pointer", fontFamily: "Courier New" }}>↩</button>
+        <button onClick={clearAll}
+          style={{ background: "transparent", border: "1px solid #ef233c55", borderRadius: "5px", padding: "3px 8px",
+            fontSize: "0.72rem", color: "#ef233c", cursor: "pointer", fontFamily: "Courier New" }}>✕</button>
+      </div>
+      {textMode && (
+        <div style={{ marginBottom: "8px" }}>
+          <input autoFocus style={{ ...style.input, width: "100%", fontSize: "0.85rem", boxSizing: "border-box" }}
+            placeholder="Type note, press Enter" value={textInput} onChange={e => setTextInput(e.target.value)}
+            onKeyDown={e => { if (e.key === "Enter") commitText(); if (e.key === "Escape") setTextMode(false); }} />
+          <div style={{ display: "flex", gap: "6px", marginTop: "5px" }}>
+            <button onClick={commitText} style={{ ...style.btn, padding: "4px 10px", fontSize: "0.72rem", marginTop: 0 }}>Place</button>
+            <button onClick={() => setTextMode(false)} style={{ ...style.btnSecondary, padding: "4px 8px", fontSize: "0.72rem", marginTop: 0 }}>✕</button>
+          </div>
+        </div>
+      )}
+      <canvas ref={canvasRef} width={300} height={560}
+        style={{ flex: 1, width: "100%", display: "block", borderRadius: "8px", background: "#050d18",
+          border: "1px dashed #c8860a44", cursor: tool === "eraser" ? "cell" : tool === "text" ? "text" : "crosshair",
+          touchAction: "none", minHeight: "200px" }}
+        onMouseDown={startDraw} onMouseMove={drawMove} onMouseUp={endDraw} onMouseLeave={endDraw}
+        onTouchStart={startDraw} onTouchMove={drawMove} onTouchEnd={endDraw} />
+      <p style={{ color: "#1e3a5f", fontSize: "0.65rem", marginTop: "5px", fontFamily: "Courier New", textAlign: "center" }}>
+        ☠️ captain's chart space
+      </p>
+    </div>
+  );
+}
+
+function Fraction({ num, den, color }) {
+  return (
+    <span style={style.fraction}>
+      <span style={{ color: color || "#f0c040" }}>{num}</span>
+      <span style={{ ...style.fractionBar, borderColor: color || "#f5e6c8" }} />
+      <span style={{ color: color || "#f5e6c8" }}>{den}</span>
+    </span>
+  );
+}
+
+function FractionInput({ value, onChange }) {
+  return (
+    <span style={{ display: "inline-flex", flexDirection: "column", alignItems: "center", margin: "0 6px", verticalAlign: "middle" }}>
+      <span style={style.fraction}>
+        <input style={{ ...style.input, width: "50px" }} value={value[0]} onChange={e => onChange([e.target.value, value[1]])} maxLength={3} />
+        <span style={{ ...style.fractionBar, borderColor: "#f5e6c8" }} />
+        <input style={{ ...style.input, width: "50px" }} value={value[1]} onChange={e => onChange([value[0], e.target.value])} maxLength={3} />
+      </span>
+    </span>
+  );
+}
+
+function InstructionPage({ badge, title, subtitle, children, onNext, onPrev, name }) {
+  return (
+    <div>
+      <div style={style.badge}>{badge}</div>
+      <h1 style={style.h1}>{title}</h1>
+      <p style={{ color: "#9aadbe", marginBottom: "12px" }}>Pirate: <strong style={{ color: "#f0c040" }}>{name}</strong></p>
+      <h2 style={style.h2}>{subtitle}</h2>
+      {children}
+      <div style={style.btnRow}>
+        <button style={style.btnSecondary} onClick={onPrev}>← Back</button>
+        <button style={style.btn} onClick={onNext}>To the Plank! →</button>
+      </div>
+    </div>
+  );
+}
+
+function PracticePage({ badge, title, name, questions, onNext, onPrev, nextLabel }) {
+  const [answers, setAnswers] = useState(questions.map(() => [["", ""]]));
+  const [checked, setChecked] = useState(false);
+  const [results, setResults] = useState([]);
+
+  const check = () => { const r = questions.map((q, i) => q.check(answers[i])); setResults(r); setChecked(true); };
+  const reset = () => { setChecked(false); setResults([]); setAnswers(questions.map(() => [["", ""]])); };
+  const allCorrect = results.length > 0 && results.every(Boolean);
+
+  return (
+    <div>
+      <div style={style.badge}>{badge}</div>
+      <h1 style={style.h1}>{title}</h1>
+      <p style={{ color: "#9aadbe", marginBottom: "12px" }}>Pirate: <strong style={{ color: "#f0c040" }}>{name}</strong></p>
+      <hr style={style.divider} />
+      {questions.map((q, i) => (
+        <div key={i} style={{ marginBottom: "22px" }}>
+          <div style={{ marginBottom: "7px", color: "#c8860a", fontSize: "0.78rem", fontFamily: "Courier New", letterSpacing: "1px" }}>⚓ CHALLENGE {i + 1}</div>
+          {q.render(answers[i], (val) => { const next = [...answers]; next[i] = val; setAnswers(next); })}
+          {checked && (
+            <div style={results[i] ? style.correctMsg : style.wrongMsg}>
+              {results[i] ? "✅ Aye aye! Correct, ye clever pirate!" : `❌ Shiver me timbers! ${q.hint}`}
+            </div>
+          )}
+        </div>
+      ))}
+      <div style={style.btnRow}>
+        <button style={style.btnSecondary} onClick={onPrev}>← Back</button>
+        {!checked && <button style={style.btn} onClick={check}>Check the Map →</button>}
+        {checked && !allCorrect && <button style={{ ...style.btn, background: "#ef233c" }} onClick={reset}>Try Again, Scallywag!</button>}
+        {checked && allCorrect && (
+          <button style={{ ...style.btn, background: "#06d6a0", color: "#061220" }} onClick={onNext}>
+            {nextLabel || "Next Sea →"}
+          </button>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function FinishPage({ name }) {
+  return (
+    <div style={{ textAlign: "center" }}>
+      <div style={{ fontSize: "3.5rem", marginBottom: "8px" }}>🏴‍☠️</div>
+      <div style={style.badge}>Treasure Found</div>
+      <h1 style={{ ...style.h1, textAlign: "center" }}>Ye Found the Gold,<br /><span style={{ color: "#f0c040" }}>{name}!</span></h1>
+      <p style={{ color: "#9aadbe", textAlign: "center", maxWidth: "380px", margin: "0 auto 16px", fontSize: "0.95rem", lineHeight: 1.7 }}>
+        You've sailed all four seas of Fraction Island and claimed the treasure!
+      </p>
+      <div style={style.infoBox}>
+        <strong style={{ color: "#06d6a0" }}>🗺️ Skills Plundered:</strong>
+        <ul style={{ margin: "8px 0 0 18px", padding: 0, lineHeight: 2 }}>
+          <li>✅ Equivalent fractions using multiplication</li>
+          <li>✅ Equivalent fractions using division</li>
+          <li>✅ Adding fractions with like denominators</li>
+          <li>✅ Adding fractions with unlike denominators</li>
+          <li>✅ Word problems with unlike denominators (5th grade)</li>
+        </ul>
+      </div>
+      <p style={{ color: "#f0c040", fontWeight: "bold", marginTop: "16px" }}>⚓ Keep sailing, Captain — math is your treasure map!</p>
+    </div>
+  );
+}
+
+function App() {
+  const [page, setPage] = useState(0);
+  const [name, setName] = useState("");
+  const [drawOpen, setDrawOpen] = useState(true);
+  const TOTAL = 11;
+  const next = () => setPage(p => Math.min(p + 1, TOTAL - 1));
+  const prev = () => setPage(p => Math.max(p - 1, 0));
+
+  const pages = [
+    <div key="p0">
+      <div style={style.badge}>☠️ Crew Check-In</div>
+      <h1 style={style.h1}>Welcome to<br /><span style={{ color: "#f0c040" }}>Fraction Island</span></h1>
+      <p style={{ color: "#9aadbe", fontSize: "0.95rem", lineHeight: 1.7, marginBottom: "16px" }}>Before ye set sail, register yerself, pirate. This voyage covers four treacherous seas of fraction mastery.</p>
+      <hr style={style.divider} />
+      <p style={{ color: "#f0c040", fontWeight: "bold", marginBottom: "8px" }}>What be yer pirate name?</p>
+      <input style={style.nameInput} placeholder="Enter yer name..." value={name} onChange={e => setName(e.target.value)} />
+      <div style={style.infoBox}>
+        <strong style={{ color: "#f0c040" }}>🗺️ Yer Voyage:</strong>
+        <ol style={{ margin: "8px 0 0 18px", padding: 0, lineHeight: 2 }}>
+          <li>Sea 1 — Equivalent Fractions (Multiplication)</li>
+          <li>Sea 2 — Equivalent Fractions (Division)</li>
+          <li>Sea 3 — Adding with Like Denominators</li>
+          <li>Sea 4 — Adding with Unlike Denominators</li>
+          <li>Final Treasure — Unlike Denominators Word Problems</li>
+        </ol>
+      </div>
+      <div style={style.btnRow}>
+        <button style={{ ...style.btn, opacity: name.trim() ? 1 : 0.4 }} onClick={next} disabled={!name.trim()}>HOIST THE SAILS →</button>
+      </div>
+    </div>,
+
+    <InstructionPage key="p1" badge="⚓ Sea 1 — Multiply" title="Equivalent Fractions" subtitle="Using Multiplication" name={name} onNext={next} onPrev={prev}>
+      <div style={style.infoBox}><strong style={{ color: "#f0c040" }}>🔭 What are equivalent fractions?</strong><p style={{ margin: "8px 0 0" }}>Equivalent fractions look different but represent the <em>same amount</em>. Like two maps of the same island — different drawings, same treasure.</p></div>
+      <div style={style.infoBox}><strong style={{ color: "#c8860a" }}>📜 The Rule:</strong><p style={{ margin: "8px 0 0" }}>Multiply both the <strong>numerator</strong> (top) and <strong>denominator</strong> (bottom) by the <strong>same number</strong>.</p><p style={{ marginTop: "10px", textAlign: "center" }}><Fraction num="1" den="2" /> × <Fraction num="3" den="3" color="#06d6a0" /> = <Fraction num="3" den="6" color="#f0c040" /></p></div>
+      <div style={style.infoBox}><strong style={{ color: "#f0c040" }}>⚓ Steps:</strong><ol style={{ margin: "8px 0 0 20px", lineHeight: 2 }}><li>Pick a multiplier (any whole number except 0).</li><li>Multiply the <strong>top</strong> by your multiplier.</li><li>Multiply the <strong>bottom</strong> by the <strong>same</strong> multiplier.</li><li>Your new fraction is equivalent!</li></ol></div>
+      <div style={style.infoBox}><strong>Example:</strong> Make an equivalent fraction for <Fraction num="2" den="5" /><br />Multiply by 4: <Fraction num="2×4" den="5×4" /> = <Fraction num="8" den="20" color="#06d6a0" /></div>
+    </InstructionPage>,
+
+    <PracticePage key="p2" badge="⚓ Sea 1 — Practice" title="Multiply to Find Equivalent Fractions" name={name} onNext={next} onPrev={prev}
+      questions={[
+        { render: (val, setVal) => (<div style={{ display: "flex", alignItems: "center", flexWrap: "wrap", gap: "8px", fontSize: "1.05rem" }}><Fraction num="1" den="3" /> = <FractionInput value={val[0]} onChange={v => setVal([v])} /><span style={{ color: "#9aadbe", fontSize: "0.85rem" }}>(Multiply by 4)</span></div>), check: (val) => val[0][0] === "4" && val[0][1] === "12", hint: "1×4=4, 3×4=12 → 4/12" },
+        { render: (val, setVal) => (<div style={{ display: "flex", alignItems: "center", flexWrap: "wrap", gap: "8px", fontSize: "1.05rem" }}><Fraction num="3" den="5" /> = <FractionInput value={val[0]} onChange={v => setVal([v])} /><span style={{ color: "#9aadbe", fontSize: "0.85rem" }}>(Multiply by 3)</span></div>), check: (val) => val[0][0] === "9" && val[0][1] === "15", hint: "3×3=9, 5×3=15 → 9/15" },
+        { render: (val, setVal) => (<div style={{ display: "flex", alignItems: "center", flexWrap: "wrap", gap: "8px", fontSize: "1.05rem" }}><Fraction num="2" den="7" /> = <FractionInput value={val[0]} onChange={v => setVal([v])} /><span style={{ color: "#9aadbe", fontSize: "0.85rem" }}>(Multiply by 5)</span></div>), check: (val) => val[0][0] === "10" && val[0][1] === "35", hint: "2×5=10, 7×5=35 → 10/35" },
+      ]} />,
+
+    <InstructionPage key="p3" badge="🦜 Sea 2 — Divide" title="Equivalent Fractions" subtitle="Using Division (Simplifying)" name={name} onNext={next} onPrev={prev}>
+      <div style={style.infoBox}><strong style={{ color: "#f0c040" }}>🔭 What is simplifying?</strong><p style={{ margin: "8px 0 0" }}>Divide both numbers to make a <em>simpler</em> equivalent fraction. This is called <strong>reducing</strong> — like trimming the sails for smoother sailing.</p></div>
+      <div style={style.infoBox}><strong style={{ color: "#c8860a" }}>📜 The Rule:</strong><p style={{ margin: "8px 0 0" }}>Divide both by their <strong>Greatest Common Factor (GCF)</strong>.</p><p style={{ marginTop: "10px", textAlign: "center" }}><Fraction num="6" den="8" /> ÷ <Fraction num="2" den="2" color="#06d6a0" /> = <Fraction num="3" den="4" color="#f0c040" /></p></div>
+      <div style={style.infoBox}><strong style={{ color: "#f0c040" }}>⚓ Finding the GCF:</strong><ol style={{ margin: "8px 0 0 20px", lineHeight: 2 }}><li>List factors of both numbers.</li><li>Find the <strong>largest</strong> shared factor.</li><li>Divide both top and bottom by it.</li></ol></div>
+      <div style={style.infoBox}><strong>Example:</strong> Simplify <Fraction num="12" den="16" /><br />GCF of 12 &amp; 16 = <strong>4</strong> → <Fraction num="3" den="4" color="#06d6a0" /> ✅</div>
+    </InstructionPage>,
+
+    <PracticePage key="p4" badge="🦜 Sea 2 — Practice" title="Divide to Simplify Fractions" name={name} onNext={next} onPrev={prev}
+      questions={[
+        { render: (val, setVal) => (<div style={{ display: "flex", alignItems: "center", flexWrap: "wrap", gap: "8px", fontSize: "1.05rem" }}>Simplify <Fraction num="8" den="12" /> = <FractionInput value={val[0]} onChange={v => setVal([v])} /><span style={{ color: "#9aadbe", fontSize: "0.85rem" }}>(GCF = 4)</span></div>), check: (val) => val[0][0] === "2" && val[0][1] === "3", hint: "8÷4=2, 12÷4=3 → 2/3" },
+        { render: (val, setVal) => (<div style={{ display: "flex", alignItems: "center", flexWrap: "wrap", gap: "8px", fontSize: "1.05rem" }}>Simplify <Fraction num="10" den="15" /> = <FractionInput value={val[0]} onChange={v => setVal([v])} /><span style={{ color: "#9aadbe", fontSize: "0.85rem" }}>(GCF = 5)</span></div>), check: (val) => val[0][0] === "2" && val[0][1] === "3", hint: "10÷5=2, 15÷5=3 → 2/3" },
+        { render: (val, setVal) => (<div style={{ display: "flex", alignItems: "center", flexWrap: "wrap", gap: "8px", fontSize: "1.05rem" }}>Simplify <Fraction num="9" den="12" /> = <FractionInput value={val[0]} onChange={v => setVal([v])} /><span style={{ color: "#9aadbe", fontSize: "0.85rem" }}>(GCF = 3)</span></div>), check: (val) => val[0][0] === "3" && val[0][1] === "4", hint: "9÷3=3, 12÷3=4 → 3/4" },
+      ]} />,
+
+    <InstructionPage key="p5" badge="⚔️ Sea 3 — Add" title="Adding Fractions" subtitle="With Like Denominators" name={name} onNext={next} onPrev={prev}>
+      <div style={style.infoBox}><strong style={{ color: "#f0c040" }}>🔭 Like denominators mean...</strong><p style={{ margin: "8px 0 0" }}>Both fractions share the <strong>same bottom number</strong>. Adding is easy — like combining coins from the same chest.</p></div>
+      <div style={style.infoBox}><strong style={{ color: "#c8860a" }}>📜 The Rule:</strong><p style={{ margin: "8px 0 0" }}><strong>Add the numerators.</strong> Keep the denominator. Simplify if needed.</p><p style={{ marginTop: "10px", textAlign: "center" }}><Fraction num="2" den="7" /> + <Fraction num="3" den="7" /> = <Fraction num="5" den="7" color="#f0c040" /></p></div>
+      <div style={style.infoBox}><strong style={{ color: "#f0c040" }}>⚓ Steps:</strong><ol style={{ margin: "8px 0 0 20px", lineHeight: 2 }}><li>Confirm the denominators match. ✅</li><li>Add the numerators together.</li><li>Write the same denominator.</li><li>Simplify if you can.</li></ol></div>
+      <div style={style.infoBox}><strong>Example:</strong> <Fraction num="3" den="8" /> + <Fraction num="1" den="8" /> = <Fraction num="4" den="8" /> = <Fraction num="1" den="2" color="#06d6a0" /></div>
+    </InstructionPage>,
+
+    <PracticePage key="p6" badge="⚔️ Sea 3 — Practice" title="Add Fractions with Like Denominators" name={name} onNext={next} onPrev={prev}
+      questions={[
+        { render: (val, setVal) => (<div style={{ display: "flex", alignItems: "center", flexWrap: "wrap", gap: "8px", fontSize: "1.05rem" }}><Fraction num="1" den="5" /> + <Fraction num="2" den="5" /> = <FractionInput value={val[0]} onChange={v => setVal([v])} /></div>), check: (val) => val[0][0] === "3" && val[0][1] === "5", hint: "1+2=3, keep 5 → 3/5" },
+        { render: (val, setVal) => (<div style={{ display: "flex", alignItems: "center", flexWrap: "wrap", gap: "8px", fontSize: "1.05rem" }}><Fraction num="3" den="10" /> + <Fraction num="5" den="10" /> = <FractionInput value={val[0]} onChange={v => setVal([v])} /><span style={{ color: "#9aadbe", fontSize: "0.85rem" }}>(simplify!)</span></div>), check: (val) => (val[0][0] === "4" && val[0][1] === "5") || (val[0][0] === "8" && val[0][1] === "10"), hint: "3+5=8/10 → GCF=2 → 4/5" },
+        { render: (val, setVal) => (<div style={{ display: "flex", alignItems: "center", flexWrap: "wrap", gap: "8px", fontSize: "1.05rem" }}><Fraction num="4" den="9" /> + <Fraction num="2" den="9" /> = <FractionInput value={val[0]} onChange={v => setVal([v])} /></div>), check: (val) => (val[0][0] === "6" && val[0][1] === "9") || (val[0][0] === "2" && val[0][1] === "3"), hint: "4+2=6/9 (or 2/3 simplified)" },
+      ]} />,
+
+    <InstructionPage key="p7" badge="💰 Sea 4 — Unlike" title="Adding Fractions" subtitle="With Unlike Denominators" name={name} onNext={next} onPrev={prev}>
+      <div style={style.infoBox}><strong style={{ color: "#f0c040" }}>🔭 Unlike denominators mean...</strong><p style={{ margin: "8px 0 0" }}>The bottom numbers are <strong>different</strong>. Find a <strong>common denominator</strong> first — like finding a common port for two ships.</p></div>
+      <div style={style.infoBox}><strong style={{ color: "#c8860a" }}>📜 Use the LCM:</strong><p style={{ margin: "8px 0 0" }}>Find the <strong>Least Common Multiple</strong> of both denominators. Convert, then add.</p></div>
+      <div style={style.infoBox}><strong style={{ color: "#f0c040" }}>⚓ Steps:</strong><ol style={{ margin: "8px 0 0 20px", lineHeight: 2 }}><li>Find the LCM of both denominators.</li><li>Convert each fraction to the LCM denominator.</li><li>Add the new numerators. Keep the denominator.</li><li>Simplify if possible.</li></ol></div>
+      <div style={style.infoBox}><strong>Example:</strong> <Fraction num="1" den="3" /> + <Fraction num="1" den="4" /><p style={{ marginTop: "8px", lineHeight: 2 }}>LCM = <strong>12</strong><br /><Fraction num="1" den="3" />→<Fraction num="4" den="12" color="#c8860a" /> &nbsp;<Fraction num="1" den="4" />→<Fraction num="3" den="12" color="#06d6a0" /><br />= <Fraction num="7" den="12" color="#f0c040" /> ✅</p></div>
+    </InstructionPage>,
+
+    <PracticePage key="p8" badge="💰 Sea 4 — Practice A" title="Add Fractions with Unlike Denominators" name={name} onNext={next} onPrev={prev}
+      questions={[
+        { render: (val, setVal) => (<div style={{ display: "flex", alignItems: "center", flexWrap: "wrap", gap: "8px", fontSize: "1.05rem" }}><Fraction num="1" den="2" /> + <Fraction num="1" den="4" /> = <FractionInput value={val[0]} onChange={v => setVal([v])} /><span style={{ color: "#9aadbe", fontSize: "0.85rem" }}>(LCM = 4)</span></div>), check: (val) => val[0][0] === "3" && val[0][1] === "4", hint: "LCM=4. 1/2→2/4. 2/4+1/4=3/4" },
+        { render: (val, setVal) => (<div style={{ display: "flex", alignItems: "center", flexWrap: "wrap", gap: "8px", fontSize: "1.05rem" }}><Fraction num="1" den="3" /> + <Fraction num="1" den="6" /> = <FractionInput value={val[0]} onChange={v => setVal([v])} /><span style={{ color: "#9aadbe", fontSize: "0.85rem" }}>(LCM = 6)</span></div>), check: (val) => (val[0][0] === "1" && val[0][1] === "2") || (val[0][0] === "3" && val[0][1] === "6"), hint: "LCM=6. 1/3→2/6. 2/6+1/6=3/6=1/2" },
+        { render: (val, setVal) => (<div style={{ display: "flex", alignItems: "center", flexWrap: "wrap", gap: "8px", fontSize: "1.05rem" }}><Fraction num="2" den="3" /> + <Fraction num="1" den="4" /> = <FractionInput value={val[0]} onChange={v => setVal([v])} /><span style={{ color: "#9aadbe", fontSize: "0.85rem" }}>(LCM = 12)</span></div>), check: (val) => val[0][0] === "11" && val[0][1] === "12", hint: "LCM=12. 2/3→8/12, 1/4→3/12. 8+3=11/12" },
+      ]} />,
+
+    <PracticePage key="p9" badge="☠️ Final Treasure — Practice B" title="Unlike Denominators: Real-World Plunder" name={name} onNext={next} onPrev={prev} nextLabel="Claim the Treasure! 🏴‍☠️"
+      questions={[
+        { render: (val, setVal) => (<div><div style={{ ...style.infoBox, marginBottom: "8px" }}>⚓ Marco sailed <Fraction num="3" den="4" /> of a league before noon and <Fraction num="5" den="6" /> after. How far total?</div><div style={{ display: "flex", alignItems: "center", flexWrap: "wrap", gap: "8px", fontSize: "1.05rem" }}><Fraction num="3" den="4" /> + <Fraction num="5" den="6" /> = <FractionInput value={val[0]} onChange={v => setVal([v])} /><span style={{ color: "#9aadbe", fontSize: "0.85rem" }}>(LCM = 12)</span></div></div>), check: (val) => val[0][0] === "19" && val[0][1] === "12", hint: "LCM=12. 3/4→9/12, 5/6→10/12. 9+10=19/12" },
+        { render: (val, setVal) => (<div><div style={{ ...style.infoBox, marginBottom: "8px" }}>🍺 A barrel of grog is <Fraction num="2" den="5" /> full. You add <Fraction num="3" den="10" /> more. How full now?</div><div style={{ display: "flex", alignItems: "center", flexWrap: "wrap", gap: "8px", fontSize: "1.05rem" }}><Fraction num="2" den="5" /> + <Fraction num="3" den="10" /> = <FractionInput value={val[0]} onChange={v => setVal([v])} /><span style={{ color: "#9aadbe", fontSize: "0.85rem" }}>(LCM = 10)</span></div></div>), check: (val) => val[0][0] === "7" && val[0][1] === "10", hint: "LCM=10. 2/5→4/10. 4/10+3/10=7/10" },
+        { render: (val, setVal) => (<div><div style={{ ...style.infoBox, marginBottom: "8px" }}>🏴‍☠️ Two pirates mapped <Fraction num="5" den="8" /> and <Fraction num="1" den="3" /> of an island. What fraction together?</div><div style={{ display: "flex", alignItems: "center", flexWrap: "wrap", gap: "8px", fontSize: "1.05rem" }}><Fraction num="5" den="8" /> + <Fraction num="1" den="3" /> = <FractionInput value={val[0]} onChange={v => setVal([v])} /><span style={{ color: "#9aadbe", fontSize: "0.85rem" }}>(LCM = 24)</span></div></div>), check: (val) => val[0][0] === "23" && val[0][1] === "24", hint: "LCM=24. 5/8→15/24, 1/3→8/24. 15+8=23/24" },
+        { render: (val, setVal) => (<div><div style={{ ...style.infoBox, marginBottom: "8px", borderColor: "#c8860a" }}> 🧠 <strong style={{ color: "#f0c040" }}>No hint</strong> — find the LCM yerself, scallywag!</div><div style={{ display: "flex", alignItems: "center", flexWrap: "wrap", gap: "8px", fontSize: "1.05rem" }}><Fraction num="1" den="6" /> + <Fraction num="3" den="8" /> = <FractionInput value={val[0]} onChange={v => setVal([v])} /></div></div>), check: (val) => val[0][0] === "13" && val[0][1] === "24", hint: "LCM=24. 1/6→4/24, 3/8→9/24. 4+9=13/24" },
+      ]} />,
+  ];
+
+  const isFinish = page === TOTAL - 1;
+
+  return (
+    <div style={style.app}>
+      <svg style={style.waves} viewBox="0 0 1440 220" xmlns="http://www.w3.org/2000/svg">
+        <path d="M0,80 C200,140 400,20 600,80 C800,140 1000,20 1200,80 C1350,120 1440,80 1440,80 L1440,220 L0,220 Z" fill="#1a6090" />
+        <path d="M0,120 C250,60 500,180 750,100 C1000,20 1200,160 1440,100 L1440,220 L0,220 Z" fill="#0a4060" opacity="0.6" />
+        <path d="M0,160 C300,100 600,200 900,140 C1100,100 1300,180 1440,140 L1440,220 L0,220 Z" fill="#063050" opacity="0.4" />
+      </svg>
+
+      <div style={style.outerWrap}>
+        <div style={style.headerBar}>
+          <div style={{ color: "#f0c040", fontFamily: "Courier New", fontSize: "0.85rem", letterSpacing: "3px", marginRight: "16px", whiteSpace: "nowrap" }}>
+            ☠️ FRACTION ISLAND
+          </div>
+          <div style={style.progress}>
+            {Array.from({ length: TOTAL }).map((_, i) => (
+              <div key={i} style={style.dot(i === page, i < page)} />
+            ))}
+          </div>
+          <div style={style.pageNum}>{page + 1} / {TOTAL}</div>
+        </div>
+
+        <div style={style.body}>
+          <div style={style.contentCol}>
+            {isFinish ? <FinishPage name={name} /> : pages[page]}
+          </div>
+          <div style={style.drawCol(drawOpen)}>
+            <button onClick={() => setDrawOpen(o => !o)} style={style.drawToggle(drawOpen)}>
+              {drawOpen ? "🗺️ Hide" : "🗺️"}
+            </button>
+            {drawOpen && <DrawPanel pageKey={`p${page}`} />}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>
