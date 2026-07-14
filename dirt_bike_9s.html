@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Dirt Bike Math Challenge – 9s Facts</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Arial Black', 'Trebuchet MS', sans-serif;
+    background: #1a1a2e;
+    color: #fff;
+    padding: 20px;
+    min-height: 100vh;
+  }
+  .page {
+    max-width: 700px;
+    margin: 0 auto;
+    background: #16213e;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 0 40px rgba(255,140,0,0.3);
+  }
+  .header {
+    background: linear-gradient(135deg, #ff6b00, #ff8c00, #ffb347);
+    padding: 24px 30px 18px;
+    text-align: center;
+    border-bottom: 4px solid #ff4500;
+  }
+  .header h1 {
+    font-family: 'Impact', 'Arial Black', cursive;
+    font-size: 2.6rem;
+    letter-spacing: 3px;
+    color: #1a1a2e;
+    text-shadow: 3px 3px 0 rgba(0,0,0,0.25);
+  }
+  .header p { color: #1a1a2e; font-weight: 700; font-size: 0.95rem; margin-top: 5px; }
+  .track-banner {
+    background: #0f3460;
+    padding: 10px 30px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.9rem;
+    border-bottom: 2px dashed #ff8c00;
+  }
+  .track-banner span { color: #ff8c00; font-weight: 800; }
+  .quote-bar {
+    background: #0a0a1a;
+    text-align: center;
+    padding: 10px 30px;
+    border-bottom: 2px solid #1e1e3a;
+  }
+  .quote-bar span {
+    font-family: 'Impact','Arial Black', cursive;
+    font-size: 1rem;
+    letter-spacing: 2px;
+    color: #ff8c00;
+  }
+  .tab-nav {
+    display: flex;
+    background: #0a0a1a;
+    border-bottom: 3px solid #ff6b00;
+  }
+  .tab-btn {
+    flex: 1;
+    padding: 11px 4px;
+    font-family: 'Impact', 'Arial Black', cursive;
+    font-size: 0.85rem;
+    letter-spacing: 1px;
+    background: transparent;
+    color: #555;
+    border: none;
+    cursor: pointer;
+    border-bottom: 4px solid transparent;
+    margin-bottom: -3px;
+    line-height: 1.3;
+  }
+  .tab-btn:hover { color: #ff8c00; background: #111; }
+  .tab-btn.active { color: #ff8c00; border-bottom-color: #ff8c00; background: #16213e; }
+  .score-bar {
+    background: #0a0a1a;
+    padding: 12px 30px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 2px solid #1e1e3a;
+  }
+  .score-label { font-size: 0.8rem; color: #aaa; letter-spacing: 1px; }
+  .score-val { font-family: 'Impact', cursive; font-size: 1.5rem; color: #ff8c00; letter-spacing: 2px; }
+  .progress-bar-wrap {
+    flex: 1; margin: 0 18px;
+    height: 10px; background: #1e1e3a;
+    border-radius: 99px; overflow: hidden;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #ff6b00, #ffb347);
+    border-radius: 99px;
+    transition: width 0.4s ease;
+    width: 0%;
+  }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+  .section { padding: 22px 30px; }
+  .section-title {
+    font-family: 'Impact', 'Arial Black', cursive;
+    font-size: 1.7rem;
+    letter-spacing: 2px;
+    color: #ff8c00;
+    margin-bottom: 14px;
+  }
+  .story-box {
+    background: #0f3460;
+    border-left: 5px solid #ff6b00;
+    border-radius: 10px;
+    padding: 13px 16px;
+    font-size: 0.93rem;
+    line-height: 1.7;
+    margin-bottom: 20px;
+    color: #e0e0e0;
+  }
+  .story-box b { color: #ffb347; }
+  .fact-list { display: flex; flex-direction: column; gap: 10px; }
+  .fact-row {
+    background: #0f3460;
+    border: 2px solid #1e4d8c;
+    border-radius: 12px;
+    padding: 11px 18px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    transition: border-color 0.2s;
+  }
+  .fact-row:hover { border-color: #ff8c00; }
+  .fact-num {
+    font-size: 0.75rem;
+    color: #ff6b00;
+    font-weight: 800;
+    letter-spacing: 1px;
+    min-width: 26px;
+    text-align: right;
+  }
+  .fact-eq {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+  }
+  .wp-list { display: flex; flex-direction: column; gap: 14px; }
+  .wp-card {
+    background: #0f3460;
+    border: 2px solid #1e4d8c;
+    border-radius: 14px;
+    padding: 16px 18px;
+    transition: border-color 0.2s;
+  }
+  .wp-card:hover { border-color: #ff8c00; }
+  .wp-num {
+    font-size: 0.72rem;
+    color: #ff6b00;
+    font-weight: 800;
+    letter-spacing: 1px;
+    margin-bottom: 7px;
+  }
+  .wp-text {
+    font-size: 0.97rem;
+    line-height: 1.65;
+    color: #e0e0e0;
+    margin-bottom: 12px;
+    font-family: 'Trebuchet MS', Arial, sans-serif;
+    font-weight: normal;
+  }
+  .wp-text b { color: #ffb347; }
+  .wp-answer-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .wp-label {
+    font-size: 1rem;
+    font-weight: 800;
+    color: #aaa;
+    white-space: nowrap;
+  }
+  .wp-hint {
+    font-size: 0.78rem;
+    color: #e74c3c;
+    margin-top: 6px;
+    min-height: 16px;
+    font-family: 'Trebuchet MS', Arial, sans-serif;
+  }
+  .blank {
+    width: 68px; height: 38px;
+    border: none;
+    border-bottom: 3px solid #ff8c00;
+    background: transparent;
+    text-align: center;
+    color: #ffe082;
+    font-size: 1.4rem;
+    font-weight: 800;
+    font-family: 'Arial Black', 'Trebuchet MS', sans-serif;
+    outline: none;
+    padding: 0 4px;
+    transition: border-color 0.2s, background 0.2s, color 0.2s;
+    border-radius: 4px 4px 0 0;
+  }
+  .blank:focus { border-bottom-color: #fff; background: rgba(255,140,0,0.1); }
+  .blank.correct   { border-bottom-color: #2ecc71; color: #2ecc71; }
+  .blank.incorrect { border-bottom-color: #e74c3c; color: #e74c3c; }
+  .fb-icon {
+    font-size: 1.3rem;
+    min-width: 24px;
+    text-align: center;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  .fb-icon.show { opacity: 1; }
+  .nav-btn-wrap { padding: 18px 30px 24px; display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .nav-btn {
+    font-family: 'Impact', 'Arial Black', cursive;
+    font-size: 1.1rem;
+    letter-spacing: 2px;
+    background: linear-gradient(135deg, #ff6b00, #ff8c00);
+    color: #1a1a2e;
+    border: none;
+    border-radius: 12px;
+    padding: 12px 26px;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(255,140,0,0.4);
+    transition: transform 0.1s;
+  }
+  .nav-btn:hover { transform: scale(1.04); }
+  .answer-key {
+    background: #0a0a1a;
+    border-top: 3px solid #222;
+    padding: 16px 30px;
+  }
+  .answer-key summary {
+    font-family: 'Impact', 'Arial Black', cursive;
+    font-size: 1.1rem;
+    letter-spacing: 2px;
+    color: #444;
+    cursor: pointer;
+    user-select: none;
+  }
+  .answer-key summary:hover { color: #777; }
+  .answer-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 6px;
+    margin-top: 12px;
+  }
+  .answer-item { font-size: 0.82rem; color: #666; padding: 3px 0; border-bottom: 1px solid #1a1a1a; }
+  .answer-item b { color: #ff8c00; }
+  .footer {
+    text-align: center;
+    padding: 12px;
+    font-size: 0.78rem;
+    color: #333;
+    background: #0a0a1a;
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="header">
+    <div style="font-size:2.2rem">🏍️ 🏁 🏍️</div>
+    <h1>DIRT BIKE MATH CHALLENGE</h1>
+    <p>Race Through Your 9s Facts — Fill in every answer to finish the race!</p>
+  </div>
+
+  <div class="track-banner">
+    <span>🏟️ TRACK:</span> Mudslinger Motocross Circuit &nbsp;|&nbsp;
+    <span>🎯 GOAL:</span> Answer all facts on every lap!
+  </div>
+
+  <div class="quote-bar">
+    <span>🏁 Great riders practice hard. Great mathematicians practice harder. 🏁</span>
+  </div>
+
+  <div class="tab-nav">
+    <button class="tab-btn active" id="tab-mult">🔥 LAP 1<br>MULTIPLY</button>
+    <button class="tab-btn"        id="tab-div" >💨 LAP 2<br>DIVIDE</button>
+    <button class="tab-btn"        id="tab-mix" >⚡ LAP 3<br>MIXED ×</button>
+    <button class="tab-btn"        id="tab-wp"  >🏆 LAP 4<br>WORD PROBLEMS</button>
+  </div>
+
+  <!-- PAGE 1 -->
+  <div class="tab-panel active" id="panel-mult">
+    <div class="score-bar">
+      <div><div class="score-label">CORRECT</div><div class="score-val" id="mult-correct">0 / 12</div></div>
+      <div class="progress-bar-wrap"><div class="progress-bar-fill" id="mult-fill"></div></div>
+      <div style="text-align:right"><div class="score-label">ANSWERED</div><div class="score-val" id="mult-answered">0 / 12</div></div>
+    </div>
+    <div class="section">
+      <div class="section-title">🔥 LAP 1 — MULTIPLICATION FACTS</div>
+      <div class="story-box">
+        <b>Rider Jake</b> is warming up his engine at the starting gate. Before the flag drops,
+        he needs to run through all his <b>9s multiplication facts</b> — his secret weapon for
+        calculating lap times, gear ratios, and race strategy at lightning speed. 🚨
+        Fill in every answer to help Jake get race-ready!
+      </div>
+      <div class="fact-list" id="mult-list"></div>
+    </div>
+    <div class="nav-btn-wrap">
+      <button class="nav-btn" id="go-div">HEAD TO LAP 2 — DIVISION ➜</button>
+    </div>
+    <div class="answer-key">
+      <details><summary>🔑 ANSWER KEY (Tutor Use)</summary>
+        <div class="answer-grid" id="mult-key"></div>
+      </details>
+    </div>
+  </div>
+
+  <!-- PAGE 2 -->
+  <div class="tab-panel" id="panel-div">
+    <div class="score-bar">
+      <div><div class="score-label">CORRECT</div><div class="score-val" id="div-correct">0 / 10</div></div>
+      <div class="progress-bar-wrap"><div class="progress-bar-fill" id="div-fill"></div></div>
+      <div style="text-align:right"><div class="score-label">ANSWERED</div><div class="score-val" id="div-answered">0 / 10</div></div>
+    </div>
+    <div class="section">
+      <div class="section-title">💨 LAP 2 — DIVISION FACTS</div>
+      <div class="story-box">
+        Jake crossed the finish line — now it's time for the <b>victory breakdown</b>!
+        After every race, Jake and his crew split everything equally: prize money,
+        fuel cans, trophies, and spare parts. Good thing Jake knows his
+        <b>9s division facts</b> cold. Help him divide it all up perfectly! 🏆
+      </div>
+      <div class="fact-list" id="div-list"></div>
+    </div>
+    <div class="nav-btn-wrap">
+      <button class="nav-btn" id="go-mult">◄ BACK TO LAP 1</button>
+      <button class="nav-btn" id="go-mix">HEAD TO LAP 3 ➜</button>
+    </div>
+    <div class="answer-key">
+      <details><summary>🔑 ANSWER KEY (Tutor Use)</summary>
+        <div class="answer-grid" id="div-key"></div>
+      </details>
+    </div>
+  </div>
+
+  <!-- PAGE 3 -->
+  <div class="tab-panel" id="panel-mix">
+    <div class="score-bar">
+      <div><div class="score-label">CORRECT</div><div class="score-val" id="mix-correct">0 / 12</div></div>
+      <div class="progress-bar-wrap"><div class="progress-bar-fill" id="mix-fill"></div></div>
+      <div style="text-align:right"><div class="score-label">ANSWERED</div><div class="score-val" id="mix-answered">0 / 12</div></div>
+    </div>
+    <div class="section">
+      <div class="section-title">⚡ LAP 3 — MIXED MULTIPLICATION</div>
+      <div class="story-box">
+        The <b>championship lap</b> is here — and this time the course is scrambled! Jake's
+        crew chief is calling out facts in random order over the radio. Can you keep up?
+        Prove you <b>really</b> know your 9s by crushing these facts no matter what order
+        they come at you. 🏆🔥 You've got this — send it!
+      </div>
+      <div class="fact-list" id="mix-list"></div>
+    </div>
+    <div class="nav-btn-wrap">
+      <button class="nav-btn" id="go-div2">◄ BACK TO LAP 2</button>
+      <button class="nav-btn" id="go-wp">HEAD TO LAP 4 ➜</button>
+    </div>
+    <div class="answer-key">
+      <details><summary>🔑 ANSWER KEY (Tutor Use)</summary>
+        <div class="answer-grid" id="mix-key"></div>
+      </details>
+    </div>
+  </div>
+
+  <!-- PAGE 4 -->
+  <div class="tab-panel" id="panel-wp">
+    <div class="score-bar">
+      <div><div class="score-label">CORRECT</div><div class="score-val" id="wp-correct">0 / 10</div></div>
+      <div class="progress-bar-wrap"><div class="progress-bar-fill" id="wp-fill"></div></div>
+      <div style="text-align:right"><div class="score-label">ANSWERED</div><div class="score-val" id="wp-answered">0 / 10</div></div>
+    </div>
+    <div class="section">
+      <div class="section-title">🏆 LAP 4 — WORD PROBLEMS</div>
+      <div class="story-box">
+        Jake is <b>race day ready</b> — but now his brain has to work as hard as his throttle hand!
+        Read each pit-stop scenario and use your <b>9s multiplication facts</b> to solve it.
+        Type your answer and move on. No calculator needed — you've got this! 🏍️💥
+      </div>
+      <div class="wp-list" id="wp-list"></div>
+    </div>
+    <div class="nav-btn-wrap">
+      <button class="nav-btn" id="go-mix2">◄ BACK TO LAP 3</button>
+    </div>
+    <div class="answer-key">
+      <details><summary>🔑 ANSWER KEY (Tutor Use)</summary>
+        <div class="answer-grid" id="wp-key"></div>
+      </details>
+    </div>
+  </div>
+
+  <div class="footer">🏍️ Keep racing. Keep learning. 🏍️</div>
+</div>
+
+<script>
+(function() {
+  var multFacts = [
+    { eq: '9 x 1',  ans: 9   },
+    { eq: '9 x 2',  ans: 18  },
+    { eq: '9 x 3',  ans: 27  },
+    { eq: '9 x 4',  ans: 36  },
+    { eq: '9 x 5',  ans: 45  },
+    { eq: '9 x 6',  ans: 54  },
+    { eq: '9 x 7',  ans: 63  },
+    { eq: '9 x 8',  ans: 72  },
+    { eq: '9 x 9',  ans: 81  },
+    { eq: '9 x 10', ans: 90  },
+    { eq: '9 x 11', ans: 99  },
+    { eq: '9 x 12', ans: 108 }
+  ];
+
+  var divFacts = [
+    { eq: '9 &divide; 9',   ans: 1  },
+    { eq: '18 &divide; 9',  ans: 2  },
+    { eq: '27 &divide; 9',  ans: 3  },
+    { eq: '36 &divide; 9',  ans: 4  },
+    { eq: '45 &divide; 9',  ans: 5  },
+    { eq: '54 &divide; 9',  ans: 6  },
+    { eq: '63 &divide; 9',  ans: 7  },
+    { eq: '72 &divide; 9',  ans: 8  },
+    { eq: '81 &divide; 9',  ans: 9  },
+    { eq: '90 &divide; 9',  ans: 10 }
+  ];
+
+  var wordProblems = [
+    { text: 'Jake is prepping for the season. He has <b>9 bikes</b> in his garage and each one needs <b>3 new tires</b>. How many tires does he need to order?', ans: 27,  hint: 'Hint: 9 x 3' },
+    { text: 'The track has <b>7 jumps</b> per lap. Jake completed <b>9 laps</b> during practice. How many jumps did he hit in total?',       ans: 63,  hint: 'Hint: 9 x 7' },
+    { text: 'There are <b>9 riders</b> in the race. Each rider carries <b>5 water bottles</b>. How many water bottles are there altogether?', ans: 45,  hint: 'Hint: 9 x 5' },
+    { text: 'Jake earns <b>9 points</b> for every race he wins. He won <b>6 races</b> this season. How many points did he earn?',            ans: 54,  hint: 'Hint: 9 x 6' },
+    { text: 'Each dirt bike needs <b>9 bolts</b> on its engine cover. Jake is fixing <b>4 bikes</b>. How many bolts does he need in all?',   ans: 36,  hint: 'Hint: 9 x 4' },
+    { text: 'Jake trains <b>9 hours</b> every week. How many hours will he have trained after <b>8 weeks</b>?',                              ans: 72,  hint: 'Hint: 9 x 8' },
+    { text: 'His sponsor ships <b>9 helmets</b> per box. <b>2 boxes</b> arrive at the track. How many helmets came in total?',               ans: 18,  hint: 'Hint: 9 x 2' },
+    { text: 'There are <b>9 tires</b> in each stack. Jake ordered <b>9 stacks</b> for the season. How many tires is that?',                  ans: 81,  hint: 'Hint: 9 x 9' },
+    { text: 'The training track charges <b>$9 per lap</b>. Jake rode <b>10 laps</b> today. How much does he owe?',                          ans: 90,  hint: 'Hint: 9 x 10' },
+    { text: "Jake's crew washes <b>9 bikes</b> before every race. There are <b>12 races</b> in the season. How many bike washes total?",     ans: 108, hint: 'Hint: 9 x 12' }
+  ];
+
+  var scores = {
+    mult: { answered: 0, correct: 0, total: 12,  graded: [] },
+    div:  { answered: 0, correct: 0, total: 10,  graded: [] },
+    mix:  { answered: 0, correct: 0, total: 12,  graded: [] },
+    wp:   { answered: 0, correct: 0, total: 10,  graded: [] }
+  };
+
+  function shuffle(arr) {
+    var a = arr.slice();
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+    }
+    return a;
+  }
+
+  function updateBar(panel) {
+    var sc = scores[panel];
+    document.getElementById(panel + '-correct').textContent  = sc.correct  + ' / ' + sc.total;
+    document.getElementById(panel + '-answered').textContent = sc.answered + ' / ' + sc.total;
+    var pct = sc.total ? (sc.correct / sc.total) * 100 : 0;
+    document.getElementById(panel + '-fill').style.width = pct + '%';
+  }
+
+  function gradeInput(input, iconEl, hintEl, hintText, panel) {
+    var raw = input.value.trim();
+    if (!raw) return;
+    var val = parseInt(raw, 10);
+    var ans = parseInt(input.getAttribute('data-answer'), 10);
+    var ok  = (val === ans);
+    var sc  = scores[panel];
+
+    var idx = sc.graded.indexOf(input);
+    var wasGraded = idx !== -1;
+    var wasCorrect = wasGraded ? input.getAttribute('data-was-correct') === '1' : false;
+
+    if (!wasGraded) {
+      sc.graded.push(input);
+      sc.answered++;
+      if (ok) sc.correct++;
+    } else {
+      if (wasCorrect && !ok) sc.correct--;
+      if (!wasCorrect && ok) sc.correct++;
+    }
+
+    input.setAttribute('data-was-correct', ok ? '1' : '0');
+    input.className = 'blank ' + (ok ? 'correct' : 'incorrect');
+    iconEl.textContent = ok ? '✅' : '❌';
+    iconEl.className = 'fb-icon show';
+    if (hintEl) hintEl.textContent = ok ? '' : hintText;
+
+    if (!ok) {
+      setTimeout(function() {
+        if (document.activeElement !== input) {
+          input.value = '';
+          input.className = 'blank';
+          iconEl.textContent = '';
+          iconEl.className = 'fb-icon';
+          if (hintEl) hintEl.textContent = '';
+          var rmIdx = sc.graded.indexOf(input);
+          if (rmIdx !== -1) sc.graded.splice(rmIdx, 1);
+          sc.answered--;
+          updateBar(panel);
+        }
+      }, 1200);
+    }
+    updateBar(panel);
+  }
+
+  function buildFactRows(facts, listId, keyId, panel) {
+    var list = document.getElementById(listId);
+    var key  = document.getElementById(keyId);
+    for (var i = 0; i < facts.length; i++) {
+      var f = facts[i];
+      var row = document.createElement('div');
+      row.className = 'fact-row';
+      row.innerHTML =
+        '<div class="fact-num">#' + (i+1) + '</div>' +
+        '<div class="fact-eq"><span>' + f.eq + ' =</span>' +
+        '<input class="blank" type="number" inputmode="numeric" min="0" placeholder="?" data-answer="' + f.ans + '"></div>' +
+        '<div class="fb-icon"></div>';
+      list.appendChild(row);
+
+      (function(inp, icon, pnl, lid) {
+        inp.addEventListener('blur', function() { gradeInput(inp, icon, null, '', pnl); });
+        inp.addEventListener('keydown', function(e) {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            gradeInput(inp, icon, null, '', pnl);
+            var all = document.querySelectorAll('#' + lid + ' input.blank');
+            var allArr = Array.prototype.slice.call(all);
+            var idx = allArr.indexOf(inp);
+            if (idx < allArr.length - 1) allArr[idx + 1].focus();
+          }
+        });
+      })(row.querySelector('input'), row.querySelector('.fb-icon'), panel, listId);
+
+      var ki = document.createElement('div');
+      ki.className = 'answer-item';
+      ki.innerHTML = (i+1) + '. ' + f.eq + ' = <b>' + f.ans + '</b>';
+      key.appendChild(ki);
+    }
+  }
+
+  function buildWordProblems() {
+    var list = document.getElementById('wp-list');
+    var key  = document.getElementById('wp-key');
+    for (var i = 0; i < wordProblems.length; i++) {
+      var p = wordProblems[i];
+      var card = document.createElement('div');
+      card.className = 'wp-card';
+      card.innerHTML =
+        '<div class="wp-num">PROBLEM #' + (i+1) + '</div>' +
+        '<div class="wp-text">' + p.text + '</div>' +
+        '<div class="wp-answer-row">' +
+          '<span class="wp-label">Answer:</span>' +
+          '<input class="blank" type="number" inputmode="numeric" min="0" placeholder="?" data-answer="' + p.ans + '">' +
+          '<div class="fb-icon"></div>' +
+        '</div>' +
+        '<div class="wp-hint"></div>';
+      list.appendChild(card);
+
+      (function(inp, icon, hintEl, hintText) {
+        inp.addEventListener('blur', function() { gradeInput(inp, icon, hintEl, hintText, 'wp'); });
+        inp.addEventListener('keydown', function(e) {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            gradeInput(inp, icon, hintEl, hintText, 'wp');
+            var all = document.querySelectorAll('#wp-list input.blank');
+            var allArr = Array.prototype.slice.call(all);
+            var idx = allArr.indexOf(inp);
+            if (idx < allArr.length - 1) allArr[idx + 1].focus();
+          }
+        });
+      })(card.querySelector('input'), card.querySelector('.fb-icon'), card.querySelector('.wp-hint'), p.hint);
+
+      var ki = document.createElement('div');
+      ki.className = 'answer-item';
+      ki.innerHTML = (i+1) + '. <b>' + p.ans + '</b> &nbsp;(' + p.hint + ')';
+      key.appendChild(ki);
+    }
+  }
+
+  function switchTab(panel) {
+    var panels = ['mult','div','mix','wp'];
+    for (var i = 0; i < panels.length; i++) {
+      document.getElementById('panel-' + panels[i]).classList.remove('active');
+      document.getElementById('tab-'   + panels[i]).classList.remove('active');
+    }
+    document.getElementById('panel-' + panel).classList.add('active');
+    document.getElementById('tab-'   + panel).classList.add('active');
+  }
+
+  // Tab buttons
+  document.getElementById('tab-mult').addEventListener('click', function() { switchTab('mult'); });
+  document.getElementById('tab-div' ).addEventListener('click', function() { switchTab('div');  });
+  document.getElementById('tab-mix' ).addEventListener('click', function() { switchTab('mix');  });
+  document.getElementById('tab-wp'  ).addEventListener('click', function() { switchTab('wp');   });
+
+  // Nav buttons
+  document.getElementById('go-div' ).addEventListener('click', function() { switchTab('div');  });
+  document.getElementById('go-mult').addEventListener('click', function() { switchTab('mult'); });
+  document.getElementById('go-mix' ).addEventListener('click', function() { switchTab('mix');  });
+  document.getElementById('go-div2').addEventListener('click', function() { switchTab('div');  });
+  document.getElementById('go-wp'  ).addEventListener('click', function() { switchTab('wp');   });
+  document.getElementById('go-mix2').addEventListener('click', function() { switchTab('mix');  });
+
+  // Build pages
+  buildFactRows(multFacts,        'mult-list', 'mult-key', 'mult');
+  buildFactRows(shuffle(divFacts), 'div-list',  'div-key',  'div');
+  buildFactRows(shuffle(multFacts),'mix-list',  'mix-key',  'mix');
+  buildWordProblems();
+})();
+</script>
+</body>
+</html>
