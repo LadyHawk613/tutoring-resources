@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The 4s Treasure Hunt</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Pirata+One&family=Baloo+2:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ocean-deep:#0A3D62;
+    --ocean-mid:#1E6091;
+    --ocean-light:#4FA5C9;
+    --parchment:#F2E4C8;
+    --parchment-dark:#DEC9A0;
+    --gold:#E8A93B;
+    --gold-bright:#FFC94D;
+    --red:#B33A3A;
+    --wood:#5C3A21;
+    --wood-dark:#3E2723;
+    --ink:#2B1B10;
+    --seafoam:#4FB3A9;
+    --good:#3E8E5A;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    min-height:100vh;
+    font-family:'Baloo 2', sans-serif;
+    background:
+      radial-gradient(ellipse at top, var(--ocean-light) 0%, var(--ocean-mid) 45%, var(--ocean-deep) 100%);
+    color:var(--ink);
+    overflow-x:hidden;
+    position:relative;
+  }
+  .pirata{font-family:'Pirata One', serif;}
+
+  /* ambient waves */
+  .waves{
+    position:fixed; left:0; right:0; bottom:0; height:120px; z-index:0; opacity:.55; pointer-events:none;
+  }
+
+  .stage{
+    position:relative;
+    z-index:1;
+    max-width:820px;
+    margin:0 auto;
+    padding:22px 16px 50px;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+  }
+
+  .banner{
+    text-align:center;
+    margin-bottom:6px;
+  }
+  .banner h1{
+    font-family:'Pirata One', serif;
+    font-size:clamp(2rem, 6vw, 3.4rem);
+    color:var(--gold-bright);
+    text-shadow: 0 3px 0 var(--wood-dark), 0 6px 10px rgba(0,0,0,.45);
+    margin:6px 0 2px;
+    letter-spacing:1px;
+  }
+  .banner p{
+    color:var(--parchment);
+    font-weight:600;
+    margin:0;
+    opacity:.9;
+  }
+
+  .coin-tally{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    background:rgba(10,20,30,.35);
+    border:2px solid var(--gold);
+    border-radius:999px;
+    padding:6px 16px 6px 8px;
+    color:var(--gold-bright);
+    font-weight:800;
+    font-size:1.05rem;
+    margin-top:10px;
+  }
+  .coin-icon{
+    width:26px;height:26px;border-radius:50%;
+    background:radial-gradient(circle at 35% 30%, #FFE9A8, var(--gold) 60%, #A97316 100%);
+    border:2px solid #8a5a12;
+    display:inline-block;
+    box-shadow:0 0 0 2px rgba(0,0,0,.1) inset;
+  }
+
+  /* parchment card */
+  .card{
+    background:
+      linear-gradient(180deg, var(--parchment), var(--parchment-dark));
+    border-radius:18px;
+    border:6px solid var(--wood);
+    box-shadow: 0 12px 0 rgba(0,0,0,.25), 0 20px 40px rgba(0,0,0,.35);
+    padding:26px 22px;
+    width:100%;
+    margin-top:22px;
+    position:relative;
+  }
+  .card::before{
+    content:"";
+    position:absolute; inset:8px;
+    border:2px dashed rgba(62,39,20,.35);
+    border-radius:12px;
+    pointer-events:none;
+  }
+
+  /* MAP / MENU */
+  .map-title{
+    text-align:center;
+    font-family:'Pirata One', serif;
+    font-size:1.6rem;
+    color:var(--wood-dark);
+    margin:0 0 18px;
+  }
+  .islands{
+    display:flex;
+    flex-direction:column;
+    gap:16px;
+  }
+  .island{
+    display:flex;
+    align-items:center;
+    gap:16px;
+    background:rgba(255,255,255,.35);
+    border:3px solid var(--wood);
+    border-radius:14px;
+    padding:14px 16px;
+    cursor:pointer;
+    transition: transform .15s ease, box-shadow .15s ease;
+    text-align:left;
+  }
+  .island:hover:not(.locked){
+    transform: translateY(-3px);
+    box-shadow:0 8px 0 rgba(0,0,0,.15);
+  }
+  .island.locked{
+    opacity:.55;
+    cursor:not-allowed;
+    filter:grayscale(.4);
+  }
+  .island-badge{
+    width:58px;height:58px;flex:0 0 58px;
+    border-radius:50%;
+    background:var(--wood);
+    color:var(--gold-bright);
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Pirata One',serif;
+    font-size:1.6rem;
+    border:3px solid var(--gold);
+  }
+  .island-info{flex:1;}
+  .island-info h3{margin:0 0 3px; font-family:'Pirata One',serif; font-size:1.3rem; color:var(--wood-dark);}
+  .island-info p{margin:0; font-size:.92rem; color:var(--ink); opacity:.85;}
+  .island-stars{font-size:1.1rem; letter-spacing:2px; margin-top:4px;}
+  .lock-icon{font-size:1.4rem;}
+
+  /* GAME SCREEN */
+  .game-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:14px;
+    flex-wrap:wrap;
+    gap:8px;
+  }
+  .level-name{
+    font-family:'Pirata One', serif;
+    font-size:1.4rem;
+    color:var(--wood-dark);
+  }
+  .progress-trail{
+    display:flex;
+    gap:5px;
+    flex-wrap:wrap;
+  }
+  .trail-dot{
+    width:16px;height:16px;border-radius:50%;
+    background:var(--parchment-dark);
+    border:2px solid var(--wood);
+  }
+  .trail-dot.done{ background:var(--good); }
+  .trail-dot.current{ background:var(--gold-bright); box-shadow:0 0 0 3px rgba(232,169,59,.4);}
+
+  .timer-wrap{
+    width:100%;
+    height:12px;
+    background:rgba(62,39,20,.2);
+    border-radius:8px;
+    overflow:hidden;
+    margin-bottom:18px;
+    border:2px solid var(--wood);
+    display:none;
+  }
+  .timer-bar{
+    height:100%;
+    background:linear-gradient(90deg, var(--seafoam), var(--good));
+    width:100%;
+    transition: width linear;
+  }
+  .timer-bar.danger{ background:linear-gradient(90deg,#e0793a, var(--red)); }
+
+  .question-box{
+    text-align:center;
+    padding:20px 10px 26px;
+  }
+  .question-box .mascot{
+    font-size:2.2rem;
+    margin-bottom:4px;
+  }
+  .speech{
+    font-size:.95rem;
+    font-weight:600;
+    color:var(--wood-dark);
+    min-height:1.3em;
+    margin-bottom:10px;
+  }
+  .fact{
+    font-family:'Pirata One', serif;
+    font-size:clamp(2.4rem, 9vw, 3.6rem);
+    color:var(--wood-dark);
+    margin:8px 0 22px;
+    text-shadow:0 2px 0 rgba(255,255,255,.4);
+  }
+
+  .choices{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:14px;
+    max-width:480px;
+    margin:0 auto;
+  }
+  .choice-btn{
+    font-family:'Baloo 2', sans-serif;
+    font-weight:800;
+    font-size:1.5rem;
+    padding:18px 8px;
+    border-radius:12px;
+    border:3px solid var(--wood);
+    background:linear-gradient(180deg,#8a5a2f,#6b4523);
+    color:var(--parchment);
+    cursor:pointer;
+    box-shadow:0 6px 0 var(--wood-dark);
+    transition: transform .08s ease, box-shadow .08s ease;
+  }
+  .choice-btn:hover:not(:disabled){ transform:translateY(-2px); }
+  .choice-btn:active:not(:disabled){ transform:translateY(4px); box-shadow:0 2px 0 var(--wood-dark); }
+  .choice-btn:disabled{ cursor:default; }
+  .choice-btn.correct{ background:linear-gradient(180deg,#4CAF6D,var(--good)); border-color:#2e5b3c; }
+  .choice-btn.wrong{ background:linear-gradient(180deg,#d9614f,var(--red)); border-color:#6e2020; }
+
+  .typed-row{
+    display:flex;
+    justify-content:center;
+    gap:10px;
+    align-items:center;
+    flex-wrap:wrap;
+  }
+  .typed-input{
+    font-family:'Baloo 2', sans-serif;
+    font-weight:800;
+    font-size:1.8rem;
+    width:120px;
+    text-align:center;
+    padding:12px;
+    border-radius:12px;
+    border:3px solid var(--wood);
+    background:#fffdf5;
+  }
+  .go-btn{
+    font-family:'Baloo 2', sans-serif;
+    font-weight:800;
+    font-size:1.2rem;
+    padding:14px 24px;
+    border-radius:12px;
+    border:3px solid var(--wood);
+    background:linear-gradient(180deg, var(--gold-bright), var(--gold));
+    color:var(--wood-dark);
+    cursor:pointer;
+    box-shadow:0 6px 0 #8a5a12;
+  }
+  .go-btn:active{ transform:translateY(4px); box-shadow:0 2px 0 #8a5a12; }
+
+  .feedback{
+    margin-top:16px;
+    font-weight:700;
+    font-size:1.05rem;
+    min-height:1.4em;
+  }
+  .feedback.good{ color:var(--good); }
+  .feedback.bad{ color:var(--red); }
+
+  /* RESULT SCREEN */
+  .result{
+    text-align:center;
+    padding:10px 6px 6px;
+  }
+  .chest{
+    font-size:4.4rem;
+    margin:6px 0;
+  }
+  .stars-big{
+    font-size:2.2rem;
+    letter-spacing:6px;
+    margin:6px 0 14px;
+  }
+  .result h2{
+    font-family:'Pirata One', serif;
+    color:var(--wood-dark);
+    margin:4px 0;
+    font-size:1.9rem;
+  }
+  .result p{ margin:4px 0 16px; font-weight:600; }
+  .result-buttons{
+    display:flex;
+    gap:12px;
+    justify-content:center;
+    flex-wrap:wrap;
+  }
+  .btn{
+    font-family:'Baloo 2', sans-serif;
+    font-weight:800;
+    font-size:1rem;
+    padding:12px 20px;
+    border-radius:12px;
+    border:3px solid var(--wood);
+    cursor:pointer;
+    box-shadow:0 5px 0 var(--wood-dark);
+  }
+  .btn.primary{ background:linear-gradient(180deg, var(--gold-bright), var(--gold)); color:var(--wood-dark);}
+  .btn.ghost{ background:transparent; color:var(--parchment); border-color:var(--parchment); box-shadow:0 5px 0 rgba(255,255,255,.3);}
+  .btn:active{ transform:translateY(3px); box-shadow:0 2px 0 var(--wood-dark);}
+
+  .hidden{ display:none !important; }
+
+  .back-link{
+    background:none;
+    border:none;
+    color:var(--parchment);
+    font-weight:700;
+    cursor:pointer;
+    font-family:'Baloo 2', sans-serif;
+    font-size:.95rem;
+    margin-bottom:8px;
+    align-self:flex-start;
+    padding:4px 0;
+  }
+
+  @media (max-width:480px){
+    .choices{ grid-template-columns:1fr 1fr; gap:10px; }
+    .choice-btn{ font-size:1.25rem; padding:14px 6px; }
+  }
+</style>
+</head>
+<body>
+
+<svg class="waves" viewBox="0 0 1440 120" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+  <path fill="#083152" d="M0,64 C240,100 480,20 720,50 C960,80 1200,110 1440,60 L1440,120 L0,120 Z"></path>
+  <path fill="#0A3D62" opacity="0.7" d="M0,90 C300,50 600,110 900,80 C1100,60 1300,90 1440,80 L1440,120 L0,120 Z"></path>
+</svg>
+
+<div class="stage">
+
+  <div class="banner">
+    <h1>⚓ The 4s Treasure Hunt ⚓</h1>
+    <p>Sail the seas and master your 4 times tables, matey!</p>
+    <div class="coin-tally"><span class="coin-icon"></span><span id="coinCount">0</span> doubloons collected</div>
+  </div>
+
+  <!-- MENU SCREEN -->
+  <div class="card" id="screen-menu">
+    <div class="map-title">🗺️ Choose Your Voyage</div>
+    <div class="islands">
+      <div class="island" id="island-1" onclick="startLevel(1)">
+        <div class="island-badge">I</div>
+        <div class="island-info">
+          <h3>Cabin Boy Training</h3>
+          <p>Multiple choice · 10 facts · No rush</p>
+          <div class="island-stars" id="stars-1">☆☆☆</div>
+        </div>
+      </div>
+      <div class="island locked" id="island-2" onclick="startLevel(2)">
+        <div class="island-badge">II</div>
+        <div class="island-info">
+          <h3>Navigator's Watch</h3>
+          <p>Multiple choice · 10 facts · 20-second tides</p>
+          <div class="island-stars" id="stars-2">☆☆☆</div>
+        </div>
+        <div class="lock-icon">🔒</div>
+      </div>
+      <div class="island locked" id="island-3" onclick="startLevel(3)">
+        <div class="island-badge">III</div>
+        <div class="island-info">
+          <h3>Captain's Treasure Hunt</h3>
+          <p>Type the answer · all 12 facts · 15-second tides</p>
+          <div class="island-stars" id="stars-3">☆☆☆</div>
+        </div>
+        <div class="lock-icon">🔒</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- GAME SCREEN -->
+  <div class="card hidden" id="screen-game">
+    <button class="back-link" onclick="confirmQuit()">← back to map</button>
+    <div class="game-header">
+      <div class="level-name" id="gameLevelName">Level</div>
+      <div class="progress-trail" id="progressTrail"></div>
+    </div>
+    <div class="timer-wrap" id="timerWrap"><div class="timer-bar" id="timerBar"></div></div>
+    <div class="question-box">
+      <div class="mascot">🦜</div>
+      <div class="speech" id="speech">Ready when ye are!</div>
+      <div class="fact" id="factText">4 × 7 = ?</div>
+
+      <div class="choices" id="choicesWrap"></div>
+
+      <div class="typed-row hidden" id="typedWrap">
+        <input class="typed-input" id="typedInput" type="number" inputmode="numeric" placeholder="?" autocomplete="off">
+        <button class="go-btn" onclick="submitTyped()">Check ⚔️</button>
+      </div>
+
+      <div class="feedback" id="feedback"></div>
+    </div>
+  </div>
+
+  <!-- RESULT SCREEN -->
+  <div class="card hidden" id="screen-result">
+    <div class="result">
+      <div class="chest" id="chestEmoji">🧰</div>
+      <h2 id="resultTitle">Voyage Complete!</h2>
+      <div class="stars-big" id="resultStars">★★★</div>
+      <p id="resultDetail">You got 10 out of 10 correct.</p>
+      <div class="result-buttons">
+        <button class="btn ghost" onclick="goMenu()">Back to Map</button>
+        <button class="btn primary" onclick="retryLevel()">Sail Again</button>
+        <button class="btn primary hidden" id="nextLevelBtn" onclick="goNextLevel()">Next Island →</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+/* ---------- STATE ---------- */
+let coins = 0;
+let progress = { 1:{done:false, stars:0}, 2:{done:false, stars:0}, 3:{done:false, stars:0} };
+
+const LEVELS = {
+  1:{ name:"Cabin Boy Training", mode:"choice", count:10, timer:0, distractorSpread:"wide" },
+  2:{ name:"Navigator's Watch", mode:"choice", count:10, timer:20, distractorSpread:"tight" },
+  3:{ name:"Captain's Treasure Hunt", mode:"typed", count:12, timer:15, distractorSpread:null }
+};
+
+let session = null; // active game session
+
+/* ---------- HELPERS ---------- */
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]]=[a[j],a[i]];
+  }
+  return a;
+}
+
+function pickN(levelNum){
+  const nums = shuffle([1,2,3,4,5,6,7,8,9,10,11,12]);
+  const cfg = LEVELS[levelNum];
+  if(cfg.count <= 12) return nums.slice(0, cfg.count);
+  // cycle if we ever need more than 12
+  let out = nums.slice();
+  while(out.length < cfg.count){ out = out.concat(shuffle(nums)); }
+  return out.slice(0, cfg.count);
+}
+
+function makeChoices(n, spread){
+  const correct = 4*n;
+  const pool = new Set();
+  const candidates = [];
+  if(n-1>=1) candidates.push(4*(n-1));
+  if(n+1<=12) candidates.push(4*(n+1));
+  candidates.push(correct+4, correct-4);
+  candidates.push(4+n); // addition mistake
+  candidates.push(n*n); // squared mistake
+  if(spread==="tight"){
+    if(n-2>=1) candidates.push(4*(n-2));
+    if(n+2<=12) candidates.push(4*(n+2));
+  } else {
+    candidates.push(correct + (Math.random()<0.5?8:-8));
+    candidates.push(correct + 12);
+  }
+  const distractors = [];
+  for(const c of shuffle(candidates)){
+    if(c>0 && c!==correct && !pool.has(c)){
+      pool.add(c);
+      distractors.push(c);
+      if(distractors.length===3) break;
+    }
+  }
+  // fallback fill if somehow short
+  let filler = correct+16;
+  while(distractors.length<3){
+    if(filler>0 && filler!==correct && !pool.has(filler)){
+      pool.add(filler); distractors.push(filler);
+    }
+    filler += 4;
+  }
+  return shuffle([correct, ...distractors]);
+}
+
+const ENCOURAGE_GOOD = ["Arrr, that be right!", "Shiver me timbers, correct!", "X marks the spot!", "Ye have the eye of a true navigator!", "Gold star, sailor!"];
+const ENCOURAGE_BAD = ["Not quite, matey.", "Close, but the tide took that one.", "Walk the plank on that guess... try the next!", "No treasure there, but keep sailing!"];
+
+function randomOf(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+
+/* ---------- SCREEN CONTROL ---------- */
+function showScreen(id){
+  ["screen-menu","screen-game","screen-result"].forEach(s=>{
+    document.getElementById(s).classList.toggle("hidden", s!==id);
+  });
+}
+
+function refreshMenu(){
+  document.getElementById("coinCount").textContent = coins;
+  for(let i=1;i<=3;i++){
+    const st = progress[i].stars;
+    document.getElementById("stars-"+i).textContent = "★".repeat(st) + "☆".repeat(3-st);
+  }
+  document.getElementById("island-2").classList.toggle("locked", !progress[1].done);
+  document.getElementById("island-3").classList.toggle("locked", !progress[2].done);
+}
+
+function goMenu(){
+  clearTimer();
+  refreshMenu();
+  showScreen("screen-menu");
+}
+
+function confirmQuit(){
+  clearTimer();
+  goMenu();
+}
+
+/* ---------- GAME FLOW ---------- */
+function startLevel(levelNum){
+  if(levelNum===2 && !progress[1].done) return;
+  if(levelNum===3 && !progress[2].done) return;
+
+  const cfg = LEVELS[levelNum];
+  session = {
+    level: levelNum,
+    cfg: cfg,
+    questions: pickN(levelNum),
+    index: 0,
+    correctCount: 0,
+    timerInterval: null
+  };
+  document.getElementById("gameLevelName").textContent = "Isle "+ (levelNum===1?"I":levelNum===2?"II":"III") +" — " + cfg.name;
+  buildTrail();
+  showScreen("screen-game");
+  renderQuestion();
+}
+
+function buildTrail(){
+  const wrap = document.getElementById("progressTrail");
+  wrap.innerHTML = "";
+  for(let i=0;i<session.cfg.count;i++){
+    const d = document.createElement("div");
+    d.className = "trail-dot";
+    d.id = "dot-"+i;
+    wrap.appendChild(d);
+  }
+}
+
+function updateTrail(){
+  for(let i=0;i<session.cfg.count;i++){
+    const d = document.getElementById("dot-"+i);
+    d.classList.remove("current","done");
+    if(i < session.index) d.classList.add("done");
+    else if(i === session.index) d.classList.add("current");
+  }
+}
+
+function clearTimer(){
+  if(session && session.timerInterval){
+    clearInterval(session.timerInterval);
+    session.timerInterval = null;
+  }
+}
+
+function renderQuestion(){
+  clearTimer();
+  updateTrail();
+  const n = session.questions[session.index];
+  document.getElementById("factText").textContent = "4 × " + n + " = ?";
+  document.getElementById("speech").textContent = "Ready when ye are!";
+  document.getElementById("feedback").textContent = "";
+  document.getElementById("feedback").className = "feedback";
+
+  const choicesWrap = document.getElementById("choicesWrap");
+  const typedWrap = document.getElementById("typedWrap");
+
+  if(session.cfg.mode === "choice"){
+    typedWrap.classList.add("hidden");
+    choicesWrap.classList.remove("hidden");
+    choicesWrap.innerHTML = "";
+    const opts = makeChoices(n, session.cfg.distractorSpread);
+    opts.forEach(opt=>{
+      const btn = document.createElement("button");
+      btn.className = "choice-btn";
+      btn.textContent = opt;
+      btn.onclick = ()=>handleAnswer(opt === 4*n, btn, 4*n);
+      choicesWrap.appendChild(btn);
+    });
+  } else {
+    choicesWrap.classList.add("hidden");
+    typedWrap.classList.remove("hidden");
+    const input = document.getElementById("typedInput");
+    input.value = "";
+    input.disabled = false;
+    input.focus();
+    input.onkeydown = (e)=>{ if(e.key==="Enter") submitTyped(); };
+  }
+
+  const timerWrap = document.getElementById("timerWrap");
+  if(session.cfg.timer > 0){
+    timerWrap.style.display = "block";
+    const bar = document.getElementById("timerBar");
+    bar.classList.remove("danger");
+    bar.style.transition = "none";
+    bar.style.width = "100%";
+    void bar.offsetWidth;
+    bar.style.transition = "width linear " + session.cfg.timer + "s";
+    requestAnimationFrame(()=>{ bar.style.width = "0%"; });
+
+    let elapsed = 0;
+    session.timerInterval = setInterval(()=>{
+      elapsed += 0.5;
+      if(elapsed >= session.cfg.timer * 0.6) bar.classList.add("danger");
+      if(elapsed >= session.cfg.timer){
+        clearTimer();
+        timeExpired(n);
+      }
+    }, 500);
+  } else {
+    timerWrap.style.display = "none";
+  }
+}
+
+function timeExpired(n){
+  const correct = 4*n;
+  document.getElementById("speech").textContent = "The tide came in too fast!";
+  const fb = document.getElementById("feedback");
+  fb.textContent = "Time's up! The answer be " + correct + ".";
+  fb.className = "feedback bad";
+  disableInputs();
+  setTimeout(nextStep, 1400);
+}
+
+function disableInputs(){
+  document.querySelectorAll(".choice-btn").forEach(b=> b.disabled = true);
+  const input = document.getElementById("typedInput");
+  if(input) input.disabled = true;
+}
+
+function handleAnswer(isCorrect, btnEl, correctVal){
+  clearTimer();
+  disableInputs();
+  const fb = document.getElementById("feedback");
+  if(isCorrect){
+    session.correctCount++;
+    coins += 5;
+    if(btnEl) btnEl.classList.add("correct");
+    document.getElementById("speech").textContent = randomOf(ENCOURAGE_GOOD);
+    fb.textContent = "+5 doubloons!";
+    fb.className = "feedback good";
+  } else {
+    if(btnEl) btnEl.classList.add("wrong");
+    document.querySelectorAll(".choice-btn").forEach(b=>{
+      if(parseInt(b.textContent,10) === correctVal) b.classList.add("correct");
+    });
+    document.getElementById("speech").textContent = randomOf(ENCOURAGE_BAD);
+    fb.textContent = "The answer be " + correctVal + ".";
+    fb.className = "feedback bad";
+  }
+  document.getElementById("coinCount").textContent = coins;
+  setTimeout(nextStep, 1200);
+}
+
+function submitTyped(){
+  const input = document.getElementById("typedInput");
+  if(input.disabled) return;
+  const n = session.questions[session.index];
+  const correct = 4*n;
+  const val = parseInt(input.value, 10);
+  handleAnswer(val === correct, null, correct);
+}
+
+function nextStep(){
+  session.index++;
+  if(session.index >= session.cfg.count){
+    finishLevel();
+  } else {
+    renderQuestion();
+  }
+}
+
+function finishLevel(){
+  clearTimer();
+  const accuracy = session.correctCount / session.cfg.count;
+  let stars = 0;
+  if(accuracy === 1) stars = 3;
+  else if(accuracy >= 0.7) stars = 2;
+  else if(accuracy >= 0.4) stars = 1;
+
+  const bonus = stars * 15;
+  coins += bonus;
+
+  progress[session.level].done = true;
+  progress[session.level].stars = Math.max(progress[session.level].stars, stars);
+
+  document.getElementById("coinCount").textContent = coins;
+  document.getElementById("resultTitle").textContent =
+    stars === 3 ? "Legendary Voyage!" :
+    stars === 2 ? "Fine Sailing!" :
+    stars === 1 ? "Land Ahoy!" : "Back to the Crow's Nest";
+  document.getElementById("resultStars").textContent = "★".repeat(stars) + "☆".repeat(3-stars);
+  document.getElementById("resultDetail").textContent =
+    "Ye got " + session.correctCount + " of " + session.cfg.count + " correct, and earned " + bonus + " bonus doubloons.";
+  document.getElementById("chestEmoji").textContent = stars >= 2 ? "🧰✨" : "🧰";
+
+  const nextBtn = document.getElementById("nextLevelBtn");
+  if(session.level < 3){
+    nextBtn.classList.remove("hidden");
+  } else {
+    nextBtn.classList.add("hidden");
+  }
+
+  showScreen("screen-result");
+}
+
+function retryLevel(){
+  startLevel(session.level);
+}
+
+function goNextLevel(){
+  const next = session.level + 1;
+  if(next <= 3) startLevel(next);
+  else goMenu();
+}
+
+/* ---------- INIT ---------- */
+refreshMenu();
+</script>
+
+</body>
+</html>
