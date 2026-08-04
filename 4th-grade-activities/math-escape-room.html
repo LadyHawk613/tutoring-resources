@@ -1,54 +1,40 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-<title>Math Escape Room</title>
+
+<title>Math Adventure Quest</title>
 
 <style>
 
 body{
-font-family:Arial, sans-serif;
-background:#111827;
+font-family:Arial;
+background:#0f172a;
 color:white;
 text-align:center;
 }
 
 h1{
 color:#facc15;
-font-size:40px;
+font-size:38px;
 }
 
-.room{
-background:#1f2937;
-border-radius:20px;
+.card{
+background:#1e293b;
 padding:25px;
 margin:20px auto;
+border-radius:20px;
 max-width:700px;
-box-shadow:0 0 20px black;
-}
-
-.lock{
-font-size:40px;
-}
-
-.question{
-font-size:22px;
-margin:15px;
-}
-
-input{
-font-size:20px;
-padding:8px;
-width:100px;
-text-align:center;
+box-shadow:0 0 15px black;
 }
 
 button{
-background:#22c55e;
-color:white;
-border:none;
-padding:12px 25px;
+padding:12px 20px;
+margin:8px;
 font-size:18px;
-border-radius:10px;
+border-radius:12px;
+border:none;
+background:#38bdf8;
 cursor:pointer;
 }
 
@@ -56,24 +42,32 @@ button:hover{
 transform:scale(1.05);
 }
 
+input{
+padding:10px;
+font-size:20px;
+width:120px;
+text-align:center;
+}
+
 .hidden{
 display:none;
 }
 
-.correct{
+.good{
 color:#4ade80;
 font-size:22px;
 }
 
-.wrong{
+.bad{
 color:#f87171;
 font-size:22px;
 }
 
-#progress{
-font-size:20px;
-color:#60a5fa;
+#stats{
+font-size:22px;
+color:#fde68a;
 }
+
 
 </style>
 
@@ -82,256 +76,386 @@ color:#60a5fa;
 
 <body>
 
-<h1>🔐 The Great Math Escape Room</h1>
+
+<h1>⚔️ Math Adventure Quest ⚔️</h1>
+
+
+<div id="stats">
+⭐ Coins: <span id="coins">0</span>
+</div>
+
+
+<div class="card" id="start">
+
+<h2>The Lost Math Kingdom</h2>
 
 <p>
-You are trapped in the Math Castle!
-Solve each challenge to unlock the doors.
+You are the Math Hero!
+A magic crystal has been stolen.
+To recover it, you must travel through the kingdom and solve math challenges.
 </p>
 
-<div id="progress">
-Doors Opened: 0 / 6
+
+<button onclick="show('map')">
+Begin Adventure
+</button>
+
+
 </div>
 
 
-<div class="room" id="room1">
 
-<div class="lock">🔒</div>
 
-<h2>Door 1: Multiplication Machine</h2>
+<div class="card hidden" id="map">
 
-<div class="question">
-A robot needs 7 batteries.
-Each pack has 8 batteries.
-How many batteries are there?
+<h2>🗺️ Choose Your Path</h2>
+
+<p>
+Which challenge will you face first?
+</p>
+
+
+<button onclick="show('forest')">
+🌲 Fraction Forest
+</button>
+
+
+<button onclick="show('castle')">
+🏰 Multiplication Castle
+</button>
+
+
+<button onclick="show('cave')">
+💎 Geometry Cave
+</button>
+
+
 </div>
 
-<input id="answer1">
+
+
+
+
+<div class="card hidden" id="forest">
+
+<h2>🌲 Fraction Forest</h2>
+
+<p>
+A magic tree has 8 apples.
+You collect 4.
+What fraction did you collect?
+</p>
+
+
+<input id="forestAnswer">
+
 
 <br><br>
 
-<button onclick="check(1,56)">
-Unlock Door
+<button onclick="check('forest','1/2')">
+Solve
 </button>
 
-<p id="result1"></p>
+
+<p id="forestResult"></p>
+
 
 </div>
 
 
 
-<div class="room hidden" id="room2">
 
-<div class="lock">🔒</div>
 
-<h2>Door 2: Division Dungeon</h2>
+<div class="card hidden" id="castle">
 
-<div class="question">
-A wizard has 72 gems.
-He puts them equally into 9 boxes.
-How many gems per box?
-</div>
+<h2>🏰 Multiplication Castle</h2>
 
-<input id="answer2">
+<p>
+There are 6 towers.
+Each tower has 9 flags.
+How many flags?
+</p>
+
+
+<input id="castleAnswer">
+
 
 <br><br>
 
-<button onclick="check(2,8)">
-Unlock Door
+<button onclick="check('castle','54')">
+Solve
 </button>
 
-<p id="result2"></p>
+
+<p id="castleResult"></p>
 
 </div>
 
 
 
-<div class="room hidden" id="room3">
-
-<div class="lock">🔒</div>
-
-<h2>Door 3: Fraction Forest</h2>
-
-<div class="question">
-A pizza is cut into 8 pieces.
-You eat 4 pieces.
-What fraction did you eat?
-</div>
-
-<input id="answer3">
-
-<br><br>
-
-<button onclick="check(3,'1/2')">
-Unlock Door
-</button>
-
-<p id="result3"></p>
-
-</div>
 
 
 
-<div class="room hidden" id="room4">
+<div class="card hidden" id="cave">
 
-<div class="lock">🔒</div>
-
-<h2>Door 4: Place Value Vault</h2>
-
-<div class="question">
-What is the value of the 6 in:
-
-46,382
-</div>
-
-<input id="answer4">
-
-<br><br>
-
-<button onclick="check(4,6000)">
-Unlock Door
-</button>
-
-<p id="result4"></p>
-
-</div>
+<h2>💎 Geometry Cave</h2>
 
 
+<p>
+A treasure room is 8 feet long
+and 5 feet wide.
 
-<div class="room hidden" id="room5">
-
-<div class="lock">🔒</div>
-
-<h2>Door 5: Geometry Tower</h2>
-
-<div class="question">
-A rectangle is 9 feet long and 4 feet wide.
 What is the area?
-</div>
+</p>
 
-<input id="answer5">
+
+<input id="caveAnswer">
+
 
 <br><br>
 
-<button onclick="check(5,36)">
-Unlock Door
+<button onclick="check('cave','40')">
+Solve
 </button>
 
-<p id="result5"></p>
+
+<p id="caveResult"></p>
+
 
 </div>
 
 
 
-<div class="room hidden" id="room6">
 
-<div class="lock">🔒</div>
 
-<h2>Final Door: Mystery Code</h2>
 
-<div class="question">
 
-A treasure chest has 5 rows of coins.
-Each row has 12 coins.
-You give away 15 coins.
+<div class="card hidden" id="choice2">
+
+<h2>🚪 The Hidden Passage</h2>
+
+
+<p>
+You found a secret passage!
+
+Choose your next adventure:
+</p>
+
+
+<button onclick="show('dragon')">
+🐉 Dragon Mountain
+</button>
+
+
+<button onclick="show('river')">
+🌊 Number River
+</button>
+
+
+</div>
+
+
+
+
+
+
+
+<div class="card hidden" id="dragon">
+
+
+<h2>🐉 Dragon Mountain</h2>
+
+
+<p>
+The dragon asks:
+
+A village has 72 gold coins.
+They split them equally among 8 people.
+
+How many coins each?
+</p>
+
+
+<input id="dragonAnswer">
+
+
+<br><br>
+
+<button onclick="check('dragon','9')">
+Answer
+</button>
+
+
+<p id="dragonResult"></p>
+
+
+</div>
+
+
+
+
+
+
+
+<div class="card hidden" id="river">
+
+<h2>🌊 Number River</h2>
+
+
+<p>
+A boat carries 35 boxes.
+Each box has 10 gems.
+
+How many gems?
+</p>
+
+
+<input id="riverAnswer">
+
+
+<br><br>
+
+<button onclick="check('river','350')">
+Answer
+</button>
+
+
+<p id="riverResult"></p>
+
+
+</div>
+
+
+
+
+
+
+
+
+<div class="card hidden" id="boss">
+
+
+<h2>👑 Final Boss Challenge</h2>
+
+
+<p>
+The Math Wizard guards the crystal!
+
+A chest contains:
+
+5 bags of 12 coins.
+You spend 18 coins.
 
 How many coins remain?
+</p>
 
-</div>
 
-<input id="answer6">
+<input id="bossAnswer">
+
 
 <br><br>
 
-<button onclick="check(6,45)">
-Unlock Door
+<button onclick="check('boss','42')">
+Defeat Wizard
 </button>
 
-<p id="result6"></p>
+
+<p id="bossResult"></p>
+
 
 </div>
 
 
 
-<div class="room hidden" id="win">
 
-<h1>🎉 ESCAPED! 🎉</h1>
+
+
+
+<div class="card hidden" id="win">
+
+<h1>🏆 YOU SAVED THE KINGDOM!</h1>
 
 <p>
-You unlocked the Math Castle!
-</p>
-
-<p>
-🏆 Math Detective Level: Expert
+You recovered the magic crystal.
+You are now a Math Master!
 </p>
 
 </div>
+
+
+
 
 
 
 <script>
 
 
-let opened=0;
+let coins=0;
 
 
-function check(number,answer){
+function show(id){
 
-let input=document.getElementById("answer"+number).value;
+document.querySelectorAll(".card")
+.forEach(x=>x.classList.add("hidden"));
 
-let result=document.getElementById("result"+number);
+document.getElementById(id)
+.classList.remove("hidden");
 
-
-if(String(input).trim()==String(answer)){
-
-
-result.innerHTML="✅ Correct! Door unlocked!";
-result.className="correct";
+}
 
 
-opened++;
 
-document.getElementById("progress").innerHTML=
-"Doors Opened: "+opened+" / 6";
+function check(place,answer){
 
 
+let input=document.getElementById(place+"Answer").value;
+
+let result=document.getElementById(place+"Result");
+
+
+if(input==answer){
+
+
+result.innerHTML="⭐ Correct! You earned coins!";
+result.className="good";
+coins+=10;
+document.getElementById("coins").innerHTML=coins;
 setTimeout(()=>{
+if(place=="forest"||
+place=="castle"||
+place=="cave"){
 
-document.getElementById("room"+number).classList.add("hidden");
+show("choice2");
 
+}
 
-if(number<6){
+else if(place=="dragon"||
+place=="river"){
 
-document.getElementById("room"+(number+1))
-.classList.remove("hidden");
+show("boss");
+
+}
+
+else if(place=="boss"){
+
+show("win");
+
+}
+
+},1200);
 
 }
 
 else{
 
-document.getElementById("win")
-.classList.remove("hidden");
-
-}
-
-
-},1000);
-
-
-}
-
-else{
-
-result.innerHTML="❌ Try again!";
-result.className="wrong";
+result.innerHTML="❌ The path is blocked. Try again!";
+result.className="bad";
 
 }
 
 }
-
 
 </script>
-
 
 </body>
 </html>
