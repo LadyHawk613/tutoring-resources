@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Math Escape Room</title>
+
+<style>
+
+body{
+font-family:Arial, sans-serif;
+background:#111827;
+color:white;
+text-align:center;
+}
+
+h1{
+color:#facc15;
+font-size:40px;
+}
+
+.room{
+background:#1f2937;
+border-radius:20px;
+padding:25px;
+margin:20px auto;
+max-width:700px;
+box-shadow:0 0 20px black;
+}
+
+.lock{
+font-size:40px;
+}
+
+.question{
+font-size:22px;
+margin:15px;
+}
+
+input{
+font-size:20px;
+padding:8px;
+width:100px;
+text-align:center;
+}
+
+button{
+background:#22c55e;
+color:white;
+border:none;
+padding:12px 25px;
+font-size:18px;
+border-radius:10px;
+cursor:pointer;
+}
+
+button:hover{
+transform:scale(1.05);
+}
+
+.hidden{
+display:none;
+}
+
+.correct{
+color:#4ade80;
+font-size:22px;
+}
+
+.wrong{
+color:#f87171;
+font-size:22px;
+}
+
+#progress{
+font-size:20px;
+color:#60a5fa;
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+<h1>🔐 The Great Math Escape Room</h1>
+
+<p>
+You are trapped in the Math Castle!
+Solve each challenge to unlock the doors.
+</p>
+
+<div id="progress">
+Doors Opened: 0 / 6
+</div>
+
+
+<div class="room" id="room1">
+
+<div class="lock">🔒</div>
+
+<h2>Door 1: Multiplication Machine</h2>
+
+<div class="question">
+A robot needs 7 batteries.
+Each pack has 8 batteries.
+How many batteries are there?
+</div>
+
+<input id="answer1">
+
+<br><br>
+
+<button onclick="check(1,56)">
+Unlock Door
+</button>
+
+<p id="result1"></p>
+
+</div>
+
+
+
+<div class="room hidden" id="room2">
+
+<div class="lock">🔒</div>
+
+<h2>Door 2: Division Dungeon</h2>
+
+<div class="question">
+A wizard has 72 gems.
+He puts them equally into 9 boxes.
+How many gems per box?
+</div>
+
+<input id="answer2">
+
+<br><br>
+
+<button onclick="check(2,8)">
+Unlock Door
+</button>
+
+<p id="result2"></p>
+
+</div>
+
+
+
+<div class="room hidden" id="room3">
+
+<div class="lock">🔒</div>
+
+<h2>Door 3: Fraction Forest</h2>
+
+<div class="question">
+A pizza is cut into 8 pieces.
+You eat 4 pieces.
+What fraction did you eat?
+</div>
+
+<input id="answer3">
+
+<br><br>
+
+<button onclick="check(3,'1/2')">
+Unlock Door
+</button>
+
+<p id="result3"></p>
+
+</div>
+
+
+
+<div class="room hidden" id="room4">
+
+<div class="lock">🔒</div>
+
+<h2>Door 4: Place Value Vault</h2>
+
+<div class="question">
+What is the value of the 6 in:
+
+46,382
+</div>
+
+<input id="answer4">
+
+<br><br>
+
+<button onclick="check(4,6000)">
+Unlock Door
+</button>
+
+<p id="result4"></p>
+
+</div>
+
+
+
+<div class="room hidden" id="room5">
+
+<div class="lock">🔒</div>
+
+<h2>Door 5: Geometry Tower</h2>
+
+<div class="question">
+A rectangle is 9 feet long and 4 feet wide.
+What is the area?
+</div>
+
+<input id="answer5">
+
+<br><br>
+
+<button onclick="check(5,36)">
+Unlock Door
+</button>
+
+<p id="result5"></p>
+
+</div>
+
+
+
+<div class="room hidden" id="room6">
+
+<div class="lock">🔒</div>
+
+<h2>Final Door: Mystery Code</h2>
+
+<div class="question">
+
+A treasure chest has 5 rows of coins.
+Each row has 12 coins.
+You give away 15 coins.
+
+How many coins remain?
+
+</div>
+
+<input id="answer6">
+
+<br><br>
+
+<button onclick="check(6,45)">
+Unlock Door
+</button>
+
+<p id="result6"></p>
+
+</div>
+
+
+
+<div class="room hidden" id="win">
+
+<h1>🎉 ESCAPED! 🎉</h1>
+
+<p>
+You unlocked the Math Castle!
+</p>
+
+<p>
+🏆 Math Detective Level: Expert
+</p>
+
+</div>
+
+
+
+<script>
+
+
+let opened=0;
+
+
+function check(number,answer){
+
+let input=document.getElementById("answer"+number).value;
+
+let result=document.getElementById("result"+number);
+
+
+if(String(input).trim()==String(answer)){
+
+
+result.innerHTML="✅ Correct! Door unlocked!";
+result.className="correct";
+
+
+opened++;
+
+document.getElementById("progress").innerHTML=
+"Doors Opened: "+opened+" / 6";
+
+
+setTimeout(()=>{
+
+document.getElementById("room"+number).classList.add("hidden");
+
+
+if(number<6){
+
+document.getElementById("room"+(number+1))
+.classList.remove("hidden");
+
+}
+
+else{
+
+document.getElementById("win")
+.classList.remove("hidden");
+
+}
+
+
+},1000);
+
+
+}
+
+else{
+
+result.innerHTML="❌ Try again!";
+result.className="wrong";
+
+}
+
+}
+
+
+</script>
+
+
+</body>
+</html>
