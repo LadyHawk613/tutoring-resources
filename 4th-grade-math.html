@@ -22,7 +22,7 @@
             border-radius: 12px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
             width: 100%;
-            max-width: 600px;
+            max-width: 800px; /* Widened to comfortably fit 3 columns */
             text-align: center;
         }
 
@@ -31,16 +31,28 @@
             margin-top: 0;
         }
 
-        .activity-button {
-            display: block;
+        /* Grid container for activity buttons: 3 columns wide */
+        .activity-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
             margin: 20px 0;
-            padding: 15px;
+        }
+
+        .activity-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px 15px;
             background-color: #007EA7; /* A nice blue color */
             color: #ffffff;
             text-decoration: none;
             border-radius: 6px;
             font-weight: bold;
-            font-size: 1.1em;
+            font-size: 1em;
+            text-align: center;
+            min-height: 60px;
+            box-sizing: border-box;
         }
 
         .activity-button:hover {
@@ -69,11 +81,14 @@
         <h1>4th Grade Math</h1>
         <p>Welcome to 4th Grade Math!</p>
 
-        <!-- New Activity Button -->
-        <a href="activity.html" class="activity-button"></a>Place Value
-        <a href="4th-grade-activities/dirt-bike-9s.html" class="activity-button">Start Dirt Bike 9s</a>
-        <a href="4th-grade-activities/pirate-times-four.html" class="activity-button">Pirate Multiplication: 4s</a>
-        
+        <!-- Activity Grid: Add new activities here one at a time -->
+        <div class="activity-grid">
+            <a href="activity.html" class="activity-button">Place Value</a>
+            <a href="4th-grade-activities/dirt-bike-9s.html" class="activity-button">Start Dirt Bike 9s</a>
+            <a href="4th-grade-activities/pirate-times-four.html" class="activity-button">Pirate Multiplication: 4s</a>
+            <!-- Example of adding a new activity next: -->
+            <!-- <a href="4th-grade-activities/new-activity.html" class="activity-button">New Activity Name</a> -->
+        </div>
         
         <!-- This button links back to your main dashboard -->
         <a href="index.html" class="back-button">← Back to Dashboard</a>
