@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Math 2</title>
-    <style>
+       <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             background-color: #F07167; /* Same warm coral background */
@@ -22,7 +22,7 @@
             border-radius: 12px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
             width: 100%;
-            max-width: 600px;
+            max-width: 800px; /* Widened to comfortably fit 3 columns */
             text-align: center;
         }
 
@@ -31,6 +31,34 @@
             margin-top: 0;
         }
 
+        /* Grid container for activity buttons: 3 columns wide */
+        .activity-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .activity-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px 15px;
+            background-color: #007EA7; /* A nice blue color */
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 1em;
+            text-align: center;
+            min-height: 60px;
+            box-sizing: border-box;
+        }
+
+        .activity-button:hover {
+            background-color: #005f7f;
+        }
+        
         .back-button {
             display: inline-block;
             margin-top: 20px;
