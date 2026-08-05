@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math 2</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: #F07167; /* Same warm coral background */
+            color: #333333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+            margin: 0;
+        }
+
+        .container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+            width: 100%;
+            max-width: 600px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #222222;
+            margin-top: 0;
+        }
+
+        .back-button {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 15px;
+            background-color: #333333;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: bold;
+        }
+
+        .back-button:hover {
+            background-color: #555555;
+        }
+
+        /* Styled diagnostic button to match dashboard theme */
+        .diagnostic-button {
+            display: block;
+            width: 100%;
+            margin-top: 20px;
+            padding: 12px;
+            background-color: #00838f; /* Consistent blue/teal dashboard button color */
+            color: #ffffff;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            box-sizing: border-box;
+            transition: background-color 0.2s;
+        }
+
+        .diagnostic-button:hover {
+            background-color: #005f6b;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>MATH 3</h1>
+        <p>Welcome to the Math 3 section!</p>
+        
+        <!-- Diagnostic Button -->
+        <button class="diagnostic-button" onclick="location.href='math2-diagnostic.html'">
+            Diagnostic
+        </button>
+
+        <!-- This button links back to your main dashboard -->
+       <button class="back-btn" onclick="location.href='../index.html'">← Main Dashboard</button>
+    </div>
+
+</body>
+</html>
