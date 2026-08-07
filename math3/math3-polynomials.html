@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -30,11 +29,18 @@ src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
     box-sizing: border-box;
 }
 
+html, body {
+    height: 100vh;
+    margin: 0;
+    overflow: hidden;
+}
+
 body {
     font-family: Arial, Helvetica, sans-serif;
     background: #f4f7fb;
-    margin: 0;
     color: #222;
+    display: flex;
+    flex-direction: column;
 }
 
 /* ---------- HEADER ---------- */
@@ -42,73 +48,100 @@ body {
 .header {
     background: #1f3c88;
     color: white;
-    padding: 15px 25px;
+    padding: 10px 25px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-shrink: 0;
 }
 
 .header-title {
-    font-size: 20px;
+    font-size: 18px;
     font-weight: bold;
 }
 
 .progress {
-    font-size: 16px;
+    font-size: 15px;
 }
 
-/* ---------- SLIDES ---------- */
+/* ---------- SLIDES CONTAINER & SLIDES ---------- */
+
+.slide-container {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+}
 
 .slide {
     display: none;
-    min-height: 600px;
-    padding: 45px 60px 80px;
-    max-width: 1100px;
-    margin: auto;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    padding: 20px 40px 70px;
+    max-width: 1000px;
+    margin: 0 auto;
+    right: 0;
+    overflow-y: auto;
 }
 
 .slide.active {
-    display: block;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    text-align: center;
 }
 
 h1 {
     color: #1f3c88;
-    font-size: 42px;
-    margin-bottom: 10px;
+    font-size: 32px;
+    margin-bottom: 5px;
+    margin-top: 5px;
 }
 
 h2 {
     color: #1f3c88;
-    font-size: 32px;
-    margin-bottom: 25px;
+    font-size: 26px;
+    margin-bottom: 15px;
+    margin-top: 5px;
 }
 
 h3 {
-    font-size: 24px;
+    font-size: 20px;
+    margin-top: 5px;
+    margin-bottom: 10px;
 }
 
 .subtitle {
-    font-size: 22px;
+    font-size: 18px;
     color: #555;
+    margin-top: 0;
+    margin-bottom: 10px;
 }
 
 /* ---------- CONTENT BOXES ---------- */
 
 .box {
     background: white;
-    border-radius: 14px;
-    padding: 25px;
-    margin: 20px auto;
+    border-radius: 10px;
+    padding: 15px;
+    margin: 10px auto;
     box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+    width: 100%;
+    max-width: 800px;
 }
 
 .math-box {
     background: white;
     border-left: 6px solid #1f3c88;
-    border-radius: 10px;
-    padding: 25px;
-    margin: 25px auto;
-    font-size: 25px;
+    border-radius: 8px;
+    padding: 12px;
+    margin: 10px auto;
+    font-size: 20px;
+    width: 100%;
+    max-width: 800px;
 }
 
 /* ---------- CARDS ---------- */
@@ -117,28 +150,35 @@ h3 {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 18px;
+    gap: 12px;
+    width: 100%;
+    max-width: 900px;
+    margin: auto;
 }
 
 .card {
     background: white;
     border: 2px solid #2673d9;
-    border-radius: 12px;
-    padding: 22px;
-    width: 240px;
-    min-height: 110px;
+    border-radius: 10px;
+    padding: 15px;
+    width: 210px;
+    min-height: 95px;
     cursor: pointer;
     box-shadow: 0 3px 8px rgba(0,0,0,0.08);
     transition: 0.2s;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 .card:hover {
-    transform: translateY(-3px);
+    transform: translateY(-2px);
     background: #eef6ff;
 }
 
 .card-title {
-    font-size: 21px;
+    font-size: 18px;
     font-weight: bold;
     color: #1f3c88;
 }
@@ -147,11 +187,13 @@ h3 {
 
 .answer {
     display: none;
-    margin-top: 15px;
-    padding: 12px;
+    margin-top: 10px;
+    padding: 10px;
     background: #e3f7df;
     border-radius: 8px;
     color: #245b20;
+    font-size: 15px;
+    width: 100%;
 }
 
 .show-answer {
@@ -162,23 +204,25 @@ h3 {
 
 .question {
     background: white;
-    border-radius: 14px;
-    padding: 30px;
-    margin: 20px auto;
-    max-width: 800px;
+    border-radius: 12px;
+    padding: 20px;
+    margin: 10px auto;
+    max-width: 750px;
+    width: 100%;
     box-shadow: 0 3px 10px rgba(0,0,0,0.08);
 }
 
 .choice {
     display: block;
     width: 80%;
-    max-width: 500px;
-    margin: 12px auto;
-    padding: 14px;
+    max-width: 450px;
+    margin: 8px auto;
+    padding: 10px;
     border: 2px solid #2673d9;
     background: white;
+    color: #222;
     border-radius: 8px;
-    font-size: 18px;
+    font-size: 16px;
     cursor: pointer;
 }
 
@@ -187,22 +231,24 @@ h3 {
 }
 
 .feedback {
-    margin-top: 15px;
+    margin-top: 10px;
     font-weight: bold;
-    min-height: 25px;
+    min-height: 20px;
+    font-size: 15px;
 }
 
 /* ---------- CHECKLIST ---------- */
 
 .checklist {
     background: white;
-    border-radius: 14px;
-    padding: 25px;
+    border-radius: 12px;
+    padding: 15px 30px;
     max-width: 600px;
+    width: 100%;
     margin: auto;
     text-align: left;
-    font-size: 20px;
-    line-height: 2;
+    font-size: 17px;
+    line-height: 1.6;
 }
 
 /* ---------- NAVIGATION ---------- */
@@ -214,19 +260,21 @@ h3 {
     right: 0;
     background: white;
     border-top: 1px solid #ddd;
-    padding: 12px;
+    padding: 10px;
     display: flex;
     justify-content: center;
     gap: 15px;
+    z-index: 1000;
+    flex-shrink: 0;
 }
 
 button {
     background: #1f3c88;
     color: white;
     border: none;
-    padding: 12px 24px;
+    padding: 10px 20px;
     border-radius: 8px;
-    font-size: 17px;
+    font-size: 16px;
     cursor: pointer;
 }
 
@@ -242,32 +290,28 @@ button:disabled {
 /* ---------- SCORE ---------- */
 
 .score {
-    font-size: 24px;
+    font-size: 20px;
     font-weight: bold;
     color: #1f3c88;
-    margin: 20px;
+    margin: 10px;
 }
 
 /* ---------- MOBILE ---------- */
 
 @media (max-width: 700px) {
-
     .slide {
-        padding: 30px 20px 90px;
+        padding: 15px 15px 70px;
     }
-
     h1 {
-        font-size: 32px;
-    }
-
-    h2 {
         font-size: 26px;
     }
-
+    h2 {
+        font-size: 22px;
+    }
     .card {
         width: 90%;
+        min-height: 80px;
     }
-
 }
 
 </style>
@@ -292,6 +336,8 @@ button:disabled {
 </div>
 
 
+<div class="slide-container">
+
 <!-- =====================================================
 SLIDE 1
 ===================================================== -->
@@ -308,7 +354,7 @@ SLIDE 1
 
         <h3>Learning Goals</h3>
 
-        <ul style="text-align:left; display:inline-block; line-height:2; font-size:20px;">
+        <ul style="text-align:left; display:inline-block; line-height:1.6; font-size:17px; margin:0; padding-left:20px;">
 
             <li>Identify polynomial functions</li>
 
@@ -335,7 +381,7 @@ SLIDE 2
 
     <h2>What Is a Polynomial Function?</h2>
 
-    <div class="math-box">
+    <div class="math-box" style="font-size:18px; padding:8px;">
 
         \[
         f(x)=a_nx^n+a_{n-1}x^{n-1}
@@ -344,11 +390,11 @@ SLIDE 2
 
     </div>
 
-    <div class="box">
+    <div class="box" style="padding:12px; margin:8px auto;">
 
-        <h3>A polynomial has:</h3>
+        <h3 style="margin:0 0 5px 0;">A polynomial has:</h3>
 
-        <ul style="text-align:left; line-height:2; font-size:19px;">
+        <ul style="text-align:left; line-height:1.5; font-size:16px; margin:0; padding-left:20px;">
 
             <li>Whole-number exponents</li>
 
@@ -362,10 +408,9 @@ SLIDE 2
 
     </div>
 
-    <div class="math-box">
+    <div class="math-box" style="font-size:18px; padding:8px;">
 
         Example:
-
         \[
         f(x)=3x^4-2x^3+5x-7
         \]
@@ -383,7 +428,7 @@ SLIDE 3
 
     <h2>Polynomial Vocabulary</h2>
 
-    <p>Click each card to reveal the definition.</p>
+    <p style="margin:5px 0 10px 0;">Click each card to reveal the definition.</p>
 
     <div class="card-container">
 
@@ -395,7 +440,7 @@ SLIDE 3
 
                 The highest exponent of the variable.
 
-                <div class="math-box">
+                <div class="math-box" style="font-size:16px; padding:6px; margin:5px 0 0 0;">
 
                     \[
                     f(x)=4x^5-2x^2+7
@@ -418,7 +463,7 @@ SLIDE 3
 
                 The coefficient of the highest-degree term.
 
-                <div class="math-box">
+                <div class="math-box" style="font-size:16px; padding:6px; margin:5px 0 0 0;">
 
                     \[
                     f(x)=-3x^4+5x^2-1
@@ -441,7 +486,7 @@ SLIDE 3
 
                 The term that contains no variable.
 
-                <div class="math-box">
+                <div class="math-box" style="font-size:16px; padding:6px; margin:5px 0 0 0;">
 
                     \[
                     f(x)=2x^3-4x+7
@@ -468,54 +513,54 @@ SLIDE 4
 
     <h2>Polynomial Degrees</h2>
 
-    <div class="box">
+    <div class="box" style="padding:10px;">
 
-        <table style="width:100%; border-collapse:collapse; font-size:19px;">
+        <table style="width:100%; border-collapse:collapse; font-size:16px;">
 
             <tr style="background:#1f3c88; color:white;">
 
-                <th style="padding:12px;">Degree</th>
+                <th style="padding:8px;">Degree</th>
 
-                <th style="padding:12px;">Name</th>
+                <th style="padding:8px;">Name</th>
 
-                <th style="padding:12px;">Example</th>
+                <th style="padding:8px;">Example</th>
 
             </tr>
 
             <tr>
-                <td>0</td>
-                <td>Constant</td>
-                <td>\(f(x)=5\)</td>
+                <td style="padding:6px;">0</td>
+                <td style="padding:6px;">Constant</td>
+                <td style="padding:6px;">\(f(x)=5\)</td>
             </tr>
 
             <tr>
-                <td>1</td>
-                <td>Linear</td>
-                <td>\(f(x)=2x+3\)</td>
+                <td style="padding:6px;">1</td>
+                <td style="padding:6px;">Linear</td>
+                <td style="padding:6px;">\(f(x)=2x+3\)</td>
             </tr>
 
             <tr>
-                <td>2</td>
-                <td>Quadratic</td>
-                <td>\(f(x)=x^2-4x+1\)</td>
+                <td style="padding:6px;">2</td>
+                <td style="padding:6px;">Quadratic</td>
+                <td style="padding:6px;">\(f(x)=x^2-4x+1\)</td>
             </tr>
 
             <tr>
-                <td>3</td>
-                <td>Cubic</td>
-                <td>\(f(x)=x^3+2x\)</td>
+                <td style="padding:6px;">3</td>
+                <td style="padding:6px;">Cubic</td>
+                <td style="padding:6px;">\(f(x)=x^3+2x\)</td>
             </tr>
 
             <tr>
-                <td>4</td>
-                <td>Quartic</td>
-                <td>\(f(x)=x^4-3x^2\)</td>
+                <td style="padding:6px;">4</td>
+                <td style="padding:6px;">Quartic</td>
+                <td style="padding:6px;">\(f(x)=x^4-3x^2\)</td>
             </tr>
 
             <tr>
-                <td>5+</td>
-                <td>Higher Degree</td>
-                <td>\(f(x)=x^5+x^2-1\)</td>
+                <td style="padding:6px;">5+</td>
+                <td style="padding:6px;">Higher Degree</td>
+                <td style="padding:6px;">\(f(x)=x^5+x^2-1\)</td>
             </tr>
 
         </table>
@@ -535,7 +580,7 @@ SLIDE 5
 
     <div class="card-container">
 
-        <div class="card">
+        <div class="card" style="width: 200px; min-height: 110px;">
 
             <div class="card-title">Linear</div>
 
@@ -543,12 +588,12 @@ SLIDE 5
             f(x)=x
             \]
 
-            <p>Degree 1</p>
+            <p style="margin:2px 0 0 0; font-size:14px;">Degree 1</p>
 
         </div>
 
 
-        <div class="card">
+        <div class="card" style="width: 200px; min-height: 110px;">
 
             <div class="card-title">Quadratic</div>
 
@@ -556,12 +601,12 @@ SLIDE 5
             f(x)=x^2
             \]
 
-            <p>Degree 2</p>
+            <p style="margin:2px 0 0 0; font-size:14px;">Degree 2</p>
 
         </div>
 
 
-        <div class="card">
+        <div class="card" style="width: 200px; min-height: 110px;">
 
             <div class="card-title">Cubic</div>
 
@@ -569,12 +614,12 @@ SLIDE 5
             f(x)=x^3
             \]
 
-            <p>Degree 3</p>
+            <p style="margin:2px 0 0 0; font-size:14px;">Degree 3</p>
 
         </div>
 
 
-        <div class="card">
+        <div class="card" style="width: 200px; min-height: 110px;">
 
             <div class="card-title">Quartic</div>
 
@@ -582,7 +627,7 @@ SLIDE 5
             f(x)=x^4
             \]
 
-            <p>Degree 4</p>
+            <p style="margin:2px 0 0 0; font-size:14px;">Degree 4</p>
 
         </div>
 
@@ -601,7 +646,7 @@ SLIDE 6
 
     <div class="question">
 
-        <div class="math-box">
+        <div class="math-box" style="font-size:18px; padding:8px;">
 
             \[
             f(x)=5x^3-2x^2+7x-4
@@ -609,19 +654,19 @@ SLIDE 6
 
         </div>
 
-        <p>What is the degree?</p>
+        <p style="margin:8px 0;">What is the degree?</p>
 
-        <button class="choice" onclick="answerQuestion(1, 3, this)">
-            \(3\)
-        </button>
-
-        <button class="choice" onclick="answerQuestion(1, 2, this)">
-            \(2\)
-        </button>
-
-        <button class="choice" onclick="answerQuestion(1, 5, this)">
-            \(5\)
-        </button>
+        <div class="choices-container" data-qid="1" data-correct="3">
+            <button class="choice" onclick="answerQuestion(1, 2, this)">
+                \(2\)
+            </button>
+            <button class="choice" onclick="answerQuestion(1, 3, this)">
+                \(3\)
+            </button>
+            <button class="choice" onclick="answerQuestion(1, 5, this)">
+                \(5\)
+            </button>
+        </div>
 
         <div id="feedback1" class="feedback"></div>
 
@@ -638,94 +683,68 @@ SLIDE 7
 
     <h2>End Behavior</h2>
 
-    <p>
+    <p style="margin:0 0 10px 0;">
         The degree and leading coefficient determine the end behavior.
     </p>
 
     <div class="card-container">
 
-        <div class="card" onclick="toggleAnswer('evenPositive')">
+        <div class="card" onclick="toggleAnswer('evenPositive')" style="width: 210px; min-height: 100px;">
 
-            <div class="card-title">
+            <div class="card-title" style="font-size:15px;">
                 Even Degree + Positive
             </div>
 
             <div id="evenPositive" class="answer">
 
                 Both ends go up.
-
-                \[
-                x\rightarrow\pm\infty
-                \quad\Rightarrow\quad
-                f(x)\rightarrow+\infty
-                \]
+                <div style="font-size: 13px;">\(x\rightarrow\pm\infty \Rightarrow f(x)\rightarrow+\infty\)</div>
 
             </div>
 
         </div>
 
 
-        <div class="card" onclick="toggleAnswer('evenNegative')">
+        <div class="card" onclick="toggleAnswer('evenNegative')" style="width: 210px; min-height: 100px;">
 
-            <div class="card-title">
+            <div class="card-title" style="font-size:15px;">
                 Even Degree + Negative
             </div>
 
             <div id="evenNegative" class="answer">
 
                 Both ends go down.
-
-                \[
-                x\rightarrow\pm\infty
-                \quad\Rightarrow\quad
-                f(x)\rightarrow-\infty
-                \]
+                <div style="font-size: 13px;">\(x\rightarrow\pm\infty \Rightarrow f(x)\rightarrow-\infty\)</div>
 
             </div>
 
         </div>
 
 
-        <div class="card" onclick="toggleAnswer('oddPositive')">
+        <div class="card" onclick="toggleAnswer('oddPositive')" style="width: 210px; min-height: 100px;">
 
-            <div class="card-title">
+            <div class="card-title" style="font-size:15px;">
                 Odd Degree + Positive
             </div>
 
-            <div id="oddPositive" class="answer">
+            <div id="oddPositive" class="answer" style="font-size:13px;">
 
                 Left down, right up.
-
-                \[
-                x\rightarrow-\infty,\quad f(x)\rightarrow-\infty
-                \]
-
-                \[
-                x\rightarrow+\infty,\quad f(x)\rightarrow+\infty
-                \]
 
             </div>
 
         </div>
 
 
-        <div class="card" onclick="toggleAnswer('oddNegative')">
+        <div class="card" onclick="toggleAnswer('oddNegative')" style="width: 210px; min-height: 100px;">
 
-            <div class="card-title">
+            <div class="card-title" style="font-size:15px;">
                 Odd Degree + Negative
             </div>
 
-            <div id="oddNegative" class="answer">
+            <div id="oddNegative" class="answer" style="font-size:13px;">
 
                 Left up, right down.
-
-                \[
-                x\rightarrow-\infty,\quad f(x)\rightarrow+\infty
-                \]
-
-                \[
-                x\rightarrow+\infty,\quad f(x)\rightarrow-\infty
-                \]
 
             </div>
 
@@ -744,52 +763,29 @@ SLIDE 8
 
     <h2>Finding Zeros</h2>
 
-    <div class="math-box">
-
-        \[
-        f(x)=x^2-9
-        \]
-
+    <div class="math-box" style="font-size:18px; padding:6px; margin:5px auto;">
+        \[ f(x)=x^2-9 \]
     </div>
 
-    <p>Factor the polynomial:</p>
+    <p style="margin:4px 0;">Factor the polynomial:</p>
 
-    <div class="math-box">
-
-        \[
-        x^2-9=(x-3)(x+3)
-        \]
-
+    <div class="math-box" style="font-size:18px; padding:6px; margin:5px auto;">
+        \[ x^2-9=(x-3)(x+3) \]
     </div>
 
-    <p>Set each factor equal to zero:</p>
+    <p style="margin:4px 0;">Set each factor equal to zero:</p>
 
-    <div class="math-box">
-
-        \[
-        x-3=0
-        \]
-
-        \[
-        x+3=0
-        \]
-
+    <div class="math-box" style="font-size:16px; padding:6px; margin:5px auto;">
+        \[ x-3=0 \quad \text{and} \quad x+3=0 \]
     </div>
 
-    <button onclick="toggleAnswer('zeroAnswer')">
+    <button onclick="toggleAnswer('zeroAnswer')" style="padding:8px 16px; font-size:15px;">
         Show Zeros
     </button>
 
     <div id="zeroAnswer" class="answer">
-
-        \[
-        \boxed{x=3,\;-3}
-        \]
-
-        <p>
-            These are the x-intercepts of the graph.
-        </p>
-
+        \[ \boxed{x=3,\;-3} \]
+        <p style="margin:4px 0 0 0;">These are the x-intercepts of the graph.</p>
     </div>
 
 </section>
@@ -805,7 +801,7 @@ SLIDE 9
 
     <div class="card-container">
 
-        <div class="card" onclick="toggleAnswer('evenMultiplicity')">
+        <div class="card" onclick="toggleAnswer('evenMultiplicity')" style="width: 320px; min-height: 110px;">
 
             <div class="card-title">
                 Even Multiplicity
@@ -814,17 +810,14 @@ SLIDE 9
             <div id="evenMultiplicity" class="answer">
 
                 The graph touches the x-axis and turns around.
-
-                \[
-                f(x)=(x-2)^2
-                \]
+                \[ f(x)=(x-2)^2 \]
 
             </div>
 
         </div>
 
 
-        <div class="card" onclick="toggleAnswer('oddMultiplicity')">
+        <div class="card" onclick="toggleAnswer('oddMultiplicity')" style="width: 320px; min-height: 110px;">
 
             <div class="card-title">
                 Odd Multiplicity
@@ -833,10 +826,7 @@ SLIDE 9
             <div id="oddMultiplicity" class="answer">
 
                 The graph crosses the x-axis.
-
-                \[
-                f(x)=(x-2)^3
-                \]
+                \[ f(x)=(x-2)^3 \]
 
             </div>
 
@@ -857,52 +847,13 @@ SLIDE 10
 
     <div class="checklist">
 
-        <label>
-            <input type="checkbox">
-            Degree
-        </label>
-
-        <br>
-
-        <label>
-            <input type="checkbox">
-            Leading coefficient
-        </label>
-
-        <br>
-
-        <label>
-            <input type="checkbox">
-            End behavior
-        </label>
-
-        <br>
-
-        <label>
-            <input type="checkbox">
-            Zeros / x-intercepts
-        </label>
-
-        <br>
-
-        <label>
-            <input type="checkbox">
-            y-intercept
-        </label>
-
-        <br>
-
-        <label>
-            <input type="checkbox">
-            Turning points
-        </label>
-
-        <br>
-
-        <label>
-            <input type="checkbox">
-            Increasing / decreasing intervals
-        </label>
+        <label><input type="checkbox"> Degree</label><br>
+        <label><input type="checkbox"> Leading coefficient</label><br>
+        <label><input type="checkbox"> End behavior</label><br>
+        <label><input type="checkbox"> Zeros / x-intercepts</label><br>
+        <label><input type="checkbox"> y-intercept</label><br>
+        <label><input type="checkbox"> Turning points</label><br>
+        <label><input type="checkbox"> Increasing / decreasing intervals</label>
 
     </div>
 
@@ -919,7 +870,7 @@ SLIDE 11
 
     <div class="question">
 
-        <div class="math-box">
+        <div class="math-box" style="font-size:18px; padding:8px;">
 
             \[
             f(x)=-3x^4+2x^2-7
@@ -927,19 +878,19 @@ SLIDE 11
 
         </div>
 
-        <p>What is the degree?</p>
+        <p style="margin:8px 0;">What is the degree?</p>
 
-        <button class="choice" onclick="answerQuestion(2, 4, this)">
-            \(4\)
-        </button>
-
-        <button class="choice" onclick="answerQuestion(2, 3, this)">
-            \(3\)
-        </button>
-
-        <button class="choice" onclick="answerQuestion(2, 7, this)">
-            \(7\)
-        </button>
+        <div class="choices-container" data-qid="2" data-correct="4">
+            <button class="choice" onclick="answerQuestion(2, 3, this)">
+                \(3\)
+            </button>
+            <button class="choice" onclick="answerQuestion(2, 7, this)">
+                \(7\)
+            </button>
+            <button class="choice" onclick="answerQuestion(2, 4, this)">
+                \(4\)
+            </button>
+        </div>
 
         <div id="feedback2" class="feedback"></div>
 
@@ -958,7 +909,7 @@ SLIDE 12
 
     <div class="question">
 
-        <div class="math-box">
+        <div class="math-box" style="font-size:18px; padding:8px;">
 
             \[
             f(x)=-7x^5+4x^2-1
@@ -966,19 +917,19 @@ SLIDE 12
 
         </div>
 
-        <p>What is the leading coefficient?</p>
+        <p style="margin:8px 0;">What is the leading coefficient?</p>
 
-        <button class="choice" onclick="answerQuestion(3, -7, this)">
-            \(-7\)
-        </button>
-
-        <button class="choice" onclick="answerQuestion(3, 7, this)">
-            \(7\)
-        </button>
-
-        <button class="choice" onclick="answerQuestion(3, 5, this)">
-            \(5\)
-        </button>
+        <div class="choices-container" data-qid="3" data-correct="-7">
+            <button class="choice" onclick="answerQuestion(3, 7, this)">
+                \(7\)
+            </button>
+            <button class="choice" onclick="answerQuestion(3, -7, this)">
+                \(-7\)
+            </button>
+            <button class="choice" onclick="answerQuestion(3, 5, this)">
+                \(5\)
+            </button>
+        </div>
 
         <div id="feedback3" class="feedback"></div>
 
@@ -997,7 +948,7 @@ SLIDE 13
 
     <div class="question">
 
-        <div class="math-box">
+        <div class="math-box" style="font-size:18px; padding:8px;">
 
             \[
             f(x)=x^4
@@ -1005,19 +956,19 @@ SLIDE 13
 
         </div>
 
-        <p>What happens at both ends of the graph?</p>
+        <p style="margin:8px 0;">What happens at both ends of the graph?</p>
 
-        <button class="choice" onclick="answerQuestion(4, 1, this)">
-            Both ends go up
-        </button>
-
-        <button class="choice" onclick="answerQuestion(4, 2, this)">
-            Both ends go down
-        </button>
-
-        <button class="choice" onclick="answerQuestion(4, 3, this)">
-            Left down, right up
-        </button>
+        <div class="choices-container" data-qid="4" data-correct="1">
+            <button class="choice" onclick="answerQuestion(4, 2, this)">
+                Both ends go down
+            </button>
+            <button class="choice" onclick="answerQuestion(4, 3, this)">
+                Left down, right up
+            </button>
+            <button class="choice" onclick="answerQuestion(4, 1, this)">
+                Both ends go up
+            </button>
+        </div>
 
         <div id="feedback4" class="feedback"></div>
 
@@ -1036,7 +987,7 @@ SLIDE 14
 
     <div class="question">
 
-        <div class="math-box">
+        <div class="math-box" style="font-size:18px; padding:8px;">
 
             \[
             f(x)=(x-5)(x+2)
@@ -1044,19 +995,19 @@ SLIDE 14
 
         </div>
 
-        <p>What are the zeros?</p>
+        <p style="margin:8px 0;">What are the zeros?</p>
 
-        <button class="choice" onclick="answerQuestion(5, 1, this)">
-            \(5\) and \(-2\)
-        </button>
-
-        <button class="choice" onclick="answerQuestion(5, 2, this)">
-            \(-5\) and \(2\)
-        </button>
-
-        <button class="choice" onclick="answerQuestion(5, 3, this)">
-            \(5\) and \(2\)
-        </button>
+        <div class="choices-container" data-qid="5" data-correct="1">
+            <button class="choice" onclick="answerQuestion(5, 2, this)">
+                \(-5\) and \(2\)
+            </button>
+            <button class="choice" onclick="answerQuestion(5, 1, this)">
+                \(5\) and \(-2\)
+            </button>
+            <button class="choice" onclick="answerQuestion(5, 3, this)">
+                \(5\) and \(2\)
+            </button>
+        </div>
 
         <div id="feedback5" class="feedback"></div>
 
@@ -1073,69 +1024,41 @@ SLIDE 15
 
     <h2>Exit Ticket</h2>
 
-    <div class="question">
+    <div class="question" style="padding:15px; margin:5px auto;">
 
-        <p>
-            <strong>Question 1:</strong>
-            What is the degree?
+        <p style="margin:4px 0; font-size:15px;">
+            <strong>Question 1:</strong> What is the degree of \(5x^3-2x+8\)?
         </p>
+        <div class="choices-container" data-qid="6" data-correct="3" style="margin-bottom:8px;">
+            <button class="choice" onclick="answerQuestion(6, 5, this)">\(5\)</button>
+            <button class="choice" onclick="answerQuestion(6, 3, this)">\(3\)</button>
+        </div>
 
-        \[
-        5x^3-2x+8
-        \]
-
-        <button class="choice" onclick="answerQuestion(6, 3, this)">
-            \(3\)
-        </button>
-
-        <button class="choice" onclick="answerQuestion(6, 5, this)">
-            \(5\)
-        </button>
-
-
-        <p>
-            <strong>Question 2:</strong>
-            What is the leading coefficient?
+        <p style="margin:4px 0; font-size:15px;">
+            <strong>Question 2:</strong> Leading coefficient of \(-7x^5+4x^2-1\)?
         </p>
+        <div class="choices-container" data-qid="7" data-correct="-7" style="margin-bottom:8px;">
+            <button class="choice" onclick="answerQuestion(7, 7, this)">\(7\)</button>
+            <button class="choice" onclick="answerQuestion(7, -7, this)">\(-7\)</button>
+        </div>
 
-        \[
-        -7x^5+4x^2-1
-        \]
-
-        <button class="choice" onclick="answerQuestion(7, -7, this)">
-            \(-7\)
-        </button>
-
-        <button class="choice" onclick="answerQuestion(7, 7, this)">
-            \(7\)
-        </button>
-
-
-        <p>
-            <strong>Question 3:</strong>
-            What are the zeros?
+        <p style="margin:4px 0; font-size:15px;">
+            <strong>Question 3:</strong> Zeros of \((x-5)(x+2)\)?
         </p>
+        <div class="choices-container" data-qid="8" data-correct="1" style="margin-bottom:4px;">
+            <button class="choice" onclick="answerQuestion(8, 2, this)">\(-5\) and \(2\)</button>
+            <button class="choice" onclick="answerQuestion(8, 1, this)">\(5\) and \(-2\)</button>
+        </div>
 
-        \[
-        (x-5)(x+2)
-        \]
-
-        <button class="choice" onclick="answerQuestion(8, 1, this)">
-            \(5\) and \(-2\)
-        </button>
-
-        <button class="choice" onclick="answerQuestion(8, 2, this)">
-            \(-5\) and \(2\)
-        </button>
-
-
-        <div id="feedback6" class="feedback"></div>
-        <div id="feedback7" class="feedback"></div>
-        <div id="feedback8" class="feedback"></div>
+        <div id="feedback6" class="feedback" style="min-height:15px; font-size:13px;"></div>
+        <div id="feedback7" class="feedback" style="min-height:15px; font-size:13px;"></div>
+        <div id="feedback8" class="feedback" style="min-height:15px; font-size:13px;"></div>
 
     </div>
 
 </section>
+
+</div>
 
 
 <!-- =====================================================
@@ -1148,7 +1071,7 @@ NAVIGATION
         ← Back
     </button>
 
-    <button onclick="nextSlide()">
+    <button id="nextButton" onclick="nextSlide()">
         Next →
     </button>
 
@@ -1156,6 +1079,23 @@ NAVIGATION
 
 
 <script>
+
+/* ============================
+   SHUFFLE CHOICES ON LOAD
+============================ */
+document.addEventListener("DOMContentLoaded", () => {
+    document.querySelectorAll(".choices-container").forEach(container => {
+        const buttons = Array.from(container.querySelectorAll(".choice"));
+        // Shuffle array randomly
+        for (let i = buttons.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [buttons[i], buttons[j]] = [buttons[j], buttons[i]];
+        }
+        // Re-append in random order
+        buttons.forEach(btn => container.appendChild(btn));
+    });
+});
+
 
 /* ============================
    SLIDE NAVIGATION
@@ -1183,10 +1123,16 @@ function updateSlide() {
     document.getElementById("backButton").disabled =
         currentSlide === 0;
 
-    window.scrollTo({
-        top: 0,
-        behavior: "smooth"
-    });
+    // Remove the "Next" button from the last slide
+    const nextBtn = document.getElementById("nextButton");
+    if (currentSlide === slides.length - 1) {
+        nextBtn.style.display = "none";
+    } else {
+        nextBtn.style.display = "inline-block";
+    }
+
+    // Scroll active slide content back to top
+    slides[currentSlide].scrollTop = 0;
 
     if (window.MathJax) {
         MathJax.typesetPromise();
@@ -1290,16 +1236,6 @@ function answerQuestion(question, answer, button) {
 
     }
 
-    updateScore();
-
-}
-
-
-function updateScore() {
-
-    document.getElementById("score").textContent =
-        "Quiz Score: " + score + " / 8";
-
 }
 
 
@@ -1314,4 +1250,3 @@ updateSlide();
 
 </body>
 </html>
-```
