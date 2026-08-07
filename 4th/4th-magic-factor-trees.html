@@ -1,0 +1,1068 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Magic Factor Trees</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #090d2a;
+    color: white;
+}
+
+/* Main game background */
+.game {
+    width: 100%;
+    min-height: 100vh;
+    background-image:
+        linear-gradient(rgba(8, 10, 45, 0.18), rgba(8, 10, 45, 0.18)),
+        url("magic_factor_trees_background.png");
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    padding: 18px;
+}
+
+/* Top information */
+.topbar {
+    max-width: 1450px;
+    margin: 0 auto 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+}
+
+.score-box,
+.level-box {
+    background: linear-gradient(135deg, #3f167c, #241052);
+    border: 3px solid #f4c542;
+    border-radius: 18px;
+    padding: 10px 22px;
+    min-width: 160px;
+    text-align: center;
+    box-shadow: 0 5px 15px rgba(0,0,0,.45);
+}
+
+.score-label,
+.level-label {
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.score-value,
+.level-value {
+    font-size: 30px;
+    font-weight: 900;
+    color: #ffd83d;
+}
+
+/* Main title */
+.title {
+    text-align: center;
+    margin: 0 auto 8px;
+}
+
+.title h1 {
+    margin: 0;
+    font-size: clamp(34px, 5vw, 64px);
+    color: #ffd42a;
+    text-shadow:
+        3px 3px 0 #8a4200,
+        0 0 15px rgba(255,220,50,.7);
+}
+
+.title p {
+    margin: 5px 0;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+/* Instruction ribbon */
+.instructions {
+    max-width: 850px;
+    margin: 12px auto;
+    background: linear-gradient(#ffe27a, #f4b92d);
+    color: #3d216c;
+    border: 4px solid #8a4b00;
+    border-radius: 15px;
+    padding: 12px;
+    font-size: 21px;
+    font-weight: 900;
+    box-shadow: 0 5px 10px rgba(0,0,0,.4);
+}
+
+/* Puzzle area */
+.puzzle-wrapper {
+    max-width: 1100px;
+    margin: 0 auto;
+    background: rgba(12, 9, 58, .88);
+    border: 5px solid #f5c943;
+    border-radius: 25px;
+    padding: 18px;
+    box-shadow: 0 8px 25px rgba(0,0,0,.6);
+}
+
+.number-banner {
+    width: fit-content;
+    min-width: 300px;
+    margin: 0 auto 10px;
+    padding: 10px 35px;
+    background: linear-gradient(135deg, #7e20a8, #3d147d);
+    border: 4px solid #f5c943;
+    border-radius: 15px;
+    font-size: 25px;
+    font-weight: bold;
+}
+
+.target-number {
+    color: #ffe42d;
+    font-size: 40px;
+}
+
+/* Factor tree */
+.tree {
+    position: relative;
+    height: 390px;
+    max-width: 760px;
+    margin: 0 auto;
+}
+
+/* Lines connecting tree */
+.line {
+    position: absolute;
+    height: 5px;
+    background: linear-gradient(90deg, #ff66e8, #b86cff);
+    transform-origin: left center;
+    box-shadow: 0 0 8px #ff6eea;
+    border-radius: 5px;
+}
+
+.line.l1 {
+    width: 155px;
+    left: 48%;
+    top: 100px;
+    transform: rotate(155deg);
+}
+
+.line.l2 {
+    width: 155px;
+    left: 52%;
+    top: 100px;
+    transform: rotate(25deg);
+}
+
+.line.l3 {
+    width: 120px;
+    left: 29%;
+    top: 240px;
+    transform: rotate(155deg);
+}
+
+.line.l4 {
+    width: 120px;
+    left: 29%;
+    top: 240px;
+    transform: rotate(25deg);
+}
+
+.line.l5 {
+    width: 120px;
+    left: 71%;
+    top: 240px;
+    transform: rotate(155deg);
+}
+
+.line.l6 {
+    width: 120px;
+    left: 71%;
+    top: 240px;
+    transform: rotate(25deg);
+}
+
+/* Tree circles */
+.circle {
+    position: absolute;
+    width: 105px;
+    height: 105px;
+    border-radius: 50%;
+    background: white;
+    border: 5px dashed #8229b7;
+    color: #28115d;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 34px;
+    font-weight: 900;
+    z-index: 3;
+    box-shadow: 0 4px 12px rgba(0,0,0,.5);
+}
+
+.root {
+    left: calc(50% - 52px);
+    top: 5px;
+    border-style: solid;
+    background: #fff;
+}
+
+.branch-left {
+    left: calc(30% - 52px);
+    top: 130px;
+}
+
+.branch-right {
+    left: calc(70% - 52px);
+    top: 130px;
+}
+
+.leaf {
+    top: 275px;
+}
+
+.leaf1 {
+    left: calc(17% - 52px);
+}
+
+.leaf2 {
+    left: calc(36% - 52px);
+}
+
+.leaf3 {
+    left: calc(64% - 52px);
+}
+
+.leaf4 {
+    left: calc(83% - 52px);
+}
+
+/* Answer status */
+.leaf.correct {
+    background: #31d66b;
+    border: 5px solid #0a8d3c;
+    color: white;
+    animation: pop .35s ease;
+}
+
+.leaf.incorrect {
+    background: #f34d4d;
+    border: 5px solid #a51414;
+    color: white;
+    animation: shake .35s ease;
+}
+
+@keyframes pop {
+    50% {
+        transform: scale(1.15);
+    }
+}
+
+@keyframes shake {
+    25% { transform: translateX(-7px); }
+    50% { transform: translateX(7px); }
+    75% { transform: translateX(-5px); }
+}
+
+/* Number bank */
+.bank {
+    margin: 5px auto 0;
+    max-width: 900px;
+    background: rgba(255,255,255,.10);
+    border-radius: 20px;
+    padding: 15px;
+}
+
+.bank h3 {
+    margin: 0 0 12px;
+    font-size: 20px;
+}
+
+.number-bank {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.number-card {
+    width: 75px;
+    height: 65px;
+    border-radius: 14px;
+    background: linear-gradient(#fff49b, #f4c844);
+    border: 4px solid #7026a2;
+    color: #28115d;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 28px;
+    font-weight: 900;
+    cursor: grab;
+    user-select: none;
+    box-shadow: 0 4px 7px rgba(0,0,0,.4);
+    transition: transform .15s;
+}
+
+.number-card:hover {
+    transform: scale(1.08);
+}
+
+.number-card.used {
+    opacity: .35;
+    cursor: default;
+    transform: scale(.95);
+}
+
+/* Message */
+.message {
+    min-height: 45px;
+    text-align: center;
+    font-size: 23px;
+    font-weight: bold;
+    margin: 8px;
+}
+
+.message.success {
+    color: #62ff91;
+}
+
+.message.error {
+    color: #ff7373;
+}
+
+/* Controls */
+.controls {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 10px;
+}
+
+button {
+    border: none;
+    border-radius: 14px;
+    padding: 13px 25px;
+    font-size: 18px;
+    font-weight: 900;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0,0,0,.4);
+}
+
+.check-btn {
+    background: linear-gradient(#7fe44f, #239b3c);
+    color: white;
+}
+
+.hint-btn {
+    background: linear-gradient(#ffd957, #e49b17);
+    color: #3d216c;
+}
+
+.reset-btn {
+    background: linear-gradient(#63c9ff, #287bc2);
+    color: white;
+}
+
+.next-btn {
+    background: linear-gradient(#c86cff, #7022bd);
+    color: white;
+    display: none;
+}
+
+button:hover {
+    transform: translateY(-2px);
+}
+
+/* Completion */
+.complete {
+    display: none;
+    text-align: center;
+    background: rgba(44, 11, 92, .95);
+    border: 5px solid #ffd63d;
+    border-radius: 25px;
+    padding: 30px;
+    max-width: 750px;
+    margin: 30px auto;
+}
+
+.complete h2 {
+    color: #ffd83d;
+    font-size: 42px;
+    margin: 0 0 10px;
+}
+
+.complete p {
+    font-size: 23px;
+}
+
+/* Responsive */
+@media(max-width: 750px) {
+
+    .tree {
+        transform: scale(.75);
+        transform-origin: top center;
+        margin-bottom: -80px;
+    }
+
+    .topbar {
+        flex-direction: column;
+    }
+
+    .score-box,
+    .level-box {
+        min-width: 140px;
+    }
+
+    .number-card {
+        width: 60px;
+        height: 55px;
+        font-size: 24px;
+    }
+}
+</style>
+</head>
+
+
+<body>
+
+<div class="game">
+
+    <div class="topbar">
+
+        <div class="score-box">
+            <div class="score-label">MAGIC POINTS</div>
+            <div class="score-value" id="score">0</div>
+        </div>
+
+        <div class="level-box">
+            <div class="level-label">PUZZLE</div>
+            <div class="level-value">
+                <span id="puzzleNumber">1</span> / 6
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="title">
+        <h1>MAGIC FACTOR TREES</h1>
+        <p>Help the magician break the number into its prime factors!</p>
+    </div>
+
+
+    <div class="instructions">
+        ✨ Drag the numbers into the four magic circles! ✨
+    </div>
+
+
+    <div class="puzzle-wrapper">
+
+        <div class="number-banner">
+            Break the number
+            <span class="target-number" id="targetNumber">24</span>
+        </div>
+
+
+        <div class="tree">
+
+            <!-- Tree connecting lines -->
+            <div class="line l1"></div>
+            <div class="line l2"></div>
+            <div class="line l3"></div>
+            <div class="line l4"></div>
+            <div class="line l5"></div>
+            <div class="line l6"></div>
+
+
+            <!-- Root -->
+            <div class="circle root" id="root">24</div>
+
+
+            <!-- Intermediate factors -->
+            <div class="circle branch-left" id="branchLeft">6</div>
+            <div class="circle branch-right" id="branchRight">4</div>
+
+
+            <!-- Prime factor drop zones -->
+            <div class="circle leaf leaf1" data-slot="0"></div>
+            <div class="circle leaf leaf2" data-slot="1"></div>
+            <div class="circle leaf leaf3" data-slot="2"></div>
+            <div class="circle leaf leaf4" data-slot="3"></div>
+
+        </div>
+
+
+        <div class="bank">
+
+            <h3>🪄 Magic Number Bank</h3>
+
+            <div class="number-bank" id="numberBank"></div>
+
+        </div>
+
+
+        <div class="message" id="message">
+            Choose a number and drag it into a magic circle!
+        </div>
+
+
+        <div class="controls">
+
+            <button class="hint-btn" onclick="showHint()">
+                🪄 HINT
+            </button>
+
+            <button class="reset-btn" onclick="resetPuzzle()">
+                🔄 RESET
+            </button>
+
+            <button class="check-btn" onclick="checkPuzzle()">
+                ✨ CHECK MAGIC
+            </button>
+
+            <button class="next-btn" id="nextButton" onclick="nextPuzzle()">
+                ➡️ NEXT PUZZLE
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <div class="complete" id="completeScreen">
+
+        <h2>🎉 MAGIC MASTER! 🎉</h2>
+
+        <p>
+            You completed all 6 factor-tree puzzles!
+        </p>
+
+        <p>
+            ⭐ Final Magic Score:
+            <strong id="finalScore">0</strong>
+        </p>
+
+        <button class="reset-btn" onclick="restartGame()">
+            🔮 PLAY AGAIN
+        </button>
+
+    </div>
+
+</div>
+
+
+<script>
+
+/* =====================================================
+   PUZZLE DATA
+   ===================================================== */
+
+const puzzles = [
+
+    {
+        number: 24,
+        branches: [6, 4],
+        factors: [2, 3, 2, 2],
+        bank: [2, 2, 2, 3, 4, 6, 12]
+    },
+
+    {
+        number: 36,
+        branches: [6, 6],
+        factors: [2, 3, 2, 3],
+        bank: [2, 2, 3, 3, 4, 6, 9]
+    },
+
+    {
+        number: 40,
+        branches: [8, 5],
+        factors: [2, 2, 2, 5],
+        bank: [2, 2, 2, 5, 4, 8, 10]
+    },
+
+    {
+        number: 54,
+        branches: [6, 9],
+        factors: [2, 3, 3, 3],
+        bank: [2, 3, 3, 3, 6, 9, 18]
+    },
+
+    {
+        number: 56,
+        branches: [8, 7],
+        factors: [2, 2, 2, 7],
+        bank: [2, 2, 2, 7, 4, 8, 14]
+    },
+
+    {
+        number: 90,
+        branches: [9, 10],
+        factors: [3, 3, 2, 5],
+        bank: [2, 3, 3, 5, 6, 9, 10]
+    }
+
+];
+
+
+/* =====================================================
+   GAME VARIABLES
+   ===================================================== */
+
+let currentPuzzle = 0;
+let score = 0;
+let solved = false;
+
+
+/* =====================================================
+   LOAD PUZZLE
+   ===================================================== */
+
+function loadPuzzle() {
+
+    solved = false;
+
+    const puzzle = puzzles[currentPuzzle];
+
+    document.getElementById("targetNumber").textContent =
+        puzzle.number;
+
+    document.getElementById("root").textContent =
+        puzzle.number;
+
+    document.getElementById("branchLeft").textContent =
+        puzzle.branches[0];
+
+    document.getElementById("branchRight").textContent =
+        puzzle.branches[1];
+
+    document.getElementById("puzzleNumber").textContent =
+        currentPuzzle + 1;
+
+    document.getElementById("message").textContent =
+        "Choose a number and drag it into a magic circle!";
+
+    document.getElementById("message").className =
+        "message";
+
+    document.getElementById("nextButton").style.display =
+        "none";
+
+    createNumberBank();
+
+    clearLeaves();
+}
+
+
+/* =====================================================
+   CREATE NUMBER CARDS
+   ===================================================== */
+
+function createNumberBank() {
+
+    const bank = document.getElementById("numberBank");
+
+    bank.innerHTML = "";
+
+    puzzles[currentPuzzle].bank.forEach((number, index) => {
+
+        const card = document.createElement("div");
+
+        card.className = "number-card";
+
+        card.textContent = number;
+
+        card.draggable = true;
+
+        card.dataset.number = number;
+
+        card.dataset.cardId = index;
+
+        card.addEventListener("dragstart", dragStart);
+
+        bank.appendChild(card);
+
+    });
+
+}
+
+
+/* =====================================================
+   DRAG AND DROP
+   ===================================================== */
+
+let draggedNumber = null;
+let draggedCard = null;
+
+
+function dragStart(event) {
+
+    draggedNumber =
+        Number(event.target.dataset.number);
+
+    draggedCard = event.target;
+
+}
+
+
+/* Allow dropping */
+
+document.querySelectorAll(".leaf").forEach(leaf => {
+
+    leaf.addEventListener("dragover", event => {
+        event.preventDefault();
+    });
+
+    leaf.addEventListener("drop", event => {
+
+        event.preventDefault();
+
+        if (solved) return;
+
+        const leaf = event.currentTarget;
+
+        /* Do not replace an occupied slot */
+        if (leaf.textContent.trim() !== "") {
+            return;
+        }
+
+        leaf.textContent = draggedNumber;
+
+        leaf.dataset.value = draggedNumber;
+
+        draggedCard.classList.add("used");
+
+        draggedCard.draggable = false;
+
+        draggedCard = null;
+        draggedNumber = null;
+
+    });
+
+});
+
+
+/* =====================================================
+   CHECK ANSWERS
+   ===================================================== */
+
+function checkPuzzle() {
+
+    if (solved) return;
+
+    const leaves =
+        document.querySelectorAll(".leaf");
+
+    let allFilled = true;
+
+    leaves.forEach(leaf => {
+
+        if (leaf.textContent.trim() === "") {
+            allFilled = false;
+        }
+
+    });
+
+
+    if (!allFilled) {
+
+        showMessage(
+            "✨ Fill all four magic circles first!",
+            "error"
+        );
+
+        return;
+    }
+
+
+    const correctFactors =
+        [...puzzles[currentPuzzle].factors].sort();
+
+    let userFactors = [];
+
+    leaves.forEach(leaf => {
+
+        userFactors.push(
+            Number(leaf.dataset.value)
+        );
+
+    });
+
+    userFactors.sort();
+
+
+    const correct =
+        JSON.stringify(correctFactors) ===
+        JSON.stringify(userFactors);
+
+
+    /*
+       Highlight each individual number.
+
+       Because prime factors can repeat,
+       each occurrence is compared against
+       the correct sorted list.
+    */
+
+    leaves.forEach(leaf => {
+
+        const value =
+            Number(leaf.dataset.value);
+
+        let remainingCorrect =
+            [...correctFactors];
+
+        let isCorrect = false;
+
+        for (let i = 0; i < remainingCorrect.length; i++) {
+
+            if (remainingCorrect[i] === value) {
+                remainingCorrect.splice(i, 1);
+                isCorrect = true;
+                break;
+            }
+
+        }
+
+        /*
+           This individual check works best
+           after comparing the complete collection.
+        */
+
+        if (correct) {
+
+            leaf.classList.add("correct");
+
+        }
+
+    });
+
+
+    if (correct) {
+
+        leaves.forEach(leaf => {
+
+            leaf.classList.remove("incorrect");
+            leaf.classList.add("correct");
+
+        });
+
+        score += 100;
+
+        document.getElementById("score").textContent =
+            score;
+
+        solved = true;
+
+        showMessage(
+            "🎉 AMAZING! Your factor magic worked!",
+            "success"
+        );
+
+        document.getElementById("nextButton")
+            .style.display = "inline-block";
+
+    }
+
+    else {
+
+        /*
+           Highlight numbers that belong in the
+           correct answer in green and numbers
+           that don't belong in red.
+        */
+
+        let remaining =
+            [...puzzles[currentPuzzle].factors];
+
+        leaves.forEach(leaf => {
+
+            const value =
+                Number(leaf.dataset.value);
+
+            const index =
+                remaining.indexOf(value);
+
+            leaf.classList.remove(
+                "correct",
+                "incorrect"
+            );
+
+            if (index !== -1) {
+
+                leaf.classList.add("correct");
+
+                remaining.splice(index, 1);
+
+            }
+
+            else {
+
+                leaf.classList.add("incorrect");
+
+            }
+
+        });
+
+
+        showMessage(
+            "🔮 Some magic is still wrong. Red numbers need fixing!",
+            "error"
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   RESET PUZZLE
+   ===================================================== */
+
+function resetPuzzle() {
+
+    clearLeaves();
+
+    document.getElementById("message").textContent =
+        "Try the factor tree again!";
+
+    document.getElementById("message").className =
+        "message";
+
+}
+
+
+/* =====================================================
+   CLEAR LEAF BOXES
+   ===================================================== */
+
+function clearLeaves() {
+
+    document.querySelectorAll(".leaf").forEach(leaf => {
+
+        leaf.textContent = "";
+
+        leaf.dataset.value = "";
+
+        leaf.classList.remove(
+            "correct",
+            "incorrect"
+        );
+
+    });
+
+}
+
+
+/* =====================================================
+   HINT
+   ===================================================== */
+
+function showHint() {
+
+    const puzzle = puzzles[currentPuzzle];
+
+    /*
+       Find a factor that should be used.
+    */
+
+    const factors = puzzle.factors;
+
+    const message =
+        "🪄 Hint: Try dividing " +
+        puzzle.number +
+        " by " +
+        factors[0] +
+        ". What do you get?";
+
+    showMessage(message, "success");
+
+}
+
+
+/* =====================================================
+   NEXT PUZZLE
+   ===================================================== */
+
+function nextPuzzle() {
+
+    if (!solved) return;
+
+    currentPuzzle++;
+
+    if (currentPuzzle >= puzzles.length) {
+
+        document.querySelector(".puzzle-wrapper")
+            .style.display = "none";
+
+        document.getElementById("completeScreen")
+            .style.display = "block";
+
+        document.getElementById("finalScore")
+            .textContent = score;
+
+        return;
+    }
+
+    loadPuzzle();
+
+}
+
+
+/* =====================================================
+   RESTART ENTIRE GAME
+   ===================================================== */
+
+function restartGame() {
+
+    currentPuzzle = 0;
+
+    score = 0;
+
+    document.getElementById("score")
+        .textContent = score;
+
+    document.querySelector(".puzzle-wrapper")
+        .style.display = "block";
+
+    document.getElementById("completeScreen")
+        .style.display = "none";
+
+    loadPuzzle();
+
+}
+
+
+/* =====================================================
+   MESSAGE
+   ===================================================== */
+
+function showMessage(text, type) {
+
+    const message =
+        document.getElementById("message");
+
+    message.textContent = text;
+
+    message.className =
+        "message " + type;
+
+}
+
+
+/* =====================================================
+   START GAME
+   ===================================================== */
+
+loadPuzzle();
+
+</script>
+
+</body>
+</html>
