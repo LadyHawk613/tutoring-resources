@@ -19,7 +19,7 @@
         .math-activity-wrapper {
             position: relative;
             width: 1000px;
-            height: 667px; /* Adjust height/width ratio to match your exact image dimensions */
+            height: 667px;
             background-image: url('magician-factor-tree.png');
             background-size: 100% 100%;
             background-repeat: no-repeat;
@@ -28,7 +28,7 @@
             overflow: hidden;
         }
 
-        /* Styling for interactive drop zones (the dashed circles at the bottom) */
+        /* Styling for interactive drop zones */
         .drop-zone {
             position: absolute;
             width: 75px;
@@ -50,35 +50,43 @@
             border-color: #ffd700;
         }
 
-        /* Precise coordinate placement for the 4 factor tree circles */
-        /* Note: Adjust these pixel values to perfectly fit your background image graphic */
-        .zone-1 { top: 600px; left: 345px; }
-        .zone-2 { top: 600px; left: 450px; }
-        .zone-3 { top: 600px; left: 555px; }
-        .zone-4 { top: 600px; left: 660px; }
+        /* Corrected coordinates for the 4 bottom factor tree circles */
+        .zone-1 { top: 525px; left: 322px; }
+        .zone-2 { top: 525px; left: 412px; }
+        .zone-3 { top: 525px; left: 522px; }
+        .zone-4 { top: 525px; left: 612px; }
 
-        /* Example styles for draggable number tiles in the bank */
+        /* Styles for draggable number tiles in the bank */
         .number-bank-tile {
             position: absolute;
-            width: 60px;
-            height: 60px;
+            width: 55px;
+            height: 55px;
             background: linear-gradient(135deg, #ffe066, #f59f00);
             border: 2px solid #fff;
             border-radius: 10px;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 28px;
+            font-size: 26px;
             font-weight: bold;
             color: #2b0a3d;
             cursor: grab;
             box-shadow: 0 4px 6px rgba(0,0,0,0.3);
         }
 
-        /* Example placement for number tiles inside the Magic Number Bank */
-        .tile-2-1 { top: 435px; left: 745px; }
-        .tile-2-2 { top: 435px; left: 815px; }
-        .tile-2-3 { top: 435px; left: 885px; }
+        /* Corrected grid placement for the Magic Number Bank */
+        /* Row 1 */
+        .tile-1-1 { top: 418px; left: 742px; }
+        .tile-1-2 { top: 418px; left: 812px; }
+        .tile-1-3 { top: 418px; left: 882px; }
+        /* Row 2 */
+        .tile-2-1 { top: 490px; left: 742px; }
+        .tile-2-2 { top: 490px; left: 812px; }
+        .tile-2-3 { top: 490px; left: 882px; }
+        /* Row 3 */
+        .tile-3-1 { top: 562px; left: 742px; }
+        .tile-3-2 { top: 562px; left: 812px; }
+        .tile-3-3 { top: 562px; left: 882px; }
     </style>
 </head>
 <body>
@@ -90,10 +98,16 @@
         <div class="drop-zone zone-3" ondragover="allowDrop(event)" ondragleave="removeHighlight(event)" ondrop="drop(event)" data-id="3"></div>
         <div class="drop-zone zone-4" ondragover="allowDrop(event)" ondragleave="removeHighlight(event)" ondrop="drop(event)" data-id="4"></div>
 
-        <!-- Draggable Number Bank Items (Sample) -->
-        <div class="number-bank-tile tile-2-1" draggable="true" ondragstart="drag(event)" id="num-2">2</div>
-        <div class="number-bank-tile tile-2-2" draggable="true" ondragstart="drag(event)" id="num-2-b">2</div>
-        <div class="number-bank-tile tile-2-3" draggable="true" ondragstart="drag(event)" id="num-3">3</div>
+        <!-- Draggable Number Bank Items matching all 9 squares -->
+        <div class="number-bank-tile tile-1-1" draggable="true" ondragstart="drag(event)">2</div>
+        <div class="number-bank-tile tile-1-2" draggable="true" ondragstart="drag(event)">2</div>
+        <div class="number-bank-tile tile-1-3" draggable="true" ondragstart="drag(event)">2</div>
+        <div class="number-bank-tile tile-2-1" draggable="true" ondragstart="drag(event)">3</div>
+        <div class="number-bank-tile tile-2-2" draggable="true" ondragstart="drag(event)">4</div>
+        <div class="number-bank-tile tile-2-3" draggable="true" ondragstart="drag(event)">6</div>
+        <div class="number-bank-tile tile-3-1" draggable="true" ondragstart="drag(event)">8</div>
+        <div class="number-bank-tile tile-3-2" draggable="true" ondragstart="drag(event)">12</div>
+        <div class="number-bank-tile tile-3-3" draggable="true" ondragstart="drag(event)">24</div>
     </div>
 
     <script>
