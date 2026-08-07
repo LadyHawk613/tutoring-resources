@@ -31,17 +31,17 @@
         /* Styling for interactive drop zones */
         .drop-zone {
             position: absolute;
-            width: 75px;
-            height: 75px;
+            width: 70px;
+            height: 70px;
             border-radius: 50%;
-            border: 3px dashed rgba(255, 255, 255, 0.8);
+            border: 3px dashed rgba(255, 255, 255, 0.9);
             display: flex;
             justify-content: center;
             align-items: center;
             color: #ffffff;
-            font-size: 24px;
+            font-size: 22px;
             font-weight: bold;
-            background-color: rgba(75, 0, 130, 0.2);
+            background-color: rgba(75, 0, 130, 0.3);
             transition: background-color 0.2s;
         }
 
@@ -50,43 +50,43 @@
             border-color: #ffd700;
         }
 
-        /* Corrected coordinates for the 4 bottom factor tree circles */
-        .zone-1 { top: 525px; left: 322px; }
-        .zone-2 { top: 525px; left: 412px; }
-        .zone-3 { top: 525px; left: 522px; }
-        .zone-4 { top: 525px; left: 612px; }
+        /* Shifted upward to align with the bottom factor circles */
+        .zone-1 { top: 468px; left: 318px; }
+        .zone-2 { top: 468px; left: 408px; }
+        .zone-3 { top: 468px; left: 518px; }
+        .zone-4 { top: 468px; left: 608px; }
 
         /* Styles for draggable number tiles in the bank */
         .number-bank-tile {
             position: absolute;
-            width: 55px;
-            height: 55px;
+            width: 50px;
+            height: 50px;
             background: linear-gradient(135deg, #ffe066, #f59f00);
             border: 2px solid #fff;
-            border-radius: 10px;
+            border-radius: 8px;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 26px;
+            font-size: 24px;
             font-weight: bold;
             color: #2b0a3d;
             cursor: grab;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            box-shadow: 0 3px 5px rgba(0,0,0,0.3);
         }
 
-        /* Corrected grid placement for the Magic Number Bank */
+        /* Shifted upward to fit neatly inside the Magic Number Bank parchment */
         /* Row 1 */
-        .tile-1-1 { top: 418px; left: 742px; }
-        .tile-1-2 { top: 418px; left: 812px; }
-        .tile-1-3 { top: 418px; left: 882px; }
+        .tile-1-1 { top: 352px; left: 745px; }
+        .tile-1-2 { top: 352px; left: 810px; }
+        .tile-1-3 { top: 352px; left: 875px; }
         /* Row 2 */
-        .tile-2-1 { top: 490px; left: 742px; }
-        .tile-2-2 { top: 490px; left: 812px; }
-        .tile-2-3 { top: 490px; left: 882px; }
+        .tile-2-1 { top: 412px; left: 745px; }
+        .tile-2-2 { top: 412px; left: 810px; }
+        .tile-2-3 { top: 412px; left: 875px; }
         /* Row 3 */
-        .tile-3-1 { top: 562px; left: 742px; }
-        .tile-3-2 { top: 562px; left: 812px; }
-        .tile-3-3 { top: 562px; left: 882px; }
+        .tile-3-1 { top: 472px; left: 745px; }
+        .tile-3-2 { top: 472px; left: 810px; }
+        .tile-3-3 { top: 472px; left: 875px; }
     </style>
 </head>
 <body>
