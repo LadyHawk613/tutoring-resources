@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>The Multiplication Magic Show</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  :root{
+    --deep-purple:#2a0e4f;
+    --mid-purple:#4b1e8f;
+    --violet:#7b2ff7;
+    --gold:#ffd166;
+    --gold-dark:#e0a91e;
+    --pink:#ff6ec7;
+    --card-bg:#3a1568;
+    --success:#38d99b;
+    --fail:#ff5c7a;
+    --cream:#fff7e6;
+  }
+  *{box-sizing:border-box;}
+  html,body{
+    margin:0;padding:0;height:100%;
+    font-family:'Trebuchet MS','Segoe UI',sans-serif;
+    background:radial-gradient(ellipse at top, var(--mid-purple), var(--deep-purple) 70%);
+    color:var(--cream);
+    overflow-x:hidden;
+    min-height:100vh;
+  }
+  #stars{
+    position:fixed;top:0;left:0;width:100%;height:100%;
+    pointer-events:none;z-index:0;
+  }
+  .star{
+    position:absolute;
+    background:var(--gold);
+    border-radius:50%;
+    opacity:0.7;
+    animation:twinkle 3s infinite ease-in-out;
+  }
+  @keyframes twinkle{
+    0%,100%{opacity:0.2;transform:scale(0.8);}
+    50%{opacity:0.9;transform:scale(1.2);}
+  }
+  #app{
+    position:relative;z-index:1;
+    max-width:640px;
+    margin:0 auto;
+    padding:20px 16px 60px;
+    min-height:100vh;
+    display:flex;flex-direction:column;align-items:center;
+  }
+  h1{
+    font-size:1.7em;
+    text-align:center;
+    margin:10px 0 4px;
+    color:var(--gold);
+    text-shadow:0 0 12px rgba(255,209,102,0.6), 2px 2px 0 var(--deep-purple);
+    letter-spacing:1px;
+  }
+  .subtitle{
+    text-align:center;
+    color:var(--pink);
+    margin-bottom:20px;
+    font-size:1em;
+    font-style:italic;
+  }
+  .hat{
+    font-size:2.6em;
+    text-align:center;
+    margin-top:6px;
+  }
+
+  /* LEVEL SELECT */
+  #level-select{
+    width:100%;
+    display:flex;flex-direction:column;gap:14px;
+    margin-top:10px;
+  }
+  .level-card{
+    background:linear-gradient(135deg, var(--card-bg), var(--mid-purple));
+    border:2px solid var(--gold);
+    border-radius:16px;
+    padding:16px 18px;
+    display:flex;align-items:center;gap:16px;
+    cursor:pointer;
+    transition:transform 0.15s ease, box-shadow 0.15s ease;
+    box-shadow:0 4px 14px rgba(0,0,0,0.35);
+    position:relative;
+  }
+  .level-card:hover:not(.locked){
+    transform:translateY(-3px) scale(1.02);
+    box-shadow:0 8px 22px rgba(255,209,102,0.35);
+  }
+  .level-card.locked{
+    opacity:0.55;
+    cursor:not-allowed;
+    filter:grayscale(0.4);
+  }
+  .level-icon{
+    font-size:2.2em;
+    min-width:52px;
+    text-align:center;
+  }
+  .level-info{flex:1;}
+  .level-info .lname{
+    font-size:1.15em;
+    font-weight:bold;
+    color:var(--gold);
+  }
+  .level-info .ldesc{
+    font-size:0.85em;
+    color:var(--cream);
+    opacity:0.85;
+  }
+  .level-stars{
+    font-size:1.05em;
+    min-width:70px;
+    text-align:right;
+    color:var(--gold-dark);
+  }
+  .lock-icon{
+    font-size:1.6em;
+    margin-left:6px;
+  }
+
+  /* QUIZ SCREEN */
+  #quiz-screen{
+    width:100%;
+    display:none;
+    flex-direction:column;
+    align-items:center;
+  }
+  .top-bar{
+    width:100%;
+    display:flex;justify-content:space-between;align-items:center;
+    margin-bottom:14px;
+  }
+  .back-btn{
+    background:none;border:2px solid var(--gold);color:var(--gold);
+    border-radius:20px;padding:6px 14px;cursor:pointer;font-size:0.9em;
+  }
+  .progress-wrap{
+    flex:1;margin:0 12px;
+    height:14px;background:rgba(255,255,255,0.15);
+    border-radius:10px;overflow:hidden;
+    border:1px solid rgba(255,209,102,0.4);
+  }
+  .progress-fill{
+    height:100%;
+    background:linear-gradient(90deg, var(--pink), var(--gold));
+    width:0%;
+    transition:width 0.4s ease;
+  }
+  .score-badge{
+    color:var(--gold);
+    font-weight:bold;
+    font-size:0.95em;
+    min-width:52px;
+    text-align:right;
+  }
+
+  .question-card{
+    width:100%;
+    background:linear-gradient(160deg, var(--card-bg), #2c0d55);
+    border:3px solid var(--gold);
+    border-radius:22px;
+    padding:34px 20px;
+    text-align:center;
+    box-shadow:0 0 30px rgba(123,47,247,0.5), inset 0 0 20px rgba(255,209,102,0.08);
+    position:relative;
+    margin-bottom:22px;
+  }
+  .question-card::before{
+    content:"✨";
+    position:absolute;
+    top:10px;left:14px;
+    font-size:1.3em;
+    animation:twinkle 2s infinite;
+  }
+  .question-card::after{
+    content:"✨";
+    position:absolute;
+    bottom:10px;right:14px;
+    font-size:1.3em;
+    animation:twinkle 2.4s infinite;
+  }
+  .wand{font-size:2em;margin-bottom:6px;}
+  .question-text{
+    font-size:2.6em;
+    color:var(--cream);
+    font-weight:bold;
+    letter-spacing:2px;
+    text-shadow:2px 2px 0 rgba(0,0,0,0.3);
+  }
+
+  .answers-grid{
+    width:100%;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:14px;
+  }
+  .answer-btn{
+    background:linear-gradient(135deg,var(--violet), var(--mid-purple));
+    border:2px solid var(--gold);
+    color:var(--cream);
+    font-size:1.4em;
+    font-weight:bold;
+    padding:18px 10px;
+    border-radius:16px;
+    cursor:pointer;
+    transition:transform 0.1s ease, background 0.2s ease;
+    box-shadow:0 4px 10px rgba(0,0,0,0.3);
+  }
+  .answer-btn:hover{transform:translateY(-2px);}
+  .answer-btn:active{transform:translateY(0px) scale(0.97);}
+  .answer-btn.correct{
+    background:linear-gradient(135deg, var(--success), #1fae7a);
+    border-color:#fff;
+  }
+  .answer-btn.wrong{
+    background:linear-gradient(135deg, var(--fail), #b8324a);
+    border-color:#fff;
+  }
+  .answer-btn[disabled]{cursor:default;}
+
+  .feedback{
+    min-height:34px;
+    font-size:1.15em;
+    font-weight:bold;
+    margin-top:16px;
+    text-align:center;
+  }
+  .feedback.good{color:var(--success);}
+  .feedback.bad{color:var(--fail);}
+
+  /* RESULTS */
+  #result-screen{
+    display:none;
+    flex-direction:column;
+    align-items:center;
+    width:100%;
+    text-align:center;
+  }
+  .result-emoji{font-size:4em;margin-bottom:6px;}
+  .result-title{
+    font-size:1.6em;color:var(--gold);font-weight:bold;margin-bottom:4px;
+  }
+  .result-sub{
+    color:var(--cream);opacity:0.9;margin-bottom:16px;
+  }
+  .result-stars{
+    font-size:2.4em;
+    margin-bottom:20px;
+    letter-spacing:6px;
+  }
+  .result-buttons{
+    display:flex;gap:12px;flex-wrap:wrap;justify-content:center;
+  }
+  .btn{
+    border:none;border-radius:24px;
+    padding:12px 22px;
+    font-size:1em;font-weight:bold;
+    cursor:pointer;
+    box-shadow:0 4px 10px rgba(0,0,0,0.3);
+  }
+  .btn-primary{
+    background:linear-gradient(135deg, var(--gold), var(--gold-dark));
+    color:var(--deep-purple);
+  }
+  .btn-secondary{
+    background:transparent;
+    border:2px solid var(--gold);
+    color:var(--gold);
+  }
+
+  .confetti{
+    position:fixed;
+    top:-10px;
+    width:10px;height:10px;
+    border-radius:2px;
+    z-index:5;
+    animation:fall linear forwards;
+  }
+  @keyframes fall{
+    to{transform:translateY(110vh) rotate(360deg);opacity:0.3;}
+  }
+
+  @media (max-width:420px){
+    .question-text{font-size:2.1em;}
+    .answer-btn{font-size:1.2em;padding:14px 6px;}
+  }
+</style>
+</head>
+<body>
+
+<div id="stars"></div>
+
+<div id="app">
+  <div class="hat">🎩✨</div>
+  <h1>The Multiplication Magic Show</h1>
+  <div class="subtitle">Master the 4s and 5s to become a Grand Wizard of Numbers!</div>
+
+  <div id="level-select"></div>
+
+  <div id="quiz-screen">
+    <div class="top-bar">
+      <button class="back-btn" onclick="goToLevelSelect()">⟵ Back</button>
+      <div class="progress-wrap"><div class="progress-fill" id="progressFill"></div></div>
+      <div class="score-badge" id="scoreBadge">0/10</div>
+    </div>
+
+    <div class="question-card">
+      <div class="wand" id="wandEmoji">🪄</div>
+      <div class="question-text" id="questionText">4 × 6 = ?</div>
+    </div>
+
+    <div class="answers-grid" id="answersGrid"></div>
+
+    <div class="feedback" id="feedback"></div>
+  </div>
+
+  <div id="result-screen">
+    <div class="result-emoji" id="resultEmoji">🎉</div>
+    <div class="result-title" id="resultTitle">Great Job!</div>
+    <div class="result-sub" id="resultSub">You got 9 out of 10 correct.</div>
+    <div class="result-stars" id="resultStars">⭐⭐⭐</div>
+    <div class="result-buttons">
+      <button class="btn btn-secondary" onclick="goToLevelSelect()">Level Select</button>
+      <button class="btn btn-primary" id="retryOrNextBtn">Try Again</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ---------- background sparkle field ---------- */
+const starsContainer = document.getElementById('stars');
+for(let i=0;i<40;i++){
+  const s=document.createElement('div');
+  s.className='star';
+  const size=Math.random()*3+1;
+  s.style.width=size+'px';
+  s.style.height=size+'px';
+  s.style.left=Math.random()*100+'%';
+  s.style.top=Math.random()*100+'%';
+  s.style.animationDelay=(Math.random()*3)+'s';
+  starsContainer.appendChild(s);
+}
+
+/* ---------- level configuration ---------- */
+const LEVELS = [
+  { id:0, name:"Apprentice of 4s",  desc:"4 × 1 through 4 × 6",  icon:"🐇", table:[4], min:1, max:6 },
+  { id:1, name:"Master of 4s",      desc:"4 × 6 through 4 × 12", icon:"🎴", table:[4], min:6, max:12 },
+  { id:2, name:"Apprentice of 5s",  desc:"5 × 1 through 5 × 6",  icon:"🕊️", table:[5], min:1, max:6 },
+  { id:3, name:"Master of 5s",      desc:"5 × 6 through 5 × 12", icon:"🔮", table:[5], min:6, max:12 },
+  { id:4, name:"Grand Illusion Challenge", desc:"Mixed 4s & 5s, 1 through 12", icon:"🌟", table:[4,5], min:1, max:12 },
+];
+
+const QUESTIONS_PER_LEVEL = 10;
+const PASS_RATIO = 0.8; // 8/10 to pass
+
+/* progress kept in memory only for this session */
+let progress = LEVELS.map(()=>({unlocked:false, bestStars:0}));
+progress[0].unlocked = true;
+
+let currentLevel = null;
+let questions = [];
+let qIndex = 0;
+let correctCount = 0;
+let answering = false;
+
+/* ---------- helpers ---------- */
+function shuffle(arr){
+  for(let i=arr.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [arr[i],arr[j]]=[arr[j],arr[i]];
+  }
+  return arr;
+}
+
+function buildQuestions(level){
+  const pool = [];
+  for(const t of level.table){
+    for(let n=level.min;n<=level.max;n++){
+      pool.push([t,n]);
+    }
+  }
+  shuffle(pool);
+  const list = [];
+  while(list.length < QUESTIONS_PER_LEVEL){
+    if(pool.length === 0){
+      // refill if range too small
+      for(const t of level.table){
+        for(let n=level.min;n<=level.max;n++) pool.push([t,n]);
+      }
+      shuffle(pool);
+    }
+    list.push(pool.pop());
+  }
+  return list;
+}
+
+function makeChoices(a,b){
+  const correct = a*b;
+  const choices = new Set([correct]);
+  const distractorPool = [
+    a*(b+1), a*(b-1), a*b + a, a*b - a,
+    (a===4?5:4)*b, correct+1, correct-1, correct+10, correct-10, a*(b+2)
+  ].filter(v => v>0 && v!==correct);
+  shuffle(distractorPool);
+  for(const d of distractorPool){
+    if(choices.size>=4) break;
+    choices.add(d);
+  }
+  while(choices.size<4){
+    const rnd = correct + Math.floor(Math.random()*10)-5;
+    if(rnd>0) choices.add(rnd);
+  }
+  return shuffle(Array.from(choices));
+}
+
+/* ---------- render level select ---------- */
+function renderLevelSelect(){
+  const container = document.getElementById('level-select');
+  container.innerHTML = '';
+  LEVELS.forEach((lvl, idx)=>{
+    const unlocked = progress[idx].unlocked;
+    const card = document.createElement('div');
+    card.className = 'level-card' + (unlocked ? '' : ' locked');
+    const starsEarned = progress[idx].bestStars;
+    const starDisplay = unlocked ? '⭐'.repeat(starsEarned) + '☆'.repeat(3-starsEarned) : '';
+    card.innerHTML = `
+      <div class="level-icon">${lvl.icon}</div>
+      <div class="level-info">
+        <div class="lname">Level ${idx+1}: ${lvl.name}</div>
+        <div class="ldesc">${lvl.desc}</div>
+      </div>
+      <div class="level-stars">${unlocked ? starDisplay : ''}</div>
+      ${unlocked ? '' : '<div class="lock-icon">🔒</div>'}
+    `;
+    if(unlocked){
+      card.onclick = ()=>startLevel(idx);
+    }
+    container.appendChild(card);
+  });
+}
+
+function goToLevelSelect(){
+  document.getElementById('quiz-screen').style.display='none';
+  document.getElementById('result-screen').style.display='none';
+  document.getElementById('level-select').style.display='flex';
+  renderLevelSelect();
+}
+
+/* ---------- quiz flow ---------- */
+function startLevel(idx){
+  currentLevel = idx;
+  questions = buildQuestions(LEVELS[idx]);
+  qIndex = 0;
+  correctCount = 0;
+  document.getElementById('level-select').style.display='none';
+  document.getElementById('result-screen').style.display='none';
+  document.getElementById('quiz-screen').style.display='flex';
+  showQuestion();
+}
+
+function showQuestion(){
+  answering = true;
+  const [a,b] = questions[qIndex];
+  document.getElementById('questionText').textContent = `${a} × ${b} = ?`;
+  document.getElementById('scoreBadge').textContent = `${correctCount}/${QUESTIONS_PER_LEVEL}`;
+  document.getElementById('progressFill').style.width = `${(qIndex/QUESTIONS_PER_LEVEL)*100}%`;
+  document.getElementById('feedback').textContent = '';
+  document.getElementById('feedback').className = 'feedback';
+
+  const wands = ['🪄','✨','🔮','🎩','🃏'];
+  document.getElementById('wandEmoji').textContent = wands[Math.floor(Math.random()*wands.length)];
+
+  const choices = makeChoices(a,b);
+  const grid = document.getElementById('answersGrid');
+  grid.innerHTML = '';
+  choices.forEach(choice=>{
+    const btn = document.createElement('button');
+    btn.className = 'answer-btn';
+    btn.textContent = choice;
+    btn.onclick = ()=>selectAnswer(choice, a*b, btn);
+    grid.appendChild(btn);
+  });
+}
+
+function selectAnswer(chosen, correctVal, btnEl){
+  if(!answering) return;
+  answering = false;
+  const allBtns = document.querySelectorAll('.answer-btn');
+  allBtns.forEach(b=>b.disabled = true);
+
+  const feedback = document.getElementById('feedback');
+  if(chosen === correctVal){
+    correctCount++;
+    btnEl.classList.add('correct');
+    feedback.textContent = pickPraise();
+    feedback.className = 'feedback good';
+    launchConfetti(12);
+  } else {
+    btnEl.classList.add('wrong');
+    allBtns.forEach(b=>{
+      if(parseInt(b.textContent) === correctVal) b.classList.add('correct');
+    });
+    feedback.textContent = `Poof! Not quite — it was ${correctVal}.`;
+    feedback.className = 'feedback bad';
+  }
+
+  document.getElementById('scoreBadge').textContent = `${correctCount}/${QUESTIONS_PER_LEVEL}`;
+
+  setTimeout(()=>{
+    qIndex++;
+    if(qIndex >= QUESTIONS_PER_LEVEL){
+      showResults();
+    } else {
+      showQuestion();
+    }
+  }, 1100);
+}
+
+function pickPraise(){
+  const lines = ["Abracadabra! Correct!", "Magnificent magic!", "Presto! You got it!", "Spellbinding!", "Enchanting work!"];
+  return lines[Math.floor(Math.random()*lines.length)];
+}
+
+function showResults(){
+  document.getElementById('quiz-screen').style.display='none';
+  document.getElementById('result-screen').style.display='flex';
+
+  const ratio = correctCount / QUESTIONS_PER_LEVEL;
+  const passed = ratio >= PASS_RATIO;
+  let stars = 1;
+  if(correctCount === QUESTIONS_PER_LEVEL) stars = 3;
+  else if(ratio >= PASS_RATIO) stars = 2;
+
+  if(passed){
+    progress[currentLevel].bestStars = Math.max(progress[currentLevel].bestStars, stars);
+    if(currentLevel + 1 < LEVELS.length){
+      progress[currentLevel+1].unlocked = true;
+    }
+  }
+
+  document.getElementById('resultEmoji').textContent = passed ? '🎉' : '💫';
+  document.getElementById('resultTitle').textContent = passed
+    ? (currentLevel === LEVELS.length-1 ? "You Are a Grand Wizard!" : "Spell Mastered!")
+    : "Almost There, Apprentice!";
+  document.getElementById('resultSub').textContent = `You got ${correctCount} out of ${QUESTIONS_PER_LEVEL} correct.`;
+  document.getElementById('resultStars').textContent = passed ? '⭐'.repeat(stars) + '☆'.repeat(3-stars) : '☆☆☆';
+
+  const nextBtn = document.getElementById('retryOrNextBtn');
+  if(passed && currentLevel + 1 < LEVELS.length){
+    nextBtn.textContent = 'Next Level ⟶';
+    nextBtn.onclick = ()=>startLevel(currentLevel+1);
+  } else if(passed){
+    nextBtn.textContent = 'Play Again';
+    nextBtn.onclick = ()=>startLevel(currentLevel);
+  } else {
+    nextBtn.textContent = 'Try Again';
+    nextBtn.onclick = ()=>startLevel(currentLevel);
+  }
+
+  if(passed) launchConfetti(40);
+}
+
+/* ---------- confetti ---------- */
+function launchConfetti(count){
+  const colors = ['#ffd166','#ff6ec7','#7b2ff7','#38d99b','#ffffff'];
+  for(let i=0;i<count;i++){
+    const c = document.createElement('div');
+    c.className='confetti';
+    c.style.left = Math.random()*100+'vw';
+    c.style.background = colors[Math.floor(Math.random()*colors.length)];
+    c.style.animationDuration = (Math.random()*1.5+1.5)+'s';
+    c.style.opacity = Math.random()*0.6+0.4;
+    document.body.appendChild(c);
+    setTimeout(()=>c.remove(), 3200);
+  }
+}
+
+/* ---------- init ---------- */
+renderLevelSelect();
+</script>
+
+</body>
+</html>
