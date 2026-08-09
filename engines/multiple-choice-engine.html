@@ -3,64 +3,86 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Math Practice</title>
+    <title>Multiple Choice Practice</title>
     <style>
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background-color: #F07167;
-            color: #333333;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 40px 20px;
+            font-family: Arial, sans-serif;
+            background: #f4f6f8;
             margin: 0;
+            padding: 40px;
         }
 
-        .container {
-            background-color: #ffffff;
-            padding: 30px;
+        .practice-box {
+            max-width: 700px;
+            margin: auto;
+            background: white;
+            padding: 35px;
             border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
-            width: 100%;
-            max-width: 600px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
 
         h1 {
-            color: #222222;
-            margin-top: 0;
-            text-align: center;
+            color: #333;
         }
 
-        .question-block {
+        .progress {
+            color: #777;
             margin-bottom: 25px;
-            text-align: left;
-            border-bottom: 1px solid #eee;
-            padding-bottom: 15px;
         }
 
-        label {
+        .question {
+            font-size: 22px;
+            margin-bottom: 25px;
+        }
+
+        .choice {
             display: block;
-            margin: 8px 0;
+            padding: 15px;
+            margin: 10px 0;
+            border: 2px solid #ddd;
+            border-radius: 8px;
             cursor: pointer;
         }
 
-        .action-button {
-            display: block;
-            width: 100%;
-            padding: 12px;
-            background-color: #00838f;
-            color: #ffffff;
-            border: none;
-            border-radius: 6px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            text-align: center;
+        .choice:hover {
+            background: #f0f4f7;
+        }
+
+        .choice input {
+            margin-right: 12px;
+        }
+
+        button {
             margin-top: 20px;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 7px;
+            background: #167c80;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
         }
 
-        .action-button:hover {
-            background-color: #005f6b;
+        .feedback {
+            margin-top: 25px;
+            padding: 18px;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .correct {
+            background: #e5f6e8;
+            color: #176b2c;
+        }
+
+        .incorrect {
+            background: #fdeaea;
+            color: #9b2226;
+        }
+
+        .explanation {
+            margin-top: 10px;
+            color: #333;
         }
 
         .back-button {
@@ -74,110 +96,153 @@
             font-weight: bold;
             border: none;
             cursor: pointer;
-            width: 100%;
             text-align: center;
         }
 
         .back-button:hover {
             background-color: #555555;
         }
-
-        #results {
-            margin-top: 20px;
-            font-size: 18px;
-            font-weight: bold;
-            text-align: center;
-            color: #00838f;
-        }
     </style>
 </head>
+
 <body>
 
-    <div class="container">
-        <h1 id="quiz-title">Loading Quiz...</h1>
-        <div id="quiz-content"></div>
-        <div id="results"></div>
-        <button class="back-button" onclick="location.href='index.html'">← Back to Hub</button>
-    </div>
+<div class="practice-box">
+    <h1 id="activityTitle">Multiple Choice Practice</h1>
+    <div class="progress" id="progress"></div>
+    <div class="question" id="question">Loading questions...</div>
+    <div id="choices"></div>
+    <button id="actionButton" style="display:none;">Check Answer</button>
+    <div id="feedback" class="feedback"></div>
+    <br><br>
+    <a href="../math3/math3-hub.html" class="back-button">← Back to Math 3 Hub</a>
+</div>
 
-    <script>
-        // 1. Extract the 'topic' parameter from the URL (e.g., ?topic=zeros)
-        const urlParams = new URLSearchParams(window.location.search);
-        const topic = urlParams.get('topic');
+<script>
+    // 1. Read the 'topic' parameter from the URL (e.g., ?topic=zeros)
+    const urlParams = new URLSearchParams(window.location.search);
+    const topic = urlParams.get('topic');
 
-        if (!topic) {
-            document.getElementById('quiz-title').innerText = "Error";
-            document.getElementById('quiz-content').innerText = "No topic specified.";
+    if (!topic) {
+        document.getElementById("question").textContent = "Error: No topic specified.";
+        document.getElementById("actionButton").style.display = "none";
+    } else {
+        // 2. Dynamically load the correct question file from the questions/ folder
+        const script = document.createElement('script');
+        script.src = `../questions/${topic}.js`;
+        
+        script.onload = function() {
+            if (typeof questions !== 'undefined') {
+                document.getElementById("actionButton").style.display = "block";
+                displayQuestion();
+            } else {
+                document.getElementById("question").textContent = "Error: 'questions' variable not found in file.";
+                document.getElementById("actionButton").style.display = "none";
+            }
+        };
+
+        script.onerror = function() {
+            document.getElementById("question").textContent = `Error: Could not load question file (questions/${topic}.js).`;
+            document.getElementById("actionButton").style.display = "none";
+        };
+
+        document.head.appendChild(script);
+    }
+
+    // ------------------------------------------
+    // MULTIPLE-CHOICE ENGINE LOGIC
+    // ------------------------------------------
+
+    let currentQuestion = 0;
+
+    function displayQuestion() {
+        const q = questions[currentQuestion];
+
+        document.getElementById("progress").textContent =
+            `Question ${currentQuestion + 1} of ${questions.length}`;
+
+        document.getElementById("question").textContent =
+            q.question;
+
+        const choicesContainer = document.getElementById("choices");
+        choicesContainer.innerHTML = "";
+
+        q.choices.forEach((choice, index) => {
+            const label = document.createElement("label");
+            label.className = "choice";
+            label.innerHTML = `
+                <input type="radio" name="answer" value="${index}">
+                ${String.fromCharCode(65 + index)}. ${choice}
+            `;
+            choicesContainer.appendChild(label);
+        });
+
+        document.getElementById("feedback").style.display = "none";
+        const actionBtn = document.getElementById("actionButton");
+        actionBtn.textContent = "Check Answer";
+        actionBtn.onclick = checkAnswer;
+    }
+
+    function checkAnswer() {
+        const selected = document.querySelector('input[name="answer"]:checked');
+        const feedback = document.getElementById("feedback");
+
+        if (!selected) {
+            feedback.className = "feedback incorrect";
+            feedback.innerHTML = "Please select an answer first.";
+            feedback.style.display = "block";
+            return;
+        }
+
+        const selectedAnswer = Number(selected.value);
+        const q = questions[currentQuestion];
+
+        if (selectedAnswer === q.answer) {
+            feedback.className = "feedback correct";
+            feedback.innerHTML = `
+                <strong>✓ Correct!</strong>
+                <div class="explanation">${q.explanation}</div>
+            `;
         } else {
-            // 2. Dynamically load the matching question script from the questions/ folder
-            const script = document.createElement('script');
-            script.src = `../questions/${questionFile}.js`;
-            
-            script.onload = () => {
-                if (typeof quizData !== 'undefined') {
-                    buildQuiz(quizData);
-                } else {
-                    showError("Question data variable 'quizData' not found in file.");
-                }
-            };
+            const correctLetter = String.fromCharCode(65 + q.answer);
+            const correctText = q.choices[q.answer];
 
-            script.onerror = () => {
-                showError(`Could not load question file: questions/${topic}.js`);
-            };
-
-            document.head.appendChild(script);
+            feedback.className = "feedback incorrect";
+            feedback.innerHTML = `
+                <strong>Not quite.</strong>
+                <div class="explanation">
+                    The correct answer is <strong>${correctLetter}. ${correctText}</strong>
+                    <br><br>
+                    ${q.explanation}
+                </div>
+            `;
         }
 
-        function showError(message) {
-            document.getElementById('quiz-title').innerText = "Missing Content";
-            document.getElementById('quiz-content').innerHTML = `<p style="color: red; text-align: center;">${message}</p>`;
+        feedback.style.display = "block";
+
+        const actionBtn = document.getElementById("actionButton");
+        if (currentQuestion < questions.length - 1) {
+            actionBtn.textContent = "Next Question";
+            actionBtn.onclick = nextQuestion;
+        } else {
+            actionBtn.textContent = "Practice Complete";
+            actionBtn.onclick = finishPractice;
         }
+    }
 
-        // 3. Render the questions onto the page dynamically
-        function buildQuiz(data) {
-            document.getElementById('quiz-title').innerText = data.title || "Practice Quiz";
-            const contentDiv = document.getElementById('quiz-content');
-            contentDiv.innerHTML = '';
+    function nextQuestion() {
+        currentQuestion++;
+        displayQuestion();
+    }
 
-            data.questions.forEach((q, qIndex) => {
-                let qDiv = document.createElement('div');
-                qDiv.className = 'question-block';
-                
-                let questionHTML = `<p><strong>${qIndex + 1}. ${q.question}</strong></p>`;
-                
-                q.options.forEach((opt, optIndex) => {
-                    questionHTML += `
-                        <label>
-                            <input type="radio" name="question-${qIndex}" value="${optIndex}"> 
-                            ${opt}
-                        </label>
-                    `;
-                });
+    function finishPractice() {
+        document.getElementById("question").textContent = "You have completed this practice set!";
+        document.getElementById("choices").innerHTML = "";
+        document.getElementById("feedback").style.display = "none";
+        document.getElementById("actionButton").style.display = "none";
+        document.getElementById("progress").textContent = "Practice Complete";
+    }
+</script>
 
-                qDiv.innerHTML = questionHTML;
-                contentDiv.appendChild(qDiv);
-            });
-
-            // Add submit button
-            let submitBtn = document.createElement('button');
-            submitBtn.className = 'action-button';
-            submitBtn.innerText = "Check Answers";
-            submitBtn.onclick = () => gradeQuiz(data.questions);
-            contentDiv.appendChild(submitBtn);
-        }
-
-        // 4. Grade the user's choices
-        function gradeQuiz(questions) {
-            let score = 0;
-            questions.forEach((q, qIndex) => {
-                const selectedOption = document.querySelector(`input[name="question-${qIndex}"]:checked`);
-                if (selectedOption && parseInt(selectedOption.value) === q.correct) {
-                    score++;
-                }
-            });
-
-            document.getElementById('results').innerText = `You scored ${score} out of ${questions.length}!`;
-        }
-    </script>
 </body>
 </html>
