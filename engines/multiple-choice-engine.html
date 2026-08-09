@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Multiple Choice Practice</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f8;
+            margin: 0;
+            padding: 40px;
+        }
+
+        .practice-box {
+            max-width: 700px;
+            margin: auto;
+            background: white;
+            padding: 35px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        .progress {
+            color: #777;
+            margin-bottom: 25px;
+        }
+
+        .question {
+            font-size: 22px;
+            margin-bottom: 25px;
+        }
+
+        .choice {
+            display: block;
+            padding: 15px;
+            margin: 10px 0;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .choice:hover {
+            background: #f0f4f7;
+        }
+
+        .choice input {
+            margin-right: 12px;
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 7px;
+            background: #167c80;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .feedback {
+            margin-top: 25px;
+            padding: 18px;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .correct {
+            background: #e5f6e8;
+            color: #176b2c;
+        }
+
+        .incorrect {
+            background: #fdeaea;
+            color: #9b2226;
+        }
+
+        .explanation {
+            margin-top: 10px;
+            color: #333;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="practice-box">
+
+    <h1 id="activityTitle">
+        Multiple Choice Practice
+    </h1>
+
+    <div class="progress" id="progress"></div>
+
+    <div class="question" id="question"></div>
+
+    <div id="choices"></div>
+
+    <button id="actionButton">
+        Check Answer
+    </button>
+
+    <div id="feedback" class="feedback"></div>
+
+</div>
+
+
+<!--
+    This loads the separate question file.
+
+    The engine itself does NOT contain
+    any math questions.
+-->
+<script src="questions.js"></script>
+
+
+<script>
+
+    // ------------------------------------------
+    // MULTIPLE-CHOICE ENGINE
+    // ------------------------------------------
+
+    let currentQuestion = 0;
+
+
+    // Display a question
+    function displayQuestion() {
+
+        const question = questions[currentQuestion];
+
+        document.getElementById("progress").textContent =
+            `Question ${currentQuestion + 1} of ${questions.length}`;
+
+        document.getElementById("question").textContent =
+            question.question;
+
+        const choicesContainer =
+            document.getElementById("choices");
+
+        choicesContainer.innerHTML = "";
+
+
+        // Create the answer choices
+        question.choices.forEach((choice, index) => {
+
+            const label = document.createElement("label");
+
+            label.className = "choice";
+
+            label.innerHTML = `
+                <input
+                    type="radio"
+                    name="answer"
+                    value="${index}">
+                ${String.fromCharCode(65 + index)}. ${choice}
+            `;
+
+            choicesContainer.appendChild(label);
+        });
+
+
+        // Clear previous feedback
+        document.getElementById("feedback").style.display = "none";
+
+        document.getElementById("actionButton").textContent =
+            "Check Answer";
+
+        document.getElementById("actionButton").onclick =
+            checkAnswer;
+    }
+
+
+    // Check the student's answer
+    function checkAnswer() {
+
+        const selected =
+            document.querySelector(
+                'input[name="answer"]:checked'
+            );
+
+
+        const feedback =
+            document.getElementById("feedback");
+
+
+        // Nothing selected
+        if (!selected) {
+
+            feedback.className =
+                "feedback incorrect";
+
+            feedback.innerHTML =
+                "Please select an answer first.";
+
+            feedback.style.display =
+                "block";
+
+            return;
+        }
+
+
+        const selectedAnswer =
+            Number(selected.value);
+
+
+        const question =
+            questions[currentQuestion];
+
+
+        // Check answer
+        if (selectedAnswer === question.answer) {
+
+            feedback.className =
+                "feedback correct";
+
+            feedback.innerHTML = `
+                <strong>✓ Correct!</strong>
+
+                <div class="explanation">
+                    ${question.explanation}
+                </div>
+            `;
+
+        } else {
+
+            const correctLetter =
+                String.fromCharCode(
+                    65 + question.answer
+                );
+
+            const correctText =
+                question.choices[question.answer];
+
+
+            feedback.className =
+                "feedback incorrect";
+
+            feedback.innerHTML = `
+                <strong>Not quite.</strong>
+
+                <div class="explanation">
+                    The correct answer is
+                    <strong>
+                        ${correctLetter}. ${correctText}
+                    </strong>
+
+                    <br><br>
+
+                    ${question.explanation}
+                </div>
+            `;
+        }
+
+
+        feedback.style.display =
+            "block";
+
+
+        // Change button to Next Question
+        if (currentQuestion < questions.length - 1) {
+
+            document.getElementById("actionButton").textContent =
+                "Next Question";
+
+            document.getElementById("actionButton").onclick =
+                nextQuestion;
+
+        } else {
+
+            document.getElementById("actionButton").textContent =
+                "Practice Complete";
+
+            document.getElementById("actionButton").onclick =
+                finishPractice;
+        }
+    }
+
+
+    // Move to next question
+    function nextQuestion() {
+
+        currentQuestion++;
+
+        displayQuestion();
+    }
+
+
+    // Finish activity
+    function finishPractice() {
+
+        document.getElementById("question").textContent =
+            "You have completed this practice set.";
+
+        document.getElementById("choices").innerHTML =
+            "";
+
+        document.getElementById("feedback").style.display =
+            "none";
+
+        document.getElementById("actionButton").style.display =
+            "none";
+
+        document.getElementById("progress").textContent =
+            "Practice Complete";
+    }
+
+
+    // Start the activity
+    displayQuestion();
+
+</script>
+
+</body>
+</html>
