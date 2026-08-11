@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Amazing Sixes — A Magic Number Show</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-deep:#170a2e;
+    --bg-panel:#241146;
+    --bg-panel-2:#331a63;
+    --curtain:#4a0f2e;
+    --curtain-dark:#340a20;
+    --gold:#ffd166;
+    --gold-deep:#e2a520;
+    --magenta:#c65bff;
+    --teal:#2dd9c4;
+    --coral:#ff5d73;
+    --text-light:#f8f0ff;
+    --text-muted:#c3b2e6;
+    --radius:18px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    min-height:100vh;
+    background:
+      radial-gradient(ellipse at 50% 0%, #3a1c6e 0%, var(--bg-deep) 55%),
+      var(--bg-deep);
+    font-family:'Nunito', sans-serif;
+    color:var(--text-light);
+    display:flex;
+    justify-content:center;
+    padding:0 0 40px 0;
+    overflow-x:hidden;
+  }
+  .app{
+    width:100%;
+    max-width:720px;
+    position:relative;
+  }
+  /* ---------- Curtain header ---------- */
+  .curtain{
+    position:relative;
+    height:86px;
+    background:
+      repeating-linear-gradient(90deg,
+        var(--curtain) 0px, var(--curtain) 22px,
+        var(--curtain-dark) 22px, var(--curtain-dark) 44px);
+    border-bottom:6px solid var(--gold-deep);
+  }
+  .curtain::after{
+    content:"";
+    position:absolute;
+    left:0; right:0; bottom:-14px;
+    height:14px;
+    background-image: radial-gradient(circle at 11px 0, var(--gold) 7px, transparent 7.5px);
+    background-size:22px 14px;
+    background-repeat:repeat-x;
+  }
+  .marquee{
+    text-align:center;
+    padding:22px 16px 6px;
+  }
+  .marquee h1{
+    font-family:'Baloo 2', sans-serif;
+    font-weight:800;
+    font-size:clamp(28px,7vw,42px);
+    margin:0;
+    letter-spacing:0.5px;
+    background:linear-gradient(180deg, var(--gold) 20%, var(--gold-deep) 100%);
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+    text-shadow:0 2px 0 rgba(0,0,0,0.25);
+  }
+  .marquee p{
+    margin:6px 0 0;
+    color:var(--text-muted);
+    font-weight:700;
+    font-size:14px;
+    letter-spacing:2px;
+    text-transform:uppercase;
+  }
+
+  /* ---------- Sections ---------- */
+  section{ padding:20px 20px 8px; }
+  .hidden{ display:none !important; }
+
+  /* ---------- Playbill (level select) ---------- */
+  .playbill{
+    display:grid;
+    gap:14px;
+    margin-top:10px;
+  }
+  .act-card{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    background:linear-gradient(135deg, var(--bg-panel), var(--bg-panel-2));
+    border:2px solid rgba(255,209,102,0.25);
+    border-radius:var(--radius);
+    padding:14px 16px;
+    cursor:pointer;
+    transition:transform .15s ease, border-color .15s ease, box-shadow .15s ease;
+    text-align:left;
+    color:var(--text-light);
+    font-family:inherit;
+  }
+  .act-card:hover:not(:disabled){
+    transform:translateY(-2px);
+    border-color:var(--gold);
+    box-shadow:0 8px 20px rgba(198,91,255,0.25);
+  }
+  .act-card:disabled{
+    opacity:0.45;
+    cursor:not-allowed;
+  }
+  .act-num{
+    font-family:'Baloo 2', sans-serif;
+    font-weight:800;
+    font-size:26px;
+    color:var(--bg-deep);
+    background:var(--gold);
+    width:46px; height:46px;
+    min-width:46px;
+    border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .act-info h3{
+    margin:0 0 3px;
+    font-family:'Baloo 2', sans-serif;
+    font-size:19px;
+  }
+  .act-info p{
+    margin:0;
+    font-size:13px;
+    color:var(--text-muted);
+  }
+  .act-stars{
+    margin-left:auto;
+    font-size:16px;
+    letter-spacing:2px;
+    color:var(--gold);
+    white-space:nowrap;
+  }
+
+  .begin-btn, .primary-btn{
+    display:block;
+    width:100%;
+    margin-top:6px;
+    padding:14px;
+    border:none;
+    border-radius:14px;
+    background:linear-gradient(180deg, var(--gold), var(--gold-deep));
+    color:#2b1400;
+    font-family:'Baloo 2', sans-serif;
+    font-weight:700;
+    font-size:17px;
+    cursor:pointer;
+    box-shadow:0 6px 0 #a9700f, 0 10px 18px rgba(0,0,0,0.35);
+  }
+  .begin-btn:active, .primary-btn:active{
+    transform:translateY(3px);
+    box-shadow:0 3px 0 #a9700f, 0 6px 12px rgba(0,0,0,0.3);
+  }
+  .ghost-btn{
+    display:block;
+    width:100%;
+    margin-top:10px;
+    padding:12px;
+    border:2px solid rgba(255,209,102,0.4);
+    border-radius:14px;
+    background:transparent;
+    color:var(--text-light);
+    font-family:'Baloo 2', sans-serif;
+    font-weight:600;
+    font-size:15px;
+    cursor:pointer;
+  }
+
+  /* ---------- Game screen ---------- */
+  .hud{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:16px;
+  }
+  .hud .back{
+    background:none;border:none;color:var(--gold);font-size:22px;cursor:pointer;padding:4px 8px;
+  }
+  .hud .level-name{
+    font-family:'Baloo 2', sans-serif;
+    font-weight:700;
+    font-size:15px;
+    color:var(--text-muted);
+    flex:1;
+  }
+  .lives{ font-size:18px; letter-spacing:2px; }
+
+  .wand-meter{
+    height:14px;
+    border-radius:10px;
+    background:rgba(255,255,255,0.08);
+    border:1px solid rgba(255,209,102,0.3);
+    overflow:hidden;
+    margin-bottom:22px;
+    position:relative;
+  }
+  .wand-fill{
+    height:100%;
+    width:0%;
+    background:linear-gradient(90deg, var(--magenta), var(--gold));
+    transition:width .4s ease;
+    border-radius:10px 0 0 10px;
+  }
+
+  .stage{
+    position:relative;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    padding:10px 0 6px;
+  }
+  .spotlight{
+    position:absolute;
+    top:-40px; left:50%; transform:translateX(-50%);
+    width:280px; height:280px;
+    background:radial-gradient(circle, rgba(255,209,102,0.20) 0%, transparent 70%);
+    pointer-events:none;
+  }
+
+  .problem-card{
+    position:relative;
+    background:linear-gradient(160deg, #fff8e8, #ffe9b8);
+    color:#2b1400;
+    border-radius:16px;
+    padding:26px 18px;
+    min-width:210px;
+    text-align:center;
+    box-shadow:0 12px 26px rgba(0,0,0,0.4), inset 0 0 0 3px var(--gold-deep);
+    transform:rotate(-2deg);
+    animation:cardIn .35s ease;
+  }
+  @keyframes cardIn{
+    from{opacity:0; transform:translateY(-16px) rotate(-2deg) scale(0.9);}
+    to{opacity:1; transform:translateY(0) rotate(-2deg) scale(1);}
+  }
+  .problem-card .label{
+    font-size:11px;
+    letter-spacing:2px;
+    text-transform:uppercase;
+    color:#8a5a12;
+    font-weight:700;
+    margin-bottom:4px;
+  }
+  .problem-card .expr{
+    font-family:'Baloo 2', sans-serif;
+    font-weight:800;
+    font-size:clamp(30px,8vw,40px);
+  }
+  .sparkle-star{
+    position:absolute;
+    font-size:20px;
+    animation:spin 3.5s linear infinite;
+    opacity:0.85;
+  }
+  .sparkle-star.a{ top:-10px; left:-10px; }
+  .sparkle-star.b{ bottom:-10px; right:-10px; animation-direction:reverse;}
+  @keyframes spin{ from{transform:rotate(0deg);} to{transform:rotate(360deg);} }
+
+  .choices{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:12px;
+    width:100%;
+    max-width:380px;
+    margin-top:26px;
+  }
+  .choice-card{
+    position:relative;
+    height:72px;
+    border-radius:12px;
+    border:none;
+    cursor:pointer;
+    font-family:'Baloo 2', sans-serif;
+    font-weight:800;
+    font-size:26px;
+    color:var(--bg-deep);
+    background:linear-gradient(160deg, #efe3ff, #d9c2ff);
+    box-shadow:0 6px 0 #8657c9, 0 9px 14px rgba(0,0,0,0.35);
+    transition:transform .08s ease;
+  }
+  .choice-card:active:not(:disabled){
+    transform:translateY(4px);
+    box-shadow:0 2px 0 #8657c9, 0 4px 8px rgba(0,0,0,0.3);
+  }
+  .choice-card:disabled{ cursor:default; }
+  .choice-card.correct{
+    background:linear-gradient(160deg, #b9fbe8, var(--teal));
+    box-shadow:0 6px 0 #14a08d, 0 9px 14px rgba(0,0,0,0.3);
+  }
+  .choice-card.wrong{
+    background:linear-gradient(160deg, #ffd0d8, var(--coral));
+    box-shadow:0 6px 0 #b8283f, 0 9px 14px rgba(0,0,0,0.3);
+  }
+
+  .feedback-banner{
+    min-height:30px;
+    margin-top:18px;
+    font-family:'Baloo 2', sans-serif;
+    font-weight:700;
+    font-size:17px;
+    text-align:center;
+  }
+  .feedback-banner.good{ color:var(--teal); }
+  .feedback-banner.bad{ color:var(--coral); }
+
+  /* ---------- Confetti / sparkles ---------- */
+  .burst{
+    position:fixed;
+    pointer-events:none;
+    font-size:22px;
+    animation:burstUp 0.9s ease-out forwards;
+    z-index:50;
+  }
+  @keyframes burstUp{
+    0%{ opacity:1; transform:translate(0,0) scale(0.6) rotate(0deg); }
+    100%{ opacity:0; transform:var(--end) scale(1.1) rotate(160deg); }
+  }
+
+  /* ---------- Results ---------- */
+  .results{
+    text-align:center;
+    padding:20px 16px 6px;
+  }
+  .results .big-stars{
+    font-size:44px;
+    letter-spacing:8px;
+    margin:8px 0 4px;
+  }
+  .results h2{
+    font-family:'Baloo 2', sans-serif;
+    margin:0 0 4px;
+  }
+  .results p{ color:var(--text-muted); margin:0 0 18px; }
+  .results .stat-row{
+    display:flex;
+    justify-content:center;
+    gap:22px;
+    margin-bottom:20px;
+  }
+  .results .stat{
+    background:var(--bg-panel);
+    border:1px solid rgba(255,209,102,0.25);
+    border-radius:12px;
+    padding:10px 16px;
+    min-width:90px;
+  }
+  .results .stat .n{
+    font-family:'Baloo 2', sans-serif;
+    font-weight:800;
+    font-size:22px;
+    color:var(--gold);
+  }
+  .results .stat .l{ font-size:11px; color:var(--text-muted); text-transform:uppercase; letter-spacing:1px; }
+
+  footer{
+    text-align:center;
+    color:var(--text-muted);
+    font-size:12px;
+    margin-top:10px;
+    padding:0 20px;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation-duration:0.001s !important; transition-duration:0.001s !important; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="curtain"></div>
+  <div class="marquee">
+    <h1>🎩 The Amazing Sixes 🎩</h1>
+    <p>A magic show of ×6 and ÷6 tricks</p>
+  </div>
+
+  <!-- START / PLAYBILL SCREEN -->
+  <section id="screen-start">
+    <p style="text-align:center; color:var(--text-muted); font-size:14px; max-width:480px; margin:0 auto 14px;">
+      Pick an act below. Answer each trick correctly to fill the magic wand meter and earn stars!
+    </p>
+    <div class="playbill" id="playbill"></div>
+  </section>
+
+  <!-- GAME SCREEN -->
+  <section id="screen-game" class="hidden">
+    <div class="hud">
+      <button class="back" id="backBtn" aria-label="Back to playbill">←</button>
+      <div class="level-name" id="levelName"></div>
+      <div class="lives" id="livesDisplay"></div>
+    </div>
+    <div class="wand-meter"><div class="wand-fill" id="wandFill"></div></div>
+
+    <div class="stage">
+      <div class="spotlight"></div>
+      <div class="problem-card" id="problemCard">
+        <span class="sparkle-star a">✨</span>
+        <div class="label" id="problemLabel">Trick #1</div>
+        <div class="expr" id="problemExpr">6 × 4 = ?</div>
+        <span class="sparkle-star b">✨</span>
+      </div>
+      <div class="choices" id="choices"></div>
+      <div class="feedback-banner" id="feedback"></div>
+    </div>
+  </section>
+
+  <!-- RESULTS SCREEN -->
+  <section id="screen-results" class="results hidden">
+    <div class="big-stars" id="resultStars">⭐⭐⭐</div>
+    <h2 id="resultTitle">Ta-da!</h2>
+    <p id="resultSubtitle">You finished the act.</p>
+    <div class="stat-row">
+      <div class="stat"><div class="n" id="statCorrect">0</div><div class="l">Correct</div></div>
+      <div class="stat"><div class="n" id="statBest">0</div><div class="l">Best Streak</div></div>
+    </div>
+    <button class="primary-btn" id="retryBtn">Perform Again</button>
+    <button class="ghost-btn" id="nextLevelBtn">Next Act →</button>
+    <button class="ghost-btn" id="menuBtn">Back to Playbill</button>
+  </section>
+
+  <footer>Tip: every ×6 fact has a ÷6 twin — 6 × 7 = 42, so 42 ÷ 6 = 7.</footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  // ---------- Level definitions ----------
+  const LEVELS = [
+    {
+      id:0,
+      title:"The Apprentice's Almanac",
+      desc:"×6 and ÷6 facts, 1 through 6",
+      range:[1,6],
+      mode:"mix",
+      questionCount:8,
+      lives:null
+    },
+    {
+      id:1,
+      title:"The Sorcerer's Circuit",
+      desc:"×6 and ÷6 facts, 7 through 12",
+      range:[7,12],
+      mode:"mix",
+      questionCount:8,
+      lives:null
+    },
+    {
+      id:2,
+      title:"The Grand Finale",
+      desc:"All facts, 1 through 12 — 3 magic tokens only!",
+      range:[1,12],
+      mode:"mix",
+      questionCount:10,
+      lives:3
+    }
+  ];
+
+  // stars earned per level, session only
+  const progress = { 0:0, 1:0, 2:0 };
+
+  let state = null; // active game state
+
+  // ---------- Utility ----------
+  function shuffle(arr){
+    const a = arr.slice();
+    for(let i=a.length-1;i>0;i--){
+      const j = Math.floor(Math.random()*(i+1));
+      [a[i],a[j]] = [a[j],a[i]];
+    }
+    return a;
+  }
+  function randInt(min,max){ return Math.floor(Math.random()*(max-min+1))+min; }
+
+  function buildQuestionPool(level){
+    const [lo,hi] = level.range;
+    const pool = [];
+    for(let n=lo; n<=hi; n++){
+      pool.push({ op:"mul", n, text:`6 × ${n} = ?`, answer:6*n });
+      pool.push({ op:"mul", n, text:`${n} × 6 = ?`, answer:6*n });
+      pool.push({ op:"div", n, text:`${6*n} ÷ 6 = ?`, answer:n });
+    }
+    return shuffle(pool).slice(0, level.questionCount).map((q,i)=>({...q, idx:i}));
+  }
+
+  function buildChoices(correct){
+    const set = new Set([correct]);
+    while(set.size < 4){
+      const roll = Math.random();
+      let candidate;
+      if(roll < 0.4){
+        candidate = correct + (Math.random()<0.5? 6 : -6) * randInt(1,2);
+      } else if(roll < 0.7){
+        candidate = correct + (Math.random()<0.5? 1 : -1) * randInt(1,3);
+      } else {
+        candidate = randInt(Math.max(1, correct-15), correct+15);
+      }
+      if(candidate > 0 && candidate <= 144){
+        set.add(candidate);
+      }
+    }
+    return shuffle(Array.from(set));
+  }
+
+  // ---------- Rendering: playbill ----------
+  function renderPlaybill(){
+    const el = document.getElementById('playbill');
+    el.innerHTML = "";
+    LEVELS.forEach((lvl, i)=>{
+      const locked = i > 0 && progress[i-1] === 0;
+      const btn = document.createElement('button');
+      btn.className = "act-card";
+      btn.disabled = locked;
+      const stars = "⭐".repeat(progress[i]) + "☆".repeat(3-progress[i]);
+      btn.innerHTML = `
+        <div class="act-num">${i+1}</div>
+        <div class="act-info">
+          <h3>${lvl.title}</h3>
+          <p>${locked ? "Locked — finish the act before this one" : lvl.desc}</p>
+        </div>
+        <div class="act-stars">${locked ? "🔒" : stars}</div>
+      `;
+      if(!locked){
+        btn.addEventListener('click', ()=> startLevel(i));
+      }
+      el.appendChild(btn);
+    });
+  }
+
+  // ---------- Screen switching ----------
+  function show(screenId){
+    ["screen-start","screen-game","screen-results"].forEach(id=>{
+      document.getElementById(id).classList.toggle('hidden', id !== screenId);
+    });
+  }
+
+  // ---------- Game flow ----------
+  function startLevel(i){
+    const level = LEVELS[i];
+    state = {
+      level,
+      questions: buildQuestionPool(level),
+      qi: 0,
+      correctCount: 0,
+      streak: 0,
+      bestStreak: 0,
+      lives: level.lives,
+      locked: false
+    };
+    document.getElementById('levelName').textContent = level.title;
+    show('screen-game');
+    renderLives();
+    renderQuestion();
+  }
+
+  function renderLives(){
+    const el = document.getElementById('livesDisplay');
+    if(state.lives === null || state.lives === undefined){
+      el.textContent = "";
+    } else {
+      el.textContent = "🐇".repeat(state.lives);
+    }
+  }
+
+  function renderQuestion(){
+    const q = state.questions[state.qi];
+    state.locked = false;
+    document.getElementById('problemLabel').textContent = `Trick #${state.qi+1} of ${state.questions.length}`;
+    document.getElementById('problemExpr').textContent = q.text;
+    document.getElementById('feedback').textContent = "";
+    document.getElementById('feedback').className = "feedback-banner";
+
+    // retrigger card entrance animation
+    const card = document.getElementById('problemCard');
+    card.style.animation = 'none';
+    void card.offsetWidth;
+    card.style.animation = '';
+
+    const choices = buildChoices(q.answer);
+    const wrap = document.getElementById('choices');
+    wrap.innerHTML = "";
+    choices.forEach(val=>{
+      const b = document.createElement('button');
+      b.className = "choice-card";
+      b.textContent = val;
+      b.addEventListener('click', ()=> handleAnswer(val, q.answer, b));
+      wrap.appendChild(b);
+    });
+
+    updateWandMeter();
+  }
+
+  function updateWandMeter(){
+    const pct = Math.round((state.qi / state.questions.length) * 100);
+    document.getElementById('wandFill').style.width = pct + "%";
+  }
+
+  function spawnBurst(originEl){
+    const rect = originEl.getBoundingClientRect();
+    const icons = ["✨","⭐","🌟","💫"];
+    for(let i=0;i<8;i++){
+      const s = document.createElement('span');
+      s.className = "burst";
+      s.textContent = icons[randInt(0,icons.length-1)];
+      const x = rect.left + rect.width/2;
+      const y = rect.top + rect.height/2;
+      s.style.left = x + "px";
+      s.style.top = y + "px";
+      const dx = randInt(-80,80);
+      const dy = randInt(-100,-20);
+      s.style.setProperty('--end', `translate(${dx}px, ${dy}px)`);
+      document.body.appendChild(s);
+      setTimeout(()=> s.remove(), 900);
+    }
+  }
+
+  function handleAnswer(chosen, correctAnswer, btnEl){
+    if(state.locked) return;
+    state.locked = true;
+    const allBtns = document.querySelectorAll('#choices .choice-card');
+    allBtns.forEach(b=> b.disabled = true);
+
+    const feedback = document.getElementById('feedback');
+
+    if(chosen === correctAnswer){
+      btnEl.classList.add('correct');
+      spawnBurst(btnEl);
+      state.correctCount++;
+      state.streak++;
+      state.bestStreak = Math.max(state.bestStreak, state.streak);
+      const lines = ["Ta-da! Correct!","Abracadabra — right!","Presto! Nailed it!","Magic!","You conjured the answer!"];
+      feedback.textContent = lines[randInt(0,lines.length-1)];
+      feedback.className = "feedback-banner good";
+    } else {
+      btnEl.classList.add('wrong');
+      allBtns.forEach(b=>{
+        if(parseInt(b.textContent,10) === correctAnswer) b.classList.add('correct');
+      });
+      state.streak = 0;
+      feedback.textContent = `Not quite — the answer was ${correctAnswer}.`;
+      feedback.className = "feedback-banner bad";
+      if(state.lives !== null && state.lives !== undefined){
+        state.lives--;
+        renderLives();
+      }
+    }
+
+    const outOfLives = state.lives !== null && state.lives !== undefined && state.lives <= 0;
+
+    setTimeout(()=>{
+      state.qi++;
+      if(outOfLives || state.qi >= state.questions.length){
+        finishLevel(outOfLives);
+      } else {
+        renderQuestion();
+      }
+    }, 1100);
+  }
+
+  function finishLevel(outOfLives){
+    document.getElementById('wandFill').style.width = "100%";
+    const total = state.questions.length;
+    const pct = state.correctCount / total;
+    let stars = 0;
+    if(!outOfLives){
+      if(pct >= 0.95) stars = 3;
+      else if(pct >= 0.75) stars = 2;
+      else if(pct >= 0.5) stars = 1;
+    }
+    progress[state.level.id] = Math.max(progress[state.level.id], stars);
+
+    document.getElementById('resultStars').textContent = "⭐".repeat(stars) + "☆".repeat(3-stars);
+    document.getElementById('resultTitle').textContent = outOfLives ? "Out of magic tokens!" : (stars === 3 ? "A perfect performance!" : "The crowd applauds!");
+    document.getElementById('resultSubtitle').textContent = outOfLives
+      ? "The rabbits have all hopped away — give the act another go."
+      : `You solved ${state.correctCount} of ${total} tricks.`;
+    document.getElementById('statCorrect').textContent = `${state.correctCount}/${total}`;
+    document.getElementById('statBest').textContent = state.bestStreak;
+
+    const nextBtn = document.getElementById('nextLevelBtn');
+    const hasNext = state.level.id < LEVELS.length - 1;
+    nextBtn.classList.toggle('hidden', !hasNext || stars === 0);
+
+    show('screen-results');
+  }
+
+  // ---------- Wiring ----------
+  document.getElementById('backBtn').addEventListener('click', ()=>{
+    renderPlaybill();
+    show('screen-start');
+  });
+  document.getElementById('menuBtn').addEventListener('click', ()=>{
+    renderPlaybill();
+    show('screen-start');
+  });
+  document.getElementById('retryBtn').addEventListener('click', ()=>{
+    startLevel(state.level.id);
+  });
+  document.getElementById('nextLevelBtn').addEventListener('click', ()=>{
+    startLevel(state.level.id + 1);
+  });
+
+  renderPlaybill();
+  show('screen-start');
+})();
+</script>
+</body>
+</html>
