@@ -51,28 +51,78 @@
     font-weight: 600;
   }
 
-  .card-bank {
+  .groups-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 18px;
+    margin-bottom: 26px;
+  }
+  .group-column {
+    background: white;
+    border-radius: 14px;
+    padding: 16px;
+    box-shadow: 0 2px 10px rgba(0,0,0,.08);
+    border: 2px solid #d1d5db;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    transition: .15s ease;
+  }
+  .group-column.over {
+    border-color: #2563eb;
+    background: #eff6ff;
+  }
+  .group-column.complete {
+    border-color: #16a34a;
+    background: #f0fdf4;
+  }
+  .column-header {
+    text-align: center;
+    font-weight: 700;
+    color: #4b5563;
+    font-size: 15px;
+    margin: 0;
+  }
+  .drop-area {
+    min-height: 380px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background: #f9fafb;
+    border: 2px dashed #e5e7eb;
+    border-radius: 10px;
+    padding: 10px;
+  }
+
+  .card-bank-section {
     background: white;
     border-radius: 14px;
     padding: 20px;
     box-shadow: 0 2px 10px rgba(0,0,0,.08);
     margin-bottom: 26px;
   }
-  .card-bank h2 {
+  .card-bank-section h2 {
     margin: 0 0 14px;
-    font-size: 20px;
+    font-size: 18px;
+    color: #4b5563;
   }
   .cards {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
-    gap: 12px;
+    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+    gap: 10px;
+    min-height: 90px;
+    background: #f9fafb;
+    border: 2px dashed #e5e7eb;
+    border-radius: 10px;
+    padding: 12px;
   }
+
   .card {
     background: #eef2ff;
     border: 2px solid #c7d2fe;
     border-radius: 10px;
-    padding: 14px;
-    min-height: 74px;
+    padding: 12px;
+    min-height: 70px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -80,7 +130,7 @@
     cursor: grab;
     user-select: none;
     touch-action: none;
-    font-size: 17px;
+    font-size: 16px;
     font-weight: 600;
   }
   .card:active { cursor: grabbing; }
@@ -90,14 +140,14 @@
     background: #ede9fe;
   }
   .card.graph-card {
-    min-height: 150px;
+    min-height: 130px;
     padding: 8px;
     flex-direction: column;
-    gap: 7px;
+    gap: 6px;
   }
   .graph-placeholder {
     width: 100%;
-    height: 105px;
+    height: 90px;
     border: 2px dashed #9ca3af;
     border-radius: 7px;
     display: flex;
@@ -108,53 +158,15 @@
       linear-gradient(90deg, #e5e7eb 1px, transparent 1px);
     background-size: 20px 20px;
     color: #6b7280;
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 500;
   }
 
-  .matches {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 18px;
-  }
-  .match-zone {
-    background: white;
-    border: 2px solid #d1d5db;
-    border-radius: 14px;
-    min-height: 310px;
-    padding: 14px;
-    transition: .15s ease;
-  }
-  .match-zone.over {
-    border-color: #2563eb;
-    background: #eff6ff;
-  }
-  .match-zone.complete {
-    border-color: #16a34a;
-    background: #f0fdf4;
-  }
-  .zone-title {
-    text-align: center;
-    font-weight: 700;
-    color: #6b7280;
-    margin-bottom: 10px;
-    font-size: 14px;
-  }
-  .drop-area {
-    min-height: 260px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-  .drop-area .card {
-    cursor: grab;
-  }
-
   .feedback {
-    margin-top: 12px;
-    min-height: 24px;
+    min-height: 22px;
     text-align: center;
     font-weight: 700;
+    font-size: 14px;
   }
   .correct { color: #15803d; }
   .incorrect { color: #b91c1c; }
@@ -171,15 +183,13 @@
   }
   .hint-box.show { display: block; }
 
-  @media (max-width: 600px) {
+  @media (max-width: 768px) {
     h1 { font-size: 25px; }
     .cards { grid-template-columns: 1fr 1fr; }
-    .matches { grid-template-columns: 1fr; }
   }</style></head><body><div class="container">
   <h1>Match the Function Family</h1>
   <p class="instructions">
-    Drag each graph, parent function, and general form into the group that belongs together.
-    You will make five groups of three cards.
+    Arrange the cards into 5 columns of three matching items each (Graph, Parent Function, and General Form belonging to the same family).
   </p>
 
   <div class="toolbar">
@@ -196,12 +206,14 @@
 
   <div id="status" class="status"></div>
 
-  <section class="card-bank">
-    <h2>Cards</h2>
-    <div id="cardBank" class="cards"></div>
-  </section>
+  <!-- 5 Columns for Grouping -->
+  <section class="groups-container" id="groupsContainer"></section>
 
-  <section class="matches" id="matches"></section></div><script>const functionSets = [
+  <!-- Unassigned Card Bank -->
+  <section class="card-bank-section">
+    <h2>Unassigned Cards</h2>
+    <div id="cardBank" class="cards"></div>
+  </section></div><script>const functionSets = [
   {
     id: "linear",
     name: "Linear",
@@ -237,7 +249,12 @@
     general: "f(x) = abˣ⁻ʰ + k",
     graph: "Exponential Graph"
   }
-];let cards = [];function makeCards() {
+];
+
+let cards = [];
+let selectedCard = null;
+
+function makeCards() {
   cards = [];
   functionSets.forEach(set => {
     cards.push({
@@ -265,7 +282,9 @@
     const j = Math.floor(Math.random() * (i + 1));
     [cards[i], cards[j]] = [cards[j], cards[i]];
   }
-}function createCard(card) {
+}
+
+function createCard(card) {
   const el = document.createElement("div");
   el.className = "card" + (card.type === "graph" ? " graph-card" : "");
   el.draggable = true;
@@ -281,7 +300,7 @@
 
     const caption = document.createElement("div");
     caption.textContent = "Graph";
-    caption.style.fontSize = "12px";
+    caption.style.fontSize = "11px";
     caption.style.color = "#6b7280";
     el.appendChild(caption);
   } else {
@@ -298,136 +317,162 @@
     el.classList.remove("dragging");
   });
 
-  // Touch / click fallback: tap a card, then tap a group.
-  el.addEventListener("click", () => {
+  // Touch / click fallback: tap a card, then tap a drop target/bank.
+  el.addEventListener("click", (e) => {
+    e.stopPropagation();
     document.querySelectorAll(".card.selected").forEach(x => x.classList.remove("selected"));
     el.classList.add("selected");
     selectedCard = card.id;
-    document.querySelectorAll(".match-zone").forEach(z => z.style.outline = "");
-    document.querySelector(".matches").scrollIntoView({behavior:"smooth", block:"start"});
   });
 
   return el;
-}let selectedCard = null;function render() {
-  const bank = document.getElementById("cardBank");
-  const matches = document.getElementById("matches");
-  bank.innerHTML = "";
-  matches.innerHTML = "";
+}
 
+function render() {
+  const bank = document.getElementById("cardBank");
+  const groupsContainer = document.getElementById("groupsContainer");
+  bank.innerHTML = "";
+  groupsContainer.innerHTML = "";
+
+  // Render cards into bank initially
   cards.forEach(card => bank.appendChild(createCard(card)));
 
-  functionSets.forEach(set => {
-    const zone = document.createElement("div");
-    zone.className = "match-zone";
-    zone.dataset.set = set.id;
+  // Render 5 columns
+  for (let i = 1; i <= 5; i++) {
+    const column = document.createElement("div");
+    column.className = "group-column";
+    column.dataset.colIndex = i;
 
-    const title = document.createElement("div");
-    title.className = "zone-title";
-    title.textContent = "Drop 3 matching cards here";
-    zone.appendChild(title);
+    const title = document.createElement("h3");
+    title.className = "column-header";
+    title.textContent = `Group ${i}`;
+    column.appendChild(title);
 
-    const drop = document.createElement("div");
-    drop.className = "drop-area";
-    zone.appendChild(drop);
+    const dropArea = document.createElement("div");
+    dropArea.className = "drop-area";
+    column.appendChild(dropArea);
 
     const feedback = document.createElement("div");
     feedback.className = "feedback";
-    feedback.dataset.feedback = set.id;
-    zone.appendChild(feedback);
+    column.appendChild(feedback);
 
-    zone.addEventListener("dragover", e => {
+    // Drag and drop event listeners for columns
+    column.addEventListener("dragover", e => {
       e.preventDefault();
-      zone.classList.add("over");
+      column.classList.add("over");
     });
 
-    zone.addEventListener("dragleave", () => zone.classList.remove("over"));
+    column.addEventListener("dragleave", () => column.classList.remove("over"));
 
-    zone.addEventListener("drop", e => {
+    column.addEventListener("drop", e => {
       e.preventDefault();
-      zone.classList.remove("over");
+      column.classList.remove("over");
       const id = e.dataTransfer.getData("text/plain");
-      moveCard(id, set.id);
+      moveCard(id, dropArea);
     });
 
-    zone.addEventListener("click", () => {
+    column.addEventListener("click", () => {
       if (selectedCard) {
-        moveCard(selectedCard, set.id);
+        moveCard(selectedCard, dropArea);
         selectedCard = null;
       }
     });
 
-    matches.appendChild(zone);
-  });
-}function moveCard(cardId, targetSet) {
-  const cardEl = document.querySelector(`[data-card-id="${cardId}"]`);
-  const zone = document.querySelector(`.match-zone[data-set="${targetSet}"]`);
-  if (!cardEl || !zone) return;
-
-  const drop = zone.querySelector(".drop-area");
-
-  // Prevent more than three cards in a group.
-  if (drop.children.length >= 3 && cardEl.parentElement !== drop) {
-    document.getElementById("status").textContent = "Each group can contain exactly three cards.";
-    return;
+    groupsContainer.appendChild(column);
   }
 
-  drop.appendChild(cardEl);
+  // Setup bank drop area as well
+  bank.addEventListener("dragover", e => e.preventDefault());
+  bank.addEventListener("drop", e => {
+    e.preventDefault();
+    const id = e.dataTransfer.getData("text/plain");
+    moveCard(id, bank);
+  });
+  bank.addEventListener("click", () => {
+    if (selectedCard) {
+      moveCard(selectedCard, bank);
+      selectedCard = null;
+    }
+  });
+}
+
+function moveCard(cardId, targetContainer) {
+  const cardEl = document.querySelector(`[data-card-id="${cardId}"]`);
+  if (!cardEl) return;
+
+  targetContainer.appendChild(cardEl);
   cardEl.classList.remove("selected");
   document.getElementById("status").textContent = "";
   updateCompleteStates();
-}function updateCompleteStates() {
-  document.querySelectorAll(".match-zone").forEach(zone => {
-    const count = zone.querySelector(".drop-area").children.length;
-    zone.classList.toggle("complete", count === 3);
-  });
-}function checkAnswer() {
-  let correct = 0;
-  let complete = 0;
+}
 
-  document.querySelectorAll(".match-zone").forEach(zone => {
-    const target = zone.dataset.set;
-    const children = [...zone.querySelector(".drop-area").children];
-    const feedback = zone.querySelector(".feedback");
+function updateCompleteStates() {
+  document.querySelectorAll(".group-column").forEach(column => {
+    const count = column.querySelector(".drop-area").children.length;
+    column.classList.toggle("complete", count === 3);
+  });
+}
+
+function checkAnswer() {
+  let correctColumns = 0;
+  let allFilled = true;
+
+  document.querySelectorAll(".group-column").forEach(column => {
+    const children = [...column.querySelector(".drop-area").children];
+    const feedback = column.querySelector(".feedback");
 
     if (children.length !== 3) {
+      allFilled = false;
       feedback.textContent = children.length === 0 ? "" : "Need 3 cards";
       feedback.className = "feedback incorrect";
+      column.classList.remove("complete");
       return;
     }
 
-    complete++;
-    const allCorrect = children.every(card => card.dataset.set === target);
+    // Check if all 3 cards belong to the exact same function set family
+    const firstSet = children[0].dataset.set;
+    const allSameFamily = children.every(card => card.dataset.set === firstSet);
 
-    if (allCorrect) {
-      correct++;
-      feedback.textContent = "Correct!";
+    if (allSameFamily) {
+      correctColumns++;
+      feedback.textContent = "Correct Group!";
       feedback.className = "feedback correct";
-      zone.classList.add("complete");
+      column.classList.add("complete");
     } else {
-      feedback.textContent = "Not a match";
+      feedback.textContent = "Mixed family";
       feedback.className = "feedback incorrect";
-      zone.classList.remove("complete");
+      column.classList.remove("complete");
     }
   });
 
   const status = document.getElementById("status");
 
-  if (complete < 5) {
-    status.textContent = `Complete all five groups first. ${complete} of 5 groups have three cards.`;
-    status.className = "status";
-  } else if (correct === 5) {
-    status.textContent = "Excellent! All five function families are matched correctly.";
+  if (!allFilled) {
+    status.textContent = "Please place exactly 3 cards into each of the 5 groups before checking.";
+    status.className = "status incorrect";
+  } else if (correctColumns === 5) {
+    status.textContent = "Fantastic! All 5 columns are correctly matched function families.";
     status.className = "status correct";
   } else {
-    status.textContent = `${correct} of 5 groups are correct. Try the incorrect groups again.`;
+    status.textContent = `${correctColumns} of 5 columns are correct. Review the incorrect groups and try again.`;
     status.className = "status incorrect";
   }
-}function resetActivity() {
+}
+
+function resetActivity() {
   makeCards();
   render();
   document.getElementById("status").textContent = "";
   document.getElementById("hintBox").classList.remove("show");
   selectedCard = null;
-}document.getElementById("checkBtn").addEventListener("click", checkAnswer);document.getElementById("resetBtn").addEventListener("click", resetActivity);document.getElementById("hintBtn").addEventListener("click", () => {
+}
+
+document.getElementById("checkBtn").addEventListener("click", checkAnswer);
+document.getElementById("resetBtn").addEventListener("click", resetActivity);
+document.getElementById("hintBtn").addEventListener("click", () => {
   document.getElementById("hintBox").classList.toggle("show");
-});makeCards();render();</script></body></html>
+});
+
+makeCards();
+render();
+</script></body></html>
