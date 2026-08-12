@@ -1,4 +1,10 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Match the Function Family</title><style>
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Match the Function Family</title>
+  <style>
   * { box-sizing: border-box; }
   body {
     margin: 0;
@@ -79,8 +85,8 @@
   .column-header {
     text-align: center;
     font-weight: 700;
-    color: #4b5563;
-    font-size: 15px;
+    color: #1f2937;
+    font-size: 16px;
     margin: 0;
   }
   .drop-area {
@@ -189,7 +195,7 @@
   }</style></head><body><div class="container">
   <h1>Match the Function Family</h1>
   <p class="instructions">
-    Arrange the cards into 5 columns of three matching items each (Graph, Parent Function, and General Form belonging to the same family).
+    Arrange the cards into the correct function family columns (Graph, Parent Function, and General Form belonging to the same family).
   </p>
 
   <div class="toolbar">
@@ -337,15 +343,15 @@ function render() {
   // Render cards into bank initially
   cards.forEach(card => bank.appendChild(createCard(card)));
 
-  // Render 5 columns
-  for (let i = 1; i <= 5; i++) {
+  // Render 5 columns based on functionSets data
+  functionSets.forEach(set => {
     const column = document.createElement("div");
     column.className = "group-column";
-    column.dataset.colIndex = i;
+    column.dataset.set = set.id;
 
     const title = document.createElement("h3");
     title.className = "column-header";
-    title.textContent = `Group ${i}`;
+    title.textContent = set.name;
     column.appendChild(title);
 
     const dropArea = document.createElement("div");
@@ -379,7 +385,7 @@ function render() {
     });
 
     groupsContainer.appendChild(column);
-  }
+  });
 
   // Setup bank drop area as well
   bank.addEventListener("dragover", e => e.preventDefault());
@@ -418,6 +424,7 @@ function checkAnswer() {
   let allFilled = true;
 
   document.querySelectorAll(".group-column").forEach(column => {
+    const targetSet = column.dataset.set;
     const children = [...column.querySelector(".drop-area").children];
     const feedback = column.querySelector(".feedback");
 
@@ -429,17 +436,16 @@ function checkAnswer() {
       return;
     }
 
-    // Check if all 3 cards belong to the exact same function set family
-    const firstSet = children[0].dataset.set;
-    const allSameFamily = children.every(card => card.dataset.set === firstSet);
+    // Check if all 3 cards belong specifically to this column's designated target set
+    const allMatchColumn = children.every(card => card.dataset.set === targetSet);
 
-    if (allSameFamily) {
+    if (allMatchColumn) {
       correctColumns++;
-      feedback.textContent = "Correct Group!";
+      feedback.textContent = "Correct!";
       feedback.className = "feedback correct";
       column.classList.add("complete");
     } else {
-      feedback.textContent = "Mixed family";
+      feedback.textContent = "Incorrect match";
       feedback.className = "feedback incorrect";
       column.classList.remove("complete");
     }
@@ -448,13 +454,13 @@ function checkAnswer() {
   const status = document.getElementById("status");
 
   if (!allFilled) {
-    status.textContent = "Please place exactly 3 cards into each of the 5 groups before checking.";
+    status.textContent = "Please place exactly 3 cards into each of the 5 columns before checking.";
     status.className = "status incorrect";
   } else if (correctColumns === 5) {
     status.textContent = "Fantastic! All 5 columns are correctly matched function families.";
     status.className = "status correct";
   } else {
-    status.textContent = `${correctColumns} of 5 columns are correct. Review the incorrect groups and try again.`;
+    status.textContent = `${correctColumns} of 5 columns are correct. Review the incorrect columns and try again.`;
     status.className = "status incorrect";
   }
 }
