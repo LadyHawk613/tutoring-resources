@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Functions and Their Inverses - Interactive Study Suite</title>
+    <style>
+        :root {
+            --primary: #3b82f6;
+            --primary-dark: #1d4ed8;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-color: #1e293b;
+            --border-color: #cbd5e1;
+            --success: #22c55e;
+            --error: #ef4444;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            background: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            overflow: hidden;
+            margin-top: 20px;
+        }
+
+        header {
+            background-color: var(--primary);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+
+        /* Tabs Navigation */
+        .tabs {
+            display: flex;
+            background-color: #e2e8f0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-weight: 600;
+            color: #64748b;
+            transition: all 0.2s ease;
+        }
+
+        .tab-btn.active {
+            background-color: var(--card-bg);
+            color: var(--primary);
+            border-bottom: 3px solid var(--primary);
+        }
+
+        /* Activity Content Panels */
+        .panel {
+            display: none;
+            padding: 30px;
+        }
+
+        .panel.active {
+            display: block;
+        }
+
+        h2 {
+            margin-top: 0;
+            color: #0f172a;
+            font-size: 1.25rem;
+        }
+
+        p.instructions {
+            color: #475569;
+            margin-bottom: 20px;
+        }
+
+        /* Activity 1: Matching Table Styling */
+        .match-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .match-item {
+            padding: 12px;
+            background: #f1f5f9;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-weight: 500;
+        }
+
+        /* Activity 2: Diagnostic Domain & Range Quiz */
+        .quiz-question {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+        }
+
+        .options label {
+            display: block;
+            margin: 8px 0;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 4px;
+            transition: background 0.1s;
+        }
+
+        .options label:hover {
+            background: #e2e8f0;
+        }
+
+        /* Activity 3: Identify the Inverse Drill */
+        .drill-card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .drill-card input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+        }
+
+        /* Buttons & Feedback */
+        .btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .feedback {
+            margin-top: 10px;
+            font-weight: 600;
+        }
+
+        .feedback.correct { color: var(--success); }
+        .feedback.incorrect { color: var(--error); }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Functions and Their Inverses Study Suite</h1>
+    </header>
+
+    <!-- Tab Navigation -->
+    <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab(0)">1. Matching Table</button>
+        <button class="tab-btn active" onclick="switchTab(1)" id="tab-1">2. Domain Diagnostic</button>
+        <button class="tab-btn active" onclick="switchTab(2)" id="tab-2">3. Inverse Drills</button>
+    </div>
+
+    <!-- Activity 1: Matching Table -->
+    <div class="panel active" id="panel-0">
+        <h2>Activity 1: Function-Inverse Pair Review</h2>
+        <p class="instructions">Review the core parent functions and their corresponding inverse functions from your guide[cite: 1].</p>
+        
+        <div class="match-grid">
+            <div class="match-item"><strong>Linear:</strong> $y = mx + b$</div>
+            <div class="match-item"><strong>Inverse:</strong> Linear ($y = \frac{x - b}{m}$)</div>
+            
+            <div class="match-item"><strong>Quadratic:</strong> $y = x^2$</div>
+            <div class="match-item"><strong>Inverse:</strong> Square Root ($y = \sqrt{x}$ for $y \ge 0$)[cite: 1]</div>
+            
+            <div class="match-item"><strong>Cubic:</strong> $y = x^3$</div>
+            <div class="match-item"><strong>Inverse:</strong> Cube Root ($y = \sqrt[3]{x}$)[cite: 1]</div>
+            
+            <div class="match-item"><strong>Absolute Value:</strong> $y = |x|$</div>
+            <div class="match-item"><strong>Inverse:</strong> Restricted Square Root ($y \ge 0$)[cite: 1]</div>
+            
+            <div class="match-item"><strong>Exponential:</strong> $y = b^x$</div>
+            <div class="match-item"><strong>Inverse:</strong> Logarithmic ($y = \log_b(x)$)[cite: 1]</div>
+        </div>
+
+        <div class="nav-buttons">
+            <div></div>
+            <button class="btn" onclick="switchTab(1)">Next Activity &rarr;</button>
+        </div>
+    </div>
+
+    <!-- Activity 2: Diagnostic Domain & Range Quiz -->
+    <div class="panel" id="panel-1">
+        <h2>Activity 2: Domain and Range Diagnostic</h2>
+        <p class="instructions">Test your understanding of function restrictions and the vertical line test[cite: 1].</p>
+        
+        <div class="quiz-question" id="q1">
+            <p><strong>1. Why must the domain of a Quadratic function be restricted ($y \ge 0$) when finding its inverse?</strong>[cite: 1]</p>
+            <div class="options">
+                <label><input type="radio" name="q1" value="a"> A) To make the graph shift upward.</label>
+                <label><input type="radio" name="q1" value="b"> B) So the inverse graph will pass the vertical line test and remain a function[cite: 1].</label>
+                <label><input type="radio" name="q1" value="c"> C) Because negative numbers cannot exist in mathematics.</label>
+            </div>
+        </div>
+
+        <div class="quiz-question" id="q2">
+            <p><strong>2. What graphical transformation maps a function directly onto its inverse?</strong>[cite: 1]</p>
+            <div class="options">
+                <label><input type="radio" name="q2" value="a"> A) Reflection over the x-axis</label>
+                <label><input type="radio" name="q2" value="b"> B) Reflection over the line y = x[cite: 1]</label>
+                <label><input type="radio" name="q2" value="c"> C) Rotation by 90 degrees</label>
+            </div>
+        </div>
+
+        <button class="btn" onclick="checkQuiz()">Check Answers</button>
+        <div id="quiz-feedback" class="feedback"></div>
+
+        <div class="nav-buttons">
+            <button class="btn" style="background:#64748b;" onclick="switchTab(0)">&larr; Back</button>
+            <button class="btn" onclick="switchTab(2)">Next Activity &rarr;</button>
+        </div>
+    </div>
+
+    <!-- Activity 3: Identify the Inverse Drill -->
+    <div class="panel" id="panel-2">
+        <h2>Activity 3: Identify the Inverse Drill</h2>
+        <p class="instructions">Type the correct mathematical inverse function name or form for each given parent function.</p>
+
+        <div class="drill-card">
+            <label><strong>Parent Function:</strong> Exponential function ($y = e^x$)[cite: 1]</label>
+            <input type="text" id="drill-1" placeholder="Type the inverse function name...">
+            <div id="feedback-drill-1" class="feedback"></div>
+        </div>
+
+        <div class="drill-card">
+            <label><strong>Parent Function:</strong> Cubic function ($y = x^3$)[cite: 1]</label>
+            <input type="text" id="drill-2" placeholder="Type the inverse function name...">
+            <div id="feedback-drill-2" class="feedback"></div>
+        </div>
+
+        <button class="btn" onclick="checkDrills()">Submit Drills</button>
+
+        <div class="nav-buttons">
+            <button class="btn" style="background:#64748b;" onclick="switchTab(1)">&larr; Back</button>
+            <div></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function switchTab(index) {
+        const panels = document.querySelectorAll('.panel');
+        const buttons = document.querySelectorAll('.tab-btn');
+
+        panels.forEach((panel, idx) => {
+            panel.classList.toggle('active', idx === index);
+        });
+
+        buttons.forEach((btn, idx) => {
+            btn.classList.toggle('active', idx === index);
+        });
+    }
+
+    function checkQuiz() {
+        const q1 = document.querySelector('input[name="q1"]:checked');
+        const q2 = document.querySelector('input[name="q2"]:checked');
+        const feedback = document.getElementById('quiz-feedback');
+
+        if (!q1 || !q2) {
+            feedback.textContent = "Please answer all questions before checking.";
+            feedback.className = "feedback incorrect";
+            return;
+        }
+
+        if (q1.value === 'b' && q2.value === 'b') {
+            feedback.textContent = "Great job! All answers are correct.";
+            feedback.className = "feedback correct";
+        } else {
+            feedback.textContent = "Some answers are incorrect. Review the vertical line test notes and try again!";
+            feedback.className = "feedback incorrect";
+        }
+    }
+
+    function checkDrills() {
+        const d1 = document.getElementById('drill-1').value.trim().toLowerCase();
+        const d2 = document.getElementById('drill-2').value.trim().toLowerCase();
+
+        const f1 = document.getElementById('feedback-drill-1');
+        const f2 = document.getElementById('feedback-drill-2');
+
+        if (d1.includes('log') || d1.includes('logarithmic')) {
+            f1.textContent = "Correct!";
+            f1.className = "feedback correct";
+        } else {
+            f1.textContent = "Incorrect. Think about logarithms[cite: 1].";
+            f1.className = "feedback incorrect";
+        }
+
+        if (d2.includes('cube root') || d2.includes('cuberoot')) {
+            f2.textContent = "Correct!";
+            f2.className = "feedback correct";
+        } else {
+            f2.textContent = "Incorrect. Think about the inverse power[cite: 1].";
+            f2.className = "feedback incorrect";
+        }
+    }
+</script>
+
+</body>
+</html>
