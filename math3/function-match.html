@@ -80,7 +80,7 @@
     margin: 0;
   }
   .drop-area {
-    min-height: 220px;
+    min-height: 150px;
     display: flex;
     flex-direction: column;
     gap: 8px;
@@ -138,28 +138,25 @@
   }
   .card.graph-card {
     min-height: 95px;
-    padding: 6px;
-    flex-direction: column;
-    gap: 4px;
+    padding: 4px;
   }
   .graph-placeholder {
     width: 100%;
-    height: 65px;
-    border: 2px dashed #9ca3af;
+    height: 85px;
     border-radius: 6px;
+    overflow: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
-    background:
-      linear-gradient(#e5e7eb 1px, transparent 1px),
-      linear-gradient(90deg, #e5e7eb 1px, transparent 1px);
-    background-size: 15px 15px;
-    color: #6b7280;
-    font-size: 11px;
-    font-weight: 500;
+    background: #fff;
+  }
+  .graph-placeholder img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
   }
 
-  /* Card Feedback Highlights */
+  /* Card Feedback Highlights - Highlights the card itself */
   .card.correct-card {
     background: #f0fdf4 !important;
     border-color: #16a34a !important;
@@ -228,14 +225,14 @@
     name: "Linear",
     parent: "y = x",
     general: "y = mx + b",
-    graph: "Linear Graph"
+    graphImg: "images/linear-graph.png"
   },
   {
     id: "rational-even",
     name: "Rational (Even)",
     parent: "y = 1/x²",
     general: "y = a/(x − h)² + k",
-    graph: "Rational (Even) Graph"
+    graphImg: "images/rational-even-graph.png"
   },
   {
     id: "rational-odd",
@@ -249,14 +246,14 @@
     name: "Quadratic",
     parent: "y = x²",
     general: "y = a(x − h)² + k",
-    graph: "Quadratic Graph"
+    graphImg: "images/quadratic-graph.png"
   },
   {
     id: "exponential",
     name: "Exponential",
     parent: "y = bˣ",
     general: "y = abˣ⁻ʰ + k",
-    graph: "Exponential Graph"
+    graphImg: "images/exponential-graph.png"
   }
 ];
 
@@ -270,7 +267,7 @@ function makeCards() {
       id: set.id + "-graph",
       type: "graph",
       set: set.id,
-      label: set.graph
+      imgSrc: set.graphImg
     });
     cards.push({
       id: set.id + "-parent",
@@ -304,14 +301,11 @@ function createCard(card) {
   if (card.type === "graph") {
     const placeholder = document.createElement("div");
     placeholder.className = "graph-placeholder";
-    placeholder.textContent = card.label;
+    const img = document.createElement("img");
+    img.src = card.imgSrc;
+    img.alt = "Graph";
+    placeholder.appendChild(img);
     el.appendChild(placeholder);
-
-    const caption = document.createElement("div");
-    caption.textContent = "Graph";
-    caption.style.fontSize = "10px";
-    caption.style.color = "#6b7280";
-    el.appendChild(caption);
   } else {
     el.textContent = card.label;
   }
@@ -326,7 +320,6 @@ function createCard(card) {
     el.classList.remove("dragging");
   });
 
-  // Touch / click fallback: tap a card, then tap a drop target/bank.
   el.addEventListener("click", (e) => {
     e.stopPropagation();
     document.querySelectorAll(".card.selected").forEach(x => x.classList.remove("selected"));
@@ -343,10 +336,8 @@ function render() {
   bank.innerHTML = "";
   groupsContainer.innerHTML = "";
 
-  // Render cards into bank initially
   cards.forEach(card => bank.appendChild(createCard(card)));
 
-  // Render 5 columns based on functionSets data
   functionSets.forEach(set => {
     const column = document.createElement("div");
     column.className = "group-column";
@@ -365,7 +356,6 @@ function render() {
     feedback.className = "feedback";
     column.appendChild(feedback);
 
-    // Drag and drop event listeners for columns
     column.addEventListener("dragover", e => {
       e.preventDefault();
       column.classList.add("over");
@@ -390,7 +380,6 @@ function render() {
     groupsContainer.appendChild(column);
   });
 
-  // Setup bank drop area as well
   bank.addEventListener("dragover", e => e.preventDefault());
   bank.addEventListener("drop", e => {
     e.preventDefault();
@@ -409,9 +398,7 @@ function moveCard(cardId, targetContainer) {
   const cardEl = document.querySelector(`[data-card-id="${cardId}"]`);
   if (!cardEl) return;
 
-  // Clear previous highlight state when moved
   cardEl.classList.remove("correct-card", "incorrect-card");
-
   targetContainer.appendChild(cardEl);
   cardEl.classList.remove("selected");
   document.getElementById("status").textContent = "";
