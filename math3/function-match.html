@@ -24,6 +24,26 @@
     font-size: 13px;
     line-height: 1.3;
   }
+  .set-selector {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+  .set-btn {
+    background: #e5e7eb;
+    color: #374151;
+    border: none;
+    padding: 6px 14px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .set-btn.active {
+    background: #7c3aed;
+    color: white;
+  }
   .toolbar {
     display: flex;
     justify-content: center;
@@ -201,6 +221,11 @@
     Arrange the cards into the correct function family columns (Graph, Parent Function, and General Form belonging to the same family).
   </p>
 
+  <div class="set-selector">
+    <button class="set-btn active" onclick="switchSet(0)">Set 1 (Basic)</button>
+    <button class="set-btn" onclick="switchSet(1)">Set 2 (Advanced)</button>
+  </div>
+
   <div class="toolbar">
     <button id="checkBtn">Check Answer</button>
     <button id="resetBtn" class="secondary">Reset</button>
@@ -208,64 +233,103 @@
   </div>
 
   <div id="hintBox" class="hint-box">
-    <strong>Hint:</strong> Think about the basic shape and symmetry of each function.
-    The even rational function has the form involving <em>x²</em>, while the odd rational
-    function has a single <em>x</em> in the denominator.
+    <strong>Hint:</strong> Look closely at domain constraints (like square roots and logarithms) and symmetry features.
   </div>
 
   <div id="status" class="status"></div>
 
-  <!-- 5 Columns for Grouping -->
+  <!-- Columns for Grouping -->
   <section class="groups-container" id="groupsContainer"></section>
 
   <!-- Unassigned Card Bank -->
   <section class="card-bank-section">
     <h2>Unassigned Cards</h2>
     <div id="cardBank" class="cards"></div>
-  </section></div><script>const functionSets = [
-  {
-    id: "linear",
-    name: "Linear",
-    parent: "y = x",
-    general: "y = mx + b",
-    graphImg: "images/linear-graph.png"
-  },
-  {
-    id: "rational-even",
-    name: "Rational (Even)",
-    parent: "y = 1/x²",
-    general: "y = a/(x − h)² + k",
-    graphImg: "images/rational-even-graph.png"
-  },
-  {
-    id: "rational-odd",
-    name: "Rational (Odd)",
-    parent: "y = 1/x",
-    general: "y = a/(x − h) + k",
-    graphImg: "images/rational-odd-graph.png"
-  },
-  {
-    id: "quadratic",
-    name: "Quadratic",
-    parent: "y = x²",
-    general: "y = a(x − h)² + k",
-    graphImg: "images/quadratic-graph.png"
-  },
-  {
-    id: "exponential",
-    name: "Exponential",
-    parent: "y = bˣ",
-    general: "y = abˣ⁻ʰ + k",
-    graphImg: "images/exponential-graph.png"
-  }
+  </section></div><script>const functionSetsGroup = [
+  [
+    {
+      id: "linear",
+      name: "Linear",
+      parent: "y = x",
+      general: "y = mx + b",
+      graphImg: "images/linear-graph.png"
+    },
+    {
+      id: "rational-even",
+      name: "Rational (Even)",
+      parent: "y = 1/x²",
+      general: "y = a/(x − h)² + k",
+      graphImg: "images/rational-even-graph.png"
+    },
+    {
+      id: "rational-odd",
+      name: "Rational (Odd)",
+      parent: "y = 1/x",
+      general: "y = a/(x − h) + k",
+      graphImg: "images/rational-odd-graph.png"
+    },
+    {
+      id: "quadratic",
+      name: "Quadratic",
+      parent: "y = x²",
+      general: "y = a(x − h)² + k",
+      graphImg: "images/quadratic-graph.png"
+    },
+    {
+      id: "exponential",
+      name: "Exponential",
+      parent: "y = bˣ",
+      general: "y = abˣ⁻ʰ + k",
+      graphImg: "images/exponential-graph.png"
+    }
+  ],
+  [
+    {
+      id: "cubic",
+      name: "Cubic",
+      parent: "y = x³",
+      general: "y = a(x − h)³ + k",
+      graphImg: "images/cubic-graph.png"
+    },
+    {
+      id: "cuberoot",
+      name: "Cube Root",
+      parent: "y = ∛x",
+      general: "y = a∛(x − h) + k",
+      graphImg: "images/cuberoot-graph.png"
+    },
+    {
+      id: "absolute-value",
+      name: "Absolute Value",
+      parent: "y = |x|",
+      general: "y = a|x − h| + k",
+      graphImg: "images/absolute-value-graph.png"
+    },
+    {
+      id: "logarithmic",
+      name: "Logarithmic",
+      parent: "y = log_b(x)",
+      general: "y = a log_b(x − h) + k",
+      graphImg: "images/logarithmic-graph.png"
+    },
+    {
+      id: "squareroot",
+      name: "Square Root",
+      parent: "y = √x",
+      general: "y = a√(x − h) + k",
+      graphImg: "images/squareroot-graph.png"
+    }
+  ]
 ];
 
+let currentSetIndex = 0;
 let cards = [];
 let selectedCard = null;
 
 function makeCards() {
   cards = [];
-  functionSets.forEach(set => {
+  const currentSets = functionSetsGroup[currentSetIndex];
+  currentSets.forEach(set => {
     cards.push({
       id: set.id + "-graph",
       type: "graph",
@@ -341,7 +405,8 @@ function render() {
 
   cards.forEach(card => bank.appendChild(createCard(card)));
 
-  functionSets.forEach(set => {
+  const currentSets = functionSetsGroup[currentSetIndex];
+  currentSets.forEach(set => {
     const column = document.createElement("div");
     column.className = "group-column";
     column.dataset.set = set.id;
@@ -405,6 +470,15 @@ function moveCard(cardId, targetContainer) {
   targetContainer.appendChild(cardEl);
   cardEl.classList.remove("selected");
   document.getElementById("status").textContent = "";
+}
+
+function switchSet(index) {
+  currentSetIndex = index;
+  document.querySelectorAll(".set-btn").forEach((btn, idx) => {
+    if (idx === index) btn.classList.add("active");
+    else btn.classList.remove("active");
+  });
+  resetActivity();
 }
 
 function checkAnswer() {
