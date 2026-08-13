@@ -101,15 +101,35 @@
     font-size: 14px;
     margin: 0;
   }
-  .drop-area {
-    min-height: 125px;
+  
+  .drop-slots-container {
     display: flex;
     flex-direction: column;
     gap: 6px;
+  }
+  .drop-slot {
+    min-height: 52px;
     background: #f9fafb;
     border: 2px dashed #e5e7eb;
     border-radius: 8px;
-    padding: 6px;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+  .drop-slot.graph-slot {
+    min-height: 68px;
+  }
+  .slot-label {
+    position: absolute;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #9ca3af;
+    top: 2px;
+    left: 6px;
+    pointer-events: none;
   }
 
   .card-bank-section {
@@ -141,6 +161,7 @@
     border-radius: 8px;
     padding: 6px 8px;
     min-height: 42px;
+    width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -159,12 +180,12 @@
     background: #ede9fe;
   }
   .card.graph-card {
-    min-height: 65px;
-    padding: 3px;
+    min-height: 62px;
+    padding: 2px;
   }
   .graph-placeholder {
     width: 100%;
-    height: 55px;
+    height: 56px;
     border-radius: 4px;
     overflow: hidden;
     display: flex;
@@ -195,6 +216,7 @@
     text-align: center;
     font-weight: 700;
     font-size: 12px;
+    margin-top: 4px;
   }
   .correct { color: #15803d; }
   .incorrect { color: #b91c1c; }
@@ -218,7 +240,7 @@
   }</style></head><body><div class="container">
   <h1>Match the Function Family</h1>
   <p class="instructions">
-    Arrange the cards into the correct function family columns (Graph, Parent Function, and General Form belonging to the same family).
+    Arrange the cards into the correct order per family: <strong>Graph</strong> (Top), <strong>Parent Function</strong> (Middle), and <strong>General Form</strong> (Bottom).
   </p>
 
   <div class="set-selector">
@@ -233,7 +255,7 @@
   </div>
 
   <div id="hintBox" class="hint-box">
-    <strong>Hint:</strong> Look closely at domain constraints (like square roots and logarithms) and symmetry features.
+    <strong>Hint:</strong> Order each column from top to bottom as: Graph first, then Parent Function, then General Form.
   </div>
 
   <div id="status" class="status"></div>
@@ -416,34 +438,51 @@ function render() {
     title.textContent = set.name;
     column.appendChild(title);
 
-    const dropArea = document.createElement("div");
-    dropArea.className = "drop-area";
-    column.appendChild(dropArea);
+    const slotsContainer = document.createElement("div");
+    slotsContainer.className = "drop-slots-container";
+
+    const slotTypes = [
+      { type: "graph", label: "Graph" },
+      { type: "parent", label: "Parent" },
+      { type: "general", label: "General" }
+    ];
+
+    slotTypes.forEach(s => {
+      const slot = document.createElement("div");
+      slot.className = "drop-slot" + (s.type === "graph" ? " graph-slot" : "");
+      slot.dataset.expectedType = s.type;
+
+      const label = document.createElement("span");
+      label.className = "slot-label";
+      label.textContent = s.label;
+      slot.appendChild(label);
+
+      slot.addEventListener("dragover", e => {
+        e.preventDefault();
+        slot.classList.add("over");
+      });
+      slot.addEventListener("dragleave", () => slot.classList.remove("over"));
+      slot.addEventListener("drop", e => {
+        e.preventDefault();
+        slot.classList.remove("over");
+        const id = e.dataTransfer.getData("text/plain");
+        placeCardIntoSlot(id, slot);
+      });
+      slot.addEventListener("click", () => {
+        if (selectedCard) {
+          placeCardIntoSlot(selectedCard, slot);
+          selectedCard = null;
+        }
+      });
+
+      slotsContainer.appendChild(slot);
+    });
+
+    column.appendChild(slotsContainer);
 
     const feedback = document.createElement("div");
     feedback.className = "feedback";
     column.appendChild(feedback);
-
-    column.addEventListener("dragover", e => {
-      e.preventDefault();
-      column.classList.add("over");
-    });
-
-    column.addEventListener("dragleave", () => column.classList.remove("over"));
-
-    column.addEventListener("drop", e => {
-      e.preventDefault();
-      column.classList.remove("over");
-      const id = e.dataTransfer.getData("text/plain");
-      moveCard(id, dropArea);
-    });
-
-    column.addEventListener("click", () => {
-      if (selectedCard) {
-        moveCard(selectedCard, dropArea);
-        selectedCard = null;
-      }
-    });
 
     groupsContainer.appendChild(column);
   });
@@ -452,22 +491,39 @@ function render() {
   bank.addEventListener("drop", e => {
     e.preventDefault();
     const id = e.dataTransfer.getData("text/plain");
-    moveCard(id, bank);
+    moveCardToBank(id);
   });
   bank.addEventListener("click", () => {
     if (selectedCard) {
-      moveCard(selectedCard, bank);
+      moveCardToBank(selectedCard);
       selectedCard = null;
     }
   });
 }
 
-function moveCard(cardId, targetContainer) {
+function placeCardIntoSlot(cardId, slotEl) {
+  const cardEl = document.querySelector(`[data-card-id="${cardId}"]`);
+  if (!cardEl) return;
+
+  // If slot already has a card, return it to bank first
+  const existingCard = slotEl.querySelector(".card");
+  if (existingCard && existingCard !== cardEl) {
+    document.getElementById("cardBank").appendChild(existingCard);
+    existingCard.classList.remove("correct-card", "incorrect-card");
+  }
+
+  cardEl.classList.remove("correct-card", "incorrect-card");
+  slotEl.appendChild(cardEl);
+  cardEl.classList.remove("selected");
+  document.getElementById("status").textContent = "";
+}
+
+function moveCardToBank(cardId) {
   const cardEl = document.querySelector(`[data-card-id="${cardId}"]`);
   if (!cardEl) return;
 
   cardEl.classList.remove("correct-card", "incorrect-card");
-  targetContainer.appendChild(cardEl);
+  document.getElementById("cardBank").appendChild(cardEl);
   cardEl.classList.remove("selected");
   document.getElementById("status").textContent = "";
 }
@@ -487,25 +543,41 @@ function checkAnswer() {
 
   document.querySelectorAll(".group-column").forEach(column => {
     const targetSet = column.dataset.set;
-    const children = [...column.querySelector(".drop-area").children];
+    const slots = column.querySelectorAll(".drop-slot");
     const feedback = column.querySelector(".feedback");
 
-    if (children.length !== 3) {
+    let columnAllFilled = true;
+    let slotCards = [];
+
+    slots.forEach(slot => {
+      const card = slot.querySelector(".card");
+      if (!card) columnAllFilled = false;
+      slotCards.push({ slot, card });
+    });
+
+    if (!columnAllFilled) {
       allFilled = false;
-      feedback.textContent = children.length === 0 ? "" : "Need 3 cards";
+      feedback.textContent = "Fill all 3 slots";
       feedback.className = "feedback incorrect";
-      children.forEach(card => card.classList.remove("correct-card", "incorrect-card"));
+      slots.forEach(s => {
+        const c = s.querySelector(".card");
+        if (c) c.classList.remove("correct-card", "incorrect-card");
+      });
       return;
     }
 
     let columnAllCorrect = true;
-    children.forEach(card => {
-      if (card.dataset.set === targetSet) {
-        card.classList.add("correct-card");
-        card.classList.remove("incorrect-card");
+    slotCards.forEach(item => {
+      const expectedType = item.slot.dataset.expectedType;
+      const cardType = item.card.dataset.type;
+      const cardSet = item.card.dataset.set;
+
+      if (cardSet === targetSet && cardType === expectedType) {
+        item.card.classList.add("correct-card");
+        item.card.classList.remove("incorrect-card");
       } else {
-        card.classList.add("incorrect-card");
-        card.classList.remove("correct-card");
+        item.card.classList.add("incorrect-card");
+        item.card.classList.remove("correct-card");
         columnAllCorrect = false;
       }
     });
@@ -523,13 +595,13 @@ function checkAnswer() {
   const status = document.getElementById("status");
 
   if (!allFilled) {
-    status.textContent = "Please place exactly 3 cards into each of the 5 columns before checking.";
+    status.textContent = "Please fill all slots across the columns before checking.";
     status.className = "status incorrect";
   } else if (correctColumns === 5) {
-    status.textContent = "Fantastic! All 5 columns are correctly matched function families.";
+    status.textContent = "Fantastic! All 5 columns are correctly matched and ordered.";
     status.className = "status correct";
   } else {
-    status.textContent = `${correctColumns} of 5 columns are fully correct. Review the highlighted cards and try again.`;
+    status.textContent = `${correctColumns} of 5 columns are fully correct. Review highlighted cards and positions.`;
     status.className = "status incorrect";
   }
 }
