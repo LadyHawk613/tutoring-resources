@@ -1,625 +1,573 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Match the Function Family</title><style>
-  * { box-sizing: border-box; }
-  body {
-    margin: 0;
-    font-family: Arial, Helvetica, sans-serif;
-    background: #f5f7fb;
-    color: #1f2937;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Match the Graph — Function Families</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-deep:#170a2e;
+    --bg-panel:#241146;
+    --bg-panel-2:#331a63;
+    --line:#432878;
+    --violet:#8b7cf6;
+    --violet-dim:#6a54d1;
+    --amber:#d9a94a;
+    --amber-dim:#8a6a26;
+    --teal:#3ecf9a;
+    --coral:#f0616b;
+    --text-light:#e9e8f0;
+    --text-muted:#b3a8d6;
+    --radius:10px;
   }
-  .container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 12px 16px 20px;
+  *{ box-sizing:border-box; }
+  html,body{ margin:0; padding:0; }
+  body{
+    min-height:100vh;
+    background:
+      radial-gradient(ellipse at 50% 0%, #2c1657 0%, var(--bg-deep) 55%),
+      var(--bg-deep);
+    font-family:'Inter', sans-serif;
+    color:var(--text-light);
   }
-  h1 {
-    text-align: center;
-    margin: 0 0 4px;
-    font-size: 22px;
-  }
-  .instructions {
-    text-align: center;
-    margin: 0 auto 10px;
-    max-width: 760px;
-    color: #4b5563;
-    font-size: 13px;
-    line-height: 1.3;
-  }
-  .set-selector {
-    display: flex;
-    justify-content: center;
-    gap: 8px;
-    margin-bottom: 10px;
-  }
-  .set-btn {
-    background: #e5e7eb;
-    color: #374151;
-    border: none;
-    padding: 6px 14px;
-    border-radius: 6px;
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-  }
-  .set-btn.active {
-    background: #7c3aed;
-    color: white;
-  }
-  .toolbar {
-    display: flex;
-    justify-content: center;
-    gap: 8px;
-    flex-wrap: wrap;
-    margin-bottom: 10px;
-  }
-  button {
-    border: 0;
-    border-radius: 6px;
-    padding: 7px 14px;
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-    background: #2563eb;
-    color: white;
-  }
-  button.secondary { background: #6b7280; }
-  button.hint { background: #7c3aed; }
-  button:hover { filter: brightness(0.95); }
-
-  .status {
-    text-align: center;
-    min-height: 20px;
-    margin-bottom: 8px;
-    font-weight: 600;
-    font-size: 13px;
+  .container{
+    max-width:1080px;
+    margin:0 auto;
+    padding:40px 20px 48px;
   }
 
-  .groups-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 12px;
-    margin-bottom: 14px;
+  .eyebrow{
+    text-align:center;
+    font-family:'JetBrains Mono', monospace;
+    font-size:11px;
+    letter-spacing:3px;
+    text-transform:uppercase;
+    color:var(--amber);
+    margin:0 0 10px;
   }
-  .group-column {
-    background: white;
-    border-radius: 10px;
-    padding: 10px;
-    box-shadow: 0 2px 8px rgba(0,0,0,.06);
-    border: 2px solid #d1d5db;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    transition: .15s ease;
+  h1{
+    text-align:center;
+    margin:0 0 10px;
+    font-family:'Space Grotesk', sans-serif;
+    font-weight:700;
+    font-size:clamp(26px,4.5vw,36px);
+    color:var(--text-light);
+    letter-spacing:-0.5px;
   }
-  .group-column.over {
-    border-color: #2563eb;
-    background: #eff6ff;
+  .instructions{
+    text-align:center;
+    margin:0 auto 26px;
+    max-width:600px;
+    color:var(--text-muted);
+    font-size:14px;
+    line-height:1.6;
   }
-  .column-header {
-    text-align: center;
-    font-weight: 700;
-    color: #1f2937;
-    font-size: 14px;
-    margin: 0;
+  .instructions strong{ color:var(--violet); font-weight:600; }
+
+  /* ---------- Controls ---------- */
+  .set-selector{
+    display:flex;
+    justify-content:center;
+    gap:8px;
+    flex-wrap:wrap;
+    margin-bottom:18px;
   }
-  
-  .drop-slots-container {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
+  .set-btn{
+    background:transparent;
+    color:var(--text-muted);
+    border:1px solid var(--line);
+    padding:9px 18px;
+    border-radius:999px;
+    font-family:'Space Grotesk', sans-serif;
+    font-size:13px;
+    font-weight:600;
+    cursor:pointer;
+    transition:border-color .15s ease, color .15s ease, background .15s ease;
   }
-  .drop-slot {
-    min-height: 52px;
-    background: #f9fafb;
-    border: 2px dashed #e5e7eb;
-    border-radius: 8px;
-    padding: 4px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
+  .set-btn:hover{ border-color:var(--violet-dim); color:var(--text-light); }
+  .set-btn.active{
+    background:var(--violet);
+    color:#0c0d13;
+    border-color:var(--violet);
   }
-  .drop-slot.graph-slot {
-    min-height: 68px;
-  }
-  .slot-label {
-    position: absolute;
-    font-size: 10px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    color: #9ca3af;
-    top: 2px;
-    left: 6px;
-    pointer-events: none;
+  .set-btn.challenge.active{
+    background:var(--amber);
+    border-color:var(--amber);
   }
 
-  .card-bank-section {
-    background: white;
-    border-radius: 10px;
-    padding: 12px;
-    box-shadow: 0 2px 8px rgba(0,0,0,.06);
-    margin-bottom: 10px;
+  .toolbar{
+    display:flex;
+    justify-content:center;
+    gap:10px;
+    flex-wrap:wrap;
+    margin-bottom:16px;
   }
-  .card-bank-section h2 {
-    margin: 0 0 8px;
-    font-size: 15px;
-    color: #4b5563;
+  button.tool{
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:9px 18px;
+    font-family:'Space Grotesk', sans-serif;
+    font-size:13px;
+    font-weight:600;
+    letter-spacing:0.2px;
+    cursor:pointer;
+    background:var(--bg-panel);
+    color:var(--text-light);
+    transition:border-color .15s ease, transform .08s ease;
   }
-  .cards {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 8px;
-    min-height: 60px;
-    background: #f9fafb;
-    border: 2px dashed #e5e7eb;
-    border-radius: 8px;
-    padding: 8px;
+  button.tool:hover{ border-color:var(--violet-dim); }
+  button.tool:active{ transform:translateY(1px); }
+  button.tool.check{
+    background:var(--violet);
+    color:#0c0d13;
+    border-color:var(--violet);
+  }
+  button.tool.check:hover{ background:#9c8ffb; border-color:#9c8ffb; }
+  button.tool.reset{ color:var(--text-muted); }
+
+  .status{
+    text-align:center;
+    min-height:22px;
+    margin-bottom:14px;
+    font-family:'JetBrains Mono', monospace;
+    font-weight:500;
+    font-size:13px;
+    letter-spacing:0.3px;
+  }
+  .status.correct{ color:var(--teal); }
+  .status.incorrect{ color:var(--coral); }
+
+  .hint-box{
+    max-width:600px;
+    margin:0 auto 18px;
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-left:2px solid var(--amber);
+    border-radius:6px;
+    padding:12px 16px;
+    display:none;
+    font-size:13px;
+    line-height:1.6;
+    color:var(--text-muted);
+  }
+  .hint-box strong{ color:var(--amber); font-family:'Space Grotesk', sans-serif; }
+  .hint-box.show{ display:block; }
+
+  /* ---------- Groups (drop targets) ---------- */
+  .groups-container{
+    display:grid;
+    grid-template-columns:repeat(5, minmax(120px, 150px));
+    gap:10px;
+    margin:0 auto 22px;
+    justify-content:center;
+    max-width:820px;
+  }
+  .group-column{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:10px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:8px;
+    transition:border-color .15s ease, background .15s ease;
+  }
+  .group-column.over{
+    border-color:var(--violet);
+    background:var(--bg-panel-2);
+  }
+  .column-header{
+    text-align:center;
+    font-family:'Space Grotesk', sans-serif;
+    font-weight:600;
+    font-size:12.5px;
+    color:var(--text-light);
+    margin:0;
+    letter-spacing:0.2px;
+  }
+  .drop-slot{
+    width:100%;
+    min-height:74px;
+    background:var(--bg-deep);
+    border:1px dashed var(--line);
+    border-radius:6px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
   }
 
-  .card {
-    background: #eef2ff;
-    border: 2px solid #c7d2fe;
-    border-radius: 8px;
-    padding: 6px 8px;
-    min-height: 42px;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    cursor: grab;
-    user-select: none;
-    touch-action: none;
-    font-size: 13px;
-    font-weight: 600;
-    transition: background 0.2s, border-color 0.2s;
+  /* ---------- Card bank ---------- */
+  .card-bank-section{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:16px;
   }
-  .card:active { cursor: grabbing; }
-  .card.dragging { opacity: .45; }
-  .card.selected {
-    outline: 3px solid #7c3aed;
-    background: #ede9fe;
+  .card-bank-section h2{
+    margin:0 0 12px;
+    text-align:center;
+    font-family:'JetBrains Mono', monospace;
+    font-size:11px;
+    color:var(--text-muted);
+    font-weight:500;
+    letter-spacing:2px;
+    text-transform:uppercase;
   }
-  .card.graph-card {
-    min-height: 62px;
-    padding: 2px;
-  }
-  .graph-placeholder {
-    width: 100%;
-    height: 56px;
-    border-radius: 4px;
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #fff;
-  }
-  .graph-placeholder img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
+  .cards{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    min-height:70px;
+    background:var(--bg-deep);
+    border:1px dashed var(--line);
+    border-radius:8px;
+    padding:10px;
   }
 
-  /* Card Feedback Highlights */
-  .card.correct-card {
-    background: #f0fdf4 !important;
-    border-color: #16a34a !important;
-    color: #15803d !important;
+  .card{
+    flex:0 0 118px;
+    width:118px;
+    background:#f4f2ec;
+    border:1px solid var(--line);
+    border-radius:6px;
+    padding:0;
+    min-height:70px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:grab;
+    user-select:none;
+    touch-action:none;
+    transition:transform .08s ease, border-color .12s ease, box-shadow .12s ease;
   }
-  .card.incorrect-card {
-    background: #fef2f2 !important;
-    border-color: #dc2626 !important;
-    color: #b91c1c !important;
+  .card:hover{ border-color:var(--violet); box-shadow:0 0 0 1px var(--violet); }
+  .card:active{ cursor:grabbing; }
+  .card.dragging{ opacity:.4; }
+  .card.selected{
+    outline:2px solid var(--amber);
+    outline-offset:2px;
+  }
+  .card svg{ width:100%; height:100%; display:block; }
+
+  .card.correct-card{
+    border-color:var(--teal);
+    box-shadow:0 0 0 1px var(--teal);
+    pointer-events:none;
+    cursor:default;
+    opacity:0.9;
+  }
+  .card.incorrect-card{
+    border-color:var(--coral);
+    box-shadow:0 0 0 1px var(--coral);
   }
 
-  .feedback {
-    min-height: 16px;
-    text-align: center;
-    font-weight: 700;
-    font-size: 12px;
-    margin-top: 4px;
+  footer{
+    text-align:center;
+    color:var(--text-muted);
+    font-size:12px;
+    font-family:'JetBrains Mono', monospace;
+    margin-top:22px;
+    letter-spacing:0.2px;
   }
-  .correct { color: #15803d; }
-  .incorrect { color: #b91c1c; }
 
-  .hint-box {
-    max-width: 850px;
-    margin: 0 auto 10px;
-    background: #f5f3ff;
-    border: 1px solid #ddd6fe;
-    border-radius: 8px;
-    padding: 10px 14px;
-    display: none;
-    font-size: 13px;
-    line-height: 1.4;
+  @media (max-width:600px){
+    .card{ flex-basis:96px; width:96px; min-height:60px; }
+    .groups-container{ grid-template-columns:repeat(2, minmax(120px,1fr)); max-width:340px; }
   }
-  .hint-box.show { display: block; }
-
-  @media (max-width: 768px) {
-    h1 { font-size: 20px; }
-    .cards { grid-template-columns: 1fr 1fr; }
-  }</style></head><body><div class="container">
-  <h1>Match the Function Family</h1>
+</style>
+</head>
+<body>
+<div class="container">
+  <p class="eyebrow">Function Recognition</p>
+  <h1>Match the Graph</h1>
   <p class="instructions">
-    Arrange the cards into the correct order per family: <strong>Graph</strong> (Top), <strong>Parent Function</strong> (Middle), and <strong>General Form</strong> (Bottom).
+    Drag each <strong>graph card</strong> into the box under its matching <strong>function family</strong>. Click a card, then click a box, if you'd rather tap than drag.
   </p>
 
   <div class="set-selector">
-    <button class="set-btn active" onclick="switchSet(0)">Set 1 (Basic)</button>
-    <button class="set-btn" onclick="switchSet(1)">Set 2 (Advanced)</button>
+    <button class="set-btn active" onclick="switchSet(0)">Round 1</button>
+    <button class="set-btn" onclick="switchSet(1)">Round 2</button>
+    <button class="set-btn challenge" onclick="switchSet(2)">Challenge — All 10</button>
   </div>
 
   <div class="toolbar">
-    <button id="checkBtn">Check Answer</button>
-    <button id="resetBtn" class="secondary">Reset</button>
-    <button id="hintBtn" class="hint">Show Hint</button>
+    <button id="checkBtn" class="tool check">Check Answer</button>
+    <button id="resetBtn" class="tool reset">Reset</button>
+    <button id="hintBtn" class="tool">Show Hint</button>
   </div>
 
   <div id="hintBox" class="hint-box">
-    <strong>Hint:</strong> Order each column from top to bottom as: Graph first, then Parent Function, then General Form.
+    <strong>Hint:</strong> Look at end behavior, symmetry, and domain restrictions — a straight line, a U-shape, a curve that levels off, a graph with two separate branches — to identify the family.
   </div>
 
   <div id="status" class="status"></div>
 
-  <!-- Columns for Grouping -->
   <section class="groups-container" id="groupsContainer"></section>
 
-  <!-- Unassigned Card Bank -->
   <section class="card-bank-section">
-    <h2>Unassigned Cards</h2>
+    <h2>Graph Cards</h2>
     <div id="cardBank" class="cards"></div>
-  </section></div><script>const functionSetsGroup = [
-  [
-    {
-      id: "linear",
-      name: "Linear",
-      parent: "y = x",
-      general: "y = mx + b",
-      graphImg: "images/linear-graph.png"
-    },
-    {
-      id: "rational-even",
-      name: "Rational (Even)",
-      parent: "y = 1/x²",
-      general: "y = a/(x − h)² + k",
-      graphImg: "images/rational-even-graph.png"
-    },
-    {
-      id: "rational-odd",
-      name: "Rational (Odd)",
-      parent: "y = 1/x",
-      general: "y = a/(x − h) + k",
-      graphImg: "images/rational-odd-graph.png"
-    },
-    {
-      id: "quadratic",
-      name: "Quadratic",
-      parent: "y = x²",
-      general: "y = a(x − h)² + k",
-      graphImg: "images/quadratic-graph.png"
-    },
-    {
-      id: "exponential",
-      name: "Exponential",
-      parent: "y = bˣ",
-      general: "y = abˣ⁻ʰ + k",
-      graphImg: "images/exponential-graph.png"
+  </section>
+
+  <footer>rational (odd) has two branches in opposite quadrants — rational (even) has both branches pointing the same way</footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  // ---------- Function family definitions ----------
+  const ROUND1 = [
+    { id:"linear",       name:"Linear",         fn:x => x },
+    { id:"quadratic",    name:"Quadratic",      fn:x => x*x },
+    { id:"absolute",     name:"Absolute Value", fn:x => Math.abs(x) },
+    { id:"squareroot",   name:"Square Root",    fn:x => x >= 0 ? Math.sqrt(x) : NaN },
+    { id:"exponential",  name:"Exponential",    fn:x => Math.pow(2, x) }
+  ];
+  const ROUND2 = [
+    { id:"cubic",        name:"Cubic",              fn:x => x*x*x },
+    { id:"cuberoot",     name:"Cube Root",          fn:x => Math.cbrt(x) },
+    { id:"logarithmic",  name:"Logarithmic",        fn:x => x > 0 ? Math.log2(x) : NaN },
+    { id:"rational-odd", name:"Rational (Odd)",     fn:x => x !== 0 ? 1/x : NaN },
+    { id:"rational-even",name:"Rational (Even)",    fn:x => x !== 0 ? 1/(x*x) : NaN }
+  ];
+  const functionSetsGroup = [ ROUND1, ROUND2, ROUND1.concat(ROUND2) ];
+
+  let currentSetIndex = 0;
+  let cards = [];
+  let selectedCard = null;
+
+  // ---------- Graph SVG generation ----------
+  function buildGraphSVG(fn){
+    const W = 100, H = 66;
+    const winMin = -6, winMax = 6;
+    const N = 90;
+    const toSX = x => ((x - winMin) / (winMax - winMin)) * W;
+    const toSY = y => H/2 - (y / winMax) * (H/2 - 4);
+
+    let segments = [];
+    let current = [];
+    for(let i=0;i<=N;i++){
+      const x = winMin + (i/N) * (winMax - winMin);
+      const y = fn(x);
+      if(!isFinite(y) || y < winMin || y > winMax){
+        if(current.length > 1) segments.push(current);
+        current = [];
+        continue;
+      }
+      current.push([toSX(x), toSY(y)]);
     }
-  ],
-  [
-    {
-      id: "cubic",
-      name: "Cubic",
-      parent: "y = x³",
-      general: "y = a(x − h)³ + k",
-      graphImg: "images/cubic-graph.png"
-    },
-    {
-      id: "cuberoot",
-      name: "Cube Root",
-      parent: "y = ∛x",
-      general: "y = a∛(x − h) + k",
-      graphImg: "images/cuberoot-graph.png"
-    },
-    {
-      id: "absolute-value",
-      name: "Absolute Value",
-      parent: "y = |x|",
-      general: "y = a|x − h| + k",
-      graphImg: "images/absolute-value-graph.png"
-    },
-    {
-      id: "logarithmic",
-      name: "Logarithmic",
-      parent: "y = log_b(x)",
-      general: "y = a log_b(x − h) + k",
-      graphImg: "images/logarithmic-graph.png"
-    },
-    {
-      id: "squareroot",
-      name: "Square Root",
-      parent: "y = √x",
-      general: "y = a√(x − h) + k",
-      graphImg: "images/squareroot-graph.png"
-    }
-  ]
-];
+    if(current.length > 1) segments.push(current);
 
-let currentSetIndex = 0;
-let cards = [];
-let selectedCard = null;
+    const paths = segments.map(seg=>{
+      const d = seg.map((p,i)=> (i===0?"M":"L") + p[0].toFixed(1) + "," + p[1].toFixed(1)).join(" ");
+      return `<path d="${d}" fill="none" stroke="#4b3f8a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>`;
+    }).join("");
 
-function makeCards() {
-  cards = [];
-  const currentSets = functionSetsGroup[currentSetIndex];
-  currentSets.forEach(set => {
-    cards.push({
-      id: set.id + "-graph",
-      type: "graph",
-      set: set.id,
-      imgSrc: set.graphImg
-    });
-    cards.push({
-      id: set.id + "-parent",
-      type: "parent",
-      set: set.id,
-      label: set.parent
-    });
-    cards.push({
-      id: set.id + "-general",
-      type: "general",
-      set: set.id,
-      label: set.general
-    });
-  });
+    const axisY = toSY(0);
+    const axisX = toSX(0);
 
-  // Fisher-Yates shuffle
-  for (let i = cards.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [cards[i], cards[j]] = [cards[j], cards[i]];
-  }
-}
-
-function createCard(card) {
-  const el = document.createElement("div");
-  el.className = "card" + (card.type === "graph" ? " graph-card" : "");
-  el.draggable = true;
-  el.dataset.cardId = card.id;
-  el.dataset.set = card.set;
-  el.dataset.type = card.type;
-
-  if (card.type === "graph") {
-    const placeholder = document.createElement("div");
-    placeholder.className = "graph-placeholder";
-    const img = document.createElement("img");
-    img.src = card.imgSrc;
-    img.alt = "Graph";
-    placeholder.appendChild(img);
-    el.appendChild(placeholder);
-  } else {
-    el.textContent = card.label;
+    return `
+      <svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">
+        <rect x="0" y="0" width="${W}" height="${H}" fill="#f4f2ec"/>
+        <line x1="0" y1="${axisY}" x2="${W}" y2="${axisY}" stroke="#c9c4d8" stroke-width="1"/>
+        <line x1="${axisX}" y1="0" x2="${axisX}" y2="${H}" stroke="#c9c4d8" stroke-width="1"/>
+        ${paths}
+      </svg>
+    `;
   }
 
-  el.addEventListener("dragstart", e => {
-    e.dataTransfer.setData("text/plain", card.id);
-    e.dataTransfer.effectAllowed = "move";
-    el.classList.add("dragging");
-  });
+  // ---------- Cards ----------
+  function makeCards(){
+    cards = [];
+    const set = functionSetsGroup[currentSetIndex];
+    set.forEach(f=>{
+      cards.push({ id:f.id, set:f.id, fn:f.fn });
+    });
+    // Fisher-Yates shuffle
+    for(let i=cards.length-1;i>0;i--){
+      const j = Math.floor(Math.random()*(i+1));
+      [cards[i],cards[j]] = [cards[j],cards[i]];
+    }
+  }
 
-  el.addEventListener("dragend", () => {
-    el.classList.remove("dragging");
-  });
+  function createCardEl(card){
+    const el = document.createElement("div");
+    el.className = "card";
+    el.draggable = true;
+    el.dataset.cardId = card.id;
+    el.dataset.set = card.set;
+    el.innerHTML = buildGraphSVG(card.fn);
 
-  el.addEventListener("click", (e) => {
-    e.stopPropagation();
-    document.querySelectorAll(".card.selected").forEach(x => x.classList.remove("selected"));
-    el.classList.add("selected");
-    selectedCard = card.id;
-  });
+    el.addEventListener("dragstart", e=>{
+      e.dataTransfer.setData("text/plain", card.id);
+      e.dataTransfer.effectAllowed = "move";
+      el.classList.add("dragging");
+    });
+    el.addEventListener("dragend", ()=> el.classList.remove("dragging"));
+    el.addEventListener("click", e=>{
+      e.stopPropagation();
+      if(el.classList.contains("correct-card")) return;
+      document.querySelectorAll(".card.selected").forEach(x=> x.classList.remove("selected"));
+      el.classList.add("selected");
+      selectedCard = card.id;
+    });
+    return el;
+  }
 
-  return el;
-}
+  function render(){
+    const bank = document.getElementById("cardBank");
+    const groupsContainer = document.getElementById("groupsContainer");
+    bank.innerHTML = "";
+    groupsContainer.innerHTML = "";
 
-function render() {
-  const bank = document.getElementById("cardBank");
-  const groupsContainer = document.getElementById("groupsContainer");
-  bank.innerHTML = "";
-  groupsContainer.innerHTML = "";
+    cards.forEach(card => bank.appendChild(createCardEl(card)));
 
-  cards.forEach(card => bank.appendChild(createCard(card)));
+    const set = functionSetsGroup[currentSetIndex];
+    set.forEach(f=>{
+      const column = document.createElement("div");
+      column.className = "group-column";
+      column.dataset.set = f.id;
 
-  const currentSets = functionSetsGroup[currentSetIndex];
-  currentSets.forEach(set => {
-    const column = document.createElement("div");
-    column.className = "group-column";
-    column.dataset.set = set.id;
+      const title = document.createElement("h3");
+      title.className = "column-header";
+      title.textContent = f.name;
+      column.appendChild(title);
 
-    const title = document.createElement("h3");
-    title.className = "column-header";
-    title.textContent = set.name;
-    column.appendChild(title);
-
-    const slotsContainer = document.createElement("div");
-    slotsContainer.className = "drop-slots-container";
-
-    const slotTypes = [
-      { type: "graph", label: "Graph" },
-      { type: "parent", label: "Parent" },
-      { type: "general", label: "General" }
-    ];
-
-    slotTypes.forEach(s => {
       const slot = document.createElement("div");
-      slot.className = "drop-slot" + (s.type === "graph" ? " graph-slot" : "");
-      slot.dataset.expectedType = s.type;
+      slot.className = "drop-slot";
+      slot.dataset.set = f.id;
 
-      const label = document.createElement("span");
-      label.className = "slot-label";
-      label.textContent = s.label;
-      slot.appendChild(label);
-
-      slot.addEventListener("dragover", e => {
+      slot.addEventListener("dragover", e=>{ e.preventDefault(); column.classList.add("over"); });
+      slot.addEventListener("dragleave", ()=> column.classList.remove("over"));
+      slot.addEventListener("drop", e=>{
         e.preventDefault();
-        slot.classList.add("over");
-      });
-      slot.addEventListener("dragleave", () => slot.classList.remove("over"));
-      slot.addEventListener("drop", e => {
-        e.preventDefault();
-        slot.classList.remove("over");
+        column.classList.remove("over");
         const id = e.dataTransfer.getData("text/plain");
         placeCardIntoSlot(id, slot);
       });
-      slot.addEventListener("click", () => {
-        if (selectedCard) {
+      slot.addEventListener("click", ()=>{
+        if(selectedCard){
           placeCardIntoSlot(selectedCard, slot);
           selectedCard = null;
         }
       });
 
-      slotsContainer.appendChild(slot);
+      column.appendChild(slot);
+      groupsContainer.appendChild(column);
     });
 
-    column.appendChild(slotsContainer);
-
-    const feedback = document.createElement("div");
-    feedback.className = "feedback";
-    column.appendChild(feedback);
-
-    groupsContainer.appendChild(column);
-  });
-
-  bank.addEventListener("dragover", e => e.preventDefault());
-  bank.addEventListener("drop", e => {
-    e.preventDefault();
-    const id = e.dataTransfer.getData("text/plain");
-    moveCardToBank(id);
-  });
-  bank.addEventListener("click", () => {
-    if (selectedCard) {
-      moveCardToBank(selectedCard);
-      selectedCard = null;
-    }
-  });
-}
-
-function placeCardIntoSlot(cardId, slotEl) {
-  const cardEl = document.querySelector(`[data-card-id="${cardId}"]`);
-  if (!cardEl) return;
-
-  // If slot already has a card, return it to bank first
-  const existingCard = slotEl.querySelector(".card");
-  if (existingCard && existingCard !== cardEl) {
-    document.getElementById("cardBank").appendChild(existingCard);
-    existingCard.classList.remove("correct-card", "incorrect-card");
+    bank.addEventListener("dragover", e=> e.preventDefault());
+    bank.addEventListener("drop", e=>{
+      e.preventDefault();
+      const id = e.dataTransfer.getData("text/plain");
+      moveCardToBank(id);
+    });
+    bank.addEventListener("click", ()=>{
+      if(selectedCard){
+        moveCardToBank(selectedCard);
+        selectedCard = null;
+      }
+    });
   }
 
-  cardEl.classList.remove("correct-card", "incorrect-card");
-  slotEl.appendChild(cardEl);
-  cardEl.classList.remove("selected");
-  document.getElementById("status").textContent = "";
-}
+  function placeCardIntoSlot(cardId, slotEl){
+    const cardEl = document.querySelector(`[data-card-id="${cardId}"]`);
+    if(!cardEl || cardEl.classList.contains("correct-card")) return;
 
-function moveCardToBank(cardId) {
-  const cardEl = document.querySelector(`[data-card-id="${cardId}"]`);
-  if (!cardEl) return;
-
-  cardEl.classList.remove("correct-card", "incorrect-card");
-  document.getElementById("cardBank").appendChild(cardEl);
-  cardEl.classList.remove("selected");
-  document.getElementById("status").textContent = "";
-}
-
-function switchSet(index) {
-  currentSetIndex = index;
-  document.querySelectorAll(".set-btn").forEach((btn, idx) => {
-    if (idx === index) btn.classList.add("active");
-    else btn.classList.remove("active");
-  });
-  resetActivity();
-}
-
-function checkAnswer() {
-  let correctColumns = 0;
-  let allFilled = true;
-
-  document.querySelectorAll(".group-column").forEach(column => {
-    const targetSet = column.dataset.set;
-    const slots = column.querySelectorAll(".drop-slot");
-    const feedback = column.querySelector(".feedback");
-
-    let columnAllFilled = true;
-    let slotCards = [];
-
-    slots.forEach(slot => {
-      const card = slot.querySelector(".card");
-      if (!card) columnAllFilled = false;
-      slotCards.push({ slot, card });
-    });
-
-    if (!columnAllFilled) {
-      allFilled = false;
-      feedback.textContent = "Fill all 3 slots";
-      feedback.className = "feedback incorrect";
-      slots.forEach(s => {
-        const c = s.querySelector(".card");
-        if (c) c.classList.remove("correct-card", "incorrect-card");
-      });
-      return;
+    const existing = slotEl.querySelector(".card");
+    if(existing && existing !== cardEl){
+      if(existing.classList.contains("correct-card")) return;
+      document.getElementById("cardBank").appendChild(existing);
+      existing.classList.remove("correct-card","incorrect-card");
     }
 
-    let columnAllCorrect = true;
-    slotCards.forEach(item => {
-      const expectedType = item.slot.dataset.expectedType;
-      const cardType = item.card.dataset.type;
-      const cardSet = item.card.dataset.set;
+    cardEl.classList.remove("incorrect-card","selected");
+    slotEl.appendChild(cardEl);
+    document.getElementById("status").textContent = "";
+    document.getElementById("status").className = "status";
+  }
 
-      if (cardSet === targetSet && cardType === expectedType) {
-        item.card.classList.add("correct-card");
-        item.card.classList.remove("incorrect-card");
+  function moveCardToBank(cardId){
+    const cardEl = document.querySelector(`[data-card-id="${cardId}"]`);
+    if(!cardEl || cardEl.classList.contains("correct-card")) return;
+    cardEl.classList.remove("incorrect-card","selected");
+    document.getElementById("cardBank").appendChild(cardEl);
+    document.getElementById("status").textContent = "";
+    document.getElementById("status").className = "status";
+  }
+
+  function switchSet(index){
+    currentSetIndex = index;
+    document.querySelectorAll(".set-btn").forEach((btn, idx)=>{
+      btn.classList.toggle("active", idx === index);
+    });
+    resetActivity();
+  }
+  window.switchSet = switchSet;
+
+  function checkAnswer(){
+    let correctCount = 0;
+    let allFilled = true;
+    const total = functionSetsGroup[currentSetIndex].length;
+
+    document.querySelectorAll(".group-column").forEach(column=>{
+      const targetSet = column.dataset.set;
+      const slot = column.querySelector(".drop-slot");
+      const card = slot.querySelector(".card");
+
+      if(!card){
+        allFilled = false;
+        return;
+      }
+      if(card.classList.contains("correct-card")){
+        correctCount++;
+        return;
+      }
+      if(card.dataset.set === targetSet){
+        card.classList.add("correct-card");
+        card.classList.remove("incorrect-card");
+        correctCount++;
       } else {
-        item.card.classList.add("incorrect-card");
-        item.card.classList.remove("correct-card");
-        columnAllCorrect = false;
+        card.classList.add("incorrect-card");
+        card.classList.remove("correct-card");
       }
     });
 
-    if (columnAllCorrect) {
-      correctColumns++;
-      feedback.textContent = "Correct!";
-      feedback.className = "feedback correct";
+    const status = document.getElementById("status");
+    if(!allFilled){
+      status.textContent = "Place a graph in every box before checking.";
+      status.className = "status incorrect";
+    } else if(correctCount === total){
+      status.textContent = `Correct — all ${total} graphs matched.`;
+      status.className = "status correct";
     } else {
-      feedback.textContent = "Contains errors";
-      feedback.className = "feedback incorrect";
+      status.textContent = `${correctCount} / ${total} correct. Matched cards are locked — adjust the rest.`;
+      status.className = "status incorrect";
     }
+  }
+
+  function resetActivity(){
+    makeCards();
+    render();
+    const status = document.getElementById("status");
+    status.textContent = "";
+    status.className = "status";
+    document.getElementById("hintBox").classList.remove("show");
+    selectedCard = null;
+  }
+
+  document.getElementById("checkBtn").addEventListener("click", checkAnswer);
+  document.getElementById("resetBtn").addEventListener("click", resetActivity);
+  document.getElementById("hintBtn").addEventListener("click", ()=>{
+    document.getElementById("hintBox").classList.toggle("show");
   });
 
-  const status = document.getElementById("status");
-
-  if (!allFilled) {
-    status.textContent = "Please fill all slots across the columns before checking.";
-    status.className = "status incorrect";
-  } else if (correctColumns === 5) {
-    status.textContent = "Fantastic! All 5 columns are correctly matched and ordered.";
-    status.className = "status correct";
-  } else {
-    status.textContent = `${correctColumns} of 5 columns are fully correct. Review highlighted cards and positions.`;
-    status.className = "status incorrect";
-  }
-}
-
-function resetActivity() {
-  makeCards();
-  render();
-  document.getElementById("status").textContent = "";
-  document.getElementById("hintBox").classList.remove("show");
-  selectedCard = null;
-}
-
-document.getElementById("checkBtn").addEventListener("click", checkAnswer);
-document.getElementById("resetBtn").addEventListener("click", resetActivity);
-document.getElementById("hintBtn").addEventListener("click", () => {
-  document.getElementById("hintBox").classList.toggle("show");
-});
-
-makeCards();
-render();
-</script></body></html>
+  resetActivity();
+})();
+</script>
+</body>
+</html>
