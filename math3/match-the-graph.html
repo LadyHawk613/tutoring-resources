@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Match the Graph — Function Families</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-deep:#170a2e;
+    --bg-panel:#241146;
+    --bg-panel-2:#331a63;
+    --curtain:#4a0f2e;
+    --curtain-dark:#340a20;
+    --gold:#ffd166;
+    --gold-deep:#e2a520;
+    --magenta:#c65bff;
+    --teal:#2dd9c4;
+    --coral:#ff5d73;
+    --text-light:#f8f0ff;
+    --text-muted:#c3b2e6;
+    --radius:14px;
+  }
+  *{ box-sizing:border-box; }
+  html,body{ margin:0; padding:0; }
+  body{
+    min-height:100vh;
+    background:
+      radial-gradient(ellipse at 50% 0%, #3a1c6e 0%, var(--bg-deep) 55%),
+      var(--bg-deep);
+    font-family:'Nunito', sans-serif;
+    color:var(--text-light);
+  }
+  .container{
+    max-width:1100px;
+    margin:0 auto;
+    padding:0 16px 32px;
+  }
+
+  h1{
+    text-align:center;
+    margin:26px 0 4px;
+    font-family:'Baloo 2', sans-serif;
+    font-weight:800;
+    font-size:clamp(22px,5vw,30px);
+    background:linear-gradient(180deg, var(--gold) 20%, var(--gold-deep) 100%);
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+    text-shadow:0 2px 0 rgba(0,0,0,0.25);
+  }
+  .instructions{
+    text-align:center;
+    margin:0 auto 16px;
+    max-width:640px;
+    color:var(--text-muted);
+    font-size:13.5px;
+    line-height:1.5;
+  }
+  .instructions strong{ color:var(--gold); }
+
+  /* ---------- Controls ---------- */
+  .set-selector, .toolbar{
+    display:flex;
+    justify-content:center;
+    gap:10px;
+    flex-wrap:wrap;
+    margin-bottom:12px;
+  }
+  .set-btn{
+    background:var(--bg-panel);
+    color:var(--text-muted);
+    border:2px solid rgba(255,209,102,0.25);
+    padding:8px 16px;
+    border-radius:20px;
+    font-family:'Baloo 2', sans-serif;
+    font-size:13px;
+    font-weight:700;
+    cursor:pointer;
+  }
+  .set-btn.active{
+    background:linear-gradient(180deg, var(--gold), var(--gold-deep));
+    color:#2b1400;
+    border-color:transparent;
+  }
+  button.tool{
+    border:none;
+    border-radius:10px;
+    padding:9px 16px;
+    font-family:'Baloo 2', sans-serif;
+    font-size:13.5px;
+    font-weight:700;
+    cursor:pointer;
+    background:linear-gradient(180deg, var(--magenta), #8f2fd6);
+    color:#fff;
+    box-shadow:0 4px 0 #6c1fac, 0 6px 10px rgba(0,0,0,0.3);
+  }
+  button.tool:active{ transform:translateY(3px); box-shadow:0 1px 0 #6c1fac; }
+  button.tool.check{
+    background:linear-gradient(180deg, var(--gold), var(--gold-deep));
+    color:#2b1400;
+    box-shadow:0 4px 0 #a9700f, 0 6px 10px rgba(0,0,0,0.3);
+  }
+  button.tool.check:active{ box-shadow:0 1px 0 #a9700f; }
+  button.tool.reset{
+    background:var(--bg-panel-2);
+    box-shadow:0 4px 0 #1c0e3a, 0 6px 10px rgba(0,0,0,0.3);
+  }
+
+  .status{
+    text-align:center;
+    min-height:22px;
+    margin-bottom:10px;
+    font-family:'Baloo 2', sans-serif;
+    font-weight:700;
+    font-size:14px;
+  }
+  .status.correct{ color:var(--teal); }
+  .status.incorrect{ color:var(--coral); }
+
+  .hint-box{
+    max-width:640px;
+    margin:0 auto 14px;
+    background:var(--bg-panel);
+    border:1px solid rgba(198,91,255,0.4);
+    border-radius:10px;
+    padding:10px 14px;
+    display:none;
+    font-size:13px;
+    line-height:1.5;
+    color:var(--text-muted);
+  }
+  .hint-box strong{ color:var(--gold); }
+  .hint-box.show{ display:block; }
+
+  /* ---------- Groups (drop targets) ---------- */
+  .groups-container{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(150px, 1fr));
+    gap:12px;
+    margin-bottom:18px;
+  }
+  .group-column{
+    background:linear-gradient(160deg, var(--bg-panel), var(--bg-panel-2));
+    border:2px solid rgba(255,209,102,0.25);
+    border-radius:var(--radius);
+    padding:10px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:8px;
+    transition:.15s ease;
+  }
+  .group-column.over{
+    border-color:var(--gold);
+    box-shadow:0 0 0 3px rgba(255,209,102,0.2);
+  }
+  .column-header{
+    text-align:center;
+    font-family:'Baloo 2', sans-serif;
+    font-weight:700;
+    font-size:13.5px;
+    color:var(--text-light);
+    margin:0;
+  }
+  .drop-slot{
+    width:100%;
+    min-height:78px;
+    background:rgba(0,0,0,0.2);
+    border:2px dashed rgba(198,91,255,0.4);
+    border-radius:10px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+
+  /* ---------- Card bank ---------- */
+  .card-bank-section{
+    background:linear-gradient(160deg, var(--bg-panel), var(--bg-panel-2));
+    border:2px solid rgba(255,209,102,0.2);
+    border-radius:var(--radius);
+    padding:14px;
+  }
+  .card-bank-section h2{
+    margin:0 0 10px;
+    text-align:center;
+    font-family:'Baloo 2', sans-serif;
+    font-size:14px;
+    color:var(--text-muted);
+    font-weight:700;
+    letter-spacing:0.5px;
+    text-transform:uppercase;
+  }
+  .cards{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    min-height:70px;
+    background:rgba(0,0,0,0.18);
+    border:2px dashed rgba(198,91,255,0.35);
+    border-radius:10px;
+    padding:10px;
+  }
+
+  .card{
+    flex:0 0 120px;
+    width:120px;
+    background:linear-gradient(160deg, #efe3ff, #d9c2ff);
+    border:none;
+    border-radius:10px;
+    padding:4px;
+    min-height:70px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:grab;
+    user-select:none;
+    touch-action:none;
+    box-shadow:0 5px 0 #8657c9, 0 7px 12px rgba(0,0,0,0.3);
+    transition:transform .08s ease, box-shadow .08s ease;
+  }
+  .card:active{ cursor:grabbing; }
+  .card.dragging{ opacity:.4; }
+  .card.selected{
+    outline:3px solid var(--gold);
+    outline-offset:2px;
+  }
+  .card svg{ width:100%; height:100%; display:block; }
+
+  .card.correct-card{
+    background:linear-gradient(160deg, #b9fbe8, var(--teal));
+    box-shadow:0 5px 0 #14a08d, 0 7px 12px rgba(0,0,0,0.3);
+  }
+  .card.incorrect-card{
+    background:linear-gradient(160deg, #ffd0d8, var(--coral));
+    box-shadow:0 5px 0 #b8283f, 0 7px 12px rgba(0,0,0,0.3);
+  }
+
+  footer{
+    text-align:center;
+    color:var(--text-muted);
+    font-size:12px;
+    margin-top:18px;
+  }
+
+  @media (max-width:600px){
+    .card{ flex-basis:100px; width:100px; min-height:62px; }
+    .groups-container{ grid-template-columns:repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>🔮 Match the Graph 🔮</h1>
+  <p class="instructions">
+    Drag each <strong>graph card</strong> into the box under its matching <strong>function family</strong>. Click a card and then click a box if you'd rather tap than drag.
+  </p>
+
+  <div class="set-selector">
+    <button class="set-btn active" onclick="switchSet(0)">Set 1 (Basic)</button>
+    <button class="set-btn" onclick="switchSet(1)">Set 2 (Advanced)</button>
+  </div>
+
+  <div class="toolbar">
+    <button id="checkBtn" class="tool check">Check Answer</button>
+    <button id="resetBtn" class="tool reset">Reset</button>
+    <button id="hintBtn" class="tool">Show Hint</button>
+  </div>
+
+  <div id="hintBox" class="hint-box">
+    <strong>Hint:</strong> Look at the overall shape — a straight line, a U-shape, a curve that levels off, two separate branches, and so on — to decide which family a graph belongs to.
+  </div>
+
+  <div id="status" class="status"></div>
+
+  <section class="groups-container" id="groupsContainer"></section>
+
+  <section class="card-bank-section">
+    <h2>Graph Cards</h2>
+    <div id="cardBank" class="cards"></div>
+  </section>
+
+  <footer>Tip: rational graphs have two separate branches — the "even" one has both branches pointing the same way.</footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  // ---------- Function family definitions ----------
+  const functionSetsGroup = [
+    [
+      { id:"linear",       name:"Linear",         fn:x => x },
+      { id:"quadratic",    name:"Quadratic",      fn:x => x*x },
+      { id:"absolute",     name:"Absolute Value", fn:x => Math.abs(x) },
+      { id:"squareroot",   name:"Square Root",    fn:x => x >= 0 ? Math.sqrt(x) : NaN },
+      { id:"exponential",  name:"Exponential",    fn:x => Math.pow(2, x) }
+    ],
+    [
+      { id:"cubic",        name:"Cubic",              fn:x => x*x*x },
+      { id:"cuberoot",     name:"Cube Root",          fn:x => Math.cbrt(x) },
+      { id:"logarithmic",  name:"Logarithmic",        fn:x => x > 0 ? Math.log2(x) : NaN },
+      { id:"rational-odd", name:"Rational (Odd)",     fn:x => x !== 0 ? 1/x : NaN },
+      { id:"rational-even",name:"Rational (Even)",    fn:x => x !== 0 ? 1/(x*x) : NaN }
+    ]
+  ];
+
+  let currentSetIndex = 0;
+  let cards = [];
+  let selectedCard = null;
+
+  // ---------- Graph SVG generation ----------
+  function buildGraphSVG(fn){
+    const W = 100, H = 66;
+    const winMin = -6, winMax = 6;
+    const N = 90;
+    const toSX = x => ((x - winMin) / (winMax - winMin)) * W;
+    const toSY = y => H/2 - (y / winMax) * (H/2 - 4);
+
+    let segments = [];
+    let current = [];
+    for(let i=0;i<=N;i++){
+      const x = winMin + (i/N) * (winMax - winMin);
+      const y = fn(x);
+      if(!isFinite(y) || y < winMin || y > winMax){
+        if(current.length > 1) segments.push(current);
+        current = [];
+        continue;
+      }
+      current.push([toSX(x), toSY(y)]);
+    }
+    if(current.length > 1) segments.push(current);
+
+    const paths = segments.map(seg=>{
+      const d = seg.map((p,i)=> (i===0?"M":"L") + p[0].toFixed(1) + "," + p[1].toFixed(1)).join(" ");
+      return `<path d="${d}" fill="none" stroke="#4c1d95" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>`;
+    }).join("");
+
+    const axisY = toSY(0);
+    const axisX = toSX(0);
+
+    return `
+      <svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">
+        <rect x="0" y="0" width="${W}" height="${H}" rx="6" fill="#ffffff"/>
+        <line x1="0" y1="${axisY}" x2="${W}" y2="${axisY}" stroke="#d9c2ff" stroke-width="1"/>
+        <line x1="${axisX}" y1="0" x2="${axisX}" y2="${H}" stroke="#d9c2ff" stroke-width="1"/>
+        ${paths}
+      </svg>
+    `;
+  }
+
+  // ---------- Cards ----------
+  function makeCards(){
+    cards = [];
+    const set = functionSetsGroup[currentSetIndex];
+    set.forEach(f=>{
+      cards.push({ id:f.id, set:f.id, fn:f.fn });
+    });
+    // Fisher-Yates shuffle
+    for(let i=cards.length-1;i>0;i--){
+      const j = Math.floor(Math.random()*(i+1));
+      [cards[i],cards[j]] = [cards[j],cards[i]];
+    }
+  }
+
+  function createCardEl(card){
+    const el = document.createElement("div");
+    el.className = "card";
+    el.draggable = true;
+    el.dataset.cardId = card.id;
+    el.dataset.set = card.set;
+    el.innerHTML = buildGraphSVG(card.fn);
+
+    el.addEventListener("dragstart", e=>{
+      e.dataTransfer.setData("text/plain", card.id);
+      e.dataTransfer.effectAllowed = "move";
+      el.classList.add("dragging");
+    });
+    el.addEventListener("dragend", ()=> el.classList.remove("dragging"));
+    el.addEventListener("click", e=>{
+      e.stopPropagation();
+      document.querySelectorAll(".card.selected").forEach(x=> x.classList.remove("selected"));
+      el.classList.add("selected");
+      selectedCard = card.id;
+    });
+    return el;
+  }
+
+  function render(){
+    const bank = document.getElementById("cardBank");
+    const groupsContainer = document.getElementById("groupsContainer");
+    bank.innerHTML = "";
+    groupsContainer.innerHTML = "";
+
+    cards.forEach(card => bank.appendChild(createCardEl(card)));
+
+    const set = functionSetsGroup[currentSetIndex];
+    set.forEach(f=>{
+      const column = document.createElement("div");
+      column.className = "group-column";
+      column.dataset.set = f.id;
+
+      const title = document.createElement("h3");
+      title.className = "column-header";
+      title.textContent = f.name;
+      column.appendChild(title);
+
+      const slot = document.createElement("div");
+      slot.className = "drop-slot";
+      slot.dataset.set = f.id;
+
+      slot.addEventListener("dragover", e=>{ e.preventDefault(); column.classList.add("over"); });
+      slot.addEventListener("dragleave", ()=> column.classList.remove("over"));
+      slot.addEventListener("drop", e=>{
+        e.preventDefault();
+        column.classList.remove("over");
+        const id = e.dataTransfer.getData("text/plain");
+        placeCardIntoSlot(id, slot);
+      });
+      slot.addEventListener("click", ()=>{
+        if(selectedCard){
+          placeCardIntoSlot(selectedCard, slot);
+          selectedCard = null;
+        }
+      });
+
+      column.appendChild(slot);
+      groupsContainer.appendChild(column);
+    });
+
+    bank.addEventListener("dragover", e=> e.preventDefault());
+    bank.addEventListener("drop", e=>{
+      e.preventDefault();
+      const id = e.dataTransfer.getData("text/plain");
+      moveCardToBank(id);
+    });
+    bank.addEventListener("click", ()=>{
+      if(selectedCard){
+        moveCardToBank(selectedCard);
+        selectedCard = null;
+      }
+    });
+  }
+
+  function placeCardIntoSlot(cardId, slotEl){
+    const cardEl = document.querySelector(`[data-card-id="${cardId}"]`);
+    if(!cardEl) return;
+
+    const existing = slotEl.querySelector(".card");
+    if(existing && existing !== cardEl){
+      document.getElementById("cardBank").appendChild(existing);
+      existing.classList.remove("correct-card","incorrect-card");
+    }
+
+    cardEl.classList.remove("correct-card","incorrect-card","selected");
+    slotEl.appendChild(cardEl);
+    document.getElementById("status").textContent = "";
+    document.getElementById("status").className = "status";
+  }
+
+  function moveCardToBank(cardId){
+    const cardEl = document.querySelector(`[data-card-id="${cardId}"]`);
+    if(!cardEl) return;
+    cardEl.classList.remove("correct-card","incorrect-card","selected");
+    document.getElementById("cardBank").appendChild(cardEl);
+    document.getElementById("status").textContent = "";
+    document.getElementById("status").className = "status";
+  }
+
+  function switchSet(index){
+    currentSetIndex = index;
+    document.querySelectorAll(".set-btn").forEach((btn, idx)=>{
+      btn.classList.toggle("active", idx === index);
+    });
+    resetActivity();
+  }
+  window.switchSet = switchSet;
+
+  function checkAnswer(){
+    let correctCount = 0;
+    let allFilled = true;
+    const total = functionSetsGroup[currentSetIndex].length;
+
+    document.querySelectorAll(".group-column").forEach(column=>{
+      const targetSet = column.dataset.set;
+      const slot = column.querySelector(".drop-slot");
+      const card = slot.querySelector(".card");
+
+      if(!card){
+        allFilled = false;
+        return;
+      }
+      if(card.dataset.set === targetSet){
+        card.classList.add("correct-card");
+        card.classList.remove("incorrect-card");
+        correctCount++;
+      } else {
+        card.classList.add("incorrect-card");
+        card.classList.remove("correct-card");
+      }
+    });
+
+    const status = document.getElementById("status");
+    if(!allFilled){
+      status.textContent = "Place a graph in every box before checking.";
+      status.className = "status incorrect";
+    } else if(correctCount === total){
+      status.textContent = `Excellent! All ${total} graphs are matched correctly.`;
+      status.className = "status correct";
+    } else {
+      status.textContent = `${correctCount} of ${total} correct. Review the highlighted cards.`;
+      status.className = "status incorrect";
+    }
+  }
+
+  function resetActivity(){
+    makeCards();
+    render();
+    const status = document.getElementById("status");
+    status.textContent = "";
+    status.className = "status";
+    document.getElementById("hintBox").classList.remove("show");
+    selectedCard = null;
+  }
+
+  document.getElementById("checkBtn").addEventListener("click", checkAnswer);
+  document.getElementById("resetBtn").addEventListener("click", resetActivity);
+  document.getElementById("hintBtn").addEventListener("click", ()=>{
+    document.getElementById("hintBox").classList.toggle("show");
+  });
+
+  resetActivity();
+})();
+</script>
+</body>
+</html>
