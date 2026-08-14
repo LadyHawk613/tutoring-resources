@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multiplication Monster Battle</title>
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --danger: #ef4444;
+            --success: #22c55e;
+            --background: #0f172a;
+            --surface: #1e293b;
+            --text: #f8fafc;
+            --text-muted: #94a3b8;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--background);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .game-container {
+            width: 100%;
+            max-width: 500px;
+            background-color: var(--surface);
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Screen States */
+        .screen {
+            display: none;
+            flex-direction: column;
+            gap: 20px;
+            align-items: center;
+            text-align: center;
+        }
+
+        .screen.active {
+            display: flex;
+        }
+
+        /* Header / Stats */
+        .stats-bar {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        .streak-badge {
+            color: #f59e0b;
+        }
+
+        /* Monster Section */
+        .monster-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            width: 100%;
+        }
+
+        .health-bar-container {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            height: 16px;
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .health-bar {
+            width: 100%;
+            height: 100%;
+            background-color: var(--danger);
+            transition: width 0.3s ease;
+        }
+
+        .monster-avatar {
+            font-size: 5rem;
+            animation: float 3s ease-in-out infinite;
+            user-select: none;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .monster-name {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: var(--text);
+        }
+
+        .battle-message {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            min-height: 24px;
+        }
+
+        /* Problem Section */
+        .problem-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 20px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .problem-display {
+            font-size: 2.5rem;
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        input[type="number"] {
+            background: var(--background);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            color: var(--text);
+            font-size: 1.5rem;
+            padding: 8px 16px;
+            width: 140px;
+            text-align: center;
+        }
+
+        input[type="number"]:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        /* Chrome, Safari, Edge, Opera remove spinners */
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.1s;
+        }
+
+        button:hover {
+            background-color: var(--primary-hover);
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        /* Animations for battle feedback */
+        .shake {
+            animation: shake 0.4s ease;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-8px); }
+            40%, 80% { transform: translateX(8px); }
+        }
+
+        .pulse {
+            animation: pulse 0.4s ease;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        /* Victory Screen */
+        .victory-avatar {
+            font-size: 6rem;
+            animation: bounce 1s infinite alternate;
+        }
+
+        @keyframes bounce {
+            from { transform: translateY(0); }
+            to { transform: translateY(-15px); }
+        }
+
+        .victory-title {
+            font-size: 2rem;
+            color: #f59e0b;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="game-container">
+        
+        <!-- START SCREEN -->
+        <div id="start-screen" class="screen active">
+            <div class="victory-avatar">👾</div>
+            <h1>Multiplication Monster</h1>
+            <p style="color: var(--text-muted);">Defeat the monster by solving multiplication problems correctly!</p>
+            <button onclick="startGame()">Start Battle</button>
+        </div>
+
+        <!-- BATTLE SCREEN -->
+        <div id="battle-screen" class="screen">
+            <!-- Stats -->
+            <div class="stats-bar">
+                <span id="level-indicator">Monster 1/3</span>
+                <span class="streak-badge">🔥 Streak: <span id="streak-count">0</span></span>
+            </div>
+
+            <!-- Monster -->
+            <div class="monster-section">
+                <div class="health-bar-container">
+                    <div id="health-bar" class="health-bar"></div>
+                </div>
+                <div id="monster-avatar" class="monster-avatar">👹</div>
+                <div id="monster-name" class="monster-name">Goblin Brute</div>
+                <div id="battle-message" class="battle-message">Solve the problem to attack!</div>
+            </div>
+
+            <!-- Problem Input Form -->
+            <form class="problem-card" onsubmit="handleAnswer(event)">
+                <div id="problem-display" class="problem-display">7 × 8</div>
+                <div class="input-group">
+                    <input type="number" id="answer-input" autocomplete="off" autofocus required>
+                    <button type="submit">Attack!</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- VICTORY SCREEN -->
+        <div id="victory-screen" class="screen">
+            <div class="victory-avatar">👑</div>
+            <div class="victory-title">Monster Master!</div>
+            <p style="color: var(--text-muted);">Incredible job! You've successfully conquered all the multiplication monsters and proved your math mastery.</p>
+            <button onclick="startGame()">Play Again</button>
+        </div>
+
+    </div>
+
+    <script>
+        // Game State Variables
+        const monsters = [
+            { name: "Goblin Brute", avatar: "👹", maxHp: 5 },
+            { name: "Shadow Slime", avatar: "🟣", maxHp: 8 },
+            { name: "Dragon King", avatar: "🐲", maxHp: 10 }
+        ];
+
+        let currentMonsterIndex = 0;
+        let currentHp = 0;
+        let maxHp = 0;
+        let streak = 0;
+        let currentNum1 = 0;
+        let currentNum2 = 0;
+        let correctAnswer = 0;
+
+        // DOM Elements
+        const startScreen = document.getElementById('start-screen');
+        const battleScreen = document.getElementById('battle-screen');
+        const victoryScreen = document.getElementById('victory-screen');
+        
+        const healthBar = document.getElementById('health-bar');
+        const monsterAvatar = document.getElementById('monster-avatar');
+        const monsterName = document.getElementById('monster-name');
+        const levelIndicator = document.getElementById('level-indicator');
+        const streakCountSpan = document.getElementById('streak-count');
+        const battleMessage = document.getElementById('battle-message');
+        const problemDisplay = document.getElementById('problem-display');
+        const answerInput = document.getElementById('answer-input');
+
+        function startGame() {
+            currentMonsterIndex = 0;
+            streak = 0;
+            streakCountSpan.textContent = streak;
+            
+            startScreen.classList.remove('active');
+            victoryScreen.classList.remove('active');
+            battleScreen.classList.add('active');
+
+            loadMonster();
+        }
+
+        function loadMonster() {
+            if (currentMonsterIndex >= monsters.length) {
+                // Game Won completely
+                battleScreen.classList.remove('active');
+                victoryScreen.classList.add('active');
+                return;
+            }
+
+            const monster = monsters[currentMonsterIndex];
+            maxHp = monster.maxHp;
+            currentHp = maxHp;
+
+            monsterName.textContent = monster.name;
+            monsterAvatar.textContent = monster.avatar;
+            levelIndicator.textContent = `Monster ${currentMonsterIndex + 1}/${monsters.length}`;
+            
+            updateHealthBar();
+            generateProblem();
+        }
+
+        function updateHealthBar() {
+            const percentage = (currentHp / maxHp) * 100;
+            healthBar.style.width = `${percentage}%`;
+        }
+
+        function generateProblem() {
+            // Generate numbers between 2 and 12 for good practice
+            currentNum1 = Math.floor(Math.random() * 10) + 2;
+            currentNum2 = Math.floor(Math.random() * 10) + 2;
+            correctAnswer = currentNum1 * currentNum2;
+
+            problemDisplay.textContent = `${currentNum1} × ${currentNum2}`;
+            answerInput.value = '';
+            answerInput.focus();
+        }
+
+        function handleAnswer(e) {
+            e.preventDefault();
+            const userAnswer = parseInt(answerInput.value);
+
+            if (isNaN(userAnswer)) return;
+
+            if (userAnswer === correctAnswer) {
+                // Correct Answer - Attack!
+                currentHp--;
+                streak++;
+                streakCountSpan.textContent = streak;
+                
+                battleMessage.style.color = 'var(--success)';
+                battleMessage.textContent = `Direct hit! You dealt 1 damage.`;
+                
+                monsterAvatar.classList.add('pulse');
+                setTimeout(() => monsterAvatar.classList.remove('pulse'), 400);
+
+                updateHealthBar();
+
+                if (currentHp <= 0) {
+                    // Monster Defeated! Move to next
+                    currentMonsterIndex++;
+                    if (currentMonsterIndex < monsters.length) {
+                        battleMessage.textContent = `You defeated ${monsters[currentMonsterIndex - 1].name}! Next monster appearing...`;
+                        setTimeout(loadMonster, 1200);
+                    } else {
+                        setTimeout(loadMonster, 500); // Will trigger victory screen
+                    }
+                } else {
+                    generateProblem();
+                }
+
+            } else {
+                // Wrong Answer - Blocked!
+                streak = 0;
+                streakCountSpan.textContent = streak;
+
+                battleMessage.style.color = 'var(--danger)';
+                battleMessage.textContent = `Wrong! Monster blocked your attack! (Correct was ${correctAnswer})`;
+
+                monsterAvatar.classList.add('shake');
+                setTimeout(() => monsterAvatar.classList.remove('shake'), 400);
+
+                generateProblem();
+            }
+        }
+    </script>
+</body>
+</html>
