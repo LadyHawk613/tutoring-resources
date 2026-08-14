@@ -4,8 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Math Dashboard</title>
+    <!-- Import a hand-drawn chalk style font from Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cabin+Sketch:wght@700&display=swap" rel="stylesheet">
+
     <style>
-        /* General page setup with a true dusty chalkboard background */
+        /* General page setup with your chalkboard background image */
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             background: url('chalkboard.jpg') no-repeat center center fixed;
@@ -53,14 +58,17 @@
             margin: 0; 
         }
 
-        /* Styling links to look like clean buttons */
+        /* Styling links to look like clean buttons with a chalk font */
         a {
             display: block;
-            padding: 12px 20px;
+            padding: 14px 20px;
             background-color: #0081A7;
             color: #ffffff;
             text-decoration: none;
-            font-weight: bold;
+            font-family: 'Cabin Sketch', cursive, sans-serif;
+            font-weight: 700;
+            font-size: 20px; /* Slightly larger to make the sketchy font pop */
+            letter-spacing: 0.5px;
             border-radius: 6px;
             transition: background-color 0.2s ease, transform 0.1s ease;
         }
