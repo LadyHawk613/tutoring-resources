@@ -10,48 +10,44 @@
     <link href="https://fonts.googleapis.com/css2?family=Cabin+Sketch:wght@700&display=swap" rel="stylesheet">
 
     <style>
-        /* General page setup with your chalkboard background image */
+        /* General page setup with chalkboard background and left alignment */
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             background: url('chalkboard.jpg') no-repeat center center fixed;
             background-size: cover;
-            color: #333333;
+            color: #ffffff;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            justify-content: center;
+            align-items: flex-start;
+            justify-content: flex-start;
             min-height: 100vh;
             margin: 0;
-            padding: 20px;
+            padding: 40px;
             box-sizing: border-box;
         }
 
-        /* Container for the menu */
-        .container {
-            background-color: #ffffff;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 25px rgba(0, 0, 0, 0.6);
-            width: 100%;
-            max-width: 800px;
-            text-align: center;
+        /* Sidebar container pinned to the far left */
+        .sidebar {
+            width: 260px;
         }
 
         h1 {
             margin-top: 0;
-            font-size: 24px;
-            color: #222222;
-            margin-bottom: 25px;
+            font-size: 22px;
+            color: #ffffff;
+            margin-bottom: 20px;
+            font-family: 'Cabin Sketch', cursive, sans-serif;
+            letter-spacing: 0.5px;
         }
 
-        /* Menu item list styling - 3-column grid */
+        /* Menu item list styling - Single vertical column */
         ul {
             list-style-type: none;
             padding: 0;
             margin: 0;
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
         }
 
         li {
@@ -61,13 +57,13 @@
         /* Styling links to look like clean buttons with a chalk font */
         a {
             display: block;
-            padding: 14px 20px;
+            padding: 12px 18px;
             background-color: #0081A7;
             color: #ffffff;
             text-decoration: none;
             font-family: 'Cabin Sketch', cursive, sans-serif;
             font-weight: 700;
-            font-size: 20px; /* Slightly larger to make the sketchy font pop */
+            font-size: 19px;
             letter-spacing: 0.5px;
             border-radius: 6px;
             transition: background-color 0.2s ease, transform 0.1s ease;
@@ -85,7 +81,7 @@
 </head>
 
 <body>
-    <div class="container">
+    <div class="sidebar">
         <h1>Select a Math Section</h1>
         <ul>
             <li><a href="math1/math1-hub.html">Integrated Math 1</a></li>
