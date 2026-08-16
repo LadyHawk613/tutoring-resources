@@ -42,32 +42,31 @@
             margin-bottom: 25px;
         }
 
-        /* Grid container for activity buttons: 3 columns wide */
-        .activity-grid {
+         /* 3-Column Grid Layout for buttons */
+        .button-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 15px;
-            margin: 20px 0;
+            margin-top: 20px;
+            margin-bottom: 30px;
         }
 
-        .activity-button {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px 15px;
-            background-color: #007EA7; /* A nice blue color */
+        /* Main Dashboard Button Style */
+        .dashboard-button {
+            background-color: #00838f;
             color: #ffffff;
-            text-decoration: none;
+            padding: 15px 10px;
+            border: none;
             border-radius: 6px;
+            font-size: 14px;
             font-weight: bold;
-            font-size: 1em;
+            cursor: pointer;
             text-align: center;
-            min-height: 60px;
-            box-sizing: border-box;
+            transition: background-color 0.2s;
         }
 
-        .activity-button:hover {
-            background-color: #005f7f;
+        .dashboard-button:hover {
+            background-color: #005f6b;
         }
         
     </style>
@@ -79,60 +78,9 @@
         
         <!-- 3-Column Grid Container -->
         <div class="button-grid">
-            <button class="dashboard-button" onclick="location.href='math2-diagnostic.html'">
-                Diagnostic
-            </button>
-
-            <!-- Topic -->
-            <button class="dashboard-button" onclick="location.href='math2-linear.html'">
-                Linear Equations
-            </button>
-
-            <!-- Topic -->
-            <button class="dashboard-button" onclick="location.href='math2-functions.html'">
-                Functions
-            </button>
-
-            <!-- Topic -->
-            <button class="dashboard-button" onclick="location.href='math2-systems.html'">
-                Systems of Equations
-            </button>
-
-            <!-- Topic -->
-            <button class="dashboard-button" onclick="location.href='math2-quadratic.html'">
-                Quadratic Functions
-            </button>
-
-            <!-- Topic -->
-            <button class="dashboard-button" onclick="location.href='math2-exponential.html'">
-                Exponential Functions
-            </button>
-
-            <!-- Topic -->
-            <button class="dashboard-button" onclick="location.href='math2-polynomial.html'">
-                Polynomial Operations
-            </button>
-
-            <!-- Topic -->
-            <button class="dashboard-button" onclick="location.href='math2-rational.html'">
-                Rational Functions
-            </button>
-
-            <!-- Topic -->
-            <button class="dashboard-button" onclick="location.href='math2-geometry.html'">
-                Geometry & Similarity
-            </button>
-
-            <!-- Topic -->
-            <button class="dashboard-button" onclick="location.href='math2-trigonometry.html'">
-                Trigonometry
-            </button>
-
-            <!-- Topic -->
-            <button class="dashboard-button" onclick="location.href='math2-statistics.html'">
-                Statistics
-            </button>
-            
+            <button class="dashboard-button" onclick="top.location.href='math2-diagnostic.html'">Diagnostic</button>
+            <button class="dashboard-button" onclick="top.location.href='math2-linear.html'">Linear Equations</button>
+            <button class="dashboard-button" onclick="top.location.href='math2-functions.html'">Functions</button>
             <!-- Future buttons added here will automatically fill the 2nd and 3rd columns -->
         </div>
 
