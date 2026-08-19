@@ -18,16 +18,16 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 40px 20px;
+            padding: 20px;
             margin: 0;
+            overflow-y: auto; /* Ensures scrolling works if embedded in an iframe */
         }
         .container {
             background-color: transparent;
-            padding: 30px;
+            padding: 10px 20px;
             border-radius: 12px;
-            box-shadow: none;
             width: 100%;
-            max-width: 800px; /* Widened to comfortably fit 3 columns */
+            max-width: 800px;
             text-align: center;
         }
         h1 {
@@ -37,35 +37,36 @@
             font-weight: 700;
             letter-spacing: 0.5px;
             margin-top: 0;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
         }
 
         /* Grid container for activity buttons: 3 columns wide */
         .activity-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
-            margin: 20px 0;
+            gap: 12px;
+            margin: 10px 0;
         }
         .activity-button {
             display: flex;
+            flex-direction: column; /* Allows multi-line titles to stack cleanly */
             align-items: center;
             justify-content: center;
-            padding: 20px 15px;
+            padding: 14px 10px;
             background-color: #007EA7; /* A nice blue color */
             color: #ffffff;
             text-decoration: none;
             border-radius: 6px;
             font-weight: bold;
-            font-size: 1em;
+            font-size: 0.95em;
             text-align: center;
             min-height: 60px;
             box-sizing: border-box;
+            transition: background-color 0.2s;
         }
         .activity-button:hover {
             background-color: #005f7f;
         }
-        
     </style>
 </head>
 <body>
@@ -73,12 +74,12 @@
     <div class="container">
         <h1>7th Grade Math</h1>
 
-        <!-- Activity Grid: Add new activities here one at a time -->
+        <!-- Activity Grid: All 14 activities -->
         <div class="activity-grid">
             <a href="diagnostic-7th.html" target="_top" class="activity-button">Diagnostic</a>
             <a href="4th-magic-factor-trees.html" target="_top" class="activity-button">Number Sense & Operations</a>
             <a href="4th-magic-factor-trees.html" target="_top" class="activity-button">Rational & Real Numbers</a>
-            <a href="4th-magic-factor-trees.html" target="_top" class="activity-button">Propertions & Percentages</a>
+            <a href="4th-magic-factor-trees.html" target="_top" class="activity-button">Proportions & Percentages</a>
             <a href="4th-magic-factor-trees.html" target="_top" class="activity-button">Measurement</a>
             <a href="4th-magic-factor-trees.html" target="_top" class="activity-button">Geometry</a>
             <a href="4th-magic-factor-trees.html" target="_top" class="activity-button">Expressions & Equations</a>
