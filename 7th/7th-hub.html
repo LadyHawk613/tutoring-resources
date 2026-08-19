@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>7th Grade Math</title>
+
+    <!-- Import the hand-drawn chalk style font from Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cabin+Sketch:wght@700&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: transparent;
+            color: #333333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+            margin: 0;
+        }
+        .container {
+            background-color: transparent;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: none;
+            width: 100%;
+            max-width: 800px; /* Widened to comfortably fit 3 columns */
+            text-align: center;
+        }
+        h1 {
+            font-family: 'Cabin Sketch', cursive, sans-serif;
+            color: #F07167;
+            font-size: 36px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            margin-top: 0;
+            margin-bottom: 25px;
+        }
+
+        /* Grid container for activity buttons: 3 columns wide */
+        .activity-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .activity-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px 15px;
+            background-color: #007EA7; /* A nice blue color */
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 1em;
+            text-align: center;
+            min-height: 60px;
+            box-sizing: border-box;
+        }
+        .activity-button:hover {
+            background-color: #005f7f;
+        }
+        
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>7th Grade Math</h1>
+
+        <!-- Activity Grid: Add new activities here one at a time -->
+        <div class="activity-grid">
+            <a href="diagnostic.html" target="_top" class="activity-button">Diagnostic</a>
+            
+            <a href="4th-magic-factor-trees.html" target="_top" class="activity-button">Magic Factor Trees</a>
+            <a href="multiplication-6s.html" target="_top" class="activity-button">Magic Sixes</a>
+            <a href="math-treasure-hunt.html" target="_top" class="activity-button">Math Treasure Hunt</a>
+            <a href="multiplication-monster-battle.html" target="_top" class="activity-button">Multiplication Monster</a>
+            <a href="triangle-sort.html" target="_top" class="activity-button">Triangle Sort</a>
+        </div>
+        
+    </div>
+
+</body>
+</html>
