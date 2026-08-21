@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quadratic Transformations Explorer</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; font-family: Arial, sans-serif; background: #f5f7fb; color: #172033;
+  }
+  .wrap { max-width: 1100px; margin: 0 auto; padding: 24px; }
+  h1 { margin: 0 0 6px; font-size: 30px; }
+  .subtitle { margin: 0 0 20px; color: #566176; }
+  .grid { display: grid; grid-template-columns: 330px 1fr; gap: 20px; }
+  .card {
+    background: white; border-radius: 14px; padding: 20px;
+    box-shadow: 0 3px 14px rgba(0,0,0,.08);
+  }
+  .equation {
+    text-align: center; font-size: 27px; font-weight: 700;
+    padding: 15px 8px; background: #eef2ff; border-radius: 10px; margin-bottom: 20px;
+  }
+  .control { margin: 20px 0; }
+  .row { display: flex; justify-content: space-between; align-items: center; }
+  label { font-weight: 700; }
+  output {
+    min-width: 50px; text-align: center; font-weight: 700;
+    padding: 4px 8px; border-radius: 6px; background: #edf0f5;
+  }
+  input[type=range] { width: 100%; margin-top: 10px; accent-color: #4f46e5; }
+  .meaning { margin-top: 18px; padding: 14px; background: #f8fafc; border-left: 4px solid #4f46e5; line-height: 1.45; }
+  button {
+    border: 0; padding: 9px 13px; border-radius: 8px; cursor: pointer;
+    background: #e8ebf2; font-weight: 700; margin: 3px;
+  }
+  button:hover { background: #dce1eb; }
+  canvas { width: 100%; height: auto; border-radius: 10px; background: white; }
+  .presets { margin-top: 15px; }
+  .prompt {
+    margin-top: 18px; padding: 14px; background: #fff7ed; border-radius: 9px;
+  }
+  .prompt strong { display:block; margin-bottom: 6px; }
+  @media(max-width: 800px) { .grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Quadratic Transformations Explorer</h1>
+  <p class="subtitle">Explore how <b>a</b>, <b>h</b>, and <b>k</b> transform the parent function <b>y = x²</b>.</p>
+
+  <div class="grid">
+    <div class="card">
+      <div class="equation">y = <span id="eqA">1</span>(x − <span id="eqH">0</span>)² + <span id="eqK">0</span></div>
+
+      <div class="control">
+        <div class="row"><label>a — vertical stretch / reflection</label><output id="aOut">1</output></div>
+        <input id="a" type="range" min="-3" max="3" step="0.1" value="1">
+      </div>
+
+      <div class="control">
+        <div class="row"><label>h — horizontal shift</label><output id="hOut">0</output></div>
+        <input id="h" type="range" min="-6" max="6" step="1" value="0">
+      </div>
+
+      <div class="control">
+        <div class="row"><label>k — vertical shift</label><output id="kOut">0</output></div>
+        <input id="k" type="range" min="-6" max="6" step="1" value="0">
+      </div>
+
+      <div class="meaning" id="meaning"></div>
+
+      <div class="presets">
+        <b>Try a preset:</b><br>
+        <button onclick="setVals(1,0,0)">Parent</button>
+        <button onclick="setVals(2,0,0)">Stretch</button>
+        <button onclick="setVals(.5,0,0)">Narrow? a = ½</button>
+        <button onclick="setVals(-1,0,0)">Reflect</button>
+        <button onclick="setVals(1,3,2)">Shift</button>
+        <button onclick="setVals(-2,-2,3)">All three</button>
+      </div>
+
+      <div class="prompt">
+        <strong>Think about it:</strong>
+        What happens to the vertex when you change <b>h</b> or <b>k</b>?
+        What does changing the sign of <b>a</b> do?
+      </div>
+    </div>
+
+    <div class="card">
+      <canvas id="graph" width="700" height="520"></canvas>
+    </div>
+  </div>
+</div>
+
+<script>
+const aEl=document.getElementById('a'), hEl=document.getElementById('h'), kEl=document.getElementById('k');
+const canvas=document.getElementById('graph'), ctx=canvas.getContext('2d');
+
+function fmt(n) { return Number.isInteger(n) ? String(n) : n.toFixed(1).replace(/\.0$/,''); }
+function equationText(a,h,k) {
+  const hs = h===0 ? "x" : (h>0 ? `x − ${fmt(h)}` : `x + ${fmt(-h)}`);
+  const as = a===1 ? "" : a===-1 ? "−" : fmt(a);
+  const ks = k===0 ? "" : (k>0 ? ` + ${fmt(k)}` : ` − ${fmt(-k)}`);
+  return `y = ${as}${as==="" ? "" : ""}(${hs})²${ks}`;
+}
+function setVals(a,h,k){ aEl.value=a; hEl.value=h; kEl.value=k; update(); }
+
+function update(){
+  const a=+aEl.value, h=+hEl.value, k=+kEl.value;
+  document.getElementById('aOut').textContent=fmt(a);
+  document.getElementById('hOut').textContent=fmt(h);
+  document.getElementById('kOut').textContent=fmt(k);
+  document.getElementById('eqA').textContent=fmt(a);
+  document.getElementById('eqH').textContent=fmt(h);
+  document.getElementById('eqK').textContent=fmt(k);
+
+  let parts=[];
+  if(a===0) parts.push("a = 0 makes the graph a horizontal line.");
+  else if(a<0) parts.push("a is negative, so the parabola opens downward.");
+  else parts.push("a is positive, so the parabola opens upward.");
+  if(Math.abs(a)!==1 && a!==0) parts.push(`|a| = ${fmt(Math.abs(a))} changes the width: values greater than 1 make it narrower; values between 0 and 1 make it wider.`);
+  if(h!==0) parts.push(`h = ${fmt(h)} shifts the graph ${h>0?"right":"left"} ${Math.abs(h)}.`);
+  if(k!==0) parts.push(`k = ${fmt(k)} shifts the graph ${k>0?"up":"down"} ${Math.abs(k)}.`);
+  if(h===0 && k===0 && Math.abs(a)===1) parts.push("This is the parent parabola.");
+  document.getElementById('meaning').innerHTML =
+    `<b>Vertex:</b> (${fmt(h)}, ${fmt(k)})<br>${parts.join(" ")}`;
+  draw(a,h,k);
+}
+
+function draw(a,h,k){
+  const w=canvas.width, ht=canvas.height, left=55, top=20, right=20, bottom=45;
+  const xmin=-8, xmax=8, ymin=-8, ymax=8;
+  const sx=(w-left-right)/(xmax-xmin), sy=(ht-top-bottom)/(ymax-ymin);
+  const X=x=>left+(x-xmin)*sx, Y=y=>top+(ymax-y)*sy;
+
+  ctx.clearRect(0,0,w,ht);
+  ctx.font="13px Arial";
+  ctx.strokeStyle="#e4e8ef"; ctx.lineWidth=1;
+  for(let x=xmin;x<=xmax;x++){
+    ctx.beginPath(); ctx.moveTo(X(x),top); ctx.lineTo(X(x),ht-bottom); ctx.stroke();
+    if(x!==0){ctx.fillStyle="#697386";ctx.fillText(x,X(x)-4,ht-bottom+20);}
+  }
+  for(let y=ymin;y<=ymax;y++){
+    ctx.beginPath(); ctx.moveTo(left,Y(y)); ctx.lineTo(w-right,Y(y)); ctx.stroke();
+    if(y!==0){ctx.fillStyle="#697386";ctx.fillText(y,left-25,Y(y)+4);}
+  }
+  ctx.strokeStyle="#303846"; ctx.lineWidth=2;
+  ctx.beginPath(); ctx.moveTo(X(0),top); ctx.lineTo(X(0),ht-bottom); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(left,Y(0)); ctx.lineTo(w-right,Y(0)); ctx.stroke();
+
+  // Parent function in a lighter dashed line
+  ctx.setLineDash([6,5]); ctx.strokeStyle="#9aa3b2"; ctx.lineWidth=2;
+  ctx.beginPath();
+  for(let x=xmin;x<=xmax;x+=0.03){
+    const y=x*x;
+    if(y<=ymax){ if(x===xmin) ctx.moveTo(X(x),Y(y)); else ctx.lineTo(X(x),Y(y)); }
+  }
+  ctx.stroke(); ctx.setLineDash([]);
+
+  // Transformed function
+  if(a!==0){
+    ctx.strokeStyle="#4f46e5"; ctx.lineWidth=4;
+    ctx.beginPath(); let started=false;
+    for(let x=xmin;x<=xmax;x+=0.02){
+      const y=a*(x-h)*(x-h)+k;
+      if(y>=ymin-1 && y<=ymax+1){
+        if(!started){ctx.moveTo(X(x),Y(y));started=true;} else ctx.lineTo(X(x),Y(y));
+      } else started=false;
+    }
+    ctx.stroke();
+    // vertex
+    if(k>=ymin && k<=ymax){
+      ctx.fillStyle="#dc2626"; ctx.beginPath(); ctx.arc(X(h),Y(k),6,0,2*Math.PI); ctx.fill();
+      ctx.fillStyle="#172033"; ctx.font="bold 14px Arial";
+      ctx.fillText(`vertex (${fmt(h)}, ${fmt(k)})`, X(h)+10, Y(k)-10);
+    }
+  } else {
+    ctx.strokeStyle="#4f46e5"; ctx.lineWidth=4;
+    ctx.beginPath();ctx.moveTo(X(xmin),Y(k));ctx.lineTo(X(xmax),Y(k));ctx.stroke();
+  }
+
+  ctx.fillStyle="#4f46e5";ctx.font="bold 14px Arial";
+  ctx.fillText("transformed", w-125, 28);
+  ctx.fillStyle="#697386";ctx.font="13px Arial";
+  ctx.fillText("dashed = y = x²", w-125, 47);
+}
+[aEl,hEl,kEl].forEach(e=>e.addEventListener('input',update));
+update();
+</script>
+</body>
+</html>
