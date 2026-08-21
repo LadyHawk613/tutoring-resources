@@ -195,30 +195,30 @@
     <!-- Tab Navigation -->
     <div class="tabs">
         <button class="tab-btn active" onclick="switchTab(0)">1. Matching Table</button>
-        <button class="tab-btn active" onclick="switchTab(1)" id="tab-1">2. Domain Diagnostic</button>
-        <button class="tab-btn active" onclick="switchTab(2)" id="tab-2">3. Inverse Drills</button>
+        <button class="tab-btn" onclick="switchTab(1)" id="tab-1">2. Domain Diagnostic</button>
+        <button class="tab-btn" onclick="switchTab(2)" id="tab-2">3. Inverse Drills</button>
     </div>
 
     <!-- Activity 1: Matching Table -->
     <div class="panel active" id="panel-0">
         <h2>Activity 1: Function-Inverse Pair Review</h2>
-        <p class="instructions">Review the core parent functions and their corresponding inverse functions from your guide[cite: 1].</p>
+        <p class="instructions">Review the core parent functions and their corresponding inverse functions from your guide.</p>
         
         <div class="match-grid">
-            <div class="match-item"><strong>Linear:</strong> $y = mx + b$</div>
-            <div class="match-item"><strong>Inverse:</strong> Linear ($y = \frac{x - b}{m}$)</div>
+            <div class="match-item"><strong>Linear:</strong> y = mx + b</div>
+            <div class="match-item"><strong>Inverse:</strong> Linear (y = (x - b) / m)</div>
             
-            <div class="match-item"><strong>Quadratic:</strong> $y = x^2$</div>
-            <div class="match-item"><strong>Inverse:</strong> Square Root ($y = \sqrt{x}$ for $y \ge 0$)[cite: 1]</div>
+            <div class="match-item"><strong>Quadratic:</strong> y = x^2</div>
+            <div class="match-item"><strong>Inverse:</strong> Square Root (y = sqrt(x) for y >= 0)</div>
             
-            <div class="match-item"><strong>Cubic:</strong> $y = x^3$</div>
-            <div class="match-item"><strong>Inverse:</strong> Cube Root ($y = \sqrt[3]{x}$)[cite: 1]</div>
+            <div class="match-item"><strong>Cubic:</strong> y = x^3</div>
+            <div class="match-item"><strong>Inverse:</strong> Cube Root (y = cbrt(x))</div>
             
-            <div class="match-item"><strong>Absolute Value:</strong> $y = |x|$</div>
-            <div class="match-item"><strong>Inverse:</strong> Restricted Square Root ($y \ge 0$)[cite: 1]</div>
+            <div class="match-item"><strong>Absolute Value:</strong> y = |x|</div>
+            <div class="match-item"><strong>Inverse:</strong> Restricted Square Root (y >= 0)</div>
             
-            <div class="match-item"><strong>Exponential:</strong> $y = b^x$</div>
-            <div class="match-item"><strong>Inverse:</strong> Logarithmic ($y = \log_b(x)$)[cite: 1]</div>
+            <div class="match-item"><strong>Exponential:</strong> y = b^x</div>
+            <div class="match-item"><strong>Inverse:</strong> Logarithmic (y = log_b(x))</div>
         </div>
 
         <div class="nav-buttons">
@@ -230,22 +230,22 @@
     <!-- Activity 2: Diagnostic Domain & Range Quiz -->
     <div class="panel" id="panel-1">
         <h2>Activity 2: Domain and Range Diagnostic</h2>
-        <p class="instructions">Test your understanding of function restrictions and the vertical line test[cite: 1].</p>
+        <p class="instructions">Test your understanding of function restrictions and the vertical line test.</p>
         
         <div class="quiz-question" id="q1">
-            <p><strong>1. Why must the domain of a Quadratic function be restricted ($y \ge 0$) when finding its inverse?</strong>[cite: 1]</p>
+            <p><strong>1. Why must the domain of a Quadratic function be restricted (y >= 0) when finding its inverse?</strong></p>
             <div class="options">
                 <label><input type="radio" name="q1" value="a"> A) To make the graph shift upward.</label>
-                <label><input type="radio" name="q1" value="b"> B) So the inverse graph will pass the vertical line test and remain a function[cite: 1].</label>
+                <label><input type="radio" name="q1" value="b"> B) So the inverse graph will pass the vertical line test and remain a function.</label>
                 <label><input type="radio" name="q1" value="c"> C) Because negative numbers cannot exist in mathematics.</label>
             </div>
         </div>
 
         <div class="quiz-question" id="q2">
-            <p><strong>2. What graphical transformation maps a function directly onto its inverse?</strong>[cite: 1]</p>
+            <p><strong>2. What graphical transformation maps a function directly onto its inverse?</strong></p>
             <div class="options">
                 <label><input type="radio" name="q2" value="a"> A) Reflection over the x-axis</label>
-                <label><input type="radio" name="q2" value="b"> B) Reflection over the line y = x[cite: 1]</label>
+                <label><input type="radio" name="q2" value="b"> B) Reflection over the line y = x</label>
                 <label><input type="radio" name="q2" value="c"> C) Rotation by 90 degrees</label>
             </div>
         </div>
@@ -265,13 +265,13 @@
         <p class="instructions">Type the correct mathematical inverse function name or form for each given parent function.</p>
 
         <div class="drill-card">
-            <label><strong>Parent Function:</strong> Exponential function ($y = e^x$)[cite: 1]</label>
+            <label><strong>Parent Function:</strong> Exponential function (y = e^x)</label>
             <input type="text" id="drill-1" placeholder="Type the inverse function name...">
             <div id="feedback-drill-1" class="feedback"></div>
         </div>
 
         <div class="drill-card">
-            <label><strong>Parent Function:</strong> Cubic function ($y = x^3$)[cite: 1]</label>
+            <label><strong>Parent Function:</strong> Cubic function (y = x^3)</label>
             <input type="text" id="drill-2" placeholder="Type the inverse function name...">
             <div id="feedback-drill-2" class="feedback"></div>
         </div>
@@ -330,7 +330,7 @@
             f1.textContent = "Correct!";
             f1.className = "feedback correct";
         } else {
-            f1.textContent = "Incorrect. Think about logarithms[cite: 1].";
+            f1.textContent = "Incorrect. Think about logarithms.";
             f1.className = "feedback incorrect";
         }
 
@@ -338,7 +338,7 @@
             f2.textContent = "Correct!";
             f2.className = "feedback correct";
         } else {
-            f2.textContent = "Incorrect. Think about the inverse power[cite: 1].";
+            f2.textContent = "Incorrect. Think about the inverse power.";
             f2.className = "feedback incorrect";
         }
     }
