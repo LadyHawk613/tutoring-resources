@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quadratic Transformations Explorer</title>
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text: #1e293b;
+            --border: #cbd5e1;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 900px;
+            width: 100%;
+            background: var(--card-bg);
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+
+        h1 {
+            margin-top: 0;
+            font-size: 1.5rem;
+            text-align: center;
+            color: var(--primary);
+        }
+
+        .tabs {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .tab-btn {
+            padding: 8px 16px;
+            border: none;
+            background: #e2e8f0;
+            color: var(--text);
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .tab-btn.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .mode-content {
+            display: none;
+        }
+
+        .mode-content.active {
+            display: block;
+        }
+
+        .grid-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        @media (max-width: 768px) {
+            .grid-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .canvas-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        canvas {
+            background: #ffffff;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            width: 100%;
+            max-width: 400px;
+            height: 400px;
+        }
+
+        .controls {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .control-group {
+            background: #f1f5f9;
+            padding: 12px;
+            border-radius: 8px;
+        }
+
+        .control-group label {
+            display: flex;
+            justify-content: space-between;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            cursor: pointer;
+        }
+
+        .equation-display {
+            font-size: 1.25rem;
+            font-weight: bold;
+            text-align: center;
+            margin: 16px 0;
+            padding: 10px;
+            background: #e0e7ff;
+            border-radius: 6px;
+            color: #312e81;
+        }
+
+        .description-box {
+            font-size: 0.95rem;
+            line-height: 1.5;
+            background: #f8fafc;
+            border-left: 4px solid var(--primary);
+            padding: 10px 14px;
+            margin-top: 10px;
+            border-radius: 0 6px 6px 0;
+        }
+
+        .btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .btn:hover {
+            background: var(--primary-hover);
+        }
+
+        .feedback {
+            text-align: center;
+            font-weight: bold;
+            margin-top: 10px;
+            min-height: 24px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Quadratic Transformations Lab</h1>
+    
+    <div class="tabs">
+        <button class="tab-btn active" onclick="switchMode('explore')">Explore Mode</button>
+        <button class="tab-btn" onclick="switchMode('practice')">Practice Mode</button>
+    </div>
+
+    <!-- EXPLORE MODE -->
+    <div id="explore-mode" class="mode-content active">
+        <div class="equation-display" id="explore-eq">y = 1(x - 0)² + 0</div>
+        
+        <div class="grid-layout">
+            <div class="canvas-container">
+                <canvas id="exploreCanvas" width="400" height="400"></canvas>
+            </div>
+            
+            <div class="controls">
+                <div class="control-group">
+                    <label><span>Vertical Stretch/Flip (a):</span> <span id="val-a">1.0</span></label>
+                    <input type="range" id="range-a" min="-4" max="4" step="0.5" value="1" oninput="updateExplore()">
+                </div>
+                
+                <div class="control-group">
+                    <label><span>Horizontal Shift (h):</span> <span id="val-h">0</span></label>
+                    <input type="range" id="range-h" min="-5" max="5" step="1" value="0" oninput="updateExplore()">
+                </div>
+                
+                <div class="control-group">
+                    <label><span>Vertical Shift (k):</span> <span id="val-k">0</span></label>
+                    <input type="range" id="range-k" min="-5" max="5" step="1" value="0" oninput="updateExplore()">
+                </div>
+
+                <div class="description-box" id="explore-desc">
+                    Parent function graph. The vertex is at (0, 0).
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PRACTICE MODE -->
+    <div id="practice-mode" class="mode-content">
+        <div style="text-align: center; margin-bottom: 10px;">
+            Adjust the sliders to match the <strong>Target Equation</strong>!
+        </div>
+        <div class="equation-display" id="target-eq" style="background: #fef3c7; color: #92400e;">Target: y = 2(x - 1)² - 3</div>
+        
+        <div class="grid-layout">
+            <div class="canvas-container">
+                <canvas id="practiceCanvas" width="400" height="400"></canvas>
+            </div>
+            
+            <div class="controls">
+                <div class="control-group">
+                    <label><span>Your a:</span> <span id="p-val-a">1.0</span></label>
+                    <input type="range" id="p-range-a" min="-4" max="4" step="0.5" value="1" oninput="updatePractice()">
+                </div>
+                
+                <div class="control-group">
+                    <label><span>Your h:</span> <span id="p-val-h">0</span></label>
+                    <input type="range" id="p-range-h" min="-5" max="5" step="1" value="0" oninput="updatePractice()">
+                </div>
+                
+                <div class="control-group">
+                    <label><span>Your k:</span> <span id="p-val-k">0</span></label>
+                    <input type="range" id="p-range-k" min="-5" max="5" step="1" value="0" oninput="updatePractice()">
+                </div>
+
+                <button class="btn" onclick="checkAnswer()">Check Answer</button>
+                <div class="feedback" id="feedback-msg"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const scale = 30; 
+
+    let targetA = 1, targetH = 0, targetK = 0;
+
+    function switchMode(mode) {
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+        document.querySelectorAll('.mode-content').forEach(content => content.classList.remove('active'));
+
+        if (mode === 'explore') {
+            document.querySelector('.tab-btn:nth-child(1)').classList.add('active');
+            document.getElementById('explore-mode').classList.add('active');
+            updateExplore();
+        } else {
+            document.querySelector('.tab-btn:nth-child(2)').classList.add('active');
+            document.getElementById('practice-mode').classList.add('active');
+            generateNewTarget();
+            updatePractice();
+        }
+    }
+
+    function drawGrid(ctx) {
+        ctx.clearRect(0, 0, 400, 400);
+        ctx.save();
+        ctx.translate(200, 200); 
+
+        ctx.strokeStyle = "#e2e8f0";
+        ctx.lineWidth = 1;
+
+        for (let x = -5; x <= 5; x++) {
+            ctx.beginPath();
+            ctx.moveTo(x * scale, -200);
+            ctx.lineTo(x * scale, 200);
+            ctx.stroke();
+        }
+        for (let y = -5; y <= 5; y++) {
+            ctx.beginPath();
+            ctx.moveTo(-200, y * scale);
+            ctx.lineTo(200, y * scale);
+            ctx.stroke();
+        }
+
+        ctx.strokeStyle = "#64748b";
+        ctx.lineWidth = 2;
+        
+        ctx.beginPath();
+        ctx.moveTo(-200, 0);
+        ctx.lineTo(200, 0);
+        ctx.stroke();
+        
+        ctx.beginPath();
+        ctx.moveTo(0, -200);
+        ctx.lineTo(0, 200);
+        ctx.stroke();
+
+        ctx.restore();
+    }
+
+    function drawParabola(ctx, a, h, k, color, dashed = false) {
+        ctx.save();
+        ctx.translate(200, 200);
+        ctx.strokeStyle = color;
+        ctx.lineWidth = 3;
+        if (dashed) ctx.setLineDash([5, 5]);
+
+        ctx.beginPath();
+        let first = true;
+        for (let px = -200; px <= 200; px += 2) {
+            let x = px / scale;
+            let y = a * Math.pow(x - h, 2) + k;
+            let py = -y * scale; 
+
+            if (first) {
+                ctx.moveTo(px, py);
+                first = false;
+            } else {
+                ctx.lineTo(px, py);
+            }
+        }
+        ctx.stroke();
+        ctx.restore();
+    }
+
+    function updateExplore() {
+        let a = parseFloat(document.getElementById('range-a').value);
+        let h = parseFloat(document.getElementById('range-h').value);
+        let k = parseFloat(document.getElementById('range-k').value);
+
+        document.getElementById('val-a').innerText = a.toFixed(1);
+        document.getElementById('val-h').innerText = h;
+        document.getElementById('val-k').innerText = k;
+
+        let hStr = h === 0 ? "x" : (h > 0 ? `(x - ${h})` : `(x + ${Math.abs(h)})`);
+        let kStr = k === 0 ? "" : (k > 0 ? ` + ${k}` : ` - ${Math.abs(k)}`);
+        document.getElementById('explore-eq').innerText = `y = ${a}${hStr}²${kStr}`;
+
+        let desc = `The vertex is at <strong>(${h}, ${k})</strong>. `;
+        if (a < 0) desc += `It is <strong>flipped downward</strong> (reflected over the x-axis). `;
+        if (Math.abs(a) > 1) desc += `It is vertically <strong>stretched</strong> (narrower than parent graph). `;
+        else if (Math.abs(a) < 1 && a !== 0) desc += `It is vertically <strong>compressed</strong> (wider than parent graph). `;
+        if (a === 0) desc += `It flattens into a horizontal line.`;
+        document.getElementById('explore-desc').innerHTML = desc;
+
+        let canvas = document.getElementById('exploreCanvas');
+        let ctx = canvas.getContext('2d');
+        drawGrid(ctx);
+        drawParabola(ctx, 1, 0, 0, "#cbd5e1", true);
+        drawParabola(ctx, a, h, k, "#4f46e5", false);
+    }
+
+    function generateNewTarget() {
+        const aOptions = [-2, -1, -0.5, 0.5, 1, 2];
+        targetA = aOptions[Math.floor(Math.random() * aOptions.length)];
+        targetH = Math.floor(Math.random() * 7) - 3; 
+        targetK = Math.floor(Math.random() * 7) - 3; 
+
+        let hStr = targetH === 0 ? "x" : (targetH > 0 ? `(x - ${targetH})` : `(x + ${Math.abs(targetH)})`);
+        let kStr = targetK === 0 ? "" : (targetK > 0 ? ` + ${targetK}` : ` - ${Math.abs(targetK)}`);
+        document.getElementById('target-eq').innerText = `Target: y = ${targetA}${hStr}²${kStr}`;
+        document.getElementById('feedback-msg').innerText = "";
+        
+        document.getElementById('p-range-a').value = 1;
+        document.getElementById('p-range-h').value = 0;
+        document.getElementById('p-range-k').value = 0;
+    }
+
+    function updatePractice() {
+        let a = parseFloat(document.getElementById('p-range-a').value);
+        let h = parseFloat(document.getElementById('p-range-h').value);
+        let k = parseFloat(document.getElementById('p-range-k').value);
+
+        document.getElementById('p-val-a').innerText = a.toFixed(1);
+        document.getElementById('p-val-h').innerText = h;
+        document.getElementById('p-val-k').innerText = k;
+
+        let canvas = document.getElementById('practiceCanvas');
+        let ctx = canvas.getContext('2d');
+        drawGrid(ctx);
+
+        drawParabola(ctx, targetA, targetH, targetK, "#d97706", true);
+        drawParabola(ctx, a, h, k, "#4f46e5", false);
+    }
+
+    function checkAnswer() {
+        let a = parseFloat(document.getElementById('p-range-a').value);
+        let h = parseFloat(document.getElementById('p-range-h').value);
+        let k = parseFloat(document.getElementById('p-range-k').value);
+
+        let feedback = document.getElementById('feedback-msg');
+        if (a === targetA && h === targetH && k === targetK) {
+            feedback.style.color = "#16a34a";
+            feedback.innerText = "🎉 Perfect match! Great job!";
+            setTimeout(generateNewTarget, 2500);
+        } else {
+            feedback.style.color = "#dc2626";
+            feedback.innerText = "❌ Not quite yet. Keep adjusting!";
+        }
+    }
+
+    updateExplore();
+</script>
+
+</body>
+</html>
