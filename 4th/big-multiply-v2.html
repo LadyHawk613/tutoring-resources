@@ -126,7 +126,16 @@
             border: 2px solid #f9e79f;
             text-align: center;
         }
-        input[type="number"] {
+        
+        /* Remove spinner arrows for Chrome, Safari, Edge, Opera */
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        /* Remove spinner arrows for Firefox */
+        input[type=number] {
+            -moz-appearance: textfield;
             width: 70px;
             padding: 8px;
             font-size: 18px;
@@ -137,6 +146,7 @@
             color: #fff;
             outline: none;
         }
+
         input[type="number"]:focus {
             border-color: #f1c40f;
             box-shadow: 0 0 8px rgba(241, 196, 15, 0.8);
@@ -232,7 +242,6 @@
 
     function loadProblem() {
         let p = problems[currentIdx];
-        document.getElementById("scoreBoardinnerHTML") = "";
         document.getElementById("scoreBoard").innerText = `Spell ${currentIdx + 1} of ${problems.length}`;
         document.getElementById("currentProblemText").innerText = `${p.num} × ${p.mult}`;
         document.getElementById("tensLabel").innerText = `${p.num}`;
@@ -294,6 +303,7 @@
     function returnToMenu() {
         window.location.href = "4th-hub.html";
     }
+
     loadProblem();
 </script>
 
