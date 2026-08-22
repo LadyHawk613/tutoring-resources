@@ -200,7 +200,7 @@
 
     <div class="step-section">
         <div class="step-title">Step 1: The Magic Breakdown</div>
-        <span id="tensLabel" style="color: #f5b041; font-weight: bold;">34</span> = <input type="number" id="inputTens" placeholder="Tens"> + <input type="number" id="inputOnes" placeholder="Ones">
+        <span id="tensLabel" style="color: #f5b041; font-weight: bold;">34</span> = <input type="number" id="inputTens" placeholder="Tens" onwheel="event.preventDefault()"> + <input type="number" id="inputOnes" placeholder="Ones" onwheel="event.preventDefault()">
     </div>
 
     <div class="step-section">
@@ -212,10 +212,10 @@
             
             <div class="grid-side" id="sideMultiplier">4</div>
             <div class="box-tens">
-                <input type="number" id="boxProduct1" placeholder="?">
+                <input type="number" id="boxProduct1" placeholder="?" onwheel="event.preventDefault()">
             </div>
             <div class="box-ones">
-                <input type="number" id="boxProduct2" placeholder="?">
+                <input type="number" id="boxProduct2" placeholder="?" onwheel="event.preventDefault()">
             </div>
         </div>
     </div>
@@ -223,7 +223,7 @@
     <div class="step-section">
         <div class="step-title">Step 3: The Final Summoning</div>
         <div class="final-row">
-            Total Magical Sum: <input type="number" id="inputFinal" placeholder="Total">
+            Total Magical Sum: <input type="number" id="inputFinal" placeholder="Total" onwheel="event.preventDefault()">
         </div>
     </div>
 
