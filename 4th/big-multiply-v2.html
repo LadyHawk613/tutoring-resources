@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Magical Math Adventure!</title>
+    <style>
+        body {
+            font-family: 'Comic Sans MS', 'Bubblegum Sans', Arial, sans-serif;
+            background: radial-gradient(circle at center, #4b134f 0%, #1a0b2e 100%);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: #f5f6fa;
+        }
+        .container {
+            background: linear-gradient(135deg, #2b1055 0%, #7597de 100%);
+            background: #23123d;
+            padding: 30px;
+            border-radius: 25px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.6), inset 0 0 20px rgba(155, 89, 182, 0.4);
+            max-width: 650px;
+            width: 100%;
+            text-align: center;
+            border: 4px solid #f1c40f;
+            position: relative;
+        }
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: linear-gradient(135deg, #8e44ad, #9b59b6);
+            color: #fff;
+            border: 2px solid #f1c40f;
+            padding: 8px 15px;
+            font-size: 14px;
+            font-weight: bold;
+            border-radius: 20px;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            transition: 0.2s;
+        }
+        .back-btn:hover {
+            background: linear-gradient(135deg, #9b59b6, #af7ac5);
+            transform: scale(1.05);
+        }
+        h1 {
+            color: #f1c40f;
+            margin-top: 10px;
+            font-size: 30px;
+            text-shadow: 2px 2px 0px #8e44ad, 0 0 15px rgba(241, 196, 15, 0.6);
+        }
+        .score-board {
+            font-size: 16px;
+            font-weight: bold;
+            color: #d7bde2;
+            margin-bottom: 15px;
+            letter-spacing: 1px;
+        }
+        .problem-box {
+            font-size: 28px;
+            background: linear-gradient(135deg, #4a235a, #5b2c6f);
+            padding: 12px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            border: 3px dashed #af7ac5;
+            color: #f9e79f;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+        }
+        .step-section {
+            background: rgba(44, 22, 79, 0.7);
+            padding: 18px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            text-align: left;
+            border: 2px solid #8e44ad;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        .step-title {
+            font-weight: bold;
+            color: #f5b041;
+            margin-bottom: 10px;
+            font-size: 18px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+        }
+        /* Grid Layout for Area Model */
+        .grid-container {
+            display: grid;
+            grid-template-columns: 80px 1fr 1fr;
+            gap: 10px;
+            margin-top: 15px;
+            align-items: center;
+        }
+        .grid-header {
+            background: #8e44ad;
+            color: white;
+            padding: 10px;
+            border-radius: 8px;
+            font-weight: bold;
+            text-align: center;
+            border: 2px solid #d7bde2;
+        }
+        .grid-side {
+            background: #c0392b;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            font-weight: bold;
+            text-align: center;
+            border: 2px solid #f5b041;
+        }
+        .box-tens {
+            background: #512e5f;
+            padding: 15px;
+            border-radius: 10px;
+            border: 2px solid #af7ac5;
+            text-align: center;
+        }
+        .box-ones {
+            background: #7d6608;
+            padding: 15px;
+            border-radius: 10px;
+            border: 2px solid #f9e79f;
+            text-align: center;
+        }
+        input[type="number"] {
+            width: 70px;
+            padding: 8px;
+            font-size: 18px;
+            text-align: center;
+            border-radius: 8px;
+            border: 2px solid #d7bde2;
+            background: #1a0b2e;
+            color: #fff;
+            outline: none;
+        }
+        input[type="number"]:focus {
+            border-color: #f1c40f;
+            box-shadow: 0 0 8px rgba(241, 196, 15, 0.8);
+        }
+        button.action-btn {
+            background: linear-gradient(135deg, #f39c12, #d68910);
+            color: #fff;
+            border: 2px solid #fef9e7;
+            padding: 12px 25px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(243, 156, 18, 0.4);
+            transition: 0.2s;
+            margin-top: 5px;
+        }
+        button.action-btn:hover {
+            transform: scale(1.05);
+            background: linear-gradient(135deg, #f5b041, #f39c12);
+        }
+        button.action-btn:active {
+            transform: translateY(2px);
+        }
+        .feedback {
+            margin-top: 15px;
+            font-size: 18px;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
+        .correct { color: #58d68d; }
+        .incorrect { color: #ec7063; }
+        .final-row {
+            margin-top: 15px;
+            font-size: 20px;
+            font-weight: bold;
+            color: #f5b041;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <button class="back-btn" onclick="returnToMenu()">⬅️ Menu</button>
+    <h1>✨ Magical Math Adventure! 🧙‍♂️</h1>
+    <div class="score-board" id="scoreBoard">Spell 1 of 3</div>
+    
+    <div class="problem-box" id="problemDisplay">
+        Cast Multi-Digit Spell: <span id="currentProblemText">34 × 4</span>
+    </div>
+
+    <div class="step-section">
+        <div class="step-title">Step 1: The Magic Breakdown</div>
+        <span id="tensLabel" style="color: #f5b041; font-weight: bold;">34</span> = <input type="number" id="inputTens" placeholder="Tens"> + <input type="number" id="inputOnes" placeholder="Ones">
+    </div>
+
+    <div class="step-section">
+        <div class="step-title">Step 2: The Spell Grid (Area Model)</div>
+        <div class="grid-container">
+            <div></div>
+            <div class="grid-header" id="headerTens">30</div>
+            <div class="grid-header" id="headerOnes">4</div>
+            
+            <div class="grid-side" id="sideMultiplier">4</div>
+            <div class="box-tens">
+                <input type="number" id="boxProduct1" placeholder="?">
+            </div>
+            <div class="box-ones">
+                <input type="number" id="boxProduct2" placeholder="?">
+            </div>
+        </div>
+    </div>
+
+    <div class="step-section">
+        <div class="step-title">Step 3: The Final Summoning</div>
+        <div class="final-row">
+            Total Magical Sum: <input type="number" id="inputFinal" placeholder="Total">
+        </div>
+    </div>
+
+    <button class="action-btn" id="checkBtn" onclick="checkAnswers()">Cast Spell! 🪄✨</button>
+    <div class="feedback" id="feedbackArea"></div>
+</div>
+
+<script>
+    const problems = [
+        { num: 34, mult: 4, tens: 30, ones: 4, p1: 120, p2: 16, total: 136 },
+        { num: 42, mult: 3, tens: 40, ones: 2, p1: 120, p2: 6, total: 126 },
+        { num: 23, mult: 5, tens: 20, ones: 3, p1: 100, p2: 15, total: 115 }
+    ];
+
+    let currentIdx = 0;
+
+    function loadProblem() {
+        let p = problems[currentIdx];
+        document.getElementById("scoreBoardinnerHTML") = "";
+        document.getElementById("scoreBoard").innerText = `Spell ${currentIdx + 1} of ${problems.length}`;
+        document.getElementById("currentProblemText").innerText = `${p.num} × ${p.mult}`;
+        document.getElementById("tensLabel").innerText = `${p.num}`;
+        document.getElementById("headerTens").innerText = `${p.tens}`;
+        document.getElementById("headerOnes").innerText = `${p.ones}`;
+        document.getElementById("sideMultiplier").innerText = `${p.mult}`;
+        
+        // Clear inputs
+        document.getElementById("inputTens").value = "";
+        document.getElementById("inputOnes").value = "";
+        document.getElementById("boxProduct1").value = "";
+        document.getElementById("boxProduct2").value = "";
+        document.getElementById("inputFinal").value = "";
+        document.getElementById("feedbackArea").innerText = "";
+        document.getElementById("checkBtn").innerText = "Cast Spell! 🪄✨";
+        document.getElementById("checkBtn").setAttribute("onclick", "checkAnswers()");
+    }
+
+    function checkAnswers() {
+        let p = problems[currentIdx];
+        
+        let uTens = parseInt(document.getElementById("inputTens").value);
+        let uOnes = parseInt(document.getElementById("inputOnes").value);
+        let uBox1 = parseInt(document.getElementById("boxProduct1").value);
+        let uBox2 = parseInt(document.getElementById("boxProduct2").value);
+        let uFinal = parseInt(document.getElementById("inputFinal").value);
+
+        let fb = document.getElementById("feedbackArea");
+
+        if (isNaN(uTens) || isNaN(uOnes) || isNaN(uBox1) || isNaN(uBox2) || isNaN(uFinal)) {
+            fb.className = "feedback incorrect";
+            fb.innerText = "⚠️ Fizzle! Fill in all the magical boxes before casting your spell.";
+            return;
+        }
+
+        if (uTens === p.tens && uOnes === p.ones && uBox1 === p.p1 && uBox2 === p.p2 && uFinal === p.total) {
+            fb.className = "feedback correct";
+            fb.innerText = "🎉 Magnificent Magic! Spell successfully cast! 🌟🧙‍♂️";
+            
+            if (currentIdx < problems.length - 1) {
+                document.getElementById("checkBtn").innerText = "Next Spell ➡️";
+                document.getElementById("checkBtn").setAttribute("onclick", "nextProblem()");
+            } else {
+                document.getElementById("checkBtn").innerText = "Grand Wizard Achieved! 🏆";
+                document.getElementById("checkBtn").disabled = true;
+            }
+        } else {
+            fb.className = "feedback incorrect";
+            fb.innerText = "❌ Spell backfired! Check your partial products and try your magic again.";
+        }
+    }
+
+    function nextProblem() {
+        currentIdx++;
+        loadProblem();
+        document.getElementById("checkBtn").disabled = false;
+    }
+
+    function returnToMenu() {
+        // You can replace this with your actual main menu URL or function call
+        alert("Returning to the main tutor dashboard menu!");
+        // window.location.href = "menu.html"; 
+    }
+
+    loadProblem();
+</script>
+
+</body>
+</html>
