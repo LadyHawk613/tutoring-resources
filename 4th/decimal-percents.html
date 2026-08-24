@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Great Math Magician: Fractions, Decimals & Percentages</title>
+    <style>
+        :root {
+            --bg-deep: #1a0b2e;
+            --purple-primary: #4a154b;
+            --purple-accent: #7b2cbf;
+            --purple-light: #9d4edd;
+            --gold: #ffb703;
+            --text-light: #f8f9fa;
+            --card-bg: #2d1b4e;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--bg-deep), var(--purple-primary));
+            color: var(--text-light);
+            min-height: 100vh;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .quiz-container {
+            background-color: var(--card-bg);
+            border: 3px solid var(--gold);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            width: 100%;
+            max-width: 650px;
+            padding: 30px;
+            box-sizing: border-box;
+            text-align: center;
+        }
+
+        h1 {
+            color: var(--gold);
+            margin-top: 0;
+            font-size: 1.8rem;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            font-weight: bold;
+            color: #e0aaff;
+        }
+
+        .question-box {
+            font-size: 1.3rem;
+            margin-bottom: 25px;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            border-left: 5px solid var(--gold);
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .option-btn {
+            background-color: var(--purple-accent);
+            color: white;
+            border: 2px solid var(--purple-light);
+            padding: 15px;
+            font-size: 1.1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            background-color: var(--purple-light);
+            border-color: var(--gold);
+            transform: translateY(-2px);
+        }
+
+        .option-btn.correct {
+            background-color: #2b9348 !important;
+            border-color: #55a630 !important;
+        }
+
+        .option-btn.incorrect {
+            background-color: #d90429 !important;
+            border-color: #ef233c !important;
+        }
+
+        #next-btn {
+            background-color: var(--gold);
+            color: var(--bg-deep);
+            border: none;
+            padding: 12px 30px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            display: none;
+            margin: 0 auto;
+            transition: background 0.2s;
+        }
+
+        #next-btn:hover {
+            background-color: #ffc300;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        #result-screen h2 {
+            color: var(--gold);
+            font-size: 2rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="quiz-container">
+        <h1>🎩 The Great Math Magician 🪄</h1>
+        <p style="margin-top: -10px; color: #e0aaff; font-style: italic;">Master Fractions, Decimals, & Percentages!</p>
+        
+        <div id="quiz-screen">
+            <div class="stats">
+                <span id="question-counter">Question 1 of 15</span>
+                <span id="score-keeper">Score: 0</span>
+            </div>
+            
+            <div class="question-box" id="question-text">Loading spell...</div>
+            
+            <div class="options-grid" id="options-container">
+                <!-- Options injected via JS -->
+            </div>
+            
+            <button id="next-btn" onclick="nextQuestion()">Next Spell 🪄</button>
+        </div>
+
+        <div id="result-screen" class="hidden">
+            <h2>✨ Spellbook Complete! ✨</h2>
+            <p id="final-score" style="font-size: 1.3rem; margin: 20px 0;"></p>
+            <p id="magician-rank" style="color: var(--gold); font-size: 1.25rem; font-weight: bold;"></p>
+            <button id="next-btn" style="display:inline-block;" onclick="restartQuiz()">Cast Again 🔮</button>
+        </div>
+    </div>
+
+    <script>
+        const quizData = [
+            {
+                question: "Convert the fraction 1/2 into a decimal.",
+                options: ["0.2", "0.5", "0.25", "0.75"],
+                answer: "0.5"
+            },
+            {
+                question: "What is 3/4 expressed as a percentage?",
+                options: ["34%", "75%", "43%", "30%"],
+                answer: "75%"
+            },
+            {
+                question: "Convert the decimal 0.25 into a fraction in simplest form.",
+                options: ["1/4", "1/5", "2/5", "2/50"],
+                answer: "1/4"
+            },
+            {
+                question: "What is 0.8 converted to a percentage?",
+                options: ["8%", "0.8%", "80%", "800%"],
+                answer: "80%"
+            },
+            {
+                question: "Convert 20% into a fraction in simplest form.",
+                options: ["1/2", "1/5", "2/10", "1/20"],
+                answer: "1/5"
+            },
+            {
+                question: "What is 5% written as a decimal?",
+                options: ["0.5", "0.05", "5.0", "0.005"],
+                answer: "0.05"
+            },
+            {
+                question: "Convert the fraction 3/5 into a decimal.",
+                options: ["0.3", "0.6", "0.35", "0.8"],
+                answer: "0.6"
+            },
+            {
+                question: "What is 9/10 expressed as a percentage?",
+                options: ["9%", "90%", "99%", "0.9%"],
+                answer: "90%"
+            },
+            {
+                question: "Convert the decimal 0.6 into a fraction in simplest form.",
+                options: ["1/6", "3/5", "6/10", "2/3"],
+                answer: "3/5"
+            },
+            {
+                question: "What is 0.12 converted to a percentage?",
+                options: ["1.2%", "12%", "120%", "0.12%"],
+                answer: "12%"
+            },
+            {
+                question: "Convert 75% into a fraction in simplest form.",
+                options: ["7/5", "3/4", "5/7", "7/10"],
+                answer: "3/4"
+            },
+            {
+                question: "What is 125% written as a decimal?",
+                options: ["1.25", "12.5", "0.125", "125.0"],
+                answer: "1.25"
+            },
+            {
+                question: "Convert the fraction 1/8 into a decimal.",
+                options: ["0.125", "0.25", "0.8", "0.18"],
+                answer: "0.125"
+            },
+            {
+                question: "What is 0.75 expressed as a percentage?",
+                options: ["7.5%", "75%", "0.75%", "750%"],
+                answer: "75%"
+            },
+            {
+                question: "Convert 35% into a fraction in simplest form.",
+                options: ["3/5", "35/10", "7/20", "3/50"],
+                answer: "7/20"
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let locked = false;
+
+        const questionCounter = document.getElementById("question-counter");
+        const scoreKeeper = document.getElementById("score-keeper");
+        const questionText = document.getElementById("question-text");
+        const optionsContainer = document.getElementById("options-container");
+        const nextBtn = document.getElementById("next-btn");
+        const quizScreen = document.getElementById("quiz-screen");
+        const resultScreen = document.getElementById("result-screen");
+        const finalScore = document.getElementById("final-score");
+        const magicianRank = document.getElementById("magician-rank");
+
+        function loadQuestion() {
+            locked = false;
+            nextBtn.style.display = "none";
+            
+            const currentQ = quizData[currentQuestionIndex];
+            questionCounter.textContent = `Question ${currentQuestionIndex + 1} of ${quizData.length}`;
+            questionText.textContent = currentQ.question;
+            
+            optionsContainer.innerHTML = "";
+            currentQ.options.forEach(option => {
+                const btn = document.createElement("button");
+                btn.textContent = option;
+                btn.classList.add("option-btn");
+                btn.onclick = () => selectAnswer(btn, option, currentQ.answer);
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        function selectAnswer(button, selected, correct) {
+            if (locked) return;
+            locked = true;
+
+            const allButtons = optionsContainer.querySelectorAll(".option-btn");
+            
+            if (selected === correct) {
+                button.classList.add("correct");
+                score++;
+                scoreKeeper.textContent = `Score: ${score}`;
+            } else {
+                button.classList.add("incorrect");
+                allButtons.forEach(btn => {
+                    if (btn.textContent === correct) {
+                        btn.classList.add("correct");
+                    }
+                });
+            }
+
+            allButtons.forEach(btn => btn.disabled = true);
+            nextBtn.style.display = "block";
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < quizData.length) {
+                loadQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        function showResults() {
+            quizScreen.classList.add("hidden");
+            resultScreen.classList.remove("hidden");
+            finalScore.textContent = `You scored ${score} out of ${quizData.length}!`;
+            
+            let rank = "";
+            if (score === 15) {
+                rank = "🌟 Archmage of Math! Absolute perfection!";
+            } else if (score >= 11) {
+                rank = "🔮 Master Illusionist! Great spellcasting!";
+            } else if (score >= 6) {
+                rank = "🪄 Apprentice Wizard! Keep practicing your potions!";
+            } else {
+                rank = "📜 Novice Sorcerer! Study your spellbook and try again!";
+            }
+            magicianRank.textContent = rank;
+        }
+
+        function restartQuiz() {
+            currentQuestionIndex = 0;
+            score = 0;
+            scoreKeeper.textContent = `Score: 0`;
+            resultScreen.classList.add("hidden");
+            quizScreen.classList.remove("hidden");
+            loadQuestion();
+        }
+
+        // Initialize quiz on load
+        loadQuestion();
+    </script>
+</body>
+</html>
