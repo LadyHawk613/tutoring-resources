@@ -68,6 +68,23 @@
         .review { background: #fef9c3; color: #854d0e; border: 1px solid #fef08a; }
         .fail { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
         .feedback-details { text-align: left; margin-top: 15px; font-size: 0.95rem; }
+        
+        /* Styles for vertical fractions */
+        .fraction {
+            display: inline-flex;
+            flex-direction: column;
+            vertical-align: middle;
+            text-align: center;
+            font-size: 0.9em;
+            margin: 0 2px;
+        }
+        .fraction > span:first-child {
+            border-bottom: 1px solid currentColor;
+            padding-bottom: 1px;
+        }
+        .fraction > span:last-child {
+            padding-top: 1px;
+        }
     </style>
 </head>
 <body>
@@ -79,7 +96,7 @@
     <form id="screenerForm">
         <!-- Q1 -->
         <div class="question-card">
-            <h3>1. Function Evaluation: If $f(x) = x^2 - 3x + 2$, what is $f(-2)$?</h3>
+            <h3>1. Function Evaluation: If f(x) = x<sup>2</sup> - 3x + 2, what is f(-2)?</h3>
             <div class="options">
                 <label><input type="radio" name="q1" value="wrong"> A) -4</label>
                 <label><input type="radio" name="q1" value="correct"> B) 12</label>
@@ -90,29 +107,29 @@
 
         <!-- Q2 -->
         <div class="question-card">
-            <h3>2. Factoring: Which expression is completely equivalent to factored form of $2x^2 - 8x - 10$?</h3>
+            <h3>2. Factoring: Which expression is completely equivalent to factored form of 2x<sup>2</sup> - 8x - 10?</h3>
             <div class="options">
-                <label><input type="radio" name="q2" value="wrong"> A) $(2x - 2)(x + 5)$</label>
-                <label><input type="radio" name="q2" value="correct"> B) $2(x - 5)(x + 1)$</label>
-                <label><input type="radio" name="q2" value="wrong"> C) $(2x - 10)(x + 1)$</label>
-                <label><input type="radio" name="q2" value="wrong"> D) $2(x - 1)(x + 5)$</label>
+                <label><input type="radio" name="q2" value="wrong"> A) (2x - 2)(x + 5)</label>
+                <label><input type="radio" name="q2" value="correct"> B) 2(x - 5)(x + 1)</label>
+                <label><input type="radio" name="q2" value="wrong"> C) (2x - 10)(x + 1)</label>
+                <label><input type="radio" name="q2" value="wrong"> D) 2(x - 1)(x + 5)</label>
             </div>
         </div>
 
         <!-- Q3 -->
         <div class="question-card">
-            <h3>3. Exponents & Radicals: Simplify $\sqrt{50x^4}$ assuming $x > 0$.</h3>
+            <h3>3. Exponents & Radicals: Simplify √(50x<sup>4</sup>) assuming x &gt; 0.</h3>
             <div class="options">
-                <label><input type="radio" name="q3" value="wrong"> A) $25x^2\sqrt{2}$</label>
-                <label><input type="radio" name="q3" value="wrong"> B) $5x\sqrt{2x^2}$</label>
-                <label><input type="radio" name="q3" value="correct"> C) $5x^2\sqrt{2}$</label>
-                <label><input type="radio" name="q3" value="wrong"> D) $10x^2\sqrt{5}$</label>
+                <label><input type="radio" name="q3" value="wrong"> A) 25x<sup>2</sup>√2</label>
+                <label><input type="radio" name="q3" value="wrong"> B) 5x√(2x<sup>2</sup>)</label>
+                <label><input type="radio" name="q3" value="correct"> C) 5x<sup>2</sup>√2</label>
+                <label><input type="radio" name="q3" value="wrong"> D) 10x<sup>2</sup>√5</label>
             </div>
         </div>
 
         <!-- Q4 -->
         <div class="question-card">
-            <h3>4. Logarithms: Evaluate $\log_3(81)$.</h3>
+            <h3>4. Logarithms: Evaluate log<sub>3</sub>(81).</h3>
             <div class="options">
                 <label><input type="radio" name="q4" value="correct"> A) 4</label>
                 <label><input type="radio" name="q4" value="wrong"> B) 3</label>
@@ -123,12 +140,12 @@
 
         <!-- Q5 -->
         <div class="question-card">
-            <h3>5. Trigonometry: In a right triangle, if the opposite side is 3 and the adjacent side is 4, what is $\tan(\theta)$?</h3>
+            <h3>5. Trigonometry: In a right triangle, if the opposite side is 3 and the adjacent side is 4, what is tan(&theta;)?</h3>
             <div class="options">
-                <label><input type="radio" name="q5" value="wrong"> A) 4/5</label>
-                <label><input type="radio" name="q5" value="wrong"> B) 3/5</label>
-                <label><input type="radio" name="q5" value="correct"> C) 3/4</label>
-                <label><input type="radio" name="q5" value="wrong"> D) 4/3</label>
+                <label><input type="radio" name="q5" value="wrong"> A) <span class="fraction"><span>4</span><span>5</span></span></label>
+                <label><input type="radio" name="q5" value="wrong"> B) <span class="fraction"><span>3</span><span>5</span></span></label>
+                <label><input type="radio" name="q5" value="correct"> C) <span class="fraction"><span>3</span><span>4</span></span></label>
+                <label><input type="radio" name="q5" value="wrong"> D) <span class="fraction"><span>4</span><span>3</span></span></label>
             </div>
         </div>
 
@@ -176,16 +193,16 @@
 
         if (score === 5) {
             resultsDiv.classList.add('pass');
-            header.innerText = `Score: 5/5 - Excellent Readiness!`;
-            message.innerText = `You have a strong grasp of the function, algebraic, and basic trig concepts needed to enter AP Precalculus with confidence.`;
+            header.innerText = "Score: 5/5 - Excellent Readiness!";
+            message.innerText = "You have a strong grasp of the function, algebraic, and basic trig concepts needed to enter AP Precalculus with confidence.";
         } else if (score >= 3) {
             resultsDiv.classList.add('review');
             header.innerText = `Score: ${score}/5 - Moderate Readiness`;
-            message.innerText = `You have a decent foundation, but you have a few specific algebra gaps that could slow you down in Unit 1 or Unit 3. Review the missed topics before day one.`;
+            message.innerText = "You have a decent foundation, but you have a few specific algebra gaps that could slow you down in Unit 1 or Unit 3. Review the missed topics before day one.";
         } else {
             resultsDiv.classList.add('fail');
             header.innerText = `Score: ${score}/5 - Targeted Review Recommended`;
-            message.innerText = `You may struggle with the fast pace of AP Precalculus right now due to foundational gaps in Algebra 2 or expression manipulation. Consider a focused review course first.`;
+            message.innerText = "You may struggle with the fast pace of AP Precalculus right now due to foundational gaps in Algebra 2 or expression manipulation. Consider a focused review course first.";
         }
 
         resultsDiv.scrollIntoView({ behavior: 'smooth' });
