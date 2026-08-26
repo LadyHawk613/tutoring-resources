@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AP Precalculus: Average vs. Instantaneous Rate of Change</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
+            line-height: 1.5;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 850px;
+            margin: 20px auto;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+        h2 { color: #0f172a; margin-top: 0; text-align: center; }
+        p.subtitle { text-align: center; color: #64748b; margin-bottom: 25px; }
+        
+        .workspace {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            align-items: start;
+        }
+        @media (max-width: 750px) {
+            .workspace { grid-template-columns: 1fr; }
+        }
+        
+        /* Graph Area */
+        .graph-box {
+            background: #f1f5f9;
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+            border: 1px solid #cbd5e1;
+        }
+        canvas {
+            background: #ffffff;
+            border-radius: 6px;
+            display: block;
+            margin: 0 auto;
+        }
+
+        /* Controls Panel & Table */
+        .controls-box {
+            background: #f8fafc;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 15px;
+        }
+        th, td {
+            padding: 8px;
+            text-align: center;
+            border-bottom: 1px solid #cbd5e1;
+            font-size: 0.95rem;
+        }
+        th { background: #e2e8f0; color: #334155; }
+        input[type="number"] {
+            width: 60px;
+            padding: 6px;
+            text-align: center;
+            border: 1px solid #94a3b8;
+            border-radius: 4px;
+            font-size: 0.95rem;
+        }
+
+        /* Readout card */
+        .readouts {
+            margin-top: 15px;
+            background: #eff6ff;
+            padding: 12px;
+            border-radius: 8px;
+            border-left: 4px solid #3b82f6;
+            font-size: 0.9rem;
+        }
+        .readouts p { margin: 4px 0; }
+
+        /* Vertical fraction styling */
+        .fraction {
+            display: inline-flex;
+            flex-direction: column;
+            vertical-align: middle;
+            text-align: center;
+            font-size: 0.9em;
+            margin: 0 4px;
+        }
+        .fraction > span:first-child {
+            border-bottom: 1px solid currentColor;
+            padding-bottom: 1px;
+        }
+        .fraction > span:last-child {
+            padding-top: 1px;
+        }
+
+        /* AP Concept Box */
+        .concept-box {
+            margin-top: 25px;
+            background: #fefce8;
+            border: 1px solid #fef08a;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+        }
+        .concept-box h3 { margin-top: 0; color: #854d0e; font-size: 1rem; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Exploring Rates of Change for f(x) = x&sup2;</h2>
+    <p class="subtitle">Enter points a and b to calculate the slope of the secant line and watch it converge toward the tangent line.</p>
+
+    <div class="workspace">
+        <!-- Graph Area -->
+        <div class="graph-box">
+            <!-- Height expanded to 360px to fully accommodate points up to y=9+ -->
+            <canvas id="graphCanvas" width="320" height="360"></canvas>
+            <p style="font-weight: bold; margin: 8px 0 0 0; color: #1e293b; font-size: 0.95rem;">Function: f(x) = x&sup2;</p>
+        </div>
+
+        <!-- Inputs and Table -->
+        <div class="controls-box">
+            <table id="pointTable">
+                <thead>
+                    <tr>
+                        <th>Point</th>
+                        <th>x-value</th>
+                        <th>y-value = f(x)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Point A</strong></td>
+                        <td><input type="number" id="inputA" value="1" step="0.5" oninput="updateGraph()"></td>
+                        <td id="valYA">1.00</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Point B</strong></td>
+                        <td><input type="number" id="inputB" value="3" step="0.5" oninput="updateGraph()"></td>
+                        <td id="valYB">9.00</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="readouts">
+                <p><strong>Secant Slope (Average Rate of Change):</strong> <span id="secantSlope">4.00</span></p>
+                <p style="color: #64748b; font-size: 0.85rem; margin-top: 6px;">
+                    Formula: 
+                    <span class="fraction">
+                        <span>f(b) - f(a)</span>
+                        <span>b - a</span>
+                    </span>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Concept Note -->
+    <div class="concept-box">
+        <h3>AP Precalculus Connection</h3>
+        <p>As you bring <strong>Point B</strong> closer and closer to <strong>Point A</strong> (making the interval b - a approach zero), the secant line morphs into the <strong>tangent line</strong>. The average rate of change over the shrinking interval approaches the <strong>instantaneous rate of change</strong> at point a!</p>
+    </div>
+</div>
+
+<script>
+    const canvas = document.getElementById('graphCanvas');
+    const ctx = canvas.getContext('2d');
+
+    const inputA = document.getElementById('inputA');
+    const inputB = document.getElementById('inputB');
+    const valYA = document.getElementById('valYA');
+    const valYB = document.getElementById('valYB');
+    const secantSlopeText = document.getElementById('secantSlope');
+
+    function drawGrid(scale, originX, originY) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        // Draw grid lines
+        ctx.strokeStyle = '#e2e8f0';
+        ctx.lineWidth = 1;
+
+        for (let x = 0; x < canvas.width; x += scale) {
+            ctx.beginPath();
+            ctx.moveTo(x, 0);
+            ctx.lineTo(x, canvas.height);
+            ctx.stroke();
+        }
+        for (let y = 0; y < canvas.height; y += scale) {
+            ctx.beginPath();
+            ctx.moveTo(0, y);
+            ctx.lineTo(canvas.width, y);
+            ctx.stroke();
+        }
+
+        // Draw axes
+        ctx.strokeStyle = '#94a3b8';
+        ctx.lineWidth = 2;
+        // X axis
+        ctx.beginPath();
+        ctx.moveTo(0, originY);
+        ctx.lineTo(canvas.width, originY);
+        ctx.stroke();
+        // Y axis
+        ctx.beginPath();
+        ctx.moveTo(originX, 0);
+        ctx.lineTo(originX, canvas.height);
+        ctx.stroke();
+    }
+
+    function updateGraph() {
+        let a = parseFloat(inputA.value);
+        let b = parseFloat(inputB.value);
+
+        if (isNaN(a)) a = 0;
+        if (isNaN(b)) b = 0;
+
+        let ya = a * a;
+        let yb = b * b;
+
+        valYA.innerText = ya.toFixed(2);
+        valYB.innerText = yb.toFixed(2);
+
+        // Calculate Average Rate of Change (Secant Slope)
+        let slope = 0;
+        if (a !== b) {
+            slope = (yb - ya) / (b - a);
+            secantSlopeText.innerText = slope.toFixed(2);
+        } else {
+            secantSlopeText.innerText = "Undefined (a = b)";
+        }
+
+        // Graph setup - scale and origin adjustments to fit y up to 10+ safely
+        const scale = 25; // pixels per unit
+        const originX = canvas.width / 2;
+        const originY = canvas.height - 35; // Lower origin so higher y values fit cleanly
+
+        drawGrid(scale, originX, originY);
+
+        // 1. Draw Function y = x^2
+        ctx.strokeStyle = '#2563eb';
+        ctx.lineWidth = 2.5;
+        ctx.beginPath();
+        let first = true;
+        for (let px = 0; px <= canvas.width; px++) {
+            let x = (px - originX) / scale;
+            let y = x * x;
+            let py = originY - (y * scale);
+
+            if (first) {
+                ctx.moveTo(px, py);
+                first = false;
+            } else {
+                ctx.lineTo(px, py);
+            }
+        }
+        ctx.stroke();
+
+        // 2. Draw Secant Line connecting (a, ya) and (b, yb)
+        if (a !== b) {
+            ctx.strokeStyle = '#dc2626'; // Red secant line
+            ctx.lineWidth = 2;
+            ctx.setLineDash([4, 4]); // Dashed line
+            ctx.beginPath();
+            
+            let xStart = -3;
+            let yStart = ya + slope * (xStart - a);
+            let xEnd = 3;
+            let yEnd = ya + slope * (xEnd - a);
+
+            ctx.moveTo(originX + xStart * scale, originY - yStart * scale);
+            ctx.lineTo(originX + xEnd * scale, originY - yEnd * scale);
+            ctx.stroke();
+            ctx.setLineDash([]); // Reset line dash
+        }
+
+        // 3. Plot Points A and B
+        drawPoint(a, ya, '#16a34a', 'A', scale, originX, originY);
+        drawPoint(b, yb, '#d97706', 'B', scale, originX, originY);
+    }
+
+    function drawPoint(x, y, color, label, scale, originX, originY) {
+        let px = originX + x * scale;
+        let py = originY - y * scale;
+
+        ctx.fillStyle = color;
+        ctx.beginPath();
+        ctx.arc(px, py, 5, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = '#1e293b';
+        ctx.font = '12px sans-serif';
+        // Adjust label placement slightly if point is near the top edge to prevent clipping
+        let yOffset = (py < 25) ? -12 : -6;
+        let xOffset = (px > canvas.width - 55) ? -55 : 8;
+        ctx.fillText(`${label}(${x}, ${y.toFixed(0)})`, px + xOffset, py + yOffset);
+    }
+
+    // Initial render call
+    updateGraph();
+</script>
+
+</body>
+</html>
