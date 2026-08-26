@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Graphing Functions Study Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Instrument Sans',sans-serif;background:#f8f7f4;color:#1a1a18;min-height:100vh}
+  .header{background:#1a1a18;color:#f8f7f4;padding:2rem 2.5rem 1.5rem}
+  .header h1{font-family:'DM Serif Display',serif;font-size:2rem;font-weight:400;letter-spacing:-0.5px}
+  .header p{font-size:0.8rem;color:#a0a09a;margin-top:0.25rem}
+  .tabs{display:flex;flex-wrap:wrap;gap:0;background:#1a1a18;padding:0 2.5rem;border-bottom:1px solid #333}
+  .tab-btn{background:none;border:none;color:#a0a09a;font-family:'Instrument Sans',sans-serif;font-size:0.78rem;font-weight:500;padding:0.7rem 1.1rem;cursor:pointer;border-bottom:2px solid transparent;transition:all 0.15s;letter-spacing:0.3px;white-space:nowrap}
+  .tab-btn.active{color:#f8f7f4;border-bottom-color:#c9b97a}
+  .tab-btn:hover:not(.active){color:#d0d0c8}
+  .content{padding:2rem 2.5rem;max-width:960px}
+  .function-intro{display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin-bottom:2rem;align-items:start}
+  .info-card{background:#fff;border:0.5px solid #d8d8d0;border-radius:10px;padding:1.4rem 1.6rem}
+  .info-card h2{font-family:'DM Serif Display',serif;font-size:1.3rem;font-weight:400;margin-bottom:1rem;color:#1a1a18}
+  .equation-block{background:#f0efe9;border-radius:8px;padding:0.7rem 1.1rem;margin:0.6rem 0;display:flex;flex-direction:column;gap:3px}
+  .equation-block .eq-value{white-space:nowrap;overflow-x:auto}
+  .eq-value sub{font-size:0.7em}
+  .eq-label{font-size:0.72rem;color:#888;text-transform:uppercase;letter-spacing:0.6px;font-weight:500}
+  .eq-value{font-family:'DM Mono',monospace;font-size:1.05rem;font-weight:500;color:#1a1a18}
+  .frac{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;margin:0 3px;line-height:1.1}
+  .frac-num{padding:0 4px 2px;border-bottom:1.4px solid currentColor}
+  .frac-den{padding:2px 4px 0}
+  .eq-readout .frac{margin:0 4px}
+  .key-features h3{font-size:0.72rem;text-transform:uppercase;letter-spacing:0.6px;color:#888;margin:1rem 0 0.5rem;font-weight:500}
+  .feature-list{list-style:none;display:flex;flex-direction:column;gap:4px}
+  .feature-list li{font-size:0.85rem;color:#444;display:flex;align-items:start;gap:8px;line-height:1.5}
+  .feature-list li::before{content:"·";color:#c9b97a;font-weight:700;flex-shrink:0;margin-top:0px}
+  .graph-card{background:#fff;border:0.5px solid #d8d8d0;border-radius:10px;padding:1.4rem;display:flex;flex-direction:column;align-items:center}
+  .graph-card h2{font-family:'DM Serif Display',serif;font-size:1.3rem;font-weight:400;margin-bottom:1rem;align-self:flex-start}
+  .controls{display:flex;flex-wrap:wrap;gap:0.9rem;align-items:flex-end;width:100%;margin-bottom:0.8rem}
+  .controls label{display:flex;flex-direction:column;font-size:0.68rem;color:#777;gap:3px;text-transform:uppercase;letter-spacing:0.4px;font-weight:500}
+  .controls input[type=range]{width:100px;accent-color:#c9b97a}
+  .controls select{font-family:'DM Mono',monospace;font-size:0.78rem;padding:3px 5px;border-radius:4px;border:1px solid #d8d8d0;background:#fff}
+  .controls .valtag{font-family:'DM Mono',monospace;color:#1a1a18;font-weight:500;font-size:0.72rem;text-transform:none}
+  .reset-btn{font-size:0.68rem;background:#1a1a18;color:#f8f7f4;border:none;border-radius:4px;padding:5px 10px;cursor:pointer;height:26px}
+  .reset-btn:hover{background:#333}
+  .eq-readout{font-family:'DM Mono',monospace;font-size:0.95rem;background:#f0efe9;border-radius:6px;padding:0.55rem 0.9rem;margin-bottom:0.6rem;text-align:center;width:100%}
+  .plot-svg{width:100%;max-width:300px;height:auto;background:#fff;display:block;margin:0 auto}
+  .feat-readout{font-size:0.72rem;color:#666;text-align:center;margin-top:0.7rem;line-height:1.5}
+  .transform-table{width:100%;margin-top:1.2rem}
+  .transform-table table{width:100%;border-collapse:collapse;font-size:0.82rem}
+  .transform-table th{background:#f0efe9;padding:0.5rem 0.8rem;text-align:left;font-weight:500;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.5px;color:#666;border-bottom:1px solid #e0dfd8}
+  .transform-table td{padding:0.45rem 0.8rem;border-bottom:0.5px solid #ececea;color:#333;font-size:0.83rem}
+  .transform-table tr:last-child td{border-bottom:none}
+  .examples-section{margin-top:2rem}
+  .examples-section h2{font-family:'DM Serif Display',serif;font-size:1.4rem;font-weight:400;margin-bottom:1.2rem}
+  .examples-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem}
+  .example-card{background:#fff;border:0.5px solid #d8d8d0;border-radius:10px;padding:1.4rem 1.6rem}
+  .example-badge{display:inline-block;background:#1a1a18;color:#f8f7f4;font-size:0.68rem;font-weight:500;letter-spacing:0.5px;padding:3px 10px;border-radius:3px;margin-bottom:0.8rem}
+  .example-eq{font-family:'DM Mono',monospace;font-size:1.05rem;font-weight:500;margin-bottom:0.5rem}
+  .example-steps{display:flex;flex-direction:column;gap:4px;margin-top:0.7rem}
+  .step{display:flex;gap:10px;font-size:0.82rem;color:#444;line-height:1.5}
+  .step-num{background:#c9b97a;color:#fff;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.65rem;font-weight:600;flex-shrink:0;margin-top:2px}
+  .example-graph-wrap{display:flex;justify-content:center;margin-top:0.8rem}
+  svg text{font-family:'Instrument Sans',sans-serif}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>Graphing Functions</h1>
+  <p>Parent functions · Transformations · Examples — graphs are plotted live from the real equations</p>
+</div>
+
+<div class="tabs" id="tabs">
+  <button class="tab-btn active" onclick="showTab('linear',this)">Linear</button>
+  <button class="tab-btn" onclick="showTab('abs',this)">Absolute Value</button>
+  <button class="tab-btn" onclick="showTab('quad',this)">Quadratic</button>
+  <button class="tab-btn" onclick="showTab('cubic',this)">Cubic</button>
+  <button class="tab-btn" onclick="showTab('sqrt',this)">Square Root</button>
+  <button class="tab-btn" onclick="showTab('cuberoot',this)">Cube Root</button>
+  <button class="tab-btn" onclick="showTab('exp',this)">Exponential</button>
+  <button class="tab-btn" onclick="showTab('log',this)">Logarithmic</button>
+  <button class="tab-btn" onclick="showTab('rateven',this)">Rational (Even)</button>
+  <button class="tab-btn" onclick="showTab('ratodd',this)">Rational (Odd)</button>
+</div>
+
+<!-- ===== LINEAR ===== -->
+<div class="tab-panel" id="tab-linear">
+<div class="content">
+  <div class="function-intro">
+    <div class="info-card">
+      <h2>Linear</h2>
+      <div class="equation-block"><span class="eq-label">Parent</span><span class="eq-value">f(x) = x</span></div>
+      <div class="equation-block"><span class="eq-label">General</span><span class="eq-value">f(x) = m(x − h) + k</span></div>
+      <div class="key-features">
+        <h3>Parameter Effects</h3>
+        <ul class="feature-list">
+          <li><strong>m &gt; 0</strong> rises left to right; <strong>m &lt; 0</strong> falls left to right</li>
+          <li>|m| &gt; 1 steeper slope; 0 &lt; |m| &lt; 1 shallower slope</li>
+          <li><strong>h</strong> shifts the line horizontally (reference point)</li>
+          <li><strong>k</strong> shifts the line vertically</li>
+          <li>Line passes through <strong>(h, k)</strong></li>
+          <li>Domain: all real numbers</li>
+          <li>Range: all real numbers (unless m = 0)</li>
+        </ul>
+      </div>
+    </div>
+    <div class="graph-card">
+      <h2>Try It: Interactive Graph</h2>
+      <div class="controls">
+        <label>m <input type="range" id="linear-a" min="-3" max="3" step="0.5" value="1" oninput="updateTab('linear')"><span class="valtag" id="linear-a-val">1</span></label>
+        <label>h <input type="range" id="linear-h" min="-4" max="4" step="1" value="0" oninput="updateTab('linear')"><span class="valtag" id="linear-h-val">0</span></label>
+        <label>k <input type="range" id="linear-k" min="-4" max="4" step="1" value="0" oninput="updateTab('linear')"><span class="valtag" id="linear-k-val">0</span></label>
+        <button class="reset-btn" onclick="resetTab('linear')">Reset</button>
+      </div>
+      <div class="eq-readout" id="linear-eq"></div>
+      <svg id="plot-linear" class="plot-svg" width="300" height="300"></svg>
+      <div class="feat-readout" id="linear-feat"></div>
+      <div class="transform-table">
+        <table>
+          <tr><th>Parameter</th><th>Effect on Graph</th></tr>
+          <tr><td>m = 3</td><td>Steep rise, left to right</td></tr>
+          <tr><td>m = ⅓</td><td>Gentle, shallow rise</td></tr>
+          <tr><td>m = −2</td><td>Falls steeply left to right</td></tr>
+          <tr><td>h = 2</td><td>Line shifts right 2</td></tr>
+          <tr><td>k = −4</td><td>Line shifts down 4</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="examples-section">
+    <h2>Worked Examples</h2>
+    <div class="examples-grid">
+      <div class="example-card">
+        <span class="example-badge">Example 1</span>
+        <div class="example-eq">f(x) = 2(x − 1) + 3</div>
+        <div class="example-steps">
+          <div class="step"><span class="step-num">1</span><span>Identify m = 2, h = 1, k = 3</span></div>
+          <div class="step"><span class="step-num">2</span><span>Line passes through (1, 3)</span></div>
+          <div class="step"><span class="step-num">3</span><span>m = 2 &gt; 0 → rises left to right, steep</span></div>
+          <div class="step"><span class="step-num">4</span><span>Domain: all reals; Range: all reals</span></div>
+        </div>
+        <div class="example-graph-wrap"><svg id="ex-linear-1" class="plot-svg" width="190" height="190"></svg></div>
+      </div>
+      <div class="example-card">
+        <span class="example-badge">Example 2</span>
+        <div class="example-eq">f(x) = −½(x + 2) − 1</div>
+        <div class="example-steps">
+          <div class="step"><span class="step-num">1</span><span>Identify m = −½, h = −2, k = −1</span></div>
+          <div class="step"><span class="step-num">2</span><span>Line passes through (−2, −1)</span></div>
+          <div class="step"><span class="step-num">3</span><span>m &lt; 0 → falls left to right, shallow slope</span></div>
+          <div class="step"><span class="step-num">4</span><span>Domain: all reals; Range: all reals</span></div>
+        </div>
+        <div class="example-graph-wrap"><svg id="ex-linear-2" class="plot-svg" width="190" height="190"></svg></div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ===== ABSOLUTE VALUE ===== -->
+<div class="tab-panel" id="tab-abs" style="display:none">
+<div class="content">
+  <div class="function-intro">
+    <div class="info-card">
+      <h2>Absolute Value</h2>
+      <div class="equation-block"><span class="eq-label">Parent</span><span class="eq-value">f(x) = |x|</span></div>
+      <div class="equation-block"><span class="eq-label">General</span><span class="eq-value">f(x) = a|x − h| + k</span></div>
+      <div class="key-features">
+        <h3>Parameter Effects</h3>
+        <ul class="feature-list">
+          <li><strong>a &gt; 0</strong> opens upward; <strong>a &lt; 0</strong> opens downward</li>
+          <li>|a| &gt; 1 narrows; 0 &lt; |a| &lt; 1 widens</li>
+          <li><strong>h</strong> shifts the vertex horizontally (right if positive)</li>
+          <li><strong>k</strong> shifts the vertex vertically (up if positive)</li>
+          <li>Vertex is at <strong>(h, k)</strong></li>
+          <li>Domain: all real numbers</li>
+          <li>Range: [k, ∞) if a &gt; 0; (−∞, k] if a &lt; 0</li>
+        </ul>
+      </div>
+    </div>
+    <div class="graph-card">
+      <h2>Try It: Interactive Graph</h2>
+      <div class="controls">
+        <label>a <input type="range" id="abs-a" min="-3" max="3" step="0.5" value="1" oninput="updateTab('abs')"><span class="valtag" id="abs-a-val">1</span></label>
+        <label>h <input type="range" id="abs-h" min="-4" max="4" step="1" value="0" oninput="updateTab('abs')"><span class="valtag" id="abs-h-val">0</span></label>
+        <label>k <input type="range" id="abs-k" min="-4" max="4" step="1" value="0" oninput="updateTab('abs')"><span class="valtag" id="abs-k-val">0</span></label>
+        <button class="reset-btn" onclick="resetTab('abs')">Reset</button>
+      </div>
+      <div class="eq-readout" id="abs-eq"></div>
+      <svg id="plot-abs" class="plot-svg" width="300" height="300"></svg>
+      <div class="feat-readout" id="abs-feat"></div>
+      <div class="transform-table">
+        <table>
+          <tr><th>Parameter</th><th>Effect on Graph</th></tr>
+          <tr><td>a = 2</td><td>Narrower V (steeper)</td></tr>
+          <tr><td>a = ½</td><td>Wider V (shallower)</td></tr>
+          <tr><td>a = −1</td><td>Flips upside down ∧</td></tr>
+          <tr><td>h = 3</td><td>Vertex shifts right 3</td></tr>
+          <tr><td>k = −2</td><td>Vertex shifts down 2</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="examples-section">
+    <h2>Worked Examples</h2>
+    <div class="examples-grid">
+      <div class="example-card">
+        <span class="example-badge">Example 1</span>
+        <div class="example-eq">f(x) = 2|x − 3| + 1</div>
+        <div class="example-steps">
+          <div class="step"><span class="step-num">1</span><span>Identify a = 2, h = 3, k = 1</span></div>
+          <div class="step"><span class="step-num">2</span><span>Vertex: (3, 1) — shift right 3, up 1</span></div>
+          <div class="step"><span class="step-num">3</span><span>a = 2 &gt; 0 → opens upward, narrower</span></div>
+          <div class="step"><span class="step-num">4</span><span>Range: [1, ∞); Domain: all reals</span></div>
+        </div>
+        <div class="example-graph-wrap"><svg id="ex-abs-1" class="plot-svg" width="190" height="190"></svg></div>
+      </div>
+      <div class="example-card">
+        <span class="example-badge">Example 2</span>
+        <div class="example-eq">f(x) = −|x + 2| − 1</div>
+        <div class="example-steps">
+          <div class="step"><span class="step-num">1</span><span>Identify a = −1, h = −2, k = −1</span></div>
+          <div class="step"><span class="step-num">2</span><span>Vertex: (−2, −1) — shift left 2, down 1</span></div>
+          <div class="step"><span class="step-num">3</span><span>a = −1 &lt; 0 → opens downward (∧ shape)</span></div>
+          <div class="step"><span class="step-num">4</span><span>Range: (−∞, −1]; Domain: all reals</span></div>
+        </div>
+        <div class="example-graph-wrap"><svg id="ex-abs-2" class="plot-svg" width="190" height="190"></svg></div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ===== QUADRATIC ===== -->
+<div class="tab-panel" id="tab-quad" style="display:none">
+<div class="content">
+  <div class="function-intro">
+    <div class="info-card">
+      <h2>Quadratic</h2>
+      <div class="equation-block"><span class="eq-label">Parent</span><span class="eq-value">f(x) = x²</span></div>
+      <div class="equation-block"><span class="eq-label">General</span><span class="eq-value">f(x) = a(x − h)² + k</span></div>
+      <div class="key-features">
+        <h3>Parameter Effects</h3>
+        <ul class="feature-list">
+          <li><strong>a &gt; 0</strong> opens upward (∪); <strong>a &lt; 0</strong> opens downward (∩)</li>
+          <li>|a| &gt; 1 narrows the parabola; 0 &lt; |a| &lt; 1 widens it</li>
+          <li><strong>h</strong> shifts the vertex horizontally</li>
+          <li><strong>k</strong> shifts the vertex vertically</li>
+          <li>Vertex: <strong>(h, k)</strong> — maximum or minimum</li>
+          <li>Axis of symmetry: x = h</li>
+          <li>Domain: all real numbers</li>
+          <li>Range: [k, ∞) if a &gt; 0; (−∞, k] if a &lt; 0</li>
+        </ul>
+      </div>
+    </div>
+    <div class="graph-card">
+      <h2>Try It: Interactive Graph</h2>
+      <div class="controls">
+        <label>a <input type="range" id="quad-a" min="-3" max="3" step="0.5" value="1" oninput="updateTab('quad')"><span class="valtag" id="quad-a-val">1</span></label>
+        <label>h <input type="range" id="quad-h" min="-4" max="4" step="1" value="0" oninput="updateTab('quad')"><span class="valtag" id="quad-h-val">0</span></label>
+        <label>k <input type="range" id="quad-k" min="-4" max="4" step="1" value="0" oninput="updateTab('quad')"><span class="valtag" id="quad-k-val">0</span></label>
+        <button class="reset-btn" onclick="resetTab('quad')">Reset</button>
+      </div>
+      <div class="eq-readout" id="quad-eq"></div>
+      <svg id="plot-quad" class="plot-svg" width="300" height="300"></svg>
+      <div class="feat-readout" id="quad-feat"></div>
+      <div class="transform-table">
+        <table>
+          <tr><th>Parameter</th><th>Effect on Graph</th></tr>
+          <tr><td>a = 3</td><td>Narrower parabola</td></tr>
+          <tr><td>a = ⅓</td><td>Wider parabola</td></tr>
+          <tr><td>a = −2</td><td>Opens downward, narrow</td></tr>
+          <tr><td>h = −4</td><td>Vertex shifts left 4</td></tr>
+          <tr><td>k = 5</td><td>Vertex shifts up 5</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="examples-section">
+    <h2>Worked Examples</h2>
+    <div class="examples-grid">
+      <div class="example-card">
+        <span class="example-badge">Example 1</span>
+        <div class="example-eq">f(x) = (x − 2)² − 3</div>
+        <div class="example-steps">
+          <div class="step"><span class="step-num">1</span><span>a = 1, h = 2, k = −3</span></div>
+          <div class="step"><span class="step-num">2</span><span>Vertex: (2, −3); Axis: x = 2</span></div>
+          <div class="step"><span class="step-num">3</span><span>a = 1 &gt; 0 → opens upward, standard width</span></div>
+          <div class="step"><span class="step-num">4</span><span>Range: [−3, ∞); Domain: all reals</span></div>
+        </div>
+        <div class="example-graph-wrap"><svg id="ex-quad-1" class="plot-svg" width="190" height="190"></svg></div>
+      </div>
+      <div class="example-card">
+        <span class="example-badge">Example 2</span>
+        <div class="example-eq">f(x) = −½(x + 1)² + 4</div>
+        <div class="example-steps">
+          <div class="step"><span class="step-num">1</span><span>a = −½, h = −1, k = 4</span></div>
+          <div class="step"><span class="step-num">2</span><span>Vertex: (−1, 4); Axis: x = −1</span></div>
+          <div class="step"><span class="step-num">3</span><span>a &lt; 0 → opens downward; |a| &lt; 1 → wider</span></div>
+          <div class="step"><span class="step-num">4</span><span>Range: (−∞, 4]; Domain: all reals</span></div>
+        </div>
+        <div class="example-graph-wrap"><svg id="ex-quad-2" class="plot-svg" width="190" height="190"></svg></div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ===== CUBIC ===== -->
+<div class="tab-panel" id="tab-cubic" style="display:none">
+<div class="content">
+  <div class="function-intro">
+    <div class="info-card">
+      <h2>Cubic</h2>
+      <div class="equation-block"><span class="eq-label">Parent</span><span class="eq-value">f(x) = x³</span></div>
+      <div class="equation-block"><span class="eq-label">General</span><span class="eq-value">f(x) = a(x − h)³ + k</span></div>
+      <div class="key-features">
+        <h3>Parameter Effects</h3>
+        <ul class="feature-list">
+          <li><strong>a &gt; 0</strong> rises left to right; <strong>a &lt; 0</strong> reflects (falls left to right)</li>
+          <li>|a| &gt; 1 stretches (steeper); 0 &lt; |a| &lt; 1 compresses (flatter)</li>
+          <li><strong>h</strong> shifts the inflection point horizontally</li>
+          <li><strong>k</strong> shifts the inflection point vertically</li>
+          <li>Inflection point: <strong>(h, k)</strong> — graph flattens briefly here</li>
+          <li>Domain: all real numbers</li>
+          <li>Range: all real numbers</li>
+        </ul>
+      </div>
+    </div>
+    <div class="graph-card">
+      <h2>Try It: Interactive Graph</h2>
+      <div class="controls">
+        <label>a <input type="range" id="cubic-a" min="-2" max="2" step="0.5" value="1" oninput="updateTab('cubic')"><span class="valtag" id="cubic-a-val">1</span></label>
+        <label>h <input type="range" id="cubic-h" min="-4" max="4" step="1" value="0" oninput="updateTab('cubic')"><span class="valtag" id="cubic-h-val">0</span></label>
+        <label>k <input type="range" id="cubic-k" min="-4" max="4" step="1" value="0" oninput="updateTab('cubic')"><span class="valtag" id="cubic-k-val">0</span></label>
+        <button class="reset-btn" onclick="resetTab('cubic')">Reset</button>
+      </div>
+      <div class="eq-readout" id="cubic-eq"></div>
+      <svg id="plot-cubic" class="plot-svg" width="300" height="300"></svg>
+      <div class="feat-readout" id="cubic-feat"></div>
+      <div class="transform-table">
+        <table>
+          <tr><th>Parameter</th><th>Effect on Graph</th></tr>
+          <tr><td>a = 2</td><td>Steeper S-curve</td></tr>
+          <tr><td>a = ⅓</td><td>Flatter S-curve</td></tr>
+          <tr><td>a = −1</td><td>Reflects, falls left to right</td></tr>
+          <tr><td>h = −2</td><td>Inflection shifts left 2</td></tr>
+          <tr><td>k = 3</td><td>Inflection shifts up 3</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="examples-section">
+    <h2>Worked Examples</h2>
+    <div class="examples-grid">
+      <div class="example-card">
+        <span class="example-badge">Example 1</span>
+        <div class="example-eq">f(x) = (x − 2)³ + 1</div>
+        <div class="example-steps">
+          <div class="step"><span class="step-num">1</span><span>a = 1, h = 2, k = 1</span></div>
+          <div class="step"><span class="step-num">2</span><span>Inflection point: (2, 1)</span></div>
+          <div class="step"><span class="step-num">3</span><span>a = 1 &gt; 0 → rises left to right, standard steepness</span></div>
+          <div class="step"><span class="step-num">4</span><span>Domain: all reals; Range: all reals</span></div>
+        </div>
+        <div class="example-graph-wrap"><svg id="ex-cubic-1" class="plot-svg" width="190" height="190"></svg></div>
+      </div>
+      <div class="example-card">
+        <span class="example-badge">Example 2</span>
+        <div class="example-eq">f(x) = −2(x + 1)³ − 2</div>
+        <div class="example-steps">
+          <div class="step"><span class="step-num">1</span><span>a = −2, h = −1, k = −2</span></div>
+          <div class="step"><span class="step-num">2</span><span>Inflection point: (−1, −2)</span></div>
+          <div class="step"><span class="step-num">3</span><span>a &lt; 0 → reflects, falls left to right; |a| = 2 → steeper</span></div>
+          <div class="step"><span class="step-num">4</span><span>Domain: all reals; Range: all reals</span></div>
+        </div>
+        <div class="example-graph-wrap"><svg id="ex-cubic-2" class="plot-svg" width="190" height="190"></svg></div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ===== SQUARE ROOT ===== -->
+<div class="tab-panel" id="tab-sqrt" style="display:none">
+<div class="content">
+  <div class="function-intro">
+    <div class="info-card">
+      <h2>Square Root</h2>
+      <div class="equation-block"><span class="eq-label">Parent</span><span class="eq-value">f(x) = √x</span></div>
+      <div class="equation-block"><span class="eq-label">General</span><span class="eq-value">f(x) = a√(x − h) + k</span></div>
+      <div class="key-features">
+        <h3>Parameter Effects</h3>
+        <ul class="feature-list">
+          <li><strong>a &gt; 0</strong> curves upward; <strong>a &lt; 0</strong> reflects over x-axis</li>
+          <li>|a| &gt; 1 stretches vertically; 0 &lt; |a| &lt; 1 compresses</li>
+          <li><strong>h</strong> shifts the starting point horizontally</li>
+          <li><strong>k</strong> shifts the starting point vertically</li>
+          <li>Starting point (endpoint): <strong>(h, k)</strong></li>
+          <li>Domain: x ≥ h (requires x − h ≥ 0)</li>
+          <li>Range: [k, ∞) if a &gt; 0; (−∞, k] if a &lt; 0</li>
+        </ul>
+      </div>
+    </div>
+    <div class="graph-card">
+      <h2>Try It: Interactive Graph</h2>
+      <div class="controls">
+        <label>a <input type="range" id="sqrt-a" min="-3" max="3" step="0.5" value="1" oninput="updateTab('sqrt')"><span class="valtag" id="sqrt-a-val">1</span></label>
+        <label>h <input type="range" id="sqrt-h" min="-4" max="4" step="1" value="0" oninput="updateTab('sqrt')"><span class="valtag" id="sqrt-h-val">0</span></label>
+        <label>k <input type="range" id="sqrt-k" min="-4" max="4" step="1" value="0" oninput="updateTab('sqrt')"><span class="valtag" id="sqrt-k-val">0</span></label>
+        <button class="reset-btn" onclick="resetTab('sqrt')">Reset</button>
+      </div>
+      <div class="eq-readout" id="sqrt-eq"></div>
+      <svg id="plot-sqrt" class="plot-svg" width="300" height="300"></svg>
+      <div class="feat-readout" id="sqrt-feat"></div>
+      <div class="transform-table">
+        <table>
+          <tr><th>Parameter</th><th>Effect on Graph</th></tr>
+          <tr><td>a = 3</td><td>Stretch — rises faster</td></tr>
+          <tr><td>a = ¼</td><td>Compress — rises slower</td></tr>
+          <tr><td>a = −1</td><td>Reflects below x-axis</td></tr>
+          <tr><td>h = 4</td><td>Start point shifts right 4</td></tr>
+          <tr><td>k = −2</td><td>Start point shifts down 2</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="examples-section">
+    <h2>Worked Examples</h2>
+    <div class="examples-grid">
+      <div class="example-card">
+        <span class="example-badge">Example 1</span>
+        <div class="example-eq">f(x) = √(x − 4) + 2</div>
+        <div class="example-steps">
+          <div class="step"><span class="step-num">1</span><span>a = 1, h = 4, k = 2</span></div>
+          <div class="step"><span class="step-num">2</span><span>Starting point: (4, 2)</span></div>
+          <div class="step"><span class="step-num">3</span><span>Domain: x ≥ 4 · Range: y ≥ 2</span></div>
+          <div class="step"><span class="step-num">4</span><span>No stretch/compress; opens normally</span></div>
+        </div>
+        <div class="example-graph-wrap"><svg id="ex-sqrt-1" class="plot-svg" width="190" height="190"></svg></div>
+      </div>
+      <div class="example-card">
+        <span class="example-badge">Example 2</span>
+        <div class="example-eq">f(x) = −2√(x + 1) + 3</div>
+        <div class="example-steps">
+          <div class="step"><span class="step-num">1</span><span>a = −2, h = −1, k = 3</span></div>
+          <div class="step"><span class="step-num">2</span><span>Starting point: (−1, 3)</span></div>
+          <div class="step"><span class="step-num">3</span><span>a &lt; 0 → reflects down; |a|=2 → steeper</span></div>
+          <div class="step"><span class="step-num">4</span><span>Domain: x ≥ −1 · Range: y ≤ 3</span></div>
+        </div>
+        <div class="example-graph-wrap"><svg id="ex-sqrt-2" class="plot-svg" width="190" height="190"></svg></div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ===== CUBE ROOT ===== -->
+<div class="tab-panel" id="tab-cuberoot" style="display:none">
+<div class="content">
+  <div class="function-intro">
+    <div class="info-card">
+      <h2>Cube Root</h2>
+      <div class="equation-block"><span class="eq-label">Parent</span><span class="eq-value">f(x) = ∛x</span></div>
+      <div class="equation-block"><span class="eq-label">General</span><span class="eq-value">f(x) = a·∛(x − h) + k</span></div>
+      <div class="key-features">
+        <h3>Parameter Effects</h3>
+        <ul class="feature-list">
+          <li><strong>a &gt; 0</strong> rises left to right; <strong>a &lt; 0</strong> reflects (falls left to right)</li>
+          <li>|a| &gt; 1 stretches vertically; 0 &lt; |a| &lt; 1 compresses</li>
+          <li><strong>h</strong> shifts the inflection point horizontally</li>
+          <li><strong>k</strong> shifts the inflection point vertically</li>
+          <li>Inflection/center point: <strong>(h, k)</strong></li>
+          <li>Domain: all real numbers (can take cube root of negatives!)</li>
+          <li>Range: all real numbers</li>
+        </ul>
+      </div>
+    </div>
+    <div class="graph-card">
+      <h2>Try It: Interactive Graph</h2>
+      <div class="controls">
+        <label>a <input type="range" id="cuberoot-a" min="-3" max="3" step="0.5" value="1" oninput="updateTab('cuberoot')"><span class="valtag" id="cuberoot-a-val">1</span></label>
+        <label>h <input type="range" id="cuberoot-h" min="-4" max="4" step="1" value="0" oninput="updateTab('cuberoot')"><span class="valtag" id="cuberoot-h-val">0</span></label>
+        <label>k <input type="range" id="cuberoot-k" min="-4" max="4" step="1" value="0" oninput="updateTab('cuberoot')"><span class="valtag" id="cuberoot-k-val">0</span></label>
+        <button class="reset-btn" onclick="resetTab('cuberoot')">Reset</button>
+      </div>
+      <div class="eq-readout" id="cuberoot-eq"></div>
+      <svg id="plot-cuberoot" class="plot-svg" width="300" height="300"></svg>
+      <div class="feat-readout" id="cuberoot-feat"></div>
+      <div class="transform-table">
+        <table>
+          <tr><th>Parameter</th><th>Effect on Graph</th></tr>
+          <tr><td>a = 2</td><td>Steeper S-curve</td></tr>
+          <tr><td>a = ½</td><td>Shallower S-curve</td></tr>
+          <tr><td>a = −1</td><td>Reflects; falls left→right</td></tr>
+          <tr><td>h = 5</td><td>Center shifts right 5</td></tr>
+          <tr><td>k = −3</td><td>Center shifts down 3</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="examples-section">
+    <h2>Worked Examples</h2>
+    <div class="examples-grid">
+      <div class="example-card">
+        <span class="example-badge">Example 1</span>
+        <div class="example-eq">f(x) = ∛(x + 3) − 2</div>
+        <div class="example-steps">
+          <div class="step"><span class="step-num">1</span><span>a = 1, h = −3, k = −2</span></div>
+          <div class="step"><span class="step-num">2</span><span>Inflection point: (−3, −2)</span></div>
+          <div class="step"><span class="step-num">3</span><span>No stretch; standard S-shape, shifted</span></div>
+          <div class="step"><span class="step-num">4</span><span>Domain: all reals · Range: all reals</span></div>
+        </div>
+        <div class="example-graph-wrap"><svg id="ex-cuberoot-1" class="plot-svg" width="190" height="190"></svg></div>
+      </div>
+      <div class="example-card">
+        <span class="example-badge">Example 2</span>
+        <div class="example-eq">f(x) = −2·∛(x − 1) + 1</div>
+        <div class="example-steps">
+          <div class="step"><span class="step-num">1</span><span>a = −2, h = 1, k = 1</span></div>
+          <div class="step"><span class="step-num">2</span><span>Inflection point: (1, 1)</span></div>
+          <div class="step"><span class="step-num">3</span><span>a &lt; 0 → reflects (falls left→right); |a|=2 → steeper</span></div>
+          <div class="step"><span class="step-num">4</span><span>Domain: all reals · Range: all reals</span></div>
+        </div>
+        <div class="example-graph-wrap"><svg id="ex-cuberoot-2" class="plot-svg" width="190" height="190"></svg></div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ===== EXPONENTIAL ===== -->
+<div class="tab-panel" id="tab-exp" style="display:none">
+<div class="content">
+  <div class="function-intro">
+    <div class="info-card">
+      <h2>Exponential</h2>
+      <div class="equation-block"><span class="eq-label">Parent</span><span class="eq-value">f(x) = bˣ (b &gt; 0, b ≠ 1)</span></div>
+      <div class="equation-block"><span class="eq-label">General</span><span class="eq-value">f(x) = a · b^(x−h) + k</span></div>
+      <div class="key-features">
+        <h3>Parameter Effects</h3>
+        <ul class="feature-list">
+          <li><strong>b &gt; 1</strong> → exponential growth (rises right)</li>
+          <li><strong>0 &lt; b &lt; 1</strong> → exponential decay (falls right)</li>
+          <li><strong>a &gt; 0</strong> same side as parent; <strong>a &lt; 0</strong> reflects over asymptote</li>
+          <li><strong>h</strong> shifts the graph horizontally</li>
+          <li><strong>k</strong> sets the horizontal asymptote y = k</li>
+          <li>Domain: all real numbers</li>
+          <li>Range: (k, ∞) if a &gt; 0; (−∞, k) if a &lt; 0</li>
+        </ul>
+      </div>
+    </div>
+    <div class="graph-card">
+      <h2>Try It: Interactive Graph</h2>
+      <div class="controls">
+        <label>a <input type="range" id="exp-a" min="-3" max="3" step="0.5" value="1" oninput="updateTab('exp')"><span class="valtag" id="exp-a-val">1</span></label>
+        <label>b <select id="exp-b" oninput="updateTab('exp')">
+          <option value="2" selected>2</option><option value="3">3</option><option value="10">10</option>
+          <option value="2.718281828">e</option><option value="0.5">½</option><option value="0.333333333">⅓</option>
+        </select></label>
+        <label>h <input type="range" id="exp-h" min="-4" max="4" step="1" value="0" oninput="updateTab('exp')"><span class="valtag" id="exp-h-val">0</span></label>
+        <label>k <input type="range" id="exp-k" min="-4" max="4" step="1" value="0" oninput="updateTab('exp')"><span class="valtag" id="exp-k-val">0</span></label>
+        <button class="reset-btn" onclick="resetTab('exp')">Reset</button>
+      </div>
+      <div class="eq-readout" id="exp-eq"></div>
+      <svg id="plot-exp" class="plot-svg" width="300" height="300"></svg>
+      <div class="feat-readout" id="exp-feat"></div>
+      <div class="transform-table">
+        <table>
+          <tr><th>Parameter</th><th>Effect on Graph</th></tr>
+          <tr><td>b = 3</td><td>Grows faster than b=2</td></tr>
+          <tr><td>b = ½</td><td>Decay — falls to the right</td></tr>
+          <tr><td>k = 2</td><td>Asymptote rises to y = 2</td></tr>
+          <tr><td>h = −3</td><td>Shifts entire graph left 3</td></tr>
+          <tr><td>a = −1</td><td>Reflects over asymptote</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="examples-section">
+    <h2>Worked Examples</h2>
+    <div class="examples-grid">
+      <div class="example-card">
+        <span class="example-badge">Example 1</span>
+        <div class="example-eq">f(x) = 2^(x−1) + 3</div>
+        <div class="example-steps">
+          <div class="step"><span class="step-num">1</span><span>a = 1, b = 2, h = 1, k = 3</span></div>
+          <div class="step"><span class="step-num">2</span><span>Asymptote: y = 3</span></div>
+          <div class="step"><span class="step-num">3</span><span>Key point: (1, 4) since 2⁰ + 3 = 4</span></div>
+          <div class="step"><span class="step-num">4</span><span>Growth; Domain all reals; Range (3, ∞)</span></div>
+        </div>
+        <div class="example-graph-wrap"><svg id="ex-exp-1" class="plot-svg" width="190" height="190"></svg></div>
+      </div>
+      <div class="example-card">
+        <span class="example-badge">Example 2</span>
+        <div class="example-eq">f(x) = 3·(½)^x − 2</div>
+        <div class="example-steps">
+          <div class="step"><span class="step-num">1</span><span>a = 3, b = ½, h = 0, k = −2</span></div>
+          <div class="step"><span class="step-num">2</span><span>Asymptote: y = −2 (decay toward it)</span></div>
+          <div class="step"><span class="step-num">3</span><span>y-intercept: (0, 1) since 3·1 − 2 = 1</span></div>
+          <div class="step"><span class="step-num">4</span><span>Decay; Domain all reals; Range (−2, ∞)</span></div>
+        </div>
+        <div class="example-graph-wrap"><svg id="ex-exp-2" class="plot-svg" width="190" height="190"></svg></div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ===== LOGARITHMIC ===== -->
+<div class="tab-panel" id="tab-log" style="display:none">
+<div class="content">
+  <div class="function-intro">
+    <div class="info-card">
+      <h2>Logarithmic</h2>
+      <div class="equation-block"><span class="eq-label">Parent</span><span class="eq-value">f(x) = log<sub>b</sub>(x) (b &gt; 0, b ≠ 1)</span></div>
+      <div class="equation-block"><span class="eq-label">General</span><span class="eq-value">f(x) = a · log<sub>b</sub>(x−h) + k</span></div>
+      <div class="key-features">
+        <h3>Parameter Effects</h3>
+        <ul class="feature-list">
+          <li><strong>b &gt; 1</strong> → increasing, rises slowly to the right</li>
+          <li><strong>a &gt; 0</strong> same orientation; <strong>a &lt; 0</strong> reflects over the asymptote</li>
+          <li><strong>h</strong> shifts the vertical asymptote and graph horizontally</li>
+          <li><strong>k</strong> shifts the graph vertically</li>
+          <li>Vertical asymptote: <strong>x = h</strong></li>
+          <li>Domain: x &gt; h</li>
+          <li>Range: all real numbers</li>
+        </ul>
+      </div>
+    </div>
+    <div class="graph-card">
+      <h2>Try It: Interactive Graph</h2>
+      <div class="controls">
+        <label>a <input type="range" id="log-a" min="-3" max="3" step="0.5" value="1" oninput="updateTab('log')"><span class="valtag" id="log-a-val">1</span></label>
+        <label>b <select id="log-b" oninput="updateTab('log')">
+          <option value="2" selected>2</option><option value="3">3</option><option value="10">10</option>
+          <option value="2.718281828">e</option>
+        </select></label>
+        <label>h <input type="range" id="log-h" min="-4" max="4" step="1" value="0" oninput="updateTab('log')"><span class="valtag" id="log-h-val">0</span></label>
+        <label>k <input type="range" id="log-k" min="-4" max="4" step="1" value="0" oninput="updateTab('log')"><span class="valtag" id="log-k-val">0</span></label>
+        <button class="reset-btn" onclick="resetTab('log')">Reset</button>
+      </div>
+      <div class="eq-readout" id="log-eq"></div>
+      <svg id="plot-log" class="plot-svg" width="300" height="300"></svg>
+      <div class="feat-readout" id="log-feat"></div>
+      <div class="transform-table">
+        <table>
+          <tr><th>Parameter</th><th>Effect on Graph</th></tr>
+          <tr><td>b = 10</td><td>Rises even more slowly</td></tr>
+          <tr><td>a = 3</td><td>Stretches vertically, steeper rise</td></tr>
+          <tr><td>a = −1</td><td>Reflects over the asymptote</td></tr>
+          <tr><td>h = 3</td><td>Asymptote shifts to x = 3</td></tr>
+          <tr><td>k = 2</td><td>Entire graph shifts up 2</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="examples-section">
+    <h2>Worked Examples</h2>
+    <div class="examples-grid">
+      <div class="example-card">
+        <span class="example-badge">Example 1</span>
+        <div class="example-eq">f(x) = log₂(x − 3) + 1</div>
+        <div class="example-steps">
+          <div class="step"><span class="step-num">1</span><span>a = 1, b = 2, h = 3, k = 1</span></div>
+          <div class="step"><span class="step-num">2</span><span>Vertical asymptote: x = 3</span></div>
+          <div class="step"><span class="step-num">3</span><span>Key point: (4, 1) since log₂(1) + 1 = 1</span></div>
+          <div class="step"><span class="step-num">4</span><span>Domain: x &gt; 3 · Range: all reals</span></div>
+        </div>
+        <div class="example-graph-wrap"><svg id="ex-log-1" class="plot-svg" width="190" height="190"></svg></div>
+      </div>
+      <div class="example-card">
+        <span class="example-badge">Example 2</span>
+        <div class="example-eq">f(x) = −log₃(x + 2) − 1</div>
+        <div class="example-steps">
+          <div class="step"><span class="step-num">1</span><span>a = −1, b = 3, h = −2, k = −1</span></div>
+          <div class="step"><span class="step-num">2</span><span>Vertical asymptote: x = −2</span></div>
+          <div class="step"><span class="step-num">3</span><span>a &lt; 0 → reflects, falls to the right</span></div>
+          <div class="step"><span class="step-num">4</span><span>Domain: x &gt; −2 · Range: all reals</span></div>
+        </div>
+        <div class="example-graph-wrap"><svg id="ex-log-2" class="plot-svg" width="190" height="190"></svg></div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ===== RATIONAL (EVEN) ===== -->
+<div class="tab-panel" id="tab-rateven" style="display:none">
+<div class="content">
+  <div class="function-intro">
+    <div class="info-card">
+      <h2>Rational (Even)</h2>
+      <div class="equation-block"><span class="eq-label">Parent</span><span class="eq-value">f(x) = <span class="frac"><span class="frac-num">1</span><span class="frac-den">x²</span></span></span></div>
+      <div class="equation-block"><span class="eq-label">General</span><span class="eq-value">f(x) = <span class="frac"><span class="frac-num">a</span><span class="frac-den">(x−h)²</span></span> + k</span></div>
+      <div class="key-features">
+        <h3>Parameter Effects</h3>
+        <ul class="feature-list">
+          <li><strong>a &gt; 0</strong> branches open above the horizontal asymptote; <strong>a &lt; 0</strong> open below</li>
+          <li>|a| &gt; 1 branches pull away faster; 0 &lt; |a| &lt; 1 stay closer to the asymptotes</li>
+          <li><strong>h</strong> shifts the vertical asymptote (x = h)</li>
+          <li><strong>k</strong> shifts the horizontal asymptote (y = k)</li>
+          <li>Vertical asymptote: x = h · Horizontal asymptote: y = k</li>
+          <li>Even function — symmetric about the line x = h</li>
+          <li>Domain: x ≠ h</li>
+          <li>Range: (k, ∞) if a &gt; 0; (−∞, k) if a &lt; 0</li>
+        </ul>
+      </div>
+    </div>
+    <div class="graph-card">
+      <h2>Try It: Interactive Graph</h2>
+      <div class="controls">
+        <label>a <input type="range" id="rateven-a" min="-3" max="3" step="0.5" value="1" oninput="updateTab('rateven')"><span class="valtag" id="rateven-a-val">1</span></label>
+        <label>h <input type="range" id="rateven-h" min="-4" max="4" step="1" value="0" oninput="updateTab('rateven')"><span class="valtag" id="rateven-h-val">0</span></label>
+        <label>k <input type="range" id="rateven-k" min="-4" max="4" step="1" value="0" oninput="updateTab('rateven')"><span class="valtag" id="rateven-k-val">0</span></label>
+        <button class="reset-btn" onclick="resetTab('rateven')">Reset</button>
+      </div>
+      <div class="eq-readout" id="rateven-eq"></div>
+      <svg id="plot-rateven" class="plot-svg" width="300" height="300"></svg>
+      <div class="feat-readout" id="rateven-feat"></div>
+      <div class="transform-table">
+        <table>
+          <tr><th>Parameter</th><th>Effect on Graph</th></tr>
+          <tr><td>a = 2</td><td>Branches pull away faster</td></tr>
+          <tr><td>a = −1</td><td>Branches flip below asymptote</td></tr>
+          <tr><td>h = 3</td><td>Vertical asymptote → x = 3</td></tr>
+          <tr><td>k = −1</td><td>Horizontal asymptote → y = −1</td></tr>
+          <tr><td>h = −2</td><td>Vertical asymptote → x = −2</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="examples-section">
+    <h2>Worked Examples</h2>
+    <div class="examples-grid">
+      <div class="example-card">
+        <span class="example-badge">Example 1</span>
+        <div class="example-eq">f(x) = 1/(x − 2)² + 1</div>
+        <div class="example-steps">
+          <div class="step"><span class="step-num">1</span><span>a = 1, h = 2, k = 1</span></div>
+          <div class="step"><span class="step-num">2</span><span>Asymptotes: x = 2, y = 1</span></div>
+          <div class="step"><span class="step-num">3</span><span>a &gt; 0 → both branches open above y = 1</span></div>
+          <div class="step"><span class="step-num">4</span><span>Domain: x ≠ 2 · Range: y &gt; 1</span></div>
+        </div>
+        <div class="example-graph-wrap"><svg id="ex-rateven-1" class="plot-svg" width="190" height="190"></svg></div>
+      </div>
+      <div class="example-card">
+        <span class="example-badge">Example 2</span>
+        <div class="example-eq">f(x) = −2/(x + 1)² − 1</div>
+        <div class="example-steps">
+          <div class="step"><span class="step-num">1</span><span>a = −2, h = −1, k = −1</span></div>
+          <div class="step"><span class="step-num">2</span><span>Asymptotes: x = −1, y = −1</span></div>
+          <div class="step"><span class="step-num">3</span><span>a &lt; 0 → both branches open below y = −1, pulled away faster</span></div>
+          <div class="step"><span class="step-num">4</span><span>Domain: x ≠ −1 · Range: y &lt; −1</span></div>
+        </div>
+        <div class="example-graph-wrap"><svg id="ex-rateven-2" class="plot-svg" width="190" height="190"></svg></div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ===== RATIONAL (ODD) ===== -->
+<div class="tab-panel" id="tab-ratodd" style="display:none">
+<div class="content">
+  <div class="function-intro">
+    <div class="info-card">
+      <h2>Rational (Odd)</h2>
+      <div class="equation-block"><span class="eq-label">Parent</span><span class="eq-value">f(x) = <span class="frac"><span class="frac-num">1</span><span class="frac-den">x</span></span></span></div>
+      <div class="equation-block"><span class="eq-label">General</span><span class="eq-value">f(x) = <span class="frac"><span class="frac-num">a</span><span class="frac-den">(x−h)</span></span> + k</span></div>
+      <div class="key-features">
+        <h3>Parameter Effects</h3>
+        <ul class="feature-list">
+          <li><strong>a &gt; 0</strong> branches sit upper-right / lower-left of the asymptotes; <strong>a &lt; 0</strong> flips them</li>
+          <li>|a| &gt; 1 branches pull farther from the asymptotes; 0 &lt; |a| &lt; 1 stay closer</li>
+          <li><strong>h</strong> shifts the vertical asymptote (x = h)</li>
+          <li><strong>k</strong> shifts the horizontal asymptote (y = k)</li>
+          <li>Vertical asymptote: x = h · Horizontal asymptote: y = k</li>
+          <li>Odd function — symmetric about the point (h, k)</li>
+          <li>Domain: x ≠ h</li>
+          <li>Range: y ≠ k</li>
+        </ul>
+      </div>
+    </div>
+    <div class="graph-card">
+      <h2>Try It: Interactive Graph</h2>
+      <div class="controls">
+        <label>a <input type="range" id="ratodd-a" min="-3" max="3" step="0.5" value="1" oninput="updateTab('ratodd')"><span class="valtag" id="ratodd-a-val">1</span></label>
+        <label>h <input type="range" id="ratodd-h" min="-4" max="4" step="1" value="0" oninput="updateTab('ratodd')"><span class="valtag" id="ratodd-h-val">0</span></label>
+        <label>k <input type="range" id="ratodd-k" min="-4" max="4" step="1" value="0" oninput="updateTab('ratodd')"><span class="valtag" id="ratodd-k-val">0</span></label>
+        <button class="reset-btn" onclick="resetTab('ratodd')">Reset</button>
+      </div>
+      <div class="eq-readout" id="ratodd-eq"></div>
+      <svg id="plot-ratodd" class="plot-svg" width="300" height="300"></svg>
+      <div class="feat-readout" id="ratodd-feat"></div>
+      <div class="transform-table">
+        <table>
+          <tr><th>Parameter</th><th>Effect on Graph</th></tr>
+          <tr><td>a = 3</td><td>Branches pull farther out</td></tr>
+          <tr><td>a = −1</td><td>Flips branches to opposite quadrants</td></tr>
+          <tr><td>h = 2</td><td>Vertical asymptote → x = 2</td></tr>
+          <tr><td>k = −3</td><td>Horizontal asymptote → y = −3</td></tr>
+          <tr><td>h = −4</td><td>Vertical asymptote → x = −4</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="examples-section">
+    <h2>Worked Examples</h2>
+    <div class="examples-grid">
+      <div class="example-card">
+        <span class="example-badge">Example 1</span>
+        <div class="example-eq">f(x) = 1/(x − 2) + 1</div>
+        <div class="example-steps">
+          <div class="step"><span class="step-num">1</span><span>a = 1, h = 2, k = 1</span></div>
+          <div class="step"><span class="step-num">2</span><span>Asymptotes: x = 2, y = 1</span></div>
+          <div class="step"><span class="step-num">3</span><span>a &gt; 0 → branches upper-right / lower-left of asymptotes</span></div>
+          <div class="step"><span class="step-num">4</span><span>Domain: x ≠ 2 · Range: y ≠ 1</span></div>
+        </div>
+        <div class="example-graph-wrap"><svg id="ex-ratodd-1" class="plot-svg" width="190" height="190"></svg></div>
+      </div>
+      <div class="example-card">
+        <span class="example-badge">Example 2</span>
+        <div class="example-eq">f(x) = −3/(x + 1) − 2</div>
+        <div class="example-steps">
+          <div class="step"><span class="step-num">1</span><span>a = −3, h = −1, k = −2</span></div>
+          <div class="step"><span class="step-num">2</span><span>Asymptotes: x = −1, y = −2</span></div>
+          <div class="step"><span class="step-num">3</span><span>a &lt; 0 → branches flip to upper-left / lower-right</span></div>
+          <div class="step"><span class="step-num">4</span><span>Domain: x ≠ −1 · Range: y ≠ −2</span></div>
+        </div>
+        <div class="example-graph-wrap"><svg id="ex-ratodd-2" class="plot-svg" width="190" height="190"></svg></div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<script>
+function showTab(name, btn) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.style.display = 'none');
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).style.display = 'block';
+  btn.classList.add('active');
+}
+
+/* ---------- math engine: every curve is sampled from the real function ---------- */
+function fmt(n){
+  n = Math.round(n*1000)/1000;
+  if (Object.is(n,-0)) n = 0;
+  return (n < 0 ? '\u2212' + Math.abs(n) : '' + n);
+}
+function bLabel(b){
+  if (Math.abs(b - Math.E) < 0.001) return 'e';
+  if (Math.abs(b - 0.5) < 0.001) return '\u00bd';
+  if (Math.abs(b - 1/3) < 0.005) return '\u2153';
+  return fmt(b);
+}
+
+const FN = {
+  linear:    (x,p) => p.a*(x-p.h)+p.k,
+  abs:       (x,p) => p.a*Math.abs(x-p.h)+p.k,
+  quad:      (x,p) => p.a*Math.pow(x-p.h,2)+p.k,
+  cubic:     (x,p) => p.a*Math.pow(x-p.h,3)+p.k,
+  sqrt:      (x,p) => (x-p.h < 0 ? NaN : p.a*Math.sqrt(x-p.h)+p.k),
+  cuberoot:  (x,p) => p.a*Math.cbrt(x-p.h)+p.k,
+  exp:       (x,p) => p.a*Math.pow(p.b, x-p.h)+p.k,
+  log:       (x,p) => (x-p.h <= 0 ? NaN : p.a*(Math.log(x-p.h)/Math.log(p.b))+p.k),
+  rateven:   (x,p) => (Math.abs(x-p.h) < 1e-6 ? NaN : p.a/Math.pow(x-p.h,2)+p.k),
+  ratodd:    (x,p) => (Math.abs(x-p.h) < 1e-6 ? NaN : p.a/(x-p.h)+p.k)
+};
+const ASYM = {
+  linear: p=>({v:[],h:[]}), abs: p=>({v:[],h:[]}), quad: p=>({v:[],h:[]}),
+  cubic: p=>({v:[],h:[]}), sqrt: p=>({v:[],h:[]}), cuberoot: p=>({v:[],h:[]}),
+  exp: p=>({v:[],h:[p.k]}), log: p=>({v:[p.h],h:[]}),
+  rateven: p=>({v:[p.h],h:[p.k]}), ratodd: p=>({v:[p.h],h:[p.k]})
+};
+const WORLD = {
+  linear:{xMin:-6,xMax:6,yMin:-6,yMax:6}, abs:{xMin:-6,xMax:6,yMin:-2,yMax:10},
+  quad:{xMin:-6,xMax:6,yMin:-6,yMax:10}, cubic:{xMin:-6,xMax:6,yMin:-8,yMax:8},
+  sqrt:{xMin:-2,xMax:10,yMin:-6,yMax:6}, cuberoot:{xMin:-6,xMax:6,yMin:-6,yMax:6},
+  exp:{xMin:-6,xMax:6,yMin:-4,yMax:10}, log:{xMin:-4,xMax:8,yMin:-6,yMax:6},
+  rateven:{xMin:-6,xMax:6,yMin:-6,yMax:6}, ratodd:{xMin:-6,xMax:6,yMin:-6,yMax:6}
+};
+
+function buildSVG(svgId, type, p){
+  const svg = document.getElementById(svgId);
+  if(!svg) return;
+  const world = WORLD[type];
+  const W=300,H=300,pad=26;
+  const xToPx = x => pad + (x-world.xMin)/(world.xMax-world.xMin)*(W-2*pad);
+  const yToPx = y => pad + (world.yMax-y)/(world.yMax-world.yMin)*(H-2*pad);
+  let s = `<clipPath id="clip-${svgId}"><rect x="${pad}" y="${pad}" width="${W-2*pad}" height="${H-2*pad}"/></clipPath>`;
+
+  for (let gx=Math.ceil(world.xMin); gx<=world.xMax; gx++){
+    s += `<line x1="${xToPx(gx)}" y1="${pad}" x2="${xToPx(gx)}" y2="${H-pad}" stroke="#eee" stroke-width="1"/>`;
+  }
+  for (let gy=Math.ceil(world.yMin); gy<=world.yMax; gy++){
+    s += `<line x1="${pad}" y1="${yToPx(gy)}" x2="${W-pad}" y2="${yToPx(gy)}" stroke="#eee" stroke-width="1"/>`;
+  }
+  if (world.xMin<=0 && world.xMax>=0) s += `<line x1="${xToPx(0)}" y1="${pad}" x2="${xToPx(0)}" y2="${H-pad}" stroke="#bbb" stroke-width="1"/>`;
+  if (world.yMin<=0 && world.yMax>=0) s += `<line x1="${pad}" y1="${yToPx(0)}" x2="${W-pad}" y2="${yToPx(0)}" stroke="#bbb" stroke-width="1"/>`;
+
+  const asym = ASYM[type](p);
+  asym.v.forEach(vx=>{ if(vx>=world.xMin && vx<=world.xMax) s += `<line x1="${xToPx(vx)}" y1="${pad}" x2="${xToPx(vx)}" y2="${H-pad}" stroke="#c9b97a" stroke-width="1" stroke-dasharray="4,3"/>`; });
+  asym.h.forEach(hy=>{ if(hy>=world.yMin && hy<=world.yMax) s += `<line x1="${pad}" y1="${yToPx(hy)}" x2="${W-pad}" y2="${yToPx(hy)}" stroke="#c9b97a" stroke-width="1" stroke-dasharray="4,3"/>`; });
+
+  const fn = x => FN[type](x,p);
+  const steps = 600;
+  const margin = (world.yMax-world.yMin)*0.6;
+  let paths = [], cur = [];
+  for (let i=0;i<=steps;i++){
+    const x = world.xMin + (world.xMax-world.xMin)*i/steps;
+    const y = fn(x);
+    if (!isFinite(y) || y < world.yMin-margin || y > world.yMax+margin){
+      if (cur.length>1) paths.push(cur);
+      cur = [];
+      continue;
+    }
+    cur.push([xToPx(x), yToPx(y)]);
+  }
+  if (cur.length>1) paths.push(cur);
+  let curveSVG = '';
+  paths.forEach(pts=>{
+    const d = 'M' + pts.map(pt=>pt[0].toFixed(1)+','+pt[1].toFixed(1)).join(' L ');
+    curveSVG += `<path d="${d}" fill="none" stroke="#c9b97a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>`;
+  });
+  s += `<g clip-path="url(#clip-${svgId})">${curveSVG}</g>`;
+  svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+  svg.innerHTML = s;
+}
+
+const TABS = {
+  linear:{ type:'linear', params:['a','h','k'],
+    eq:p=>`f(x) = ${fmt(p.a)}(x \u2212 ${fmt(p.h)}) + ${fmt(p.k)}`,
+    feat:p=>`Passes through (${fmt(p.h)}, ${fmt(p.k)}) \u00b7 Domain: all reals \u00b7 Range: all reals` },
+  abs:{ type:'abs', params:['a','h','k'],
+    eq:p=>`f(x) = ${fmt(p.a)}|x \u2212 ${fmt(p.h)}| + ${fmt(p.k)}`,
+    feat:p=>`Vertex: (${fmt(p.h)}, ${fmt(p.k)}) \u00b7 Opens ${p.a>0?'upward':'downward'} \u00b7 Range: ${p.a>0?`[${fmt(p.k)}, \u221e)`:`(\u2212\u221e, ${fmt(p.k)}]`}` },
+  quad:{ type:'quad', params:['a','h','k'],
+    eq:p=>`f(x) = ${fmt(p.a)}(x \u2212 ${fmt(p.h)})\u00b2 + ${fmt(p.k)}`,
+    feat:p=>`Vertex: (${fmt(p.h)}, ${fmt(p.k)}) \u00b7 Axis: x = ${fmt(p.h)} \u00b7 Opens ${p.a>0?'upward':'downward'} \u00b7 Range: ${p.a>0?`[${fmt(p.k)}, \u221e)`:`(\u2212\u221e, ${fmt(p.k)}]`}` },
+  cubic:{ type:'cubic', params:['a','h','k'],
+    eq:p=>`f(x) = ${fmt(p.a)}(x \u2212 ${fmt(p.h)})\u00b3 + ${fmt(p.k)}`,
+    feat:p=>`Inflection point: (${fmt(p.h)}, ${fmt(p.k)}) \u00b7 Domain: all reals \u00b7 Range: all reals` },
+  sqrt:{ type:'sqrt', params:['a','h','k'],
+    eq:p=>`f(x) = ${fmt(p.a)}\u221a(x \u2212 ${fmt(p.h)}) + ${fmt(p.k)}`,
+    feat:p=>`Starting point: (${fmt(p.h)}, ${fmt(p.k)}) \u00b7 Domain: x \u2265 ${fmt(p.h)} \u00b7 Range: ${p.a>0?`[${fmt(p.k)}, \u221e)`:`(\u2212\u221e, ${fmt(p.k)}]`}` },
+  cuberoot:{ type:'cuberoot', params:['a','h','k'],
+    eq:p=>`f(x) = ${fmt(p.a)}\u00b7\u221b(x \u2212 ${fmt(p.h)}) + ${fmt(p.k)}`,
+    feat:p=>`Center point: (${fmt(p.h)}, ${fmt(p.k)}) \u00b7 Domain: all reals \u00b7 Range: all reals` },
+  exp:{ type:'exp', params:['a','b','h','k'],
+    eq:p=>`f(x) = ${fmt(p.a)}\u00b7${bLabel(p.b)}^(x\u2212${fmt(p.h)}) + ${fmt(p.k)}`,
+    feat:p=>`Asymptote: y = ${fmt(p.k)} \u00b7 Domain: all reals \u00b7 Range: ${p.a>0?`(${fmt(p.k)}, \u221e)`:`(\u2212\u221e, ${fmt(p.k)})`}` },
+  log:{ type:'log', params:['a','b','h','k'],
+    eq:p=>`f(x) = ${fmt(p.a)}\u00b7log<sub>${bLabel(p.b)}</sub>(x \u2212 ${fmt(p.h)}) + ${fmt(p.k)}`,
+    feat:p=>`Asymptote: x = ${fmt(p.h)} \u00b7 Domain: x > ${fmt(p.h)} \u00b7 Range: all reals` },
+  rateven:{ type:'rateven', params:['a','h','k'],
+    eq:p=>`f(x) = <span class="frac"><span class="frac-num">${fmt(p.a)}</span><span class="frac-den">(x \u2212 ${fmt(p.h)})\u00b2</span></span> + ${fmt(p.k)}`,
+    feat:p=>`Asymptotes: x = ${fmt(p.h)}, y = ${fmt(p.k)} \u00b7 Domain: x \u2260 ${fmt(p.h)} \u00b7 Range: ${p.a>0?`y > ${fmt(p.k)}`:`y < ${fmt(p.k)}`}` },
+  ratodd:{ type:'ratodd', params:['a','h','k'],
+    eq:p=>`f(x) = <span class="frac"><span class="frac-num">${fmt(p.a)}</span><span class="frac-den">(x \u2212 ${fmt(p.h)})</span></span> + ${fmt(p.k)}`,
+    feat:p=>`Asymptotes: x = ${fmt(p.h)}, y = ${fmt(p.k)} \u00b7 Domain: x \u2260 ${fmt(p.h)} \u00b7 Range: y \u2260 ${fmt(p.k)}` }
+};
+const DEFAULTS = {
+  linear:{a:1,h:0,k:0}, abs:{a:1,h:0,k:0}, quad:{a:1,h:0,k:0}, cubic:{a:1,h:0,k:0},
+  sqrt:{a:1,h:0,k:0}, cuberoot:{a:1,h:0,k:0}, exp:{a:1,b:2,h:0,k:0}, log:{a:1,b:2,h:0,k:0},
+  rateven:{a:1,h:0,k:0}, ratodd:{a:1,h:0,k:0}
+};
+
+function updateTab(key){
+  const cfg = TABS[key];
+  const p = {};
+  cfg.params.forEach(name=>{
+    const el = document.getElementById(key+'-'+name);
+    const v = parseFloat(el.value);
+    p[name] = v;
+    const tag = document.getElementById(key+'-'+name+'-val');
+    if (tag) tag.textContent = (name==='b') ? bLabel(v) : fmt(v);
+  });
+  buildSVG('plot-'+key, cfg.type, p);
+  document.getElementById(key+'-eq').innerHTML = cfg.eq(p);
+  document.getElementById(key+'-feat').innerHTML = cfg.feat(p);
+}
+function resetTab(key){
+  const d = DEFAULTS[key];
+  Object.keys(d).forEach(name=>{
+    document.getElementById(key+'-'+name).value = d[name];
+  });
+  updateTab(key);
+}
+
+const EXAMPLES = {
+  'ex-linear-1':['linear',{a:2,h:1,k:3}], 'ex-linear-2':['linear',{a:-0.5,h:-2,k:-1}],
+  'ex-abs-1':['abs',{a:2,h:3,k:1}], 'ex-abs-2':['abs',{a:-1,h:-2,k:-1}],
+  'ex-quad-1':['quad',{a:1,h:2,k:-3}], 'ex-quad-2':['quad',{a:-0.5,h:-1,k:4}],
+  'ex-cubic-1':['cubic',{a:1,h:2,k:1}], 'ex-cubic-2':['cubic',{a:-2,h:-1,k:-2}],
+  'ex-sqrt-1':['sqrt',{a:1,h:4,k:2}], 'ex-sqrt-2':['sqrt',{a:-2,h:-1,k:3}],
+  'ex-cuberoot-1':['cuberoot',{a:1,h:-3,k:-2}], 'ex-cuberoot-2':['cuberoot',{a:-2,h:1,k:1}],
+  'ex-exp-1':['exp',{a:1,b:2,h:1,k:3}], 'ex-exp-2':['exp',{a:3,b:0.5,h:0,k:-2}],
+  'ex-log-1':['log',{a:1,b:2,h:3,k:1}], 'ex-log-2':['log',{a:-1,b:3,h:-2,k:-1}],
+  'ex-rateven-1':['rateven',{a:1,h:2,k:1}], 'ex-rateven-2':['rateven',{a:-2,h:-1,k:-1}],
+  'ex-ratodd-1':['ratodd',{a:1,h:2,k:1}], 'ex-ratodd-2':['ratodd',{a:-3,h:-1,k:-2}]
+};
+
+document.addEventListener('DOMContentLoaded', function(){
+  Object.keys(TABS).forEach(key => updateTab(key));
+  Object.keys(EXAMPLES).forEach(id => {
+    const [type, params] = EXAMPLES[id];
+    buildSVG(id, type, params);
+  });
+});
+</script>
+</body>
+</html>
