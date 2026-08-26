@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>From Average Rate to Instantaneous Rate</title>
+<style>
+  body{font-family:Arial,sans-serif;margin:0;background:#f5f7fb;color:#20252b}
+  .wrap{max-width:1050px;margin:auto;padding:22px}
+  h1{margin:0 0 6px}
+  .subtitle{margin:0 0 18px;color:#555}
+  .grid{display:grid;grid-template-columns:1.35fr .9fr;gap:18px}
+  .card{background:white;border-radius:14px;padding:18px;box-shadow:0 2px 10px #0001}
+  canvas{width:100%;height:430px;border:1px solid #ddd;border-radius:10px;background:white}
+  label{display:block;margin:12px 0 5px;font-weight:bold}
+  input[type=range]{width:100%}
+  .value{font-size:1.15rem;font-weight:bold}
+  .readout{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:15px}
+  .box{padding:12px;border-radius:10px;background:#eef3ff}
+  .box strong{display:block;font-size:1.35rem;margin-top:4px}
+  .question{margin-top:18px;padding:14px;background:#fff8df;border-left:5px solid #e3b341;border-radius:8px}
+  button{padding:9px 13px;border:0;border-radius:8px;background:#222;color:white;cursor:pointer;margin:5px 5px 0 0}
+  button.secondary{background:#e8ebf0;color:#222}
+  .feedback{font-weight:bold;margin-top:10px;min-height:22px}
+  .formula{font-size:1.1rem;text-align:center;padding:10px;background:#f1f1f1;border-radius:8px;margin:12px 0}
+  .step{margin:8px 0}
+  @media(max-width:800px){.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>From Average Rate of Change to Instantaneous Rate</h1>
+  <p class="subtitle">Move the second point toward the first point and watch the secant slope become the tangent slope.</p>
+
+  <div class="grid">
+    <div class="card">
+      <canvas id="graph" width="760" height="430"></canvas>
+      <div class="formula">
+        Average rate of change = <b>(f(b) − f(a)) / (b − a)</b>
+      </div>
+      <label for="a">Fixed point: a = <span id="aVal">2</span></label>
+      <input id="a" type="range" min="-1" max="4" step="0.1" value="2">
+      <label for="h">Horizontal distance: h = b − a = <span id="hVal">2.0</span></label>
+      <input id="h" type="range" min="0.05" max="3" step="0.05" value="2">
+
+      <div class="readout">
+        <div class="box">Second point: b<strong id="bVal">4.00</strong></div>
+        <div class="box">Average rate<strong id="avgVal">6.00</strong></div>
+        <div class="box">Instantaneous rate at a<strong id="instVal">4.00</strong></div>
+        <div class="box">Difference<strong id="diffVal">2.00</strong></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>What do you notice?</h2>
+      <div class="step"><b>1.</b> Start with h = 2.00. What does the secant slope tell you?</div>
+      <div class="step"><b>2.</b> Slowly decrease h toward 0.</div>
+      <div class="step"><b>3.</b> Watch the second point move toward the fixed point.</div>
+      <div class="step"><b>4.</b> Watch the average rate approach the instantaneous rate.</div>
+
+      <div class="question">
+        <b>Prediction</b><br>
+        As h gets closer to 0, what do you think happens to the average rate of change?
+        <br><br>
+        <button onclick="check('closer')">It gets closer to the instantaneous rate.</button>
+        <button onclick="check('same')">It stays the same.</button>
+        <button onclick="check('zero')">It approaches zero.</button>
+        <div id="feedback" class="feedback"></div>
+      </div>
+
+      <div class="question">
+        <b>Key idea</b><br>
+        A secant line uses <i>two distinct points</i>. A tangent line describes the slope <i>at one point</i>.
+        We estimate the tangent slope by making the two points extremely close together.
+      </div>
+
+      <button onclick="setH(.05)">Make h tiny</button>
+      <button class="secondary" onclick="setH(2)">Reset</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const canvas=document.getElementById("graph"),ctx=canvas.getContext("2d");
+const aEl=document.getElementById("a"),hEl=document.getElementById("h");
+function f(x){return x*x;}
+function derivative(x){return 2*x;}
+
+function setH(v){hEl.value=v; update();}
+function check(ans){
+  const fb=document.getElementById("feedback");
+  if(ans==="closer"){fb.textContent="Correct. As h → 0, the average rate approaches the instantaneous rate."; fb.style.color="green";}
+  else {fb.textContent="Try again. Think about what happens to the secant line as the two points get extremely close."; fb.style.color="#a33";}
+}
+
+function update(){
+  const a=+aEl.value, h=+hEl.value, b=a+h;
+  const avg=(f(b)-f(a))/h, inst=derivative(a);
+  document.getElementById("aVal").textContent=a.toFixed(1);
+  document.getElementById("hVal").textContent=h.toFixed(2);
+  document.getElementById("bVal").textContent=b.toFixed(2);
+  document.getElementById("avgVal").textContent=avg.toFixed(2);
+  document.getElementById("instVal").textContent=inst.toFixed(2);
+  document.getElementById("diffVal").textContent=Math.abs(avg-inst).toFixed(2);
+  draw(a,b,avg,inst);
+}
+function draw(a,b,avg,inst){
+  const W=canvas.width,H=canvas.height;
+  ctx.clearRect(0,0,W,H);
+  const xmin=-3,xmax=6,ymin=-3,ymax=30;
+  const X=x=>(x-xmin)/(xmax-xmin)*W;
+  const Y=y=>H-(y-ymin)/(ymax-ymin)*H;
+
+  ctx.strokeStyle="#ddd";ctx.lineWidth=1;
+  for(let x=-3;x<=6;x++){ctx.beginPath();ctx.moveTo(X(x),0);ctx.lineTo(X(x),H);ctx.stroke();}
+  for(let y=-3;y<=30;y+=3){ctx.beginPath();ctx.moveTo(0,Y(y));ctx.lineTo(W,Y(y));ctx.stroke();}
+  ctx.strokeStyle="#555";ctx.lineWidth=2;
+  ctx.beginPath();ctx.moveTo(X(0),0);ctx.lineTo(X(0),H);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(0,Y(0));ctx.lineTo(W,Y(0));ctx.stroke();
+
+  // parabola
+  ctx.strokeStyle="#2d6cdf";ctx.lineWidth=3;ctx.beginPath();
+  for(let x=xmin;x<=xmax;x+=.03){
+    const y=f(x);
+    if(y<ymin||y>ymax) continue;
+    if(x===xmin)ctx.moveTo(X(x),Y(y));else ctx.lineTo(X(x),Y(y));
+  }ctx.stroke();
+
+  const ya=f(a), yb=f(b);
+
+  // secant
+  ctx.strokeStyle="#d97706";ctx.lineWidth=3;ctx.beginPath();
+  const x1=xmin,x2=xmax;
+  ctx.moveTo(X(x1),Y(ya+avg*(x1-a)));
+  ctx.lineTo(X(x2),Y(ya+avg*(x2-a)));ctx.stroke();
+
+  // tangent at a
+  ctx.strokeStyle="#16803c";ctx.lineWidth=3;ctx.setLineDash([8,6]);ctx.beginPath();
+  ctx.moveTo(X(x1),Y(ya+inst*(x1-a)));
+  ctx.lineTo(X(x2),Y(ya+inst*(x2-a)));ctx.stroke();ctx.setLineDash([]);
+
+  // points
+  [[a,ya,"A"],[b,yb,"B"]].forEach(([x,y,label])=>{
+    ctx.fillStyle="#111";ctx.beginPath();ctx.arc(X(x),Y(y),6,0,Math.PI*2);ctx.fill();
+    ctx.font="bold 15px Arial";ctx.fillText(label,X(x)+8,Y(y)-8);
+  });
+
+  ctx.font="14px Arial";
+  ctx.fillStyle="#d97706";ctx.fillText("Secant line",18,25);
+  ctx.fillStyle="#16803c";ctx.fillText("Tangent line",18,45);
+  ctx.fillStyle="#2d6cdf";ctx.fillText("f(x) = x²",18,65);
+}
+aEl.addEventListener("input",update);hEl.addEventListener("input",update);update();
+</script>
+</body>
+</html>
