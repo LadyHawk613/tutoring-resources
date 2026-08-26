@@ -23,6 +23,22 @@
   button.secondary{background:#e8ebf0;color:#222}
   .feedback{font-weight:bold;margin-top:10px;min-height:22px}
   .formula{font-size:1.1rem;text-align:center;padding:10px;background:#f1f1f1;border-radius:8px;margin:12px 0}
+  
+  /* Vertical fraction styling */
+  .frac {
+    display: inline-block;
+    vertical-align: middle;
+    text-align: center;
+    margin: 0 4px;
+  }
+  .frac > span {
+    display: block;
+    padding: 0 4px;
+  }
+  .frac-num {
+    border-bottom: 1.5px solid #20252b;
+  }
+
   .step{margin:8px 0}
   @media(max-width:800px){.grid{grid-template-columns:1fr}}
 </style>
@@ -36,7 +52,11 @@
     <div class="card">
       <canvas id="graph" width="760" height="430"></canvas>
       <div class="formula">
-        Average rate of change = <b>(f(b) − f(a)) / (b − a)</b>
+        Average rate of change = 
+        <div class="frac">
+          <span class="frac-num"><i>f</i>(<i>b</i>) − <i>f</i>(<i>a</i>)</span>
+          <span><i>b</i> − <i>a</i></span>
+        </div>
       </div>
       <label for="a">Fixed point: a = <span id="aVal">2</span></label>
       <input id="a" type="range" min="-1" max="4" step="0.1" value="2">
