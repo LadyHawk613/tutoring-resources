@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Is It a Polynomial? - Sorting Activity</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        html, body {
+            height: 100vh;
+            overflow: hidden;
+            background: linear-gradient(135deg, #4a154b, #2b0c2c);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #ffffff;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            padding: 8px 16px;
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 4px;
+        }
+        h1 {
+            font-size: 1.35rem;
+            color: #f3e5f5;
+            margin-bottom: 2px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        .instructions {
+            font-size: 0.8rem;
+            color: #e1bee7;
+        }
+        .main-content {
+            display: flex;
+            gap: 12px;
+            flex: 1;
+            min-height: 0;
+            padding-bottom: 6px;
+        }
+        /* Pool Area */
+        .pool-section {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.08);
+            border: 2px dashed #ba68c8;
+            border-radius: 10px;
+            padding: 8px;
+            display: flex;
+            flex-direction: column;
+            backdrop-filter: blur(5px);
+            min-height: 0;
+        }
+        .section-title {
+            font-size: 0.85rem;
+            font-weight: bold;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #ce93d8;
+            text-align: center;
+        }
+        .equations-pool {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            overflow-y: auto;
+            flex: 1;
+            padding-right: 2px;
+        }
+        /* Drop Zones Area */
+        .drop-zones-section {
+            flex: 1.25;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            min-height: 0;
+        }
+        .drop-zone {
+            flex: 1;
+            background: rgba(0, 0, 0, 0.25);
+            border: 3px dashed #ab47bc;
+            border-radius: 10px;
+            padding: 8px;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s ease;
+            min-height: 0;
+        }
+        .drop-zone.drag-over {
+            background: rgba(186, 104, 200, 0.2);
+            border-color: #e1bee7;
+            transform: scale(1.01);
+        }
+        .zone-title {
+            font-size: 0.9rem;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 4px;
+            padding-bottom: 3px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .zone-title.yes { color: #81c784; }
+        .zone-title.no { color: #e57373; }
+
+        .zone-content {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            overflow-y: auto;
+            flex: 1;
+            align-content: flex-start;
+        }
+        /* Equation Card styling */
+        .eq-card {
+            background: #ffffff;
+            color: #2c3e50;
+            padding: 6px 10px;
+            border-radius: 6px;
+            cursor: grab;
+            font-weight: 600;
+            box-shadow: 0 3px 5px rgba(0,0,0,0.2);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s, box-shadow 0.2s, background-color 0.2s;
+            user-select: none;
+            min-height: 36px;
+            border: 2px solid transparent;
+        }
+        .eq-card:active {
+            cursor: grabbing;
+        }
+        .eq-card.dragging {
+            opacity: 0.4;
+        }
+        
+        /* Validation feedback styles */
+        .eq-card.correct {
+            background-color: #d4edda !important;
+            color: #155724 !important;
+            border-color: #28a745 !important;
+        }
+        .eq-card.incorrect {
+            background-color: #f8d7da !important;
+            color: #721c24 !important;
+            border-color: #dc3545 !important;
+        }
+
+        /* Pool cards layout */
+        .equations-pool .eq-card {
+            width: 100%;
+            justify-content: flex-start;
+            padding-left: 12px;
+            font-size: 0.9rem;
+        }
+        /* Zone cards layout */
+        .drop-zone .eq-card {
+            font-size: 0.8rem;
+            padding: 4px 8px;
+            min-height: 32px;
+        }
+
+        /* Fully styled Math layout */
+        .math-expr {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            white-space: nowrap;
+        }
+        .math-fraction {
+            display: inline-flex;
+            flex-direction: column;
+            vertical-align: middle;
+            text-align: center;
+            margin: 0 3px;
+            font-size: 0.9em;
+        }
+        .math-numerator {
+            border-bottom: 1.5px solid currentColor;
+            padding-bottom: 1px;
+        }
+        .math-denominator {
+            padding-top: 1px;
+        }
+        sup {
+            font-size: 0.75em;
+            vertical-align: super;
+            line-height: 0;
+        }
+
+        /* Footer & Controls */
+        footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 4px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        .btn {
+            background: #ab47bc;
+            color: white;
+            border: none;
+            padding: 6px 16px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
+            box-shadow: 0 2px 3px rgba(0,0,0,0.2);
+        }
+        .btn:hover {
+            background: #ba68c8;
+            transform: translateY(-1px);
+        }
+        .score-display {
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: #e1bee7;
+        }
+        
+        /* Modal for feedback */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6);
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+        }
+        .modal-content {
+            background: #38133a;
+            border: 2px solid #ba68c8;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            max-width: 380px;
+            width: 90%;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        }
+        .modal-content h2 { margin-bottom: 8px; color: #f3e5f5; font-size: 1.2rem; }
+        .modal-content p { margin-bottom: 15px; color: #e1bee7; font-size: 0.95rem; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Is It a Polynomial? &mdash; Sorting Activity</h1>
+        <p class="instructions">Drag and drop each equation into the correct category based on polynomial rules.</p>
+    </header>
+
+    <div class="main-content">
+        <!-- Equations Pool -->
+        <div class="pool-section">
+            <div class="section-title">Equations Pool</div>
+            <div class="equations-pool" id="pool" ondragover="allowDrop(event)" ondrop="dropToPool(event)">
+                
+                <div class="eq-card" draggable="true" id="eq1" ondragstart="drag(event)" data-answer="yes">
+                    <div class="math-expr">f(x) = 4x<sup>3</sup> &minus; 5x<sup>2</sup> + 7x &minus; 9</div>
+                </div>
+
+                <div class="eq-card" draggable="true" id="eq2" ondragstart="drag(event)" data-answer="no">
+                    <div class="math-expr">g(x) = 
+                        <div class="math-fraction"><div class="math-numerator">3</div><div class="math-denominator">x<sup>2</sup></div></div> 
+                        + 5x &minus; 2
+                    </div>
+                </div>
+
+                <div class="eq-card" draggable="true" id="eq3" ondragstart="drag(event)" data-answer="no">
+                    <div class="math-expr">h(x) = 6&#8730;x + 12</div>
+                </div>
+
+                <div class="eq-card" draggable="true" id="eq4" ondragstart="drag(event)" data-answer="yes">
+                    <div class="math-expr">P(x) = 
+                        <div class="math-fraction"><div class="math-numerator">2</div><div class="math-denominator">3</div></div>
+                        x<sup>5</sup> &minus; &#8730;5x<sup>2</sup> + 8
+                    </div>
+                </div>
+
+                <div class="eq-card" draggable="true" id="eq5" ondragstart="drag(event)" data-answer="no">
+                    <div class="math-expr">f(x) = 5x<sup>&minus;3</sup> + 2x<sup>2</sup> &minus; x</div>
+                </div>
+
+                <div class="eq-card" draggable="true" id="eq6" ondragstart="drag(event)" data-answer="no">
+                    <div class="math-expr">y = 3<sup>x</sup> + 4x</div>
+                </div>
+
+                <div class="eq-card" draggable="true" id="eq7" ondragstart="drag(event)" data-answer="yes">
+                    <div class="math-expr">R(x) = 
+                        <div class="math-fraction"><div class="math-numerator">x<sup>3</sup> &minus; 8</div><div class="math-denominator">4</div></div>
+                    </div>
+                </div>
+
+                <div class="eq-card" draggable="true" id="eq8" ondragstart="drag(event)" data-answer="no">
+                    <div class="math-expr">f(x) = 7x<sup>1/2</sup> + 3x &minus; 10</div>
+                </div>
+
+                <div class="eq-card" draggable="true" id="eq9" ondragstart="drag(event)" data-answer="yes">
+                    <div class="math-expr">g(x) = 15</div>
+                </div>
+
+                <div class="eq-card" draggable="true" id="eq10" ondragstart="drag(event)" data-answer="no">
+                    <div class="math-expr">H(x) = 
+                        <div class="math-fraction"><div class="math-numerator">5</div><div class="math-denominator">x</div></div>
+                        + &#8730;x &minus; 3
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Drop Zones -->
+        <div class="drop-zones-section">
+            
+            <div class="drop-zone" id="zone-yes" ondragover="allowDrop(event)" ondragleave="removeDragOver(event)" ondrop="drop(event, 'yes')">
+                <div class="zone-title yes">&#10004; YES &mdash; It is a Polynomial</div>
+                <div class="zone-content" id="content-yes"></div>
+            </div>
+
+            <div class="drop-zone" id="zone-no" ondragover="allowDrop(event)" ondragleave="removeDragOver(event)" ondrop="drop(event, 'no')">
+                <div class="zone-title no">&#10006; NO &mdash; Not a Polynomial</div>
+                <div class="zone-content" id="content-no"></div>
+            </div>
+
+        </div>
+    </div>
+
+    <footer>
+        <button class="btn" onclick="checkAnswers()">Check Answers</button>
+        <div class="score-display" id="score">Sorted: 0 / 10</div>
+        <button class="btn" onclick="resetActivity()">Reset</button>
+    </footer>
+</div>
+
+<!-- Modal Feedback -->
+<div class="modal" id="feedbackModal">
+    <div class="modal-content">
+        <h2 id="modalTitle">Results</h2>
+        <p id="modalMessage"></p>
+        <button class="btn" onclick="closeModal()">Try Again / Review</button>
+    </div>
+</div>
+
+<script>
+    function allowDrop(ev) {
+        ev.preventDefault();
+        const zone = ev.currentTarget.closest('.drop-zone');
+        if (zone) zone.classList.add('drag-over');
+    }
+
+    function removeDragOver(ev) {
+        const zone = ev.currentTarget.closest('.drop-zone');
+        if (zone) zone.classList.remove('drag-over');
+    }
+
+    function drag(ev) {
+        ev.dataTransfer.setData("text", ev.target.closest('.eq-card').id);
+        ev.target.closest('.eq-card').classList.add('dragging');
+    }
+
+    document.addEventListener('dragend', function(ev) {
+        if (ev.target.classList.contains('eq-card')) {
+            ev.target.classList.remove('dragging');
+        }
+        document.querySelectorAll('.drop-zone').forEach(z => z.classList.remove('drag-over'));
+    });
+
+    function drop(ev, expectedCategory) {
+        ev.preventDefault();
+        const zone = ev.currentTarget.closest('.drop-zone');
+        if (zone) zone.classList.remove('drag-over');
+        
+        const data = ev.dataTransfer.getData("text");
+        const card = document.getElementById(data);
+        
+        card.classList.remove('correct', 'incorrect');
+        
+        const contentZone = zone.querySelector('.zone-content');
+        contentZone.appendChild(card);
+        updateScore();
+    }
+
+    function dropToPool(ev) {
+        ev.preventDefault();
+        const data = ev.dataTransfer.getData("text");
+        const card = document.getElementById(data);
+        card.classList.remove('correct', 'incorrect');
+        document.getElementById('pool').appendChild(card);
+        updateScore();
+    }
+
+    function updateScore() {
+        const yesCount = document.getElementById('content-yes').children.length;
+        const noCount = document.getElementById('content-no').children.length;
+        const totalSorted = yesCount + noCount;
+        document.getElementById('score').innerText = `Sorted: ${totalSorted} / 10`;
+    }
+
+    function checkAnswers() {
+        const yesCards = document.getElementById('content-yes').children;
+        const noCards = document.getElementById('content-no').children;
+        
+        let correctCount = 0;
+        let totalPlaced = yesCards.length + noCards.length;
+
+        if (totalPlaced < 10) {
+            showModal("Keep Going!", `You have only sorted ${totalPlaced} out of 10 equations. Sort all equations before checking!`);
+            return;
+        }
+
+        for (let card of Array.from(yesCards)) {
+            if (card.getAttribute('data-answer') === 'yes') {
+                card.classList.add('correct');
+                card.classList.remove('incorrect');
+                correctCount++;
+            } else {
+                card.classList.add('incorrect');
+                card.classList.remove('correct');
+            }
+        }
+
+        for (let card of Array.from(noCards)) {
+            if (card.getAttribute('data-answer') === 'no') {
+                card.classList.add('correct');
+                card.classList.remove('incorrect');
+                correctCount++;
+            } else {
+                card.classList.add('incorrect');
+                card.classList.remove('correct');
+            }
+        }
+
+        if (correctCount === 10) {
+            showModal("Fantastic Job! 🎉", "All 10 equations are sorted correctly! You've mastered polynomial identification.");
+        } else {
+            showModal("Almost There!", `You got ${correctCount} out of 10 correct. Correct answers are highlighted in green, and incorrect ones are in red!`);
+        }
+    }
+
+    function showModal(title, message) {
+        document.getElementById('modalTitle').innerText = title;
+        document.getElementById('modalMessage').innerText = message;
+        document.getElementById('feedbackModal').style.display = 'flex';
+    }
+
+    function closeModal() {
+        document.getElementById('feedbackModal').style.display = 'none';
+    }
+
+    function resetActivity() {
+        const pool = document.getElementById('pool');
+        const allCards = document.querySelectorAll('.eq-card');
+        
+        allCards.forEach(card => {
+            card.classList.remove('correct', 'incorrect');
+            pool.appendChild(card);
+        });
+        updateScore();
+    }
+</script>
+
+</body>
+</html>
