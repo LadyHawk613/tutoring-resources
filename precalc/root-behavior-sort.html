@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Root Behavior Sort</title>
+<style>
+  :root {
+    --purple: #7c3aed;
+    --purple-dark: #5b2a8c;
+    --purple-light: #f5edfd;
+    --purple-border: #dccdf0;
+    --green: #1f9d55;
+    --red: #d64545;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    background: #fbf9fd;
+    color: #2a2230;
+    margin: 0;
+    padding: 20px;
+  }
+  .wrap { max-width: 900px; margin: 0 auto; }
+  h1 {
+    color: var(--purple-dark);
+    font-size: 24px;
+    margin-bottom: 2px;
+  }
+  .subtitle { color: #6b6070; font-size: 13px; margin-bottom: 14px; }
+
+  .legend {
+    background: var(--purple-light);
+    border: 1.5px solid var(--purple-border);
+    border-left: 5px solid var(--purple);
+    border-radius: 8px;
+    padding: 10px 16px;
+    font-size: 13px;
+    margin-bottom: 20px;
+    line-height: 1.6;
+  }
+  .legend b { color: var(--purple-dark); }
+  .tag {
+    display: inline-block;
+    background: var(--purple);
+    color: white;
+    font-size: 10.5px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 10px;
+    margin-right: 6px;
+  }
+
+  .section { display: none; }
+  .section.active { display: block; }
+
+  .progress-bar {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 18px;
+  }
+  .progress-bar div {
+    flex: 1;
+    height: 6px;
+    border-radius: 3px;
+    background: #e6dbf5;
+  }
+  .progress-bar div.done { background: var(--purple); }
+
+  .tray {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-bottom: 22px;
+    justify-content: center;
+  }
+  .card {
+    width: 150px;
+    background: white;
+    border: 2px solid var(--purple-border);
+    border-radius: 10px;
+    padding: 8px;
+    cursor: pointer;
+    transition: transform .12s, box-shadow .12s, border-color .12s;
+    text-align: center;
+  }
+  .card:hover { transform: translateY(-3px); box-shadow: 0 4px 10px rgba(124,58,237,0.15); }
+  .card.selected { border-color: var(--purple); box-shadow: 0 0 0 3px rgba(124,58,237,0.25); }
+  .card.placed { opacity: 0; pointer-events: none; height: 0; padding: 0; margin: 0; overflow: hidden; }
+  .card.shake { animation: shake .35s; border-color: var(--red); }
+  @keyframes shake {
+    0%,100% { transform: translateX(0); }
+    25% { transform: translateX(-6px); }
+    75% { transform: translateX(6px); }
+  }
+  .card svg { width: 100%; height: auto; display: block; }
+  .card-label { font-size: 11px; color: #6b6070; margin-top: 4px; }
+
+  .bins {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .bin {
+    width: 190px;
+    min-height: 150px;
+    border: 2px dashed var(--purple-border);
+    border-radius: 10px;
+    background: var(--purple-light);
+    padding: 10px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color .15s, background .15s;
+  }
+  .bin:hover { border-color: var(--purple); }
+  .bin.correct { border: 2px solid var(--green); background: #eafaf0; cursor: default; }
+  .bin-label {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--purple-dark);
+    margin-bottom: 8px;
+  }
+  .bin-slot { min-height: 90px; display: flex; align-items: center; justify-content: center; }
+  .bin-slot svg { width: 100%; }
+  .bin-hint { font-size: 11px; color: #9c8fae; }
+
+  .status-line {
+    text-align: center;
+    font-size: 13px;
+    color: #6b6070;
+    margin: 14px 0;
+    min-height: 18px;
+  }
+
+  .btn {
+    display: inline-block;
+    background: var(--purple);
+    color: white;
+    border: none;
+    padding: 9px 18px;
+    border-radius: 7px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background .15s;
+  }
+  .btn:hover { background: var(--purple-dark); }
+  .btn.secondary {
+    background: white;
+    color: var(--purple);
+    border: 1.5px solid var(--purple);
+  }
+  .btn.secondary:hover { background: var(--purple-light); }
+  .center { text-align: center; margin-top: 18px; }
+
+  .success-banner {
+    text-align: center;
+    background: #eafaf0;
+    border: 1.5px solid var(--green);
+    color: #16713d;
+    border-radius: 8px;
+    padding: 12px;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 16px;
+  }
+
+  .challenge-card {
+    background: white;
+    border: 2px solid var(--purple-border);
+    border-radius: 10px;
+    padding: 12px;
+    text-align: center;
+    width: 200px;
+  }
+  .challenge-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    justify-content: center;
+    margin-bottom: 18px;
+  }
+  .guess-btns { display: flex; gap: 5px; justify-content: center; margin-top: 8px; }
+  .guess-btn {
+    width: 30px; height: 30px;
+    border-radius: 6px;
+    border: 1.5px solid var(--purple);
+    background: white;
+    color: var(--purple);
+    font-weight: 700;
+    cursor: pointer;
+    font-size: 13px;
+  }
+  .guess-btn:hover { background: var(--purple-light); }
+  .guess-btn.correct-pick { background: var(--green); border-color: var(--green); color: white; }
+  .guess-btn.wrong-pick { background: var(--red); border-color: var(--red); color: white; }
+  .guess-btn:disabled { cursor: default; opacity: .55; }
+  .explain {
+    font-size: 11px;
+    margin-top: 6px;
+    min-height: 28px;
+    color: #6b6070;
+  }
+
+  .score-box {
+    text-align: center;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--purple-dark);
+    margin-bottom: 12px;
+  }
+
+  .tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 18px;
+    justify-content: center;
+  }
+  .tab-btn {
+    background: white;
+    border: 1.5px solid var(--purple-border);
+    color: #6b6070;
+    padding: 7px 16px;
+    border-radius: 20px;
+    font-size: 12.5px;
+    cursor: pointer;
+    font-weight: 600;
+  }
+  .tab-btn.active { background: var(--purple); color: white; border-color: var(--purple); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>🎯 Root Behavior Sort</h1>
+  <p class="subtitle">Match each graph's behavior at the x-intercept to its factor form</p>
+
+  <div class="legend">
+    <span class="tag">ODD</span> exponent &rarr; graph <b>crosses</b> the x-axis &nbsp;&bull;&nbsp;
+    <span class="tag">EVEN</span> exponent &rarr; graph <b>touches and bounces</b> back.
+    Higher exponents (within the same family) make the curve <b>flatter</b> near the root.
+  </div>
+
+  <div class="tabs">
+    <button class="tab-btn active" id="tabRound1" onclick="showSection('round1')">Round 1: Sort</button>
+    <button class="tab-btn" id="tabRound2" onclick="showSection('round2')">Round 2: Challenge</button>
+  </div>
+
+  <!-- ROUND 1 -->
+  <div class="section active" id="round1">
+    <div class="progress-bar" id="progressBar"></div>
+    <div id="round1Banner"></div>
+    <p style="text-align:center; font-size:13px; color:#6b6070;">Click a graph card, then click the factor box you think it matches.</p>
+    <div class="tray" id="cardTray"></div>
+    <div class="bins" id="binRow"></div>
+    <div class="status-line" id="statusLine"></div>
+    <div class="center">
+      <button class="btn secondary" onclick="setupRound1()">🔀 Shuffle New Cards</button>
+    </div>
+  </div>
+
+  <!-- ROUND 2 -->
+  <div class="section" id="round2">
+    <p style="text-align:center; font-size:13px; color:#6b6070; margin-bottom:4px;">
+      No labels this time — infer the multiplicity from shape alone. Click a number to guess.
+    </p>
+    <div class="score-box" id="scoreBox">Score: 0 / 0</div>
+    <div class="challenge-grid" id="challengeGrid"></div>
+    <div class="center">
+      <button class="btn" onclick="setupRound2()">🔁 New Challenge Set</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+/* ---------- Curve math ---------- */
+const K = { 1: 0.8125, 2: 0.5078, 3: 0.3174, 4: 0.1984 };
+const BEHAVIOR_TEXT = {
+  1: "Crosses the x-axis",
+  2: "Touches and bounces",
+  3: "Crosses but flattens",
+  4: "Touches with more flatness"
+};
+const EXPLAIN_TEXT = {
+  1: "Crosses straight through — odd exponent, simplest case.",
+  2: "Touches and bounces back — even exponent, like a parabola.",
+  3: "Crosses, but flattens out first — odd exponent greater than 1.",
+  4: "Touches and bounces, very flat — even exponent greater than 2."
+};
+
+function scaleX(x) { return 20 + (x + 1.6) / 3.2 * 200; }
+function scaleY(v) { return 90 - v * 50; }
+
+function buildSvg(m, sign, shift, showTick) {
+  const k = K[m];
+  let d = "";
+  for (let i = 0; i <= 40; i++) {
+    const x = -1.6 + i * (3.2 / 40);
+    let raw = Math.pow(x - shift, m);
+    let v = sign * k * raw;
+    v = Math.max(-1.45, Math.min(1.45, v));
+    const px = scaleX(x).toFixed(1);
+    const py = scaleY(v).toFixed(1);
+    d += (i === 0 ? "M" : "L") + px + "," + py + " ";
+  }
+  const tickX = scaleX(shift).toFixed(1);
+  const tick = showTick
+    ? `<line x1="${tickX}" y1="85" x2="${tickX}" y2="95" stroke="#5b2a8c" stroke-width="2"/>
+       <text x="${tickX}" y="108" font-size="10" fill="#5b2a8c" text-anchor="middle">a</text>`
+    : "";
+  return `<svg viewBox="0 0 240 120" xmlns="http://www.w3.org/2000/svg">
+    <line x1="20" y1="90" x2="220" y2="90" stroke="#c9b4e8" stroke-width="1.5"/>
+    ${tick}
+    <path d="${d}" fill="none" stroke="#7c3aed" stroke-width="2.5" stroke-linecap="round"/>
+  </svg>`;
+}
+
+function shuffle(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+/* ---------- Round 1: Sort ---------- */
+let round1State = {};
+
+function setupRound1() {
+  const order = shuffle([1, 2, 3, 4]);
+  round1State = { placed: {}, cards: order };
+  const tray = document.getElementById('cardTray');
+  const bins = document.getElementById('binRow');
+  tray.innerHTML = "";
+  bins.innerHTML = "";
+  document.getElementById('round1Banner').innerHTML = "";
+  document.getElementById('statusLine').textContent = "";
+  updateProgress();
+
+  order.forEach(m => {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.dataset.m = m;
+    card.innerHTML = buildSvg(m, 1, 0, true) + `<div class="card-label">${BEHAVIOR_TEXT[m]}</div>`;
+    card.onclick = () => selectCard(card);
+    tray.appendChild(card);
+  });
+
+  [1, 2, 3, 4].forEach(m => {
+    const bin = document.createElement('div');
+    bin.className = 'bin';
+    bin.dataset.m = m;
+    bin.innerHTML = `<div class="bin-label">(x &minus; a)<sup>${m}</sup></div>
+      <div class="bin-slot"><span class="bin-hint">drop here</span></div>`;
+    bin.onclick = () => attemptPlace(bin);
+    bins.appendChild(bin);
+  });
+}
+
+let selectedCard = null;
+function selectCard(card) {
+  if (card.classList.contains('placed')) return;
+  if (selectedCard) selectedCard.classList.remove('selected');
+  if (selectedCard === card) { selectedCard = null; return; }
+  selectedCard = card;
+  card.classList.add('selected');
+}
+
+function attemptPlace(bin) {
+  if (!selectedCard || bin.classList.contains('correct')) return;
+  const cardM = selectedCard.dataset.m;
+  if (cardM === bin.dataset.m) {
+    bin.classList.add('correct');
+    bin.querySelector('.bin-slot').innerHTML = buildSvg(parseInt(cardM), 1, 0, true);
+    selectedCard.classList.add('placed');
+    selectedCard.classList.remove('selected');
+    round1State.placed[cardM] = true;
+    selectedCard = null;
+    document.getElementById('statusLine').textContent = "✅ Correct match!";
+    updateProgress();
+    checkRound1Done();
+  } else {
+    bin.classList.add('shake');
+    document.getElementById('statusLine').textContent = "❌ Not quite — try another box.";
+    setTimeout(() => bin.classList.remove('shake'), 350);
+  }
+}
+
+function updateProgress() {
+  const bar = document.getElementById('progressBar');
+  bar.innerHTML = "";
+  const doneCount = Object.keys(round1State.placed || {}).length;
+  for (let i = 0; i < 4; i++) {
+    const seg = document.createElement('div');
+    if (i < doneCount) seg.className = 'done';
+    bar.appendChild(seg);
+  }
+}
+
+function checkRound1Done() {
+  if (Object.keys(round1State.placed).length === 4) {
+    document.getElementById('round1Banner').innerHTML =
+      `<div class="success-banner">🎉 All matched! Ready to try the Challenge Round with unlabeled graphs?
+       <br><button class="btn" style="margin-top:8px;" onclick="showSection('round2')">Go to Round 2 →</button></div>`;
+    document.getElementById('statusLine').textContent = "";
+  }
+}
+
+/* ---------- Round 2: Challenge ---------- */
+let challengeScore = { correct: 0, total: 0 };
+
+function setupRound2() {
+  const order = shuffle([1, 2, 3, 4]);
+  const grid = document.getElementById('challengeGrid');
+  grid.innerHTML = "";
+  challengeScore = { correct: 0, total: 0 };
+  updateScoreBox();
+
+  order.forEach((m, idx) => {
+    const sign = Math.random() < 0.5 ? 1 : -1;
+    const shift = (Math.random() * 0.6 - 0.3);
+    const card = document.createElement('div');
+    card.className = 'challenge-card';
+    const cardId = 'ch' + idx;
+    card.innerHTML = buildSvg(m, sign, shift, false) +
+      `<div class="guess-btns" id="${cardId}-btns">
+        ${[1,2,3,4].map(n => `<button class="guess-btn" onclick="guess('${cardId}', ${m}, ${n}, this)">${n}</button>`).join("")}
+      </div>
+      <div class="explain" id="${cardId}-explain"></div>`;
+    grid.appendChild(card);
+  });
+}
+
+function guess(cardId, correctM, pickedM, btn) {
+  const btns = document.getElementById(cardId + '-btns').querySelectorAll('button');
+  btns.forEach(b => b.disabled = true);
+  challengeScore.total++;
+  if (pickedM === correctM) {
+    btn.classList.add('correct-pick');
+    challengeScore.correct++;
+    document.getElementById(cardId + '-explain').textContent = "✅ " + EXPLAIN_TEXT[correctM];
+  } else {
+    btn.classList.add('wrong-pick');
+    btns.forEach(b => { if (parseInt(b.textContent) === correctM) b.classList.add('correct-pick'); });
+    document.getElementById(cardId + '-explain').textContent = "❌ It was " + correctM + ": " + EXPLAIN_TEXT[correctM];
+  }
+  updateScoreBox();
+}
+
+function updateScoreBox() {
+  document.getElementById('scoreBox').textContent = `Score: ${challengeScore.correct} / ${challengeScore.total}`;
+}
+
+/* ---------- Tabs ---------- */
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.getElementById('tabRound1').classList.toggle('active', id === 'round1');
+  document.getElementById('tabRound2').classList.toggle('active', id === 'round2');
+}
+
+/* ---------- Init ---------- */
+setupRound1();
+setupRound2();
+</script>
+</body>
+</html>
