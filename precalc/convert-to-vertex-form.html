@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vertex Form Practice</title>
+<style>
+  :root {
+    --purple: #7c3aed;
+    --purple-dark: #5b2a8c;
+    --purple-light: #f5edfd;
+    --purple-border: #dccdf0;
+    --green: #1f9d55;
+    --red: #d64545;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    background: #fbf9fd;
+    color: #2a2230;
+    margin: 0;
+    padding: 20px;
+  }
+  .wrap { max-width: 760px; margin: 0 auto; }
+  h1 { color: var(--purple-dark); font-size: 22px; margin-bottom: 2px; }
+  .subtitle { color: #6b6070; font-size: 13px; margin-bottom: 14px; }
+
+  .legend {
+    background: var(--purple-light);
+    border: 1.5px solid var(--purple-border);
+    border-left: 5px solid var(--purple);
+    border-radius: 8px;
+    padding: 10px 16px;
+    font-size: 13.5px;
+    margin-bottom: 18px;
+    text-align: center;
+    font-family: 'Cambria Math', Cambria, Georgia, serif;
+  }
+  .legend .lbl {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    color: var(--purple-dark);
+    font-weight: 700;
+    font-size: 12px;
+    margin-right: 6px;
+  }
+
+  .dots { display: flex; gap: 8px; justify-content: center; margin-bottom: 16px; }
+  .dot {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    border: 2px solid var(--purple-border);
+    background: white;
+    color: var(--purple-dark);
+    font-size: 12px;
+    font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+  }
+  .dot.active { background: var(--purple); color: white; border-color: var(--purple); }
+  .dot.solved { background: #eafaf0; border-color: var(--green); color: var(--green); }
+
+  .problem-card {
+    background: white;
+    border: 1.5px solid var(--purple-border);
+    border-radius: 10px;
+    padding: 16px 18px;
+    margin-bottom: 16px;
+  }
+  .equation-display {
+    font-family: 'Cambria Math', Cambria, Georgia, serif;
+    font-size: 20px;
+    text-align: center;
+    color: var(--purple-dark);
+    margin-bottom: 14px;
+    font-weight: 600;
+  }
+  .equation-display sup { font-size: 0.7em; }
+
+  .worklog {
+    background: #faf7ff;
+    border: 1px dashed var(--purple-border);
+    border-radius: 8px;
+    padding: 10px 14px;
+    margin-bottom: 16px;
+    min-height: 20px;
+  }
+  .worklog .line {
+    font-family: 'Cambria Math', Cambria, Georgia, serif;
+    font-size: 15px;
+    padding: 3px 0;
+    color: #2a2230;
+  }
+  .worklog .line.final { color: var(--green); font-weight: 700; }
+  .worklog .placeholder { font-size: 11.5px; color: #a08cc0; font-family: 'Helvetica Neue', Arial, sans-serif; }
+
+  .step-block { margin-bottom: 14px; }
+  .step-block.disabled { opacity: 0.4; pointer-events: none; }
+  .step-label {
+    font-size: 12.5px;
+    font-weight: 700;
+    color: var(--purple-dark);
+    margin-bottom: 6px;
+  }
+  .btn-row { display: flex; gap: 8px; flex-wrap: wrap; }
+  .opt-btn {
+    background: white;
+    border: 1.5px solid var(--purple);
+    color: var(--purple);
+    padding: 7px 14px;
+    border-radius: 7px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'Cambria Math', Cambria, Georgia, serif;
+  }
+  .opt-btn:hover:not(:disabled) { background: var(--purple-light); }
+  .opt-btn.correct-pick { background: var(--green); border-color: var(--green); color: white; }
+  .opt-btn.wrong-pick { background: var(--red); border-color: var(--red); color: white; }
+  .opt-btn:disabled { cursor: default; opacity: 0.55; }
+  .opt-btn.mc { display: block; width: 100%; text-align: left; margin-bottom: 6px; }
+  .feedback { font-size: 11.5px; color: #6b6070; margin-top: 5px; min-height: 15px; }
+
+  .success-banner {
+    text-align: center;
+    background: #eafaf0;
+    border: 1.5px solid var(--green);
+    color: #16713d;
+    border-radius: 8px;
+    padding: 10px;
+    font-size: 13.5px;
+    font-weight: 600;
+    margin-top: 4px;
+  }
+
+  .btn-nav-row { display: flex; justify-content: center; gap: 10px; margin-top: 6px; }
+  .btn {
+    background: var(--purple);
+    color: white;
+    border: none;
+    padding: 9px 18px;
+    border-radius: 7px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .btn:hover { background: var(--purple-dark); }
+  .btn.secondary { background: white; color: var(--purple); border: 1.5px solid var(--purple); }
+  .btn.secondary:hover { background: var(--purple-light); }
+
+  .overall-complete {
+    text-align: center;
+    background: #eafaf0;
+    border: 1.5px solid var(--green);
+    color: #16713d;
+    border-radius: 8px;
+    padding: 14px;
+    font-size: 15px;
+    font-weight: 700;
+    margin-top: 14px;
+    display: none;
+  }
+  .overall-complete.show { display: block; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Vertex Form Practice</h1>
+  <p class="subtitle">Complete the square to rewrite each function in vertex form</p>
+
+  <div class="legend"><span class="lbl">VERTEX FORM:</span> f(x) = a(x &minus; h)<sup>2</sup> + k</div>
+
+  <div class="dots" id="dots"></div>
+
+  <div class="problem-card" id="problemCard"></div>
+
+  <div class="overall-complete" id="overallComplete">🎉 Nice work — all four functions converted to vertex form!</div>
+
+  <div class="btn-nav-row">
+    <button class="btn secondary" onclick="prevProblem()">&larr; Previous</button>
+    <button class="btn" onclick="nextProblem()">Next Problem &rarr;</button>
+  </div>
+</div>
+
+<script>
+/* ---------- Problem bank ---------- */
+const PROBLEMS = [
+  {
+    display: "f(x) = x<sup>2</sup> + 4x &minus; 3",
+    needsFactor: false,
+    step2Options: [2, 4, 8, 16],
+    step2Correct: 4,
+    step2Label: "Half of 4 is 2, squared is 4. What number completes the square?",
+    lineAfterStep2: "f(x) = (x<sup>2</sup> + 4x + 4) &minus; 4 &minus; 3",
+    finalOptions: [
+      { text: "(x + 2)² &minus; 7", correct: true },
+      { text: "(x + 2)² &minus; 3", correct: false },
+      { text: "(x + 4)² &minus; 7", correct: false },
+      { text: "(x + 2)² + 7", correct: false }
+    ],
+    finalLine: "f(x) = (x + 2)<sup>2</sup> &minus; 7  &rarr;  vertex (&minus;2, &minus;7)"
+  },
+  {
+    display: "f(x) = x<sup>2</sup> &minus; 12x + 5",
+    needsFactor: false,
+    step2Options: [36, 144, 6, 72],
+    step2Correct: 36,
+    step2Label: "Half of &minus;12 is &minus;6, squared is 36. What number completes the square?",
+    lineAfterStep2: "f(x) = (x<sup>2</sup> &minus; 12x + 36) &minus; 36 + 5",
+    finalOptions: [
+      { text: "(x &minus; 6)² &minus; 31", correct: true },
+      { text: "(x &minus; 6)² &minus; 7", correct: false },
+      { text: "(x &minus; 12)² &minus; 31", correct: false },
+      { text: "(x &minus; 6)² + 31", correct: false }
+    ],
+    finalLine: "f(x) = (x &minus; 6)<sup>2</sup> &minus; 31  &rarr;  vertex (6, &minus;31)"
+  },
+  {
+    display: "f(x) = 2x<sup>2</sup> + 12x + 1",
+    needsFactor: true,
+    step1Options: [2, 12, 1, 6],
+    step1Correct: 2,
+    step1Label: "First, factor the leading coefficient out of the x² and x terms. What is a?",
+    lineAfterStep1: "f(x) = 2(x<sup>2</sup> + 6x) + 1",
+    step2Options: [9, 3, 36, 18],
+    step2Correct: 9,
+    step2Label: "Inside the parentheses: half of 6 is 3, squared is 9. What number completes the square?",
+    lineAfterStep2: "f(x) = 2(x<sup>2</sup> + 6x + 9) &minus; 18 + 1",
+    finalOptions: [
+      { text: "2(x + 3)² &minus; 17", correct: true },
+      { text: "2(x + 3)² + 1", correct: false },
+      { text: "(x + 3)² &minus; 17", correct: false },
+      { text: "2(x + 6)² &minus; 17", correct: false }
+    ],
+    finalLine: "f(x) = 2(x + 3)<sup>2</sup> &minus; 17  &rarr;  vertex (&minus;3, &minus;17)"
+  },
+  {
+    display: "f(x) = &minus;3x<sup>2</sup> + 18x &minus; 4",
+    needsFactor: true,
+    step1Options: [-3, 3, 18, -4],
+    step1Correct: -3,
+    step1Label: "First, factor the leading coefficient out of the x² and x terms. What is a?",
+    lineAfterStep1: "f(x) = &minus;3(x<sup>2</sup> &minus; 6x) &minus; 4",
+    step2Options: [9, 3, 36, -9],
+    step2Correct: 9,
+    step2Label: "Inside the parentheses: half of &minus;6 is &minus;3, squared is 9. What number completes the square?",
+    lineAfterStep2: "f(x) = &minus;3(x<sup>2</sup> &minus; 6x + 9) + 27 &minus; 4",
+    finalOptions: [
+      { text: "&minus;3(x &minus; 3)² + 23", correct: true },
+      { text: "&minus;3(x &minus; 3)² &minus; 23", correct: false },
+      { text: "&minus;3(x + 3)² + 23", correct: false },
+      { text: "3(x &minus; 3)² + 23", correct: false }
+    ],
+    finalLine: "f(x) = &minus;3(x &minus; 3)<sup>2</sup> + 23  &rarr;  vertex (3, 23)"
+  }
+];
+
+let currentProblem = 0;
+let states = PROBLEMS.map(p => ({
+  step1: p.needsFactor ? 'unsolved' : 'skip',
+  step2: 'unsolved',
+  step3: 'unsolved',
+  step1Wrong: [], step2Wrong: [], step3Wrong: []
+}));
+
+function shuffle(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function renderDots() {
+  const dotsEl = document.getElementById('dots');
+  dotsEl.innerHTML = "";
+  PROBLEMS.forEach((_, idx) => {
+    const solved = states[idx].step3 === 'correct';
+    const dot = document.createElement('div');
+    dot.className = 'dot' + (idx === currentProblem ? ' active' : '') + (solved ? ' solved' : '');
+    dot.textContent = idx + 1;
+    dot.onclick = () => { currentProblem = idx; renderProblem(); };
+    dotsEl.appendChild(dot);
+  });
+  const allSolved = states.every(s => s.step3 === 'correct');
+  document.getElementById('overallComplete').className = 'overall-complete' + (allSolved ? ' show' : '');
+}
+
+function renderWorklog(problem, state) {
+  let html = `<div class="line">${problem.display}</div>`;
+  if (problem.needsFactor && state.step1 === 'correct') {
+    html += `<div class="line">${problem.lineAfterStep1}</div>`;
+  }
+  if (state.step2 === 'correct') {
+    html += `<div class="line">${problem.lineAfterStep2}</div>`;
+  }
+  if (state.step3 === 'correct') {
+    html += `<div class="line final">${problem.finalLine}</div>`;
+  }
+  if (state.step2 !== 'correct' && !(problem.needsFactor && state.step1 === 'correct')) {
+    html += `<div class="placeholder">Work will appear here as you complete each step below&hellip;</div>`;
+  }
+  document.getElementById('worklogEl').innerHTML = html;
+}
+
+function buildOptRow(options, correctVal, wrongArr, statusKey, stepFn) {
+  return options.map(opt => {
+    let cls = 'opt-btn';
+    let disabled = '';
+    const isCorrectOpt = (opt === correctVal);
+    if (statusKey === 'correct') {
+      disabled = 'disabled';
+      if (isCorrectOpt) cls += ' correct-pick';
+    } else if (wrongArr.includes(opt)) {
+      cls += ' wrong-pick';
+      disabled = 'disabled';
+    }
+    return `<button class="${cls}" ${disabled} onclick='${stepFn}(${opt})'>${opt}</button>`;
+  }).join("");
+}
+
+function buildFinalOptions(problem, state) {
+  return problem.finalOptions.map((opt, idx) => {
+    let cls = 'opt-btn mc';
+    let disabled = '';
+    if (state.step3 === 'correct') {
+      disabled = 'disabled';
+      if (opt.correct) cls += ' correct-pick';
+    } else if (state.step3Wrong.includes(idx)) {
+      cls += ' wrong-pick';
+      disabled = 'disabled';
+    }
+    return `<button class="${cls}" ${disabled} onclick='answerStep3(${idx})'>${opt.text}</button>`;
+  }).join("");
+}
+
+function renderProblem() {
+  const problem = PROBLEMS[currentProblem];
+  const state = states[currentProblem];
+  const card = document.getElementById('problemCard');
+
+  let html = `<div class="equation-display">${problem.display}</div>`;
+  html += `<div class="worklog" id="worklogEl"></div>`;
+
+  if (problem.needsFactor) {
+    const disabled1 = state.step1 !== 'unsolved' ? '' : '';
+    html += `<div class="step-block" id="step1Block">
+      <div class="step-label">Step 1 &mdash; ${problem.step1Label}</div>
+      <div class="btn-row">${buildOptRow(problem.step1Options, problem.step1Correct, state.step1Wrong, state.step1, 'answerStep1')}</div>
+      <div class="feedback">${state.step1 === 'correct' ? '✅ Correct!' : (state.step1Wrong.length ? '❌ Try again.' : '')}</div>
+    </div>`;
+  }
+
+  const step2Enabled = problem.needsFactor ? (state.step1 === 'correct') : true;
+  html += `<div class="step-block ${step2Enabled ? '' : 'disabled'}" id="step2Block">
+    <div class="step-label">Step ${problem.needsFactor ? 2 : 1} &mdash; ${problem.step2Label}</div>
+    <div class="btn-row">${buildOptRow(problem.step2Options, problem.step2Correct, state.step2Wrong, state.step2, 'answerStep2')}</div>
+    <div class="feedback">${state.step2 === 'correct' ? '✅ Correct!' : (state.step2Wrong.length ? '❌ Try again.' : '')}</div>
+  </div>`;
+
+  const step3Enabled = state.step2 === 'correct';
+  html += `<div class="step-block ${step3Enabled ? '' : 'disabled'}" id="step3Block">
+    <div class="step-label">Step ${problem.needsFactor ? 3 : 2} &mdash; Which is the correct vertex form?</div>
+    <div>${buildFinalOptions(problem, state)}</div>
+    <div class="feedback">${state.step3 === 'correct' ? '✅ Correct!' : (state.step3Wrong.length ? '❌ Try again.' : '')}</div>
+  </div>`;
+
+  if (state.step3 === 'correct') {
+    html += `<div class="success-banner">🎉 Vertex form found! Vertex form and vertex are shown above.</div>`;
+  }
+
+  card.innerHTML = html;
+  renderWorklog(problem, state);
+  renderDots();
+}
+
+function answerStep1(val) {
+  const problem = PROBLEMS[currentProblem];
+  const state = states[currentProblem];
+  if (state.step1 === 'correct') return;
+  if (val === problem.step1Correct) {
+    state.step1 = 'correct';
+  } else {
+    state.step1Wrong.push(val);
+  }
+  renderProblem();
+}
+
+function answerStep2(val) {
+  const problem = PROBLEMS[currentProblem];
+  const state = states[currentProblem];
+  if (problem.needsFactor && state.step1 !== 'correct') return;
+  if (state.step2 === 'correct') return;
+  if (val === problem.step2Correct) {
+    state.step2 = 'correct';
+  } else {
+    state.step2Wrong.push(val);
+  }
+  renderProblem();
+}
+
+function answerStep3(idx) {
+  const problem = PROBLEMS[currentProblem];
+  const state = states[currentProblem];
+  if (state.step2 !== 'correct') return;
+  if (state.step3 === 'correct') return;
+  const chosen = problem.finalOptions[idx];
+  if (chosen && chosen.correct) {
+    state.step3 = 'correct';
+  } else {
+    state.step3Wrong.push(idx);
+  }
+  renderProblem();
+}
+
+function nextProblem() {
+  currentProblem = (currentProblem + 1) % PROBLEMS.length;
+  renderProblem();
+}
+function prevProblem() {
+  currentProblem = (currentProblem - 1 + PROBLEMS.length) % PROBLEMS.length;
+  renderProblem();
+}
+
+/* ---------- Init ---------- */
+renderProblem();
+</script>
+</body>
+</html>
