@@ -4,11 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Completing the Square Practice</title>
-    <!-- Include KaTeX CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
-    <!-- Include KaTeX JS -->
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body);"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
 
     <style>
         :root {
@@ -110,6 +108,7 @@
             font-size: 0.95rem;
             color: #4a5568;
             margin-bottom: 16px;
+            text-align: center;
         }
 
         .input-group {
@@ -209,7 +208,7 @@
 <div class="container">
     <header>
         <h1>Completing the Square Practice</h1>
-        <p>Transform standard quadratic equations into vertex form: $f(x) = a(x - h)^2 + k$</p>
+        <p>Transform standard quadratic equations into vertex form: \(f(x) = a(x - h)^2 + k\)</p>
     </header>
 
     <div class="quiz-card">
@@ -217,66 +216,60 @@
             <div class="progress-fill" id="progressFill"></div>
         </div>
 
-        <!-- Problem Container -->
         <div id="quizForm">
-            <!-- Problem 1 -->
             <div class="problem-container active" data-index="0">
                 <div class="problem-title">Problem 1 of 4</div>
-                <div class="math-display">$$f(x) = x^2 + 4x - 3$$</div>
-                <div class="instructions">Rewrite the function in vertex form. (Example format: <code>(x+2)^2-7</code>)</div>
+                <div class="math-display">\(f(x) = x^2 + 4x - 3\)</div>
+                <div class="instructions">Rewrite the function in vertex form: \(a(x - h)^2 + k\)</div>
                 <div class="input-group">
-                    <span>$f(x) =$</span>
-                    <input type="text" class="user-answer" placeholder="e.g. (x+2)^2-7">
+                    <span>\(f(x) =\)</span>
+                    <input type="text" class="user-answer" data-index="0">
                 </div>
                 <button class="btn" onclick="checkAnswer(0)">Submit Answer</button>
                 <div class="feedback" id="feedback-0"></div>
-                <div class="hint-box">Tip: Take half of the linear coefficient ($4$), square it to complete the square, and balance outside.</div>
+                <div class="hint-box">Tip: Take half of the linear coefficient (\(4\)), square it to complete the square, and balance outside.</div>
             </div>
 
-            <!-- Problem 2 -->
             <div class="problem-container" data-index="1">
                 <div class="problem-title">Problem 2 of 4</div>
-                <div class="math-display">$$f(x) = x^2 - 12x + 5$$</div>
-                <div class="instructions">Rewrite the function in vertex form.</div>
+                <div class="math-display">\(f(x) = x^2 - 12x + 5\)</div>
+                <div class="instructions">Rewrite the function in vertex form: \(a(x - h)^2 + k\)</div>
                 <div class="input-group">
-                    <span>$f(x) =$</span>
-                    <input type="text" class="user-answer" placeholder="e.g. (x-6)^2-31">
+                    <span>\(f(x) =\)</span>
+                    <input type="text" class="user-answer" data-index="1">
                 </div>
                 <button class="btn" onclick="checkAnswer(1)">Submit Answer</button>
                 <div class="feedback" id="feedback-1"></div>
-                <div class="hint-box">Tip: Half of $-12$ is $-6$, and $(-6)^2 = 36$. Adjust the constant at the end accordingly.</div>
+                <div class="hint-box">Tip: Half of \(-12\) is \(-6\), and \((-6)^2 = 36\). Adjust the constant at the end accordingly.</div>
             </div>
 
-            <!-- Problem 3 -->
             <div class="problem-container" data-index="2">
                 <div class="problem-title">Problem 3 of 4</div>
-                <div class="math-display">$$f(x) = 2x^2 + 12x + 1$$</div>
-                <div class="instructions">Rewrite the function in vertex form. (Factor out the leading coefficient first!)</div>
+                <div class="math-display">\(f(x) = 2x^2 + 12x + 1\)</div>
+                <div class="instructions">Rewrite the function in vertex form: \(a(x - h)^2 + k\) (Factor out the leading coefficient first!)</div>
                 <div class="input-group">
-                    <span>$f(x) =$</span>
-                    <input type="text" class="user-answer" placeholder="e.g. 2(x+3)^2-17">
+                    <span>\(f(x) =\)</span>
+                    <input type="text" class="user-answer" data-index="2">
                 </div>
                 <button class="btn" onclick="checkAnswer(2)">Submit Answer</button>
                 <div class="feedback" id="feedback-2"></div>
-                <div class="hint-box">Tip: Factor out $2$ from the $x$ terms first: $2(x^2 + 6x) + 1$.</div>
+                <div class="hint-box">Tip: Factor out \(2\) from the \(x\) terms first: \(2(x^2 + 6x) + 1\).</div>
             </div>
 
-            <!-- Problem 4 -->
             <div class="problem-container" data-index="3">
                 <div class="problem-title">Problem 4 of 4</div>
-                <div class="math-display">$$f(x) = -3x^2 + 18x - 4$$</div>
-                <div class="instructions">Rewrite the function in vertex form. Watch out for negative signs!</div>
+                <div class="math-display">\(f(x) = -3x^2 + 18x - 4\)</div>
+                <div class="instructions">Rewrite the function in vertex form: \(a(x - h)^2 + k\) (Watch out for negative signs!)</div>
                 <div class="input-group">
-                    <span>$f(x) =$</span>
-                    <input type="text" class="user-answer" placeholder="e.g. -3(x-3)^2+23">
+                    <span>\(f(x) =\)</span>
+                    <input type="text" class="user-answer" data-index="3">
                 </div>
                 <button class="btn" onclick="checkAnswer(3)">Submit Answer</button>
                 <div class="feedback" id="feedback-3"></div>
-                <div class="hint-box">Tip: Factor out $-3$ from the $x$ terms carefully before completing the square.</div>
+                <div class="hint-box">Tip: Factor out \(-3\) from the \(x\) terms carefully before completing the square.</div>
             </div>
         </div>
 
-        <!-- Score Screen -->
         <div class="score-screen" id="scoreScreen">
             <h2>Activity Complete! 🎉</h2>
             <p id="finalScoreText">You finished all the practice problems.</p>
@@ -286,11 +279,23 @@
 </div>
 
 <script>
+    // Safe initialization for KaTeX rendering
+    document.addEventListener("DOMContentLoaded", function () {
+        if (typeof renderMathInElement === "function") {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: "\\(", right: "\\)", display: false},
+                    {left: "\\[", right: "\\]", display: true}
+                ]
+            });
+        }
+    });
+
     const answers = [
-        ["(x+2)^2-7", "(x + 2)^2 - 7"],
-        ["(x-6)^2-31", "(x - 6)^2 - 31"],
-        ["2(x+3)^2-17", "2(x + 3)^2 - 17", "2*(x+3)^2-17"],
-        ["-3(x-3)^2+23", "-3(x - 3)^2 + 23", "-3*(x-3)^2+23"]
+        ["(x+2)^2-7", "(x + 2)^2 - 7", "(x+2)²-7", "(x + 2)² - 7", "1(x+2)^2-7", "1(x + 2)^2 - 7", "1(x+2)²-7", "1(x + 2)² - 7"],
+        ["(x-6)^2-31", "(x - 6)^2 - 31", "(x-6)²-31", "(x - 6)² - 31", "1(x-6)^2-31", "1(x - 6)^2 - 31", "1(x-6)²-31", "1(x - 6)² - 31"],
+        ["2(x+3)^2-17", "2(x + 3)^2 - 17", "2*(x+3)^2-17", "2(x+3)²-17", "2(x + 3)² - 17"],
+        ["-3(x-3)^2+23", "-3(x - 3)^2 + 23", "-3*(x-3)^2+23", "-3(x-3)²+23", "-3(x - 3)² - 23"]
     ];
 
     let currentProblem = 0;
@@ -302,12 +307,13 @@
     }
 
     function normalizeString(str) {
-        return str.replace(/\s+/g, '').toLowerCase();
+        return str.replace(/\s+/g, '').replace(/²/g, '^2').toLowerCase();
     }
 
     function checkAnswer(index) {
         const container = document.querySelector(`.problem-container[data-index="${index}"]`);
-        const inputVal = container.querySelector('.user-answer').value;
+        const inputField = container.querySelector('.user-answer');
+        const inputVal = inputField.value;
         const feedback = document.getElementById(`feedback-${index}`);
         
         const normalizedInput = normalizeString(inputVal);
@@ -324,8 +330,9 @@
                     const nextContainer = document.querySelector(`.problem-container[data-index="${currentProblem}"]`);
                     nextContainer.classList.add('active');
                     updateProgress();
-                    // Re-render math for newly shown elements if necessary
-                    renderMathInElement(nextContainer);
+                    if (typeof renderMathInElement === "function") {
+                        renderMathInElement(nextContainer);
+                    }
                 } else {
                     document.getElementById('quizForm').style.display = 'none';
                     document.getElementById('scoreScreen').style.display = 'block';
@@ -347,13 +354,16 @@
         document.querySelectorAll('.user-answer').forEach(input => input.value = '');
         document.querySelectorAll('.feedback').forEach(f => f.className = 'feedback');
         updateProgress();
-        renderMathInElement(document.body);
+        if (typeof renderMathInElement === "function") {
+            renderMathInElement(document.body);
+        }
     }
 
-    document.querySelectorAll('.user-answer').forEach((input, index) => {
+    document.querySelectorAll('.user-answer').forEach((input) => {
         input.addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
-                checkAnswer(index);
+                const idx = parseInt(this.getAttribute('data-index'), 10);
+                checkAnswer(idx);
             }
         });
     });
