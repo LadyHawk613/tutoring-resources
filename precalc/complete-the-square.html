@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Completing the Square Practice</title>
+    <!-- Include KaTeX CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <!-- Include KaTeX JS -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body);"></script>
+
+    <style>
+        :root {
+            --primary-purple: #6b46c1;
+            --light-purple: #f3e8ff;
+            --dark-purple: #44337a;
+            --success: #2f855a;
+            --error: #c53030;
+            --bg-color: #f7fafc;
+            --card-bg: #ffffff;
+            --text-color: #2d3748;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 750px;
+        }
+
+        header {
+            background-color: var(--primary-purple);
+            color: white;
+            padding: 24px;
+            border-radius: 12px 12px 0 0;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        header h1 {
+            margin: 0 0 8px 0;
+            font-size: 1.8rem;
+        }
+
+        header p {
+            margin: 0;
+            opacity: 0.95;
+            font-size: 1rem;
+        }
+
+        .quiz-card {
+            background-color: var(--card-bg);
+            padding: 24px;
+            border-radius: 0 0 12px 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+        }
+
+        .progress-bar {
+            background-color: #e2e8f0;
+            height: 8px;
+            border-radius: 4px;
+            margin-bottom: 24px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background-color: var(--primary-purple);
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .problem-container {
+            display: none;
+        }
+
+        .problem-container.active {
+            display: block;
+        }
+
+        .problem-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--dark-purple);
+            margin-bottom: 12px;
+        }
+
+        .math-display {
+            font-size: 1.5rem;
+            background-color: var(--light-purple);
+            color: var(--dark-purple);
+            padding: 16px;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .instructions {
+            font-size: 0.95rem;
+            color: #4a5568;
+            margin-bottom: 16px;
+        }
+
+        .input-group {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .input-group span {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        input[type="text"] {
+            font-size: 1.2rem;
+            padding: 10px 14px;
+            border: 2px solid #cbd5e0;
+            border-radius: 8px;
+            width: 220px;
+            text-align: center;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        input[type="text"]:focus {
+            border-color: var(--primary-purple);
+        }
+
+        .btn {
+            background-color: var(--primary-purple);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .btn:hover {
+            background-color: var(--dark-purple);
+        }
+
+        .feedback {
+            margin-top: 16px;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: 500;
+            text-align: center;
+            display: none;
+        }
+
+        .feedback.correct {
+            background-color: #c6f6d5;
+            color: var(--success);
+            display: block;
+        }
+
+        .feedback.incorrect {
+            background-color: #fed7d7;
+            color: var(--error);
+            display: block;
+        }
+
+        .hint-box {
+            margin-top: 12px;
+            font-size: 0.9rem;
+            color: #718096;
+            text-align: center;
+        }
+
+        .score-screen {
+            text-align: center;
+            display: none;
+        }
+
+        .score-screen h2 {
+            color: var(--dark-purple);
+            font-size: 2rem;
+            margin-bottom: 12px;
+        }
+
+        .score-screen p {
+            font-size: 1.2rem;
+            margin-bottom: 24px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Completing the Square Practice</h1>
+        <p>Transform standard quadratic equations into vertex form: $f(x) = a(x - h)^2 + k$</p>
+    </header>
+
+    <div class="quiz-card">
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+
+        <!-- Problem Container -->
+        <div id="quizForm">
+            <!-- Problem 1 -->
+            <div class="problem-container active" data-index="0">
+                <div class="problem-title">Problem 1 of 4</div>
+                <div class="math-display">$$f(x) = x^2 + 4x - 3$$</div>
+                <div class="instructions">Rewrite the function in vertex form. (Example format: <code>(x+2)^2-7</code>)</div>
+                <div class="input-group">
+                    <span>$f(x) =$</span>
+                    <input type="text" class="user-answer" placeholder="e.g. (x+2)^2-7">
+                </div>
+                <button class="btn" onclick="checkAnswer(0)">Submit Answer</button>
+                <div class="feedback" id="feedback-0"></div>
+                <div class="hint-box">Tip: Take half of the linear coefficient ($4$), square it to complete the square, and balance outside.</div>
+            </div>
+
+            <!-- Problem 2 -->
+            <div class="problem-container" data-index="1">
+                <div class="problem-title">Problem 2 of 4</div>
+                <div class="math-display">$$f(x) = x^2 - 12x + 5$$</div>
+                <div class="instructions">Rewrite the function in vertex form.</div>
+                <div class="input-group">
+                    <span>$f(x) =$</span>
+                    <input type="text" class="user-answer" placeholder="e.g. (x-6)^2-31">
+                </div>
+                <button class="btn" onclick="checkAnswer(1)">Submit Answer</button>
+                <div class="feedback" id="feedback-1"></div>
+                <div class="hint-box">Tip: Half of $-12$ is $-6$, and $(-6)^2 = 36$. Adjust the constant at the end accordingly.</div>
+            </div>
+
+            <!-- Problem 3 -->
+            <div class="problem-container" data-index="2">
+                <div class="problem-title">Problem 3 of 4</div>
+                <div class="math-display">$$f(x) = 2x^2 + 12x + 1$$</div>
+                <div class="instructions">Rewrite the function in vertex form. (Factor out the leading coefficient first!)</div>
+                <div class="input-group">
+                    <span>$f(x) =$</span>
+                    <input type="text" class="user-answer" placeholder="e.g. 2(x+3)^2-17">
+                </div>
+                <button class="btn" onclick="checkAnswer(2)">Submit Answer</button>
+                <div class="feedback" id="feedback-2"></div>
+                <div class="hint-box">Tip: Factor out $2$ from the $x$ terms first: $2(x^2 + 6x) + 1$.</div>
+            </div>
+
+            <!-- Problem 4 -->
+            <div class="problem-container" data-index="3">
+                <div class="problem-title">Problem 4 of 4</div>
+                <div class="math-display">$$f(x) = -3x^2 + 18x - 4$$</div>
+                <div class="instructions">Rewrite the function in vertex form. Watch out for negative signs!</div>
+                <div class="input-group">
+                    <span>$f(x) =$</span>
+                    <input type="text" class="user-answer" placeholder="e.g. -3(x-3)^2+23">
+                </div>
+                <button class="btn" onclick="checkAnswer(3)">Submit Answer</button>
+                <div class="feedback" id="feedback-3"></div>
+                <div class="hint-box">Tip: Factor out $-3$ from the $x$ terms carefully before completing the square.</div>
+            </div>
+        </div>
+
+        <!-- Score Screen -->
+        <div class="score-screen" id="scoreScreen">
+            <h2>Activity Complete! 🎉</h2>
+            <p id="finalScoreText">You finished all the practice problems.</p>
+            <button class="btn" onclick="restartQuiz()">Try Again</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const answers = [
+        ["(x+2)^2-7", "(x + 2)^2 - 7"],
+        ["(x-6)^2-31", "(x - 6)^2 - 31"],
+        ["2(x+3)^2-17", "2(x + 3)^2 - 17", "2*(x+3)^2-17"],
+        ["-3(x-3)^2+23", "-3(x - 3)^2 + 23", "-3*(x-3)^2+23"]
+    ];
+
+    let currentProblem = 0;
+    const totalProblems = answers.length;
+
+    function updateProgress() {
+        const progress = (currentProblem / totalProblems) * 100;
+        document.getElementById('progressFill').style.width = `${progress}%`;
+    }
+
+    function normalizeString(str) {
+        return str.replace(/\s+/g, '').toLowerCase();
+    }
+
+    function checkAnswer(index) {
+        const container = document.querySelector(`.problem-container[data-index="${index}"]`);
+        const inputVal = container.querySelector('.user-answer').value;
+        const feedback = document.getElementById(`feedback-${index}`);
+        
+        const normalizedInput = normalizeString(inputVal);
+        const validOptions = answers[index].map(normalizeString);
+
+        if (validOptions.includes(normalizedInput)) {
+            feedback.className = "feedback correct";
+            feedback.innerHTML = "Correct! Great job completing the square.";
+            
+            setTimeout(() => {
+                currentProblem++;
+                if (currentProblem < totalProblems) {
+                    container.classList.remove('active');
+                    const nextContainer = document.querySelector(`.problem-container[data-index="${currentProblem}"]`);
+                    nextContainer.classList.add('active');
+                    updateProgress();
+                    // Re-render math for newly shown elements if necessary
+                    renderMathInElement(nextContainer);
+                } else {
+                    document.getElementById('quizForm').style.display = 'none';
+                    document.getElementById('scoreScreen').style.display = 'block';
+                    document.getElementById('progressFill').style.width = '100%';
+                }
+            }, 1500);
+        } else {
+            feedback.className = "feedback incorrect";
+            feedback.innerHTML = "Not quite right. Check your arithmetic or check how you factored out the leading coefficient!";
+        }
+    }
+
+    function restartQuiz() {
+        currentProblem = 0;
+        document.getElementById('scoreScreen').style.display = 'none';
+        document.getElementById('quizForm').style.display = 'block';
+        document.querySelectorAll('.problem-container').forEach(c => c.classList.remove('active'));
+        document.querySelector('.problem-container[data-index="0"]').classList.add('active');
+        document.querySelectorAll('.user-answer').forEach(input => input.value = '');
+        document.querySelectorAll('.feedback').forEach(f => f.className = 'feedback');
+        updateProgress();
+        renderMathInElement(document.body);
+    }
+
+    document.querySelectorAll('.user-answer').forEach((input, index) => {
+        input.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                checkAnswer(index);
+            }
+        });
+    });
+
+    updateProgress();
+</script>
+
+</body>
+</html>
