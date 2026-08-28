@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Find the Hidden Multiplicity</title>
+<style>
+  :root {
+    --purple: #7c3aed;
+    --purple-dark: #5b2a8c;
+    --purple-light: #f5edfd;
+    --purple-border: #dccdf0;
+    --green: #1f9d55;
+    --red: #d64545;
+    --amber: #c8860a;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    background: #fbf9fd;
+    color: #2a2230;
+    margin: 0;
+    padding: 20px;
+  }
+  .wrap { max-width: 780px; margin: 0 auto; }
+  h1 { color: var(--purple-dark); font-size: 23px; margin-bottom: 2px; }
+  .subtitle { color: #6b6070; font-size: 13px; margin-bottom: 16px; }
+
+  .dots { display: flex; gap: 8px; justify-content: center; margin-bottom: 16px; }
+  .dot {
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    border: 2px solid var(--purple-border);
+    background: white;
+    color: var(--purple-dark);
+    font-size: 12px;
+    font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+  }
+  .dot.active { background: var(--purple); color: white; border-color: var(--purple); }
+  .dot.solved { background: #eafaf0; border-color: var(--green); color: var(--green); }
+
+  .equation-card {
+    background: var(--purple-light);
+    border: 1.5px solid var(--purple-border);
+    border-left: 5px solid var(--purple);
+    border-radius: 8px;
+    padding: 14px 18px;
+    text-align: center;
+    font-size: 19px;
+    font-family: 'Cambria Math', Cambria, Georgia, serif;
+    color: #2a2230;
+    margin-bottom: 16px;
+  }
+  .equation-card sup { color: var(--purple-dark); font-weight: 700; }
+  .equation-card sup.q { color: #a08cc0; }
+  .equation-card sup.revealed { color: var(--amber); }
+
+  .graph-box {
+    background: white;
+    border: 1.5px solid var(--purple-border);
+    border-radius: 10px;
+    padding: 10px;
+    margin-bottom: 18px;
+  }
+  .graph-box svg { width: 100%; height: auto; display: block; }
+
+  .root-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  .root-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #faf7ff;
+    border: 1.5px solid var(--purple-border);
+    border-radius: 8px;
+    padding: 8px 12px;
+    flex-wrap: wrap;
+  }
+  .root-row.solved { border-color: var(--green); background: #eafaf0; }
+  .root-row.revealed { border-color: var(--amber); background: #fdf5e6; }
+  .root-label { font-size: 13px; font-weight: 700; color: var(--purple-dark); min-width: 90px; }
+  .guess-btn {
+    width: 32px; height: 32px;
+    border-radius: 6px;
+    border: 1.5px solid var(--purple);
+    background: white;
+    color: var(--purple);
+    font-weight: 700;
+    cursor: pointer;
+    font-size: 13px;
+  }
+  .guess-btn:hover:not(:disabled) { background: var(--purple-light); }
+  .guess-btn.correct-pick { background: var(--green); border-color: var(--green); color: white; }
+  .guess-btn.wrong-pick { background: var(--red); border-color: var(--red); color: white; }
+  .guess-btn:disabled { cursor: default; opacity: .55; }
+  .row-feedback { font-size: 11.5px; color: #6b6070; flex-basis: 100%; }
+
+  .status-banner {
+    text-align: center;
+    background: #eafaf0;
+    border: 1.5px solid var(--green);
+    color: #16713d;
+    border-radius: 8px;
+    padding: 12px;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    display: none;
+  }
+  .status-banner.show { display: block; }
+
+  .btn-row { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-top: 6px; }
+  .btn {
+    background: var(--purple);
+    color: white;
+    border: none;
+    padding: 9px 18px;
+    border-radius: 7px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .btn:hover { background: var(--purple-dark); }
+  .btn.secondary { background: white; color: var(--purple); border: 1.5px solid var(--purple); }
+  .btn.secondary:hover { background: var(--purple-light); }
+  .btn:disabled { opacity: .5; cursor: default; }
+
+  .legend {
+    font-size: 12px;
+    color: #6b6070;
+    text-align: center;
+    margin-bottom: 16px;
+  }
+  .legend b { color: var(--purple-dark); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>🕵️ Find the Hidden Multiplicity</h1>
+  <p class="subtitle">Read the graph's behavior at each zero to figure out its hidden exponent</p>
+
+  <div class="legend"><b>Odd</b> exponent &rarr; crosses &nbsp;&bull;&nbsp; <b>Even</b> exponent &rarr; bounces &nbsp;&bull;&nbsp; higher exponent &rarr; flatter near that zero</div>
+
+  <div class="dots" id="dots"></div>
+
+  <div class="equation-card" id="equationCard"></div>
+
+  <div class="graph-box">
+    <svg id="graphSvg" viewBox="0 0 400 220" xmlns="http://www.w3.org/2000/svg"></svg>
+  </div>
+
+  <div class="root-controls" id="rootControls"></div>
+
+  <div class="status-banner" id="statusBanner"></div>
+
+  <div class="btn-row">
+    <button class="btn secondary" id="revealBtn" onclick="revealAll()">Reveal Full Answer</button>
+    <button class="btn secondary" onclick="prevProblem()">&larr; Previous</button>
+    <button class="btn" onclick="nextProblem()">Next Problem &rarr;</button>
+  </div>
+</div>
+
+<script>
+/* ---------- Problem bank ---------- */
+/* Each root: { r: root value, exp: true exponent } ; leadSign: +1 or -1 leading coefficient */
+const PROBLEMS = [
+  { leadSign: 1, roots: [ {r:-1, exp:2}, {r:3, exp:1} ] },
+  { leadSign: 1, roots: [ {r:-1, exp:2}, {r:2, exp:3}, {r:4, exp:1} ] },
+  { leadSign: -1, roots: [ {r:-3, exp:1}, {r:0, exp:4}, {r:2, exp:1} ] },
+  { leadSign: 1, roots: [ {r:-2, exp:2}, {r:1, exp:3}, {r:4, exp:2} ] }
+];
+const OPTIONS = [1, 2, 3, 4];
+
+let currentProblem = 0;
+let states = PROBLEMS.map(p => p.roots.map(() => ({ status: 'unsolved' })));
+
+/* ---------- Math / curve ---------- */
+function evalPoly(problem, x) {
+  let v = problem.leadSign;
+  problem.roots.forEach(rt => { v *= Math.pow(x - rt.r, rt.exp); });
+  return v;
+}
+
+function buildGraphSvg(problem, state) {
+  const rootVals = problem.roots.map(rt => rt.r);
+  const xMin = Math.min(...rootVals) - 1.6;
+  const xMax = Math.max(...rootVals) + 1.6;
+  const W = 400, H = 220;
+  const padL = 30, padR = 30, padT = 25, padB = 35;
+  const axisY = H - padB - (H - padT - padB) / 2 + 10; // roughly center, adjusted below
+  const plotTop = padT, plotBottom = H - padB;
+  const midY = (plotTop + plotBottom) / 2;
+
+  function scaleXpx(x) { return padL + (x - xMin) / (xMax - xMin) * (W - padL - padR); }
+
+  // sample curve, compress with cube-root transform to keep shape readable
+  const N = 120;
+  const raw = [];
+  for (let i = 0; i <= N; i++) {
+    const x = xMin + i * (xMax - xMin) / N;
+    const v = evalPoly(problem, x);
+    const t = Math.sign(v) * Math.pow(Math.abs(v), 1/3);
+    raw.push({ x, t });
+  }
+  const maxAbsT = Math.max(...raw.map(p => Math.abs(p.t)), 0.001);
+  const amp = (midY - plotTop) * 0.85;
+  function scaleYpx(t) { return midY - (t / maxAbsT) * amp; }
+
+  let d = "";
+  raw.forEach((p, i) => {
+    const px = scaleXpx(p.x).toFixed(1);
+    const py = scaleYpx(p.t).toFixed(1);
+    d += (i === 0 ? "M" : "L") + px + "," + py + " ";
+  });
+
+  let guides = "";
+  problem.roots.forEach((rt, idx) => {
+    const px = scaleXpx(rt.r).toFixed(1);
+    guides += `<line x1="${px}" y1="${plotTop}" x2="${px}" y2="${plotBottom}" stroke="#e3d5f7" stroke-width="1.5" stroke-dasharray="4,3"/>`;
+    guides += `<text x="${px}" y="${plotBottom + 16}" font-size="12" fill="#5b2a8c" text-anchor="middle" font-weight="600">x=${rt.r}</text>`;
+    const st = state[idx];
+    let badgeText = "?";
+    let badgeColor = "#c9b4e8";
+    let badgeTextColor = "#5b2a8c";
+    if (st.status === 'correct') { badgeText = rt.exp; badgeColor = "#1f9d55"; badgeTextColor = "white"; }
+    else if (st.status === 'revealed') { badgeText = rt.exp; badgeColor = "#c8860a"; badgeTextColor = "white"; }
+    guides += `<circle cx="${px}" cy="${plotTop - 8}" r="11" fill="${badgeColor}"/>`;
+    guides += `<text x="${px}" y="${plotTop - 4}" font-size="12" fill="${badgeTextColor}" text-anchor="middle" font-weight="700">${badgeText}</text>`;
+  });
+
+  return `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">
+    <line x1="${padL}" y1="${midY}" x2="${W-padR}" y2="${midY}" stroke="#c9b4e8" stroke-width="1.5"/>
+    ${guides}
+    <path d="${d}" fill="none" stroke="#7c3aed" stroke-width="2.5" stroke-linecap="round"/>
+  </svg>`;
+}
+
+/* ---------- Rendering ---------- */
+function formatFactor(r) {
+  if (r === 0) return "x";
+  if (r > 0) return `x &minus; ${r}`;
+  return `x + ${Math.abs(r)}`;
+}
+
+function renderEquation(problem, state) {
+  let html = "f(x) = ";
+  if (problem.leadSign < 0) html += "&minus;";
+  problem.roots.forEach((rt, idx) => {
+    const st = state[idx];
+    let expHtml;
+    if (st.status === 'correct') expHtml = `<sup class="revealed" style="color:#1f9d55">${rt.exp}</sup>`;
+    else if (st.status === 'revealed') expHtml = `<sup class="revealed">${rt.exp}</sup>`;
+    else expHtml = `<sup class="q">?</sup>`;
+    html += `(${formatFactor(rt.r)})${expHtml}`;
+  });
+  document.getElementById('equationCard').innerHTML = html;
+}
+
+function renderDots() {
+  const dotsEl = document.getElementById('dots');
+  dotsEl.innerHTML = "";
+  PROBLEMS.forEach((_, idx) => {
+    const solved = states[idx].every(s => s.status !== 'unsolved');
+    const dot = document.createElement('div');
+    dot.className = 'dot' + (idx === currentProblem ? ' active' : '') + (solved ? ' solved' : '');
+    dot.textContent = idx + 1;
+    dot.onclick = () => { currentProblem = idx; renderProblem(); };
+    dotsEl.appendChild(dot);
+  });
+}
+
+function renderControls(problem, state) {
+  const container = document.getElementById('rootControls');
+  container.innerHTML = "";
+  problem.roots.forEach((rt, idx) => {
+    const st = state[idx];
+    const row = document.createElement('div');
+    row.className = 'root-row' + (st.status === 'correct' ? ' solved' : st.status === 'revealed' ? ' revealed' : '');
+    const locked = st.status !== 'unsolved';
+    row.innerHTML = `<span class="root-label">Root x = ${rt.r}:</span>` +
+      OPTIONS.map(n => {
+        let cls = 'guess-btn';
+        let dis = locked ? 'disabled' : '';
+        if (locked && n === rt.exp) cls += ' correct-pick';
+        else if (st.status === 'correct' && st.wrongTries && st.wrongTries.includes(n)) cls += ' wrong-pick';
+        else if (st.wrongTries && st.wrongTries.includes(n) && st.status === 'unsolved') cls += ' wrong-pick';
+        return `<button class="${cls}" ${dis} onclick="guessExponent(${idx}, ${n}, this)">${n}</button>`;
+      }).join("") +
+      `<span class="row-feedback">${feedbackText(st, rt)}</span>`;
+    container.appendChild(row);
+  });
+}
+
+function feedbackText(st, rt) {
+  if (st.status === 'correct') return "✅ Correct! " + explainFor(rt.exp);
+  if (st.status === 'revealed') return "Revealed: exponent is " + rt.exp + ". " + explainFor(rt.exp);
+  return "";
+}
+
+function explainFor(exp) {
+  if (exp === 1) return "Odd exponent — the graph crosses straight through here.";
+  if (exp === 2) return "Even exponent — the graph touches and bounces back.";
+  if (exp % 2 === 1) return "Odd exponent greater than 1 — the graph crosses, but flattens first.";
+  return "Even exponent greater than 2 — the graph touches and bounces, very flat.";
+}
+
+function guessExponent(idx, n, btn) {
+  const problem = PROBLEMS[currentProblem];
+  const state = states[currentProblem];
+  const st = state[idx];
+  if (st.status !== 'unsolved') return;
+  if (n === problem.roots[idx].exp) {
+    st.status = 'correct';
+  } else {
+    st.wrongTries = st.wrongTries || [];
+    st.wrongTries.push(n);
+  }
+  renderProblem(false);
+  checkComplete();
+}
+
+function revealAll() {
+  const problem = PROBLEMS[currentProblem];
+  const state = states[currentProblem];
+  state.forEach(st => { if (st.status === 'unsolved') st.status = 'revealed'; });
+  renderProblem(false);
+  checkComplete();
+}
+
+function checkComplete() {
+  const state = states[currentProblem];
+  const banner = document.getElementById('statusBanner');
+  const allDone = state.every(s => s.status !== 'unsolved');
+  const allCorrect = state.every(s => s.status === 'correct');
+  if (allDone) {
+    const problem = PROBLEMS[currentProblem];
+    const degree = problem.roots.reduce((a, rt) => a + rt.exp, 0);
+    if (allCorrect) {
+      banner.className = 'status-banner show';
+      banner.style.background = '#eafaf0';
+      banner.style.borderColor = '#1f9d55';
+      banner.style.color = '#16713d';
+      banner.innerHTML = `🎉 Equation fully solved! Degree = ${degree} (sum of the exponents).`;
+    } else {
+      banner.className = 'status-banner show';
+      banner.style.background = '#fdf5e6';
+      banner.style.borderColor = '#c8860a';
+      banner.style.color = '#8a5a06';
+      banner.innerHTML = `Equation revealed. Degree = ${degree} (sum of the exponents).`;
+    }
+  } else {
+    banner.className = 'status-banner';
+    banner.innerHTML = "";
+  }
+  renderDots();
+}
+
+function renderProblem(resetBanner = true) {
+  const problem = PROBLEMS[currentProblem];
+  const state = states[currentProblem];
+  renderEquation(problem, state);
+  document.getElementById('graphSvg').outerHTML = buildGraphSvg(problem, state).replace('<svg', '<svg id="graphSvg"');
+  renderControls(problem, state);
+  renderDots();
+  if (resetBanner) {
+    document.getElementById('statusBanner').className = 'status-banner';
+    checkComplete();
+  }
+}
+
+function nextProblem() {
+  currentProblem = (currentProblem + 1) % PROBLEMS.length;
+  renderProblem();
+}
+function prevProblem() {
+  currentProblem = (currentProblem - 1 + PROBLEMS.length) % PROBLEMS.length;
+  renderProblem();
+}
+
+/* ---------- Init ---------- */
+renderProblem();
+</script>
+</body>
+</html>
