@@ -208,7 +208,7 @@
     border-radius: 4px 4px 0 0;
   }
   .blank:focus { border-bottom-color: #fff; background: rgba(255,140,0,0.1); }
-  .blank.correct  { border-bottom-color: #2ecc71; color: #2ecc71; }
+  .blank.correct   { border-bottom-color: #2ecc71; color: #2ecc71; }
   .blank.incorrect { border-bottom-color: #e74c3c; color: #e74c3c; }
   .fb-icon {
     font-size: 1.3rem;
@@ -233,28 +233,6 @@
     transition: transform 0.1s;
   }
   .nav-btn:hover { transform: scale(1.04); }
-  .answer-key {
-    background: #0a0a1a;
-    border-top: 3px solid #222;
-    padding: 16px 30px;
-  }
-  .answer-key summary {
-    font-family: 'Impact', 'Arial Black', cursive;
-    font-size: 1.1rem;
-    letter-spacing: 2px;
-    color: #444;
-    cursor: pointer;
-    user-select: none;
-  }
-  .answer-key summary:hover { color: #777; }
-  .answer-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    gap: 6px;
-    margin-top: 12px;
-  }
-  .answer-item { font-size: 0.82rem; color: #666; padding: 3px 0; border-bottom: 1px solid #1a1a1a; }
-  .answer-item b { color: #ff8c00; }
   .footer {
     text-align: center;
     padding: 12px;
@@ -279,8 +257,8 @@
   </div>
 
   <div class="quote-bar">
-    <span>🏁 Great riders practice hard. 🏁</span>
-    <span>🏁 Great mathematicians practice harder. 🏁</span>
+    <span>🏁 Great riders practice hard.</span>
+    <span>🏁 Great mathematicians practice harder. </span>
   </div>
 
   <div class="tab-nav">
@@ -310,11 +288,6 @@
     <div class="nav-btn-wrap">
       <button class="nav-btn" id="go-div">HEAD TO LAP 2 — DIVISION ➜</button>
     </div>
-    <div class="answer-key">
-      <details><summary>🔑 ANSWER KEY (Tutor Use)</summary>
-        <div class="answer-grid" id="mult-key"></div>
-      </details>
-    </div>
   </div>
 
   <!-- PAGE 2 -->
@@ -337,11 +310,6 @@
     <div class="nav-btn-wrap">
       <button class="nav-btn" id="go-mult">◄ BACK TO LAP 1</button>
       <button class="nav-btn" id="go-mix">HEAD TO LAP 3 ➜</button>
-    </div>
-    <div class="answer-key">
-      <details><summary>🔑 ANSWER KEY (Tutor Use)</summary>
-        <div class="answer-grid" id="div-key"></div>
-      </details>
     </div>
   </div>
 
@@ -366,11 +334,6 @@
       <button class="nav-btn" id="go-div2">◄ BACK TO LAP 2</button>
       <button class="nav-btn" id="go-wp">HEAD TO LAP 4 ➜</button>
     </div>
-    <div class="answer-key">
-      <details><summary>🔑 ANSWER KEY (Tutor Use)</summary>
-        <div class="answer-grid" id="mix-key"></div>
-      </details>
-    </div>
   </div>
 
   <!-- PAGE 4 -->
@@ -392,11 +355,6 @@
     <div class="nav-btn-wrap">
       <button class="nav-btn" id="go-mix2">◄ BACK TO LAP 3</button>
     </div>
-    <div class="answer-key">
-      <details><summary>🔑 ANSWER KEY (Tutor Use)</summary>
-        <div class="answer-grid" id="wp-key"></div>
-      </details>
-    </div>
   </div>
 
   <div class="footer">🏍️ Keep racing. Keep learning. 🏍️</div>
@@ -416,7 +374,7 @@
     { eq: '8 x 9',  ans: 72  },
     { eq: '8 x 10', ans: 80  },
     { eq: '8 x 11', ans: 88  },
-    { eq: '8 x 12', ans: 96 }
+    { eq: '8 x 12', ans: 96  }
   ];
 
   var divFacts = [
@@ -438,11 +396,11 @@
     { text: 'There are <b>8 riders</b> in the race. Each rider carries <b>5 water bottles</b>. How many water bottles are there altogether?', ans: 40,  hint: 'Hint: 8 x 5' },
     { text: 'Jake earns <b>8 points</b> for every race he wins. He won <b>6 races</b> this season. How many points did he earn?',            ans: 48,  hint: 'Hint: 8 x 6' },
     { text: 'Each dirt bike needs <b>8 bolts</b> on its engine cover. Jake is fixing <b>4 bikes</b>. How many bolts does he need in all?',   ans: 32,  hint: 'Hint: 8 x 4' },
-    { text: 'Jake trains <b>8 hours</b> every week. How many hours will he have trained after <b>8 weeks</b>?',                               ans: 64,  hint: 'Hint: 8 x 8' },
+    { text: 'Jake trains <b>8 hours</b> every week. How many hours will he have trained after <b>8 weeks</b>?',                              ans: 64,  hint: 'Hint: 8 x 8' },
     { text: 'His sponsor ships <b>8 helmets</b> per box. <b>2 boxes</b> arrive at the track. How many helmets came in total?',               ans: 16,  hint: 'Hint: 8 x 2' },
-    { text: 'There are <b>8 tires</b> in each stack. Jake ordered <b>9 stacks</b> for the season. How many tires is that?',                 ans: 72,  hint: 'Hint: 8 x 9' },
+    { text: 'There are <b>8 tires</b> in each stack. Jake ordered <b>9 stacks</b> for the season. How many tires is that?',                  ans: 72,  hint: 'Hint: 8 x 9' },
     { text: 'The training track charges <b>$8 per lap</b>. Jake rode <b>10 laps</b> today. How much does he owe?',                          ans: 80,  hint: 'Hint: 8 x 10' },
-    { text: "Jake's crew washes <b>8 bikes</b> before every race. There are <b>12 races</b> in the season. How many bike washes total?",     ans: 96,  hint: 'Hint: 8 x 12' }
+    { text: "Jake's crew washes <b>8 bikes</b> before every race. There are <b>12 races</b> in the season. How many bike washes total?",     ans: 96, hint: 'Hint: 8 x 12' }
   ];
 
   var scores = {
@@ -514,9 +472,8 @@
     updateBar(panel);
   }
 
-  function buildFactRows(facts, listId, keyId, panel) {
+  function buildFactRows(facts, listId, panel) {
     var list = document.getElementById(listId);
-    var key  = document.getElementById(keyId);
     for (var i = 0; i < facts.length; i++) {
       var f = facts[i];
       var row = document.createElement('div');
@@ -541,17 +498,11 @@
           }
         });
       })(row.querySelector('input'), row.querySelector('.fb-icon'), panel, listId);
-
-      var ki = document.createElement('div');
-      ki.className = 'answer-item';
-      ki.innerHTML = (i+1) + '. ' + f.eq + ' = <b>' + f.ans + '</b>';
-      key.appendChild(ki);
     }
   }
 
   function buildWordProblems() {
     var list = document.getElementById('wp-list');
-    var key  = document.getElementById('wp-key');
     for (var i = 0; i < wordProblems.length; i++) {
       var p = wordProblems[i];
       var card = document.createElement('div');
@@ -580,11 +531,6 @@
           }
         });
       })(card.querySelector('input'), card.querySelector('.fb-icon'), card.querySelector('.wp-hint'), p.hint);
-
-      var ki = document.createElement('div');
-      ki.className = 'answer-item';
-      ki.innerHTML = (i+1) + '. <b>' + p.ans + '</b> &nbsp;(' + p.hint + ')';
-      key.appendChild(ki);
     }
   }
 
@@ -613,9 +559,9 @@
   document.getElementById('go-mix2').addEventListener('click', function() { switchTab('mix');  });
 
   // Build pages
-  buildFactRows(multFacts,         'mult-list', 'mult-key', 'mult');
-  buildFactRows(shuffle(divFacts), 'div-list',  'div-key',  'div');
-  buildFactRows(shuffle(multFacts),'mix-list',  'mix-key',  'mix');
+  buildFactRows(multFacts,        'mult-list', 'mult');
+  buildFactRows(shuffle(divFacts), 'div-list',  'div');
+  buildFactRows(shuffle(multFacts),'mix-list',  'mix');
   buildWordProblems();
 })();
 </script>
