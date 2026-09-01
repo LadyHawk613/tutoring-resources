@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unit Circle Trig Explorer</title>
+<style>
+  :root{
+    --bg:#f6f8fb; --card:#fff; --ink:#172033; --muted:#5d687d;
+    --line:#d9dfeb; --accent:#3b5ccc; --accent2:#16866b;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);font-family:system-ui,-apple-system,Segoe UI,Arial,sans-serif;color:var(--ink)}
+  .wrap{max-width:1250px;margin:auto;padding:24px}
+  h1{margin:0 0 6px;font-size:30px}
+  .subtitle{margin:0 0 18px;color:var(--muted)}
+  .grid{display:grid;grid-template-columns:minmax(480px,1.2fr) minmax(350px,.8fr);gap:18px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;box-shadow:0 3px 14px #1720330b}
+  canvas{display:block;width:100%;height:auto;background:#fbfcfe;border-radius:12px;border:1px solid var(--line)}
+  .controls{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;margin-top:15px}
+  input[type=range]{width:100%}
+  .angle{font-size:22px;font-weight:700;min-width:92px;text-align:right}
+  .buttons{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}
+  button{border:1px solid var(--line);background:#fff;padding:8px 12px;border-radius:9px;cursor:pointer;font-weight:600}
+  button:hover{background:#f0f3fa}
+  .hint{font-size:13px;color:var(--muted);margin-top:10px}
+  .section-title{font-size:17px;font-weight:750;margin:0 0 12px}
+  .values{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+  .value{border:1px solid var(--line);border-radius:11px;padding:10px 12px}
+  .value .name{font-weight:750}
+  .value .formula{font-size:12px;color:var(--muted)}
+  .value .num{font-size:20px;font-weight:750;margin-top:3px}
+  .triangle{margin-top:16px;padding-top:15px;border-top:1px solid var(--line)}
+  .relationship{background:#f1f5ff;border-radius:11px;padding:12px;margin-top:14px;line-height:1.45}
+  .relationship strong{display:block;margin-bottom:4px}
+  .check{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+  .check div{padding:9px;border-radius:9px;background:#f7f8fb;font-size:13px}
+  .legend{display:flex;flex-wrap:wrap;gap:12px;margin-top:10px;font-size:13px;color:var(--muted)}
+  .dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px}
+  .note{margin-top:14px;font-size:13px;color:var(--muted)}
+  @media(max-width:900px){.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Unit Circle Trig Explorer</h1>
+  <p class="subtitle">Move the angle and watch the right triangle, the coordinates, and all six trigonometric ratios change together.</p>
+
+  <div class="grid">
+    <div class="card">
+      <canvas id="circle" width="700" height="700"></canvas>
+      <div class="controls">
+        <input id="slider" type="range" min="0" max="360" step="0.1" value="45">
+        <div class="angle" id="angleText">45.0°</div>
+      </div>
+      <div class="buttons">
+        <button data-a="0">0°</button><button data-a="30">30°</button><button data-a="45">45°</button>
+        <button data-a="60">60°</button><button data-a="90">90°</button><button data-a="120">120°</button>
+        <button data-a="135">135°</button><button data-a="150">150°</button><button data-a="180">180°</button>
+        <button data-a="225">225°</button><button data-a="270">270°</button><button data-a="315">315°</button>
+      </div>
+      <div class="legend">
+        <span><i class="dot" style="background:#3b5ccc"></i>radius / hypotenuse</span>
+        <span><i class="dot" style="background:#16866b"></i>x-coordinate</span>
+        <span><i class="dot" style="background:#c45a28"></i>y-coordinate</span>
+        <span><i class="dot" style="background:#8a4bb3"></i>reference triangle</span>
+      </div>
+      <div class="hint">You can also drag the point around the circle. Quadrants II and IV are especially useful for noticing how signs change.</div>
+    </div>
+
+    <div class="card">
+      <div class="section-title">The six ratios at this angle</div>
+      <div class="values" id="values"></div>
+
+      <div class="triangle">
+        <div class="section-title">Right-triangle connection</div>
+        <div id="triangleText"></div>
+      </div>
+
+      <div class="relationship">
+        <strong>Watch x and y in Quadrant II</strong>
+        When the point moves from 90° toward 180°, <b>x decreases</b> from 0 toward −1 while <b>y decreases</b> from 1 toward 0. If you instead move from 0° toward 90°, <b>x decreases</b> while <b>y increases</b>. The unit circle makes both coordinate changes visible at once.
+      </div>
+
+      <div class="check">
+        <div><b>sin θ = y</b><br>vertical coordinate</div>
+        <div><b>cos θ = x</b><br>horizontal coordinate</div>
+        <div><b>tan θ = y/x</b><br>slope of the radius</div>
+        <div><b>sec θ = 1/x</b><br>reciprocal of cosine</div>
+        <div><b>csc θ = 1/y</b><br>reciprocal of sine</div>
+        <div><b>cot θ = x/y</b><br>reciprocal of tangent</div>
+      </div>
+
+      <div class="note">Undefined values occur when a denominator is 0. The display uses “undefined” rather than a misleading decimal.</div>
+    </div>
+  </div>
+</div>
+
+<script>
+const canvas = document.getElementById('circle');
+const ctx = canvas.getContext('2d');
+const slider = document.getElementById('slider');
+const angleText = document.getElementById('angleText');
+const valuesBox = document.getElementById('values');
+const triangleText = document.getElementById('triangleText');
+
+let angle = 45 * Math.PI / 180;
+let dragging = false;
+
+function fmt(v){
+  if (!Number.isFinite(v)) return "undefined";
+  if (Math.abs(v) < 1e-10) return "0";
+  if (Math.abs(v-1)<1e-10) return "1";
+  if (Math.abs(v+1)<1e-10) return "−1";
+  return (Math.round(v*1000)/1000).toString().replace("-", "−");
+}
+function niceDeg(d){
+  return Math.abs(d-Math.round(d))<0.05 ? Math.round(d) : d.toFixed(1);
+}
+function setAngleDeg(d){
+  d = ((d % 360) + 360) % 360;
+  angle = d*Math.PI/180;
+  slider.value=d;
+  update();
+}
+function update(){
+  const x=Math.cos(angle), y=Math.sin(angle);
+  let deg=((angle*180/Math.PI)%360+360)%360;
+  angleText.textContent=niceDeg(deg)+"°";
+
+  const vals=[
+    ["sin θ","y",y],["cos θ","x",x],["tan θ","y/x",y/x],
+    ["cot θ","x/y",x/y],["sec θ","1/x",1/x],["csc θ","1/y",1/y]
+  ];
+  valuesBox.innerHTML=vals.map(v=>`
+    <div class="value">
+      <div class="name">${v[0]}</div>
+      <div class="formula">${v[1]}</div>
+      <div class="num">${fmt(v[2])}</div>
+    </div>`).join("");
+
+  triangleText.innerHTML=`
+    <b>Point on circle:</b> (${fmt(x)}, ${fmt(y)})<br>
+    <b>Hypotenuse:</b> 1 &nbsp; | &nbsp; <b>opposite:</b> y=${fmt(y)} &nbsp; | &nbsp; <b>adjacent:</b> x=${fmt(x)}<br>
+    So <b>opposite/hypotenuse = sin θ</b>, <b>adjacent/hypotenuse = cos θ</b>, and
+    <b>opposite/adjacent = tan θ</b>.
+  `;
+  draw(x,y);
+}
+
+function draw(x,y){
+  const w=canvas.width,h=canvas.height;
+  ctx.clearRect(0,0,w,h);
+  const cx=w/2, cy=h/2, R=250, scale=R;
+
+  // grid
+  ctx.lineWidth=1;
+  ctx.strokeStyle="#e8ecf3";
+  for(let i=-2;i<=2;i++){
+    ctx.beginPath();ctx.moveTo(cx+i*scale/2,cy-R);ctx.lineTo(cx+i*scale/2,cy+R);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(cx-R,cy-i*scale/2);ctx.lineTo(cx+R,cy-i*scale/2);ctx.stroke();
+  }
+  // axes
+  ctx.strokeStyle="#667085";ctx.lineWidth=2;
+  ctx.beginPath();ctx.moveTo(cx-R-20,cy);ctx.lineTo(cx+R+20,cy);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(cx,cy+R+20);ctx.lineTo(cx,cy-R-20);ctx.stroke();
+
+  // circle
+  ctx.strokeStyle="#3b5ccc";ctx.lineWidth=3;
+  ctx.beginPath();ctx.arc(cx,cy,R,0,2*Math.PI);ctx.stroke();
+
+  const px=cx+x*scale, py=cy-y*scale;
+
+  // projection legs
+  ctx.setLineDash([7,6]);ctx.lineWidth=2;
+  ctx.strokeStyle="#16866b";
+  ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(px,cy);ctx.stroke();
+  ctx.strokeStyle="#c45a28";
+  ctx.beginPath();ctx.moveTo(px,cy);ctx.lineTo(px,py);ctx.stroke();
+  ctx.setLineDash([]);
+
+  // radius / hypotenuse
+  ctx.strokeStyle="#3b5ccc";ctx.lineWidth=4;
+  ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(px,py);ctx.stroke();
+
+  // right-angle marker
+  const s=13;
+  ctx.strokeStyle="#8a4bb3";ctx.lineWidth=3;
+  ctx.beginPath();ctx.moveTo(px-s,cy);ctx.lineTo(px-s,cy-s);ctx.lineTo(px,cy-s);ctx.stroke();
+
+  // point
+  ctx.fillStyle="#172033";
+  ctx.beginPath();ctx.arc(px,py,8,0,2*Math.PI);ctx.fill();
+
+  // angle arc
+  ctx.strokeStyle="#8a4bb3";ctx.lineWidth=3;
+  ctx.beginPath();ctx.arc(cx,cy,55,0,-angle,true);ctx.stroke();
+
+  // labels
+  ctx.fillStyle="#172033";ctx.font="bold 16px system-ui";
+  ctx.fillText("x",cx+R+8,cy+5);ctx.fillText("y",cx+6,cy-R-10);
+  ctx.font="14px system-ui";
+  ctx.fillStyle="#16866b";ctx.fillText("x = "+fmt(x),cx+x*scale/2-30,cy+22);
+  ctx.fillStyle="#c45a28";ctx.fillText("y = "+fmt(y),px+10,(cy+py)/2);
+  ctx.fillStyle="#3b5ccc";ctx.fillText("r = 1",cx+(px-cx)*.52-18,cy+(py-cy)*.52-8);
+  ctx.fillStyle="#8a4bb3";ctx.fillText("θ",cx+62,cy-10);
+
+  // unit tick labels
+  ctx.fillStyle="#667085";ctx.font="12px system-ui";
+  ctx.fillText("1",cx+R-5,cy+17);ctx.fillText("−1",cx-R-8,cy+17);
+  ctx.fillText("1",cx+7,cy-R+4);ctx.fillText("−1",cx+7,cy+R);
+}
+
+slider.addEventListener('input',e=>setAngleDeg(Number(e.target.value)));
+document.querySelectorAll('button[data-a]').forEach(b=>b.addEventListener('click',()=>setAngleDeg(Number(b.dataset.a))));
+
+function pointerToAngle(e){
+  const r=canvas.getBoundingClientRect();
+  const px=(e.clientX-r.left)*(canvas.width/r.width);
+  const py=(e.clientY-r.top)*(canvas.height/r.height);
+  const a=Math.atan2(canvas.height/2-py,px-canvas.width/2);
+  setAngleDeg((a*180/Math.PI+360)%360);
+}
+canvas.addEventListener('pointerdown',e=>{dragging=true;canvas.setPointerCapture(e.pointerId);pointerToAngle(e)});
+canvas.addEventListener('pointermove',e=>{if(dragging)pointerToAngle(e)});
+canvas.addEventListener('pointerup',()=>dragging=false);
+canvas.addEventListener('pointercancel',()=>dragging=false);
+
+update();
+</script>
+</body>
+</html>
