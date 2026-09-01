@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculus Solution - Two-Column Format</title>
+    
+    <!-- Load MathJax with configuration to avoid parsing regular text dollar signs -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['\\(', '\\)']],
+                displayMath: [['$$', '$$']]
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        :root {
+            --purple-accent: #6b46c1;
+            --purple-light: #f3f0ff;
+            --purple-hover: #553c9a;
+            --text-color: #2d3748;
+            --bg-color: #f7fafc;
+            --border-color: #e2e8f0;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: #ffffff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            border-top: 6px solid var(--purple-accent);
+        }
+
+        h1 {
+            color: var(--purple-accent);
+            font-size: 1.8rem;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table.calc-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            background: #ffffff;
+        }
+
+        table.calc-table th {
+            background-color: var(--purple-accent);
+            color: white;
+            text-align: left;
+            padding: 14px 18px;
+            font-size: 0.95rem;
+            font-weight: 600;
+        }
+
+        table.calc-table th:first-child {
+            width: 40%;
+            border-top-left-radius: 8px;
+        }
+
+        table.calc-table th:last-child {
+            width: 60%;
+            border-top-right-radius: 8px;
+        }
+
+        table.calc-table td {
+            padding: 16px 18px;
+            border-bottom: 1px solid var(--border-color);
+            vertical-align: middle;
+        }
+
+        table.calc-table tr:hover {
+            background-color: #faf5ff;
+        }
+
+        .math-cell {
+            white-space: nowrap;
+            overflow-x: auto;
+        }
+
+        /* Styling for the collapsible expansion box */
+        details.expandable-step {
+            margin-top: 10px;
+            background-color: var(--purple-light);
+            border: 1px solid #d6bcfa;
+            border-radius: 6px;
+            padding: 10px 14px;
+        }
+
+        details.expandable-step summary {
+            font-weight: 600;
+            color: var(--purple-accent);
+            cursor: pointer;
+            list-style: none;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 0.9rem;
+        }
+
+        details.expandable-step summary::after {
+            content: "▼";
+            font-size: 0.75rem;
+            transition: transform 0.3s ease;
+        }
+
+        details.expandable-step[open] summary::after {
+            transform: rotate(180deg);
+        }
+
+        details.expandable-step summary:hover {
+            color: var(--purple-hover);
+        }
+
+        .sub-steps {
+            margin-top: 10px;
+            padding-left: 20px;
+            border-left: 3px solid var(--purple-accent);
+            list-style-type: disc;
+        }
+
+        .sub-steps li {
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Logarithmic Differentiation Solution</h1>
+
+    <div class="table-wrapper">
+        <table class="calc-table">
+            <thead>
+                <tr>
+                    <th>Description / Reasons</th>
+                    <th>Mathematical Steps</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Step 1 -->
+                <tr>
+                    <td>Take the natural logarithm (\(\ln\)) of both sides to handle the variable exponent.</td>
+                    <td><div class="math-cell">$$\ln(y) = \ln\left[ \left(\frac{x+1}{x-2}\right)^{x^2} \right]$$</div></td>
+                </tr>
+                <!-- Step 2 -->
+                <tr>
+                    <td>Apply the Logarithm Power Rule: \(\ln(a^b) = b \ln(a)\).</td>
+                    <td><div class="math-cell">$$\ln(y) = x^2 \ln\left(\frac{x+1}{x-2}\right)$$</div></td>
+                </tr>
+                <!-- Step 3 -->
+                <tr>
+                    <td>Apply the Logarithm Quotient Rule: \(\ln\left(\frac{a}{b}\right) = \ln(a) - \ln(b)\).</td>
+                    <td><div class="math-cell">$$\ln(y) = x^2 \left[ \ln(x+1) - \ln(x-2) \right]$$</div></td>
+                </tr>
+                <!-- Step 4 -->
+                <tr>
+                    <td>Differentiate both sides implicitly with respect to \(x\).</td>
+                    <td><div class="math-cell">$$\frac{d}{dx}[\ln(y)] = \frac{d}{dx}\left[ x^2 (\ln(x+1) - \ln(x-2)) \right]$$</div></td>
+                </tr>
+                <!-- Step 5 -->
+                <tr>
+                    <td>Apply the Chain Rule on the left and the Product Rule on the right.</td>
+                    <td><div class="math-cell">$$\frac{1}{y} \frac{dy}{dx} = x^2 \frac{d}{dx}[\ln(x+1) - \ln(x-2)] + (\ln(x+1) - \ln(x-2)) \frac{d}{dx}[x^2]$$</div></td>
+                </tr>
+                <!-- Step 6 -->
+                <tr>
+                    <td>Evaluate individual derivatives using standard log and power rules.</td>
+                    <td><div class="math-cell">$$\frac{1}{y} \frac{dy}{dx} = x^2 \left( \frac{1}{x+1} - \frac{1}{x-2} \right) + (\ln(x+1) - \ln(x-2))(2x)$$</div></td>
+                </tr>
+                <!-- Step 7 -->
+                <tr>
+                    <td>Multiply both sides by \(y\) to isolate \(\frac{dy}{dx}\).</td>
+                    <td><div class="math-cell">$$\frac{dy}{dx} = y \left[ x^2 \left(\frac{1}{x+1} - \frac{1}{x-2}\right) + 2x \ln\left(\frac{x+1}{x-2}\right) \right]$$</div></td>
+                </tr>
+                <!-- Step 8 -->
+                <tr>
+                    <td>
+                        Substitute back \(y\) and simplify the inner fraction algebraically.
+                        <details class="expandable-step">
+                            <summary>Click to view intermediate algebra steps</summary>
+                            <ul class="sub-steps">
+                                <li>Common denominator: \((x+1)(x-2)\)</li>
+                                <li>Numerator: \(x^2(x-2) - x^2(x+1)\)</li>
+                                <li>Expand: \(\frac{x^3 - 2x^2 - x^3 - x^2}{(x+1)(x-2)}\)</li>
+                                <li>Simplify: \(\frac{-3x^2}{(x+1)(x-2)}\)</li>
+                            </ul>
+                        </details>
+                    </td>
+                    <td><div class="math-cell">$$\frac{dy}{dx} = \left(\frac{x+1}{x-2}\right)^{x^2} \left[ -\frac{3x^2}{(x+1)(x-2)} + 2x \ln\left(\frac{x+1}{x-2}\right) \right]$$</div></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+</body>
+</html>
