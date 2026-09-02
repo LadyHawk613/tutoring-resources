@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Grade 7 Math Diagnostic — NWEA MAP Readiness</title>
+<style>
+  :root{
+    --ink: #1c2b33;
+    --ink-soft: #4a5c66;
+    --paper: #f6f3ec;
+    --panel: #ffffff;
+    --rule: #d8d2c4;
+    --navy: #1f3a4d;
+    --navy-deep: #14262f;
+    --brass: #a9762f;
+    --brass-soft: #e8d9bf;
+    --correct: #33684a;
+    --correct-bg: #e3ede4;
+    --incorrect: #9c3b2e;
+    --incorrect-bg: #f3e3e0;
+    --focus: #1f3a4d;
+  }
+
+  * { box-sizing: border-box; }
+
+  body{
+    margin:0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: "Iowan Old Style","Palatino Linotype", Palatino, Georgia, serif;
+    line-height: 1.5;
+  }
+
+  .sheet{
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 0 20px 80px;
+  }
+
+  header.masthead{
+    border-bottom: 3px solid var(--navy);
+    padding: 34px 0 18px;
+    margin-bottom: 28px;
+  }
+  .masthead .kicker{
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-size: 12.5px;
+    letter-spacing: 0.04em;
+    color: var(--brass);
+    font-weight: 600;
+    margin: 0 0 6px;
+  }
+  .masthead h1{
+    font-size: 30px;
+    margin: 0 0 8px;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+  }
+  .masthead p.sub{
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    color: var(--ink-soft);
+    font-size: 14.5px;
+    margin: 0;
+    max-width: 56ch;
+  }
+
+  /* ---------- Intro screen ---------- */
+  .intro-card{
+    background: var(--panel);
+    border: 1px solid var(--rule);
+    padding: 30px 32px;
+  }
+  .intro-card h2{
+    margin-top:0;
+    font-size: 19px;
+  }
+  .strand-grid{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px 22px;
+    margin: 18px 0 24px;
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-size: 13.5px;
+  }
+  .strand-grid div{
+    padding: 9px 0;
+    border-bottom: 1px dotted var(--rule);
+    display:flex;
+    justify-content: space-between;
+    color: var(--ink-soft);
+  }
+  .strand-grid span.count{
+    color: var(--navy);
+    font-weight: 700;
+  }
+  .meta-line{
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-size: 13px;
+    color: var(--ink-soft);
+    margin-bottom: 22px;
+  }
+
+  button.primary{
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    background: var(--navy);
+    color: #fbf9f4;
+    border: none;
+    padding: 13px 26px;
+    font-size: 14.5px;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    cursor: pointer;
+    transition: background 0.15s ease;
+  }
+  button.primary:hover{ background: var(--navy-deep); }
+  button.primary:focus-visible{ outline: 3px solid var(--brass); outline-offset: 2px; }
+
+  button.secondary{
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    background: transparent;
+    color: var(--navy);
+    border: 1.5px solid var(--navy);
+    padding: 11px 22px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  button.secondary:hover{ background: rgba(31,58,77,0.06); }
+  button.secondary:focus-visible{ outline: 3px solid var(--brass); outline-offset: 2px; }
+
+  /* ---------- Progress ---------- */
+  .progress-wrap{
+    display:flex;
+    align-items:center;
+    gap: 14px;
+    margin-bottom: 22px;
+    font-family: "Helvetica Neue", Arial, sans-serif;
+  }
+  .progress-track{
+    flex:1;
+    height: 6px;
+    background: var(--rule);
+    position: relative;
+  }
+  .progress-fill{
+    position:absolute; left:0; top:0; height:100%;
+    background: var(--brass);
+    transition: width 0.25s ease;
+  }
+  .progress-text{
+    font-size: 12.5px;
+    color: var(--ink-soft);
+    white-space: nowrap;
+    font-weight: 600;
+  }
+
+  /* ---------- Question card ---------- */
+  .q-card{
+    background: var(--panel);
+    border: 1px solid var(--rule);
+    padding: 30px 32px 26px;
+  }
+  .q-strand{
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-size: 11.5px;
+    font-weight: 700;
+    color: var(--brass);
+    margin-bottom: 10px;
+  }
+  .q-prompt{
+    font-size: 19px;
+    margin: 0 0 22px;
+    line-height: 1.45;
+  }
+  .q-prompt .work{
+    display:block;
+    font-family: "Courier New", monospace;
+    background: #f2efe6;
+    border-left: 3px solid var(--brass-soft);
+    padding: 10px 14px;
+    margin-top: 12px;
+    font-size: 16px;
+  }
+
+  .choices{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 26px;
+  }
+  .choice{
+    display:flex;
+    align-items: center;
+    gap: 14px;
+    border: 1.5px solid var(--rule);
+    background: #fdfcf9;
+    padding: 13px 16px;
+    cursor: pointer;
+    font-size: 15.5px;
+    text-align: left;
+    font-family: inherit;
+    color: var(--ink);
+    transition: border-color 0.12s ease, background 0.12s ease;
+  }
+  .choice:hover{ border-color: var(--navy); }
+  .choice:focus-visible{ outline: 3px solid var(--focus); outline-offset: 1px; }
+  .choice .letter{
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-weight: 700;
+    font-size: 12.5px;
+    width: 22px; height: 22px;
+    border: 1.5px solid var(--ink-soft);
+    border-radius: 50%;
+    display:flex; align-items:center; justify-content:center;
+    flex-shrink: 0;
+    color: var(--ink-soft);
+  }
+  .choice.selected{
+    border-color: var(--navy);
+    background: #eef2f4;
+  }
+  .choice.selected .letter{
+    background: var(--navy);
+    border-color: var(--navy);
+    color: #fff;
+  }
+  .choice.locked{ cursor: default; }
+  .choice.locked:hover{ border-color: var(--rule); }
+  .choice.correct-answer{
+    border-color: var(--correct);
+    background: var(--correct-bg);
+  }
+  .choice.correct-answer .letter{
+    background: var(--correct); border-color: var(--correct); color:#fff;
+  }
+  .choice.wrong-answer{
+    border-color: var(--incorrect);
+    background: var(--incorrect-bg);
+  }
+  .choice.wrong-answer .letter{
+    background: var(--incorrect); border-color: var(--incorrect); color:#fff;
+  }
+
+  .feedback-box{
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-size: 13.5px;
+    padding: 13px 16px;
+    border-left: 3px solid var(--navy);
+    background: #f2efe6;
+    color: var(--ink-soft);
+    margin-bottom: 22px;
+  }
+  .feedback-box strong{ color: var(--ink); }
+
+  .nav-row{
+    display:flex;
+    justify-content: flex-end;
+  }
+
+  /* ---------- Report ---------- */
+  .report-card{
+    background: var(--panel);
+    border: 1px solid var(--rule);
+    padding: 34px 34px 30px;
+  }
+  .score-hero{
+    display:flex;
+    align-items:baseline;
+    gap: 18px;
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: 22px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+  }
+  .score-hero .big{
+    font-size: 54px;
+    font-weight: 700;
+    color: var(--navy);
+    line-height: 1;
+  }
+  .score-hero .of{
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    color: var(--ink-soft);
+    font-size: 15px;
+  }
+  .score-hero .band{
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    margin-left: auto;
+    text-align: right;
+  }
+  .band-label{
+    display:inline-block;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    padding: 5px 12px;
+    color: #fff;
+  }
+
+  .report-card h3{
+    font-size: 16px;
+    margin: 26px 0 14px;
+  }
+
+  .strand-row{
+    margin-bottom: 16px;
+  }
+  .strand-row .label-line{
+    display:flex;
+    justify-content: space-between;
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-size: 13.5px;
+    margin-bottom: 5px;
+  }
+  .strand-row .label-line .name{ color: var(--ink); font-weight: 600; }
+  .strand-row .label-line .frac{ color: var(--ink-soft); }
+  .bar-track{
+    height: 9px;
+    background: #eee9dc;
+    position: relative;
+  }
+  .bar-fill{
+    position:absolute; left:0; top:0; height:100%;
+  }
+
+  .review-item{
+    border-top: 1px solid var(--rule);
+    padding: 14px 0;
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-size: 13.5px;
+  }
+  .review-item .rq{
+    font-size: 14.5px;
+    font-family: "Iowan Old Style","Palatino Linotype", Palatino, Georgia, serif;
+    color: var(--ink);
+    margin-bottom: 6px;
+  }
+  .review-item .rmeta{
+    display:flex;
+    gap: 10px;
+    align-items: baseline;
+    flex-wrap: wrap;
+  }
+  .tag{
+    display:inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 8px;
+  }
+  .tag.ok{ background: var(--correct-bg); color: var(--correct); }
+  .tag.no{ background: var(--incorrect-bg); color: var(--incorrect); }
+  .rmeta .strandname{ color: var(--ink-soft); }
+
+  .action-row{
+    display:flex;
+    gap: 12px;
+    margin-top: 30px;
+    flex-wrap: wrap;
+  }
+
+  footer.printfoot{
+    display:none;
+  }
+
+  @media print{
+    .action-row, header.masthead + .progress-wrap { display:none; }
+
+    /* Force background colors to print (browsers omit them by default
+       unless the person enables "background graphics" in the print
+       dialog). Without this, the strand bars and score badge render blank. */
+    *{
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+      color-adjust: exact !important;
+    }
+  }
+
+  @media (max-width: 600px){
+    .sheet{ padding: 0 14px 60px; }
+    .masthead h1{ font-size: 24px; }
+    .strand-grid{ grid-template-columns: 1fr; }
+    .q-card, .intro-card, .report-card{ padding: 22px 18px; }
+    .score-hero .band{ margin-left: 0; text-align: left; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ transition: none !important; }
+  }
+
+  .hidden{ display:none !important; }
+</style>
+</head>
+<body>
+
+<div class="sheet">
+
+  <header class="masthead">
+    <p class="kicker">Skills Readiness Check</p>
+    <h1>Grade 7 Math Diagnostic</h1>
+    <p class="sub">A 25-question practice set covering the skill areas assessed on the NWEA MAP Growth Grade 7 mathematics test. Untimed — work through each item, then review a full skills breakdown at the end.</p>
+  </header>
+
+  <!-- INTRO -->
+  <div id="intro-screen">
+    <div class="intro-card">
+      <h2>Before you begin</h2>
+      <p style="color:var(--ink-soft); font-size:14.5px;">This diagnostic samples five strands aligned to the Common Core domains NWEA MAP draws from at Grade 7. Questions increase gradually in difficulty within each strand, similar to how MAP adapts in real time.</p>
+
+      <div class="strand-grid">
+        <div>Ratios &amp; Proportional Relationships <span class="count">5</span></div>
+        <div>The Number System <span class="count">5</span></div>
+        <div>Expressions &amp; Equations <span class="count">6</span></div>
+        <div>Geometry <span class="count">5</span></div>
+        <div>Statistics &amp; Probability <span class="count">4</span></div>
+      </div>
+
+      <p class="meta-line">25 questions &nbsp;·&nbsp; multiple choice &nbsp;·&nbsp; no time limit &nbsp;·&nbsp; a calculator is not needed for any item</p>
+
+      <button class="primary" id="start-btn">Begin diagnostic</button>
+    </div>
+  </div>
+
+  <!-- QUIZ -->
+  <div id="quiz-screen" class="hidden">
+    <div class="progress-wrap">
+      <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+      <div class="progress-text" id="progress-text">Question 1 of 25</div>
+    </div>
+
+    <div class="q-card">
+      <div class="q-strand" id="q-strand"></div>
+      <p class="q-prompt" id="q-prompt"></p>
+      <div class="choices" id="q-choices"></div>
+      <div class="feedback-box hidden" id="feedback-box"></div>
+      <div class="nav-row">
+        <button class="primary" id="next-btn" disabled>Check answer</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- REPORT -->
+  <div id="report-screen" class="hidden">
+    <div class="report-card">
+      <div class="score-hero">
+        <div class="big" id="score-big">0</div>
+        <div class="of">out of 25 correct</div>
+        <div class="band" id="band-wrap">
+          <span class="band-label" id="band-label">—</span>
+        </div>
+      </div>
+
+      <p id="summary-sentence" style="font-size:15px; color:var(--ink-soft); margin-top:0;"></p>
+
+      <h3>Skill area breakdown</h3>
+      <div id="strand-bars"></div>
+
+      <h3>Where to focus next</h3>
+      <div id="recommendations" style="font-size:14.5px; color:var(--ink-soft);"></div>
+
+      <h3>Full answer review</h3>
+      <div id="review-list"></div>
+
+      <div class="action-row">
+        <button class="secondary" id="retake-btn">Retake diagnostic</button>
+        <button class="secondary" id="print-btn">Print / save report</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+(function(){
+
+  const STRAND_COLORS = {
+    "Ratios & Proportions": "#1f3a4d",
+    "The Number System": "#a9762f",
+    "Expressions & Equations": "#33684a",
+    "Geometry": "#7a4b8a",
+    "Statistics & Probability": "#9c3b2e"
+  };
+
+  const QUESTIONS = [
+    // ---- Ratios & Proportional Relationships (5) ----
+    {
+      strand: "Ratios & Proportions",
+      prompt: "A recipe uses 3 cups of flour for every 2 cups of sugar. At this rate, how many cups of flour are needed for 8 cups of sugar?",
+      choices: ["10", "12", "16", "24"],
+      correct: 1,
+      explain: "Set up the proportion 3/2 = x/8. Multiply both sides by 8: x = 3 × 4 = 12 cups of flour."
+    },
+    {
+      strand: "Ratios & Proportions",
+      prompt: "A car travels 135 miles in 3 hours. What is its unit rate in miles per hour?",
+      choices: ["40 mph", "45 mph", "48 mph", "50 mph"],
+      correct: 1,
+      explain: "Divide distance by time: 135 ÷ 3 = 45 miles per hour."
+    },
+    {
+      strand: "Ratios & Proportions",
+      prompt: "A shirt originally priced at $40 is on sale for 25% off. What is the sale price?",
+      choices: ["$10", "$15", "$28", "$30"],
+      correct: 3,
+      explain: "25% of $40 is $10 discount. $40 − $10 = $30."
+    },
+    {
+      strand: "Ratios & Proportions",
+      prompt: "Which of the following represents a proportional relationship between x and y?",
+      choices: ["y = x + 5", "y = 4x", "y = x\u00b2", "y = 3/x"],
+      correct: 1,
+      explain: "A proportional relationship has the form y = kx, passing through the origin with a constant ratio. Only y = 4x fits."
+    },
+    {
+      strand: "Ratios & Proportions",
+      prompt: "A map has a scale of 1 inch = 25 miles. If two cities are 4.5 inches apart on the map, what is the actual distance?",
+      choices: ["100 miles", "112.5 miles", "125 miles", "150 miles"],
+      correct: 1,
+      explain: "Multiply 4.5 × 25 = 112.5 miles."
+    },
+
+    // ---- The Number System (5) ----
+    {
+      strand: "The Number System",
+      prompt: "What is the value of −8 + 5?",
+      choices: ["−13", "−3", "3", "13"],
+      correct: 1,
+      explain: "Adding a smaller positive number to a negative number: −8 + 5 = −3."
+    },
+    {
+      strand: "The Number System",
+      prompt: "Evaluate: (−4) × (−6)",
+      choices: ["−24", "−10", "10", "24"],
+      correct: 3,
+      explain: "A negative times a negative gives a positive product: 4 × 6 = 24."
+    },
+    {
+      strand: "The Number System",
+      prompt: "What is −3/4 ÷ 1/8 ?",
+      choices: ["−6", "−3/32", "3/32", "6"],
+      correct: 0,
+      explain: "Dividing by a fraction means multiplying by its reciprocal: −3/4 × 8/1 = −24/4 = −6."
+    },
+    {
+      strand: "The Number System",
+      prompt: "Which decimal is equivalent to the fraction 5/8?",
+      choices: ["0.58", "0.625", "0.65", "0.8"],
+      correct: 1,
+      explain: "5 ÷ 8 = 0.625."
+    },
+    {
+      strand: "The Number System",
+      prompt: "A submarine is at an elevation of −120 feet. It rises 45 feet. What is its new elevation?",
+      choices: ["−165 ft", "−75 ft", "75 ft", "165 ft"],
+      correct: 1,
+      explain: "−120 + 45 = −75 feet."
+    },
+
+    // ---- Expressions & Equations (6) ----
+    {
+      strand: "Expressions & Equations",
+      prompt: "Simplify: 4(x + 3) − 2x",
+      choices: ["2x + 3", "2x + 12", "6x + 3", "6x + 12"],
+      correct: 1,
+      explain: "Distribute: 4x + 12 − 2x = 2x + 12."
+    },
+    {
+      strand: "Expressions & Equations",
+      prompt: "Solve for x: 3x − 7 = 14",
+      choices: ["x = 5", "x = 7", "x = 21/3", "x = 63"],
+      correct: 1,
+      explain: "Add 7 to both sides: 3x = 21. Divide by 3: x = 7."
+    },
+    {
+      strand: "Expressions & Equations",
+      prompt: "Which expression is equivalent to 2(3x − 5) + 4x?",
+      choices: ["10x − 10", "10x − 5", "6x − 10", "6x − 5"],
+      correct: 0,
+      explain: "Distribute: 6x − 10 + 4x = 10x − 10."
+    },
+    {
+      strand: "Expressions & Equations",
+      prompt: "Solve the inequality: 2x + 4 < 12",
+      choices: ["x < 4", "x < 8", "x > 4", "x > 8"],
+      correct: 0,
+      explain: "Subtract 4: 2x < 8. Divide by 2: x < 4."
+    },
+    {
+      strand: "Expressions & Equations",
+      prompt: "A phone plan costs $20 per month plus $0.10 per text message. Which expression models the total monthly cost for t texts?",
+      choices: ["20 + 0.10t", "0.10 + 20t", "20t + 0.10", "(20 + 0.10)t"],
+      correct: 0,
+      explain: "The flat fee ($20) is added once; the per-text charge scales with t, giving 20 + 0.10t."
+    },
+    {
+      strand: "Expressions & Equations",
+      prompt: "If y = 2x − 1 and x = 5, what is y?",
+      choices: ["4", "9", "10", "11"],
+      correct: 1,
+      explain: "Substitute x = 5: y = 2(5) − 1 = 10 − 1 = 9."
+    },
+
+    // ---- Geometry (5) ----
+    {
+      strand: "Geometry",
+      prompt: "A circle has a radius of 6 cm. What is its area? (Use π ≈ 3.14)",
+      choices: ["18.84 cm²", "37.68 cm²", "113.04 cm²", "226.08 cm²"],
+      correct: 2,
+      explain: "Area = πr² = 3.14 × 6² = 3.14 × 36 = 113.04 cm²."
+    },
+    {
+      strand: "Geometry",
+      prompt: "Two angles are supplementary. If one angle measures 65°, what is the measure of the other?",
+      choices: ["25°", "35°", "115°", "125°"],
+      correct: 2,
+      explain: "Supplementary angles sum to 180°. 180 − 65 = 115°."
+    },
+    {
+      strand: "Geometry",
+      prompt: "A rectangular prism has length 5 cm, width 3 cm, and height 4 cm. What is its volume?",
+      choices: ["12 cm³", "35 cm³", "60 cm³", "120 cm³"],
+      correct: 2,
+      explain: "Volume = l × w × h = 5 × 3 × 4 = 60 cm³."
+    },
+    {
+      strand: "Geometry",
+      prompt: "A triangle has angles measuring 40° and 65°. What is the measure of the third angle?",
+      choices: ["55°", "65°", "75°", "85°"],
+      correct: 2,
+      explain: "Triangle angles sum to 180°. 180 − 40 − 65 = 75°."
+    },
+    {
+      strand: "Geometry",
+      prompt: "A scale drawing of a garden uses a scale factor of 1:50. If the drawing shows a length of 3 cm, what is the actual length?",
+      choices: ["53 cm", "150 cm", "300 cm", "1500 cm"],
+      correct: 1,
+      explain: "Multiply the drawn length by the scale factor: 3 × 50 = 150 cm."
+    },
+
+    // ---- Statistics & Probability (4) ----
+    {
+      strand: "Statistics & Probability",
+      prompt: "A bag contains 4 red marbles, 3 blue marbles, and 5 green marbles. What is the probability of randomly drawing a blue marble?",
+      choices: ["1/4", "1/3", "5/12", "7/12"],
+      correct: 0,
+      explain: "There are 12 marbles total (4 + 3 + 5 = 12), and 3 are blue: 3/12 simplifies to 1/4."
+    },
+    {
+      strand: "Statistics & Probability",
+      prompt: "A survey of 40 students found that 25 prefer pizza for lunch. What percent of students prefer pizza?",
+      choices: ["25%", "40%", "62.5%", "65%"],
+      correct: 2,
+      explain: "25/40 = 0.625 = 62.5%."
+    },
+    {
+      strand: "Statistics & Probability",
+      prompt: "Which measure of center is most affected by an extreme outlier in a data set?",
+      choices: ["Mean", "Median", "Mode", "Range"],
+      correct: 0,
+      explain: "The mean uses every value in its calculation, so a single extreme value can shift it significantly. The median is more resistant to outliers."
+    },
+    {
+      strand: "Statistics & Probability",
+      prompt: "A spinner is divided into 5 equal sections numbered 1–5. What is the probability of landing on an even number?",
+      choices: ["1/5", "2/5", "3/5", "1/2"],
+      correct: 1,
+      explain: "Two of the five numbers (2 and 4) are even: probability = 2/5."
+    }
+  ];
+
+
+  const total = QUESTIONS.length;
+  let current = 0;
+  let selected = null;
+  let locked = false;
+  const responses = new Array(total).fill(null); // stores chosen index per question
+
+  const introScreen = document.getElementById('intro-screen');
+  const quizScreen = document.getElementById('quiz-screen');
+  const reportScreen = document.getElementById('report-screen');
+  const startBtn = document.getElementById('start-btn');
+  const nextBtn = document.getElementById('next-btn');
+  const retakeBtn = document.getElementById('retake-btn');
+  const printBtn = document.getElementById('print-btn');
+
+  startBtn.addEventListener('click', () => {
+    introScreen.classList.add('hidden');
+    quizScreen.classList.remove('hidden');
+    renderQuestion();
+  });
+
+  retakeBtn.addEventListener('click', () => {
+    current = 0;
+    selected = null;
+    locked = false;
+    responses.fill(null);
+    reportScreen.classList.add('hidden');
+    quizScreen.classList.remove('hidden');
+    renderQuestion();
+    window.scrollTo({top:0, behavior:'smooth'});
+  });
+
+  printBtn.addEventListener('click', () => window.print());
+
+  function renderQuestion(){
+    const q = QUESTIONS[current];
+    selected = null;
+    locked = false;
+
+    document.getElementById('progress-fill').style.width = ((current) / total * 100) + '%';
+    document.getElementById('progress-text').textContent = `Question ${current+1} of ${total}`;
+
+    document.getElementById('q-strand').textContent = q.strand;
+    document.getElementById('q-prompt').textContent = q.prompt;
+
+    const choicesWrap = document.getElementById('q-choices');
+    choicesWrap.innerHTML = '';
+    const letters = ['A','B','C','D'];
+
+    q.choices.forEach((choiceText, idx) => {
+      const btn = document.createElement('button');
+      btn.className = 'choice';
+      btn.setAttribute('type','button');
+      btn.innerHTML = `<span class="letter">${letters[idx]}</span><span>${choiceText}</span>`;
+      btn.addEventListener('click', () => selectChoice(idx));
+      choicesWrap.appendChild(btn);
+    });
+
+    document.getElementById('feedback-box').classList.add('hidden');
+    nextBtn.disabled = true;
+    nextBtn.textContent = 'Check answer';
+    nextBtn.onclick = handleNextClick;
+  }
+
+  function selectChoice(idx){
+    if (locked) return;
+    selected = idx;
+    const choiceEls = document.querySelectorAll('#q-choices .choice');
+    choiceEls.forEach((el, i) => {
+      el.classList.toggle('selected', i === idx);
+    });
+    nextBtn.disabled = false;
+  }
+
+  function handleNextClick(){
+    if (!locked){
+      lockAndReveal();
+    } else {
+      advance();
+    }
+  }
+
+  function lockAndReveal(){
+    locked = true;
+    const q = QUESTIONS[current];
+    responses[current] = selected;
+
+    const choiceEls = document.querySelectorAll('#q-choices .choice');
+    choiceEls.forEach((el, i) => {
+      el.classList.add('locked');
+      if (i === q.correct) el.classList.add('correct-answer');
+      if (i === selected && selected !== q.correct) el.classList.add('wrong-answer');
+    });
+
+    const fb = document.getElementById('feedback-box');
+    fb.classList.remove('hidden');
+    const wasCorrect = selected === q.correct;
+    fb.innerHTML = `<strong>${wasCorrect ? 'Correct.' : 'Not quite.'}</strong> ${q.explain}`;
+
+    nextBtn.textContent = (current === total - 1) ? 'View report' : 'Next question';
+  }
+
+  function advance(){
+    if (current < total - 1){
+      current++;
+      renderQuestion();
+      document.querySelector('.q-card').scrollIntoView({behavior:'smooth', block:'start'});
+    } else {
+      document.getElementById('progress-fill').style.width = '100%';
+      showReport();
+    }
+  }
+
+  function showReport(){
+    quizScreen.classList.add('hidden');
+    reportScreen.classList.remove('hidden');
+
+    let correctCount = 0;
+    const strandStats = {};
+    QUESTIONS.forEach(q => {
+      if (!strandStats[q.strand]) strandStats[q.strand] = {correct:0, total:0};
+      strandStats[q.strand].total++;
+    });
+
+    QUESTIONS.forEach((q, i) => {
+      if (responses[i] === q.correct){
+        correctCount++;
+        strandStats[q.strand].correct++;
+      }
+    });
+
+    document.getElementById('score-big').textContent = correctCount;
+
+    const pct = correctCount / total;
+    let bandText, bandColor;
+    if (pct >= 0.85){ bandText = 'Advanced'; bandColor = '#33684a'; }
+    else if (pct >= 0.65){ bandText = 'Proficient'; bandColor = '#1f3a4d'; }
+    else if (pct >= 0.45){ bandText = 'Developing'; bandColor = '#a9762f'; }
+    else { bandText = 'Foundational'; bandColor = '#9c3b2e'; }
+
+    const bandLabel = document.getElementById('band-label');
+    bandLabel.textContent = bandText;
+    bandLabel.style.background = bandColor;
+
+    const summarySentence = document.getElementById('summary-sentence');
+    summarySentence.textContent = `You answered ${correctCount} of ${total} questions correctly (${Math.round(pct*100)}%). The breakdown below shows performance across each skill area assessed on the Grade 7 MAP math test.`;
+
+    // Strand bars
+    const strandBarsWrap = document.getElementById('strand-bars');
+    strandBarsWrap.innerHTML = '';
+    Object.keys(strandStats).forEach(strand => {
+      const s = strandStats[strand];
+      const spct = Math.round((s.correct / s.total) * 100);
+      const color = STRAND_COLORS[strand] || '#1f3a4d';
+      const row = document.createElement('div');
+      row.className = 'strand-row';
+      row.innerHTML = `
+        <div class="label-line">
+          <span class="name">${strand}</span>
+          <span class="frac">${s.correct} / ${s.total} &nbsp;(${spct}%)</span>
+        </div>
+        <div class="bar-track">
+          <div class="bar-fill" style="width:${spct}%; background:${color};"></div>
+        </div>
+      `;
+      strandBarsWrap.appendChild(row);
+    });
+
+    // Recommendations
+    const recWrap = document.getElementById('recommendations');
+    const sortedStrands = Object.keys(strandStats).sort((a,b) => {
+      const pa = strandStats[a].correct / strandStats[a].total;
+      const pb = strandStats[b].correct / strandStats[b].total;
+      return pa - pb;
+    });
+    const weakest = sortedStrands.slice(0, 2).filter(s => (strandStats[s].correct/strandStats[s].total) < 0.8);
+    if (weakest.length === 0){
+      recWrap.innerHTML = `<p>Performance was strong and consistent across all five skill areas. Continue with grade-level or slightly above-level practice to maintain fluency.</p>`;
+    } else {
+      const items = weakest.map(strand => {
+        const s = strandStats[strand];
+        return `<li><strong>${strand}</strong> — ${s.correct}/${s.total} correct. Prioritize targeted review and practice sets in this area before moving to enrichment topics.</li>`;
+      }).join('');
+      recWrap.innerHTML = `<p>Based on this diagnostic, focus review time on:</p><ul style="padding-left:20px;">${items}</ul>`;
+    }
+
+    // Review list
+    const reviewWrap = document.getElementById('review-list');
+    reviewWrap.innerHTML = '';
+    QUESTIONS.forEach((q, i) => {
+      const wasCorrect = responses[i] === q.correct;
+      const yourAns = responses[i] !== null ? q.choices[responses[i]] : '(no answer)';
+      const item = document.createElement('div');
+      item.className = 'review-item';
+      item.innerHTML = `
+        <div class="rq">${i+1}. ${q.prompt}</div>
+        <div class="rmeta">
+          <span class="tag ${wasCorrect ? 'ok' : 'no'}">${wasCorrect ? 'Correct' : 'Incorrect'}</span>
+          <span class="strandname">${q.strand}</span>
+          ${!wasCorrect ? `<span style="color:var(--ink-soft)">Your answer: ${yourAns} — Correct: ${q.choices[q.correct]}</span>` : ''}
+        </div>
+      `;
+      reviewWrap.appendChild(item);
+    });
+
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+
+})();
+</script>
+
+</body>
+</html>
