@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>6th to 9th Grade Comprehensive Math Diagnostic Assessment</title>
+    <title>6th–8th Grade NWEA-Aligned Math Diagnostic Assessment</title>
     <style>
         :root {
-            --primary: #7c3aed; /* Vibrant purple accent */
-            --primary-dark: #6d28d9; /* Darker purple */
+            --primary: #2563eb; /* Professional NWEA blue accent */
+            --primary-dark: #1d4ed8;
             --success: #16a34a;
             --error: #dc2626;
             --bg-color: #f8fafc;
@@ -41,14 +41,16 @@
             color: var(--primary);
             text-align: center;
             margin-bottom: 5px;
-            font-size: 1.5rem;
+            font-size: 1.4rem;
         }
 
         .subtitle {
             text-align: center;
             color: #64748b;
             margin-bottom: 25px;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
         }
 
         .progress-bar {
@@ -77,8 +79,8 @@
 
         .domain-tag {
             display: inline-block;
-            background-color: #f3e8ff; /* Light purple tint */
-            color: #7c3aed; /* Purple text */
+            background-color: #eff6ff; /* Light blue tint */
+            color: #1d4ed8; /* Blue text */
             padding: 4px 10px;
             border-radius: 20px;
             font-size: 0.75rem;
@@ -113,12 +115,12 @@
 
         .option-item:hover {
             border-color: var(--primary);
-            background-color: #faf5ff; /* Very light purple hover */
+            background-color: #eff6ff;
         }
 
         .option-item.selected {
             border-color: var(--primary);
-            background-color: #f3e8ff; /* Light purple selection background */
+            background-color: #dbeafe;
             font-weight: 600;
         }
 
@@ -216,8 +218,8 @@
 <body>
 
 <div class="container">
-    <h1>Math Readiness Diagnostic Assessment</h1>
-    <div class="subtitle">6th to 9th Grade Transition Evaluation</div>
+    <h1>6th–8th Grade NWEA-Aligned Math Diagnostic Assessment</h1>
+    <div class="subtitle">MAP Growth Framework Evaluation (Grades 6–8)</div>
 
     <div class="progress-bar">
         <div class="progress" id="progress-bar"></div>
@@ -232,14 +234,14 @@
     <div id="report-screen">
         <div class="report-header">
             <h2 style="margin: 0 0 5px 0; color: var(--primary);">Assessment Report</h2>
-            <p style="margin: 0; color: #64748b; font-size: 0.9rem;">30-Question Comprehensive Evaluation</p>
+            <p style="margin: 0; color: #64748b; font-size: 0.9rem;">Comprehensive NWEA MAP Growth Evaluation</p>
         </div>
 
         <h3 style="font-size: 1rem; margin-bottom: 10px;">Score Summary</h3>
         <table class="report-table" id="summary-table">
             <thead>
                 <tr>
-                    <th>Section</th>
+                    <th>NWEA Goal Strand</th>
                     <th>Score</th>
                     <th>%</th>
                     <th>Status</th>
@@ -251,12 +253,12 @@
         </table>
 
         <div class="guide-box">
-            <h4>Score Interpretation Guide</h4>
+            <h4>NWEA Performance Interpretation Guide</h4>
             <ul>
-                <li><strong>Algebra 1 Ready / Exceeds (26–30 pts / 87–100%):</strong> Strong foundational mastery. Ready for advanced coursework.</li>
-                <li><strong>On Track (21–25 pts / 70–86%):</strong> Solid understanding with minor gaps. Ready for Algebra 1.</li>
-                <li><strong>Developing (15–20 pts / 50–69%):</strong> Gaps in key areas; supplemental support recommended.</li>
-                <li><strong>Needs Support (0–14 pts / 0–49%):</strong> Significant foundational gaps; pre-algebra review recommended.</li>
+                <li><strong>Exceeds / Advanced (87–100%):</strong> Demonstrates high proficiency across middle school RIT bands. Ready for advanced coursework.</li>
+                <li><strong>On Track (70–86%):</strong> Solid understanding with minor gaps[cite: 1]. Fully prepared for grade-level progression.</li>
+                <li><strong>Developing (50–69%):</strong> Gaps in key intermediate areas[cite: 1]; structured support and targeted pre-algebra review recommended[cite: 1].</li>
+                <li><strong>Needs Support (0–49%):</strong> Significant foundational gaps[cite: 1]; additional intervention strongly recommended[cite: 1].</li>
             </ul>
         </div>
 
@@ -271,249 +273,199 @@
 
 <script>
     const questions = [
-        // Section 1: Numbers & Operations (Q1 - Q6)
+        // Strand 1: The Number System & Operations (Q1 - Q6)
         {
-            section: "Section 1: Numbers & Operations",
+            section: "The Number System & Operations",
             topic: "Integer Operations",
             text: "Simplify the following expression: -12 + (-4) × 3 - (-10)",
             options: ["-14", "-34", "6", "-24"],
             answer: 0,
-            weaknessMsg: "Review order of operations (PEMDAS) and signed integer arithmetic."
+            weaknessMsg: "Review integer order of operations (PEMDAS) and signed arithmetic."
         },
         {
-            section: "Section 1: Numbers & Operations",
+            section: "The Number System & Operations",
             topic: "Rational Numbers",
             text: "Arrange from least to greatest: 3/4, 0.7, 72%, 2/3",
             options: ["2/3, 0.7, 72%, 3/4", "0.7, 2/3, 72%, 3/4", "2/3, 72%, 0.7, 3/4", "3/4, 72%, 0.7, 2/3"],
             answer: 0,
-            weaknessMsg: "Practice converting fractions, decimals, and percentages to common formats for comparison."
+            weaknessMsg: "Practice converting and comparing fractions, decimals, and percentages."
         },
         {
-            section: "Section 1: Numbers & Operations",
+            section: "The Number System & Operations",
             topic: "Proportions & Rates",
             text: "A car travels 150 miles in 3 hours. How many miles will it travel in 7 hours at the same constant rate?",
             options: ["300 miles", "350 miles", "400 miles", "450 miles"],
             answer: 1,
-            weaknessMsg: "Focus on unit rates and solving direct proportion word problems."
+            weaknessMsg: "Focus on unit rates and solving proportional relationships."
         },
         {
-            section: "Section 1: Numbers & Operations",
+            section: "The Number System & Operations",
             topic: "Percentages",
             text: "A jacket originally costs $85.00. It is on sale for 20% off. What is the final price before tax?",
             options: ["$17.00", "$65.00", "$68.00", "$75.00"],
             answer: 2,
-            weaknessMsg: "Review calculating percent discounts and finding parts of a whole."
+            weaknessMsg: "Review real-world percentage discount and markup calculations."
         },
         {
-            section: "Section 1: Numbers & Operations",
+            section: "The Number System & Operations",
             topic: "Absolute Value",
             text: "What is the value of |-7.5| + |-2.5|?",
             options: ["-10", "-5", "5", "10"],
             answer: 3,
-            weaknessMsg: "Practice absolute value rules and decimal addition."
+            weaknessMsg: "Practice evaluating absolute value expressions and combining decimals."
         },
         {
-            section: "Section 1: Numbers & Operations",
+            section: "The Number System & Operations",
             topic: "Fraction Arithmetic",
             text: "What is 3/4 divided by 1/2 in simplest form?",
             options: ["3/8", "1/2", "3/2", "4/3"],
             answer: 2,
-            weaknessMsg: "Review fraction division rules (multiply by the reciprocal)."
+            weaknessMsg: "Review fraction division rules (multiplying by the reciprocal)."
         },
 
-        // Section 2: Expressions & Equations (Q7 - Q12)
+        // Strand 2: Algebra & Expressions (Q7 - Q12)
         {
-            section: "Section 2: Expressions & Equations",
+            section: "Algebra & Expressions",
             topic: "Evaluating Expressions",
             text: "Evaluate 3x² - 5x + 2 when x = -2.",
             options: ["24", "4", "-4", "0"],
             answer: 0,
-            weaknessMsg: "Review substitution of negative values into polynomial expressions."
+            weaknessMsg: "Review substituting negative integers into algebraic polynomial expressions."
         },
         {
-            section: "Section 2: Expressions & Equations",
+            section: "Algebra & Expressions",
             topic: "Distributive Property",
             text: "Simplify: 4(2x - 3) - 2(x + 5)",
             options: ["6x - 2", "6x - 22", "8x - 12 - 2x + 10", "10x - 22"],
             answer: 1,
-            weaknessMsg: "Practice distributing negative numbers and combining like terms."
+            weaknessMsg: "Practice applying the distributive property and combining like terms[cite: 1]."
         },
         {
-            section: "Section 2: Expressions & Equations",
+            section: "Algebra & Expressions",
             topic: "Two-Step Equations",
             text: "Solve for y: (y / 4) + 7 = 2",
             options: ["y = -5", "y = -20", "y = 20", "y = 36"],
             answer: 1,
-            weaknessMsg: "Focus on isolating variables using inverse operations."
+            weaknessMsg: "Focus on solving one- and two-step linear equations[cite: 1]."
         },
         {
-            section: "Section 2: Expressions & Equations",
+            section: "Algebra & Expressions",
             topic: "Multi-Step Equations",
             text: "Solve for x: 3(x - 4) = 2x + 10",
             options: ["x = 2", "x = 7", "x = 14", "x = 22"],
             answer: 3,
-            weaknessMsg: "Review solving multi-step equations with variables on both sides."
+            weaknessMsg: "Review multi-step equation solving with variables on both sides."
         },
         {
-            section: "Section 2: Expressions & Equations",
+            section: "Algebra & Expressions",
             topic: "Inequalities",
             text: "Solve the inequality: -2x + 5 > 11",
             options: ["x > -3", "x < -3", "x > 3", "x < 3"],
             answer: 1,
-            weaknessMsg: "Remember to reverse inequality signs when multiplying or dividing by negative numbers."
+            weaknessMsg: "Remember to reverse inequality symbols when multiplying/dividing by a negative."
         },
         {
-            section: "Section 2: Expressions & Equations",
-            topic: "Factoring GCF",
-            text: "Factor completely: 6x² - 9x",
-            options: ["3x(2x - 3)", "3(2x² - 3x)", "x(6x - 9)", "6x(x - 3)"],
-            answer: 0,
-            weaknessMsg: "Review finding the greatest common factor (GCF) for algebraic terms."
-        },
-
-        // Section 3: Functions & Linear Relationships (Q13 - Q18)
-        {
-            section: "Section 3: Functions & Linear Relationships",
-            topic: "Slope Formula",
+            section: "Algebra & Expressions",
+            topic: "Linear Functions & Slope",
             text: "Find the slope of the line passing through the points (2, 5) and (4, -1).",
             options: ["m = -3", "m = 3", "m = -1/3", "m = 1/3"],
             answer: 0,
-            weaknessMsg: "Practice using the coordinate slope formula m = (y₂ - y₁) / (x₂ - x₁)."
-        },
-        {
-            section: "Section 3: Functions & Linear Relationships",
-            topic: "Slope-Intercept Form",
-            text: "Write the equation of a line with slope m = 3 passing through (0, -4).",
-            options: ["y = -4x + 3", "y = 3x - 4", "y = 3x + 4", "y = -3x - 4"],
-            answer: 1,
-            weaknessMsg: "Review slope-intercept form (y = mx + b) identifying slope and y-intercept."
-        },
-        {
-            section: "Section 3: Functions & Linear Relationships",
-            topic: "Systems of Equations",
-            text: "Solve the system: x + y = 10 and 2x - y = 2",
-            options: ["x = 3, y = 7", "x = 4, y = 6", "x = 5, y = 5", "x = 6, y = 4"],
-            answer: 1,
-            weaknessMsg: "Practice solving linear systems via substitution or elimination."
-        },
-        {
-            section: "Section 3: Functions & Linear Relationships",
-            topic: "Expanding Binomials",
-            text: "Multiply and simplify: (x + 3)(x + 5)",
-            options: ["x² + 8x + 15", "x² + 15x + 8", "x² + 8x + 8", "2x + 8"],
-            answer: 0,
-            weaknessMsg: "Practice the FOIL method for multiplying binomial expressions."
-        },
-        {
-            section: "Section 3: Functions & Linear Relationships",
-            topic: "Direct Variation",
-            text: "y varies directly with x. If y = 15 when x = 3, what is y when x = 7?",
-            options: ["35", "45", "25", "10"],
-            answer: 0,
-            weaknessMsg: "Review direct variation models (y = kx) and constant of proportionality."
-        },
-        {
-            section: "Section 3: Functions & Linear Relationships",
-            topic: "Function Evaluation",
-            text: "If f(x) = 2x - 5, what is the value of f(4)?",
-            options: ["3", "8", "-3", "13"],
-            answer: 0,
-            weaknessMsg: "Practice evaluating function notation by substituting input values."
+            weaknessMsg: "Practice determining slope from coordinate points or slope-intercept form[cite: 1]."
         },
 
-        // Section 4: Geometry & Measurement (Q19 - Q24)
+        // Strand 3: Geometry (Q13 - Q18)
         {
-            section: "Section 4: Geometry & Measurement",
+            section: "Geometry",
             topic: "Angle Relationships",
             text: "If ∠A and ∠B are supplementary and m∠A = 115°, find m∠B.",
             options: ["65°", "75°", "85°", "25°"],
             answer: 0,
-            weaknessMsg: "Review supplementary (180°) and complementary (90°) angle rules."
+            weaknessMsg: "Review supplementary and complementary angle properties."
         },
         {
-            section: "Section 4: Geometry & Measurement",
+            section: "Geometry",
             topic: "Pythagorean Theorem",
             text: "A rectangle has a length of 12 cm and a diagonal of 13 cm. Find its area.",
             options: ["30 cm²", "60 cm²", "72 cm²", "156 cm²"],
             answer: 1,
-            weaknessMsg: "Practice applying the Pythagorean Theorem (a² + b² = c²) to find missing rectangle dimensions."
+            weaknessMsg: "Practice applying the Pythagorean theorem (a² + b² = c²)[cite: 1] to find missing dimensions."
         },
         {
-            section: "Section 4: Geometry & Measurement",
-            topic: "Cylinder Volume",
+            section: "Geometry",
+            topic: "Volume of Cylinders",
             text: "Find the volume of a cylinder with radius 3 inches and height 10 inches. (Use π ≈ 3.14)",
             options: ["94.2 cubic inches", "188.4 cubic inches", "282.6 cubic inches", "565.2 cubic inches"],
             answer: 2,
-            weaknessMsg: "Review formulas for 3D volumes, specifically cylinders (V = πr²h)."
+            weaknessMsg: "Review volume formulas for 3D cylinders and geometric solids."
         },
         {
-            section: "Section 4: Geometry & Measurement",
-            topic: "Circle Area",
+            section: "Geometry",
+            topic: "Circle Area & Circumference",
             text: "What is the area of a circle with a diameter of 8 cm? (Use π ≈ 3.14)",
             options: ["25.12 cm²", "50.24 cm²", "100.48 cm²", "12.56 cm²"],
             answer: 1,
-            weaknessMsg: "Practice distinguishing between radius and diameter when calculating circle area (A = πr²)."
+            weaknessMsg: "Practice calculating circle area (A = πr²) and circumference using radius/diameter[cite: 1]."
         },
         {
-            section: "Section 4: Geometry & Measurement",
+            section: "Geometry",
             topic: "Triangle Area",
             text: "Find the area of a triangle with a base of 10 cm and a height of 6 cm.",
             options: ["60 cm²", "30 cm²", "16 cm²", "32 cm²"],
             answer: 1,
-            weaknessMsg: "Review polygon area formulas, specifically triangles (A = ½bh)."
+            weaknessMsg: "Review standard polygon area formulas, specifically triangles (A = ½bh)[cite: 1]."
         },
         {
-            section: "Section 4: Geometry & Measurement",
+            section: "Geometry",
             topic: "Polygon Perimeter",
             text: "What is the perimeter of a regular hexagon with a side length of 7 cm?",
             options: ["35 cm", "42 cm", "49 cm", "56 cm"],
             answer: 1,
-            weaknessMsg: "Practice perimeter calculations for regular polygons."
+            weaknessMsg: "Practice perimeter and boundary calculations for regular polygons."
         },
 
-        // Section 5: Data Analysis & Probability (Q25 - Q30)
+        // Strand 4: Statistics & Probability (Q19 - Q24)
         {
-            section: "Section 5: Data Analysis & Probability",
-            topic: "Mean / Averages",
+            section: "Statistics & Probability",
+            topic: "Mean & Averages",
             text: "A student has scores of 82, 85, and 90. What score do they need on the fourth test for a mean of 88?",
             options: ["89", "91", "95", "96"],
             answer: 2,
-            weaknessMsg: "Practice working backward from target means to find missing data points."
+            weaknessMsg: "Practice solving for missing values given a target mean or average."
         },
         {
-            section: "Section 5: Data Analysis & Probability",
+            section: "Statistics & Probability",
             topic: "Basic Probability",
             text: "A bag contains 4 red, 3 blue, and 5 green marbles. What is the probability of drawing a blue marble?",
             options: ["3/12 (or 1/4)", "3/9", "4/12", "3/7"],
             answer: 0,
-            weaknessMsg: "Review basic single-event probability (favorable outcomes / total outcomes)."
+            weaknessMsg: "Review basic single-event probability ratios."
         },
         {
-            section: "Section 5: Data Analysis & Probability",
-            topic: "Unit Pricing",
+            section: "Statistics & Probability",
+            topic: "Unit Rates & Pricing",
             text: "Which is the better buy: a 12-oz box for $3.60 or an 18-oz box for $4.86?",
             options: ["12-oz box ($0.30/oz)", "18-oz box ($0.27/oz)", "They cost the same", "Cannot be determined"],
             answer: 1,
-            weaknessMsg: "Practice computing unit rates for comparison problem solving."
+            weaknessMsg: "Practice unit pricing calculations for comparative data analysis."
         },
         {
-            section: "Section 5: Data Analysis & Probability",
+            section: "Statistics & Probability",
             topic: "Distance-Rate-Time",
             text: "A train travels at a constant speed of 60 mph. How long does it take to travel 210 miles?",
             options: ["2.5 hours", "3 hours", "3.5 hours", "4 hours"],
             answer: 2,
-            weaknessMsg: "Practice applying the distance-rate-time formula (Time = Distance / Rate)."
+            weaknessMsg: "Review applications of rates, ratios, and distance formulas."
         },
         {
-            section: "Section 5: Data Analysis & Probability",
+            section: "Statistics & Probability",
             topic: "Median & Range",
             text: "Find the median of the data set: 14, 7, 22, 19, 3, 11, 25.",
             options: ["14", "13", "11", "19"],
             answer: 0,
-            weaknessMsg: "Practice sorting data sets to correctly identify medians and ranges."
+            weaknessMsg: "Practice ordering data sets to correctly identify central measures like the median."
         },
         {
-            section: "Section 5: Data Analysis & Probability",
+            section: "Statistics & Probability",
             topic: "Compound Probability",
             text: "A coin is flipped and a standard 6-sided die is rolled. What is the probability of getting heads and rolling a 4?",
             options: ["1/6", "1/12", "1/3", "1/2"],
@@ -593,7 +545,7 @@
         reportScreen.style.display = 'block';
         progressBar.style.width = '100%';
 
-        // Group scores by section
+        // Group scores by NWEA Goal Strand
         const sectionStats = {};
         userAnswers.forEach(ans => {
             if (!sectionStats[ans.section]) {
@@ -628,7 +580,7 @@
 
         const overallPct = Math.round((score / questions.length) * 100);
         let overallLevel = "Needs Support";
-        if (overallPct >= 87) overallLevel = "Algebra 1 Ready / Exceeds";
+        if (overallPct >= 87) overallLevel = "Exceeds / Advanced";
         else if (overallPct >= 70) overallLevel = "On Track";
         else if (overallPct >= 50) overallLevel = "Developing";
 
@@ -650,8 +602,8 @@
         if (incorrectAnswers.length === 0) {
             recHTML = `
                 <div class="recommendation-block" style="border-left-color: var(--success); background: #f0fdf4;">
-                    <h4 style="color: var(--success);">Exceeds Expectations / Advanced Readiness!</h4>
-                    <p style="color: #166534;">The student demonstrated complete mastery across all 30 diagnostic items, showing exceptional readiness for advanced math coursework.</p>
+                    <h4 style="color: var(--success);">Advanced NWEA Mastery!</h4>
+                    <p style="color: #166534;">The student demonstrated complete mastery across all NWEA MAP Growth goal strands for grades 6–8.</p>
                 </div>
             `;
         } else {
