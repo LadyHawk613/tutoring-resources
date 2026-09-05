@@ -252,7 +252,7 @@
                     {
                         question: "1. Find \\(\\dfrac{dy}{dx}\\) for: \\(x^2y = 5\\)",
                         steps: [
-                            "Apply product rule \\((f \\cdot g)' = f'g + fg'\\) to left side: \\((2x)(y) + (x^2)\\left(\\dfrac{dy}{dx}\\)\\)",
+                            "Apply product rule \\((f \\cdot g)' = f'g + fg'\\) to left side: \\((2x)(y) + x^2\\left(\\dfrac{dy}{dx}\\)\\)",
                             "Differentiate the right side constant: \\(\\dfrac{d}{dx}[5] = 0\\)",
                             "Set equation: \\(2xy + x^2\\dfrac{dy}{dx} = 0\\)",
                             "Isolate \\(\\dfrac{dy}{dx}\\): \\(x^2\\dfrac{dy}{dx} = -2xy \\implies \\dfrac{dy}{dx} = \\dfrac{-2xy}{x^2}\\)"
@@ -262,7 +262,7 @@
                     {
                         question: "2. Find \\(\\dfrac{dy}{dx}\\) for: \\(xy^2 = 12\\)",
                         steps: [
-                            "Apply product rule: \\((1)(y^2) + (x)\\left(2y \\dfrac{dy}{dx}\\) = 0\\)",
+                            "Apply product rule: \\((1)(y^2) + x\\left(2y \\dfrac{dy}{dx}\\) = 0\\)",
                             "Simplify: \\(y^2 + 2xy\\dfrac{dy}{dx} = 0\\)",
                             "Move non-derivative term: \\(2xy\\dfrac{dy}{dx} = -y^2\\)",
                             "Divide to isolate: \\(\\dfrac{dy}{dx} = \\dfrac{-y^2}{2xy}\\)"
@@ -326,7 +326,6 @@
     // TEMPLATE GENERATOR ENGINE (DO NOT EDIT)
     // ==========================================
     function renderLesson() {
-        // Set Header
         document.getElementById('lesson-title').textContent = lessonData.title;
         document.getElementById('lesson-subtitle').textContent = lessonData.subtitle;
 
@@ -339,14 +338,12 @@
         lessonData.levels.forEach((level, index) => {
             const isActive = index === 0 ? 'active' : '';
 
-            // 1. Create Navigation Tab Button
             const tabBtn = document.createElement('button');
             tabBtn.className = `tab-btn ${isActive}`;
             tabBtn.setAttribute('onclick', `switchLevel(${level.levelNumber})`);
             tabBtn.textContent = level.tabName;
             tabsContainer.appendChild(tabBtn);
 
-            // 2. Create Level Section Page
             const section = document.createElement('section');
             section.id = `level-${level.levelNumber}`;
             section.className = `level-section ${isActive}`;
@@ -380,7 +377,6 @@
             contentContainer.appendChild(section);
         });
 
-        // Tell MathJax to typeset the dynamically injected equations
         if (window.MathJax) {
             MathJax.typeset();
         }
@@ -409,7 +405,6 @@
         }
     }
 
-    // Run on load
     window.onload = renderLesson;
 </script>
 
