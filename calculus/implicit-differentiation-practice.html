@@ -3,21 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Implicit Differentiation Practice Guide</title>
+    <title>Math Practice Template</title>
     
     <!-- MathJax CDN for rendering equations -->
     <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
     <style>
         :root {
-            --primary: #2563eb;
-            --primary-hover: #1d4ed8;
+            --primary: #7c3aed;          /* Purple accent */
+            --primary-hover: #6d28d9;    /* Darker purple for hover */
             --bg-color: #f8fafc;
             --card-bg: #ffffff;
             --text-main: #1e293b;
             --text-muted: #64748b;
             --border-color: #e2e8f0;
-            --step-bg: #f1f5f9;
+            --step-bg: #f5f3ff;          /* Light purple tint for steps */
         }
 
         body {
@@ -78,7 +78,7 @@
             background-color: #cbd5e1;
         }
 
-        /* Level section styling (Pages) */
+        /* Level section styling */
         .level-section {
             display: none;
             background: var(--card-bg);
@@ -156,10 +156,10 @@
         }
 
         .solution-panel.open {
-            max-height: 600px;
+            max-height: 800px;
             margin-top: 15px;
             padding: 15px;
-            border: 1px solid var(--border-color);
+            border: 1px solid #ddd6fe;
         }
 
         .solution-panel h4 {
@@ -167,7 +167,7 @@
             font-size: 0.95rem;
             text-transform: uppercase;
             letter-spacing: 0.05em;
-            color: var(--text-muted);
+            color: #5b21b6;
         }
 
         .steps-list {
@@ -182,7 +182,7 @@
         .final-answer {
             margin-top: 12px;
             padding-top: 8px;
-            border-top: 1px dashed var(--border-color);
+            border-top: 1px dashed #ddd6fe;
             font-weight: bold;
             color: #047857;
         }
@@ -192,210 +192,204 @@
 
 <div class="container">
     <header>
-        <h1>Implicit Differentiation Practice</h1>
-        <p class="subtitle">Step-by-step interactive problem sets</p>
+        <h1 id="lesson-title">Lesson Title</h1>
+        <p class="subtitle" id="lesson-subtitle">Lesson Subtitle</p>
     </header>
 
     <!-- Navigation Tabs -->
-    <div class="nav-tabs">
-        <button class="tab-btn active" onclick="switchLevel(1)">Level 1: Single Terms</button>
-        <button class="tab-btn" onclick="switchLevel(2)">Level 2: Product Rule</button>
-        <button class="tab-btn" onclick="switchLevel(3)">Level 3: Full Equation & Factoring</button>
-    </div>
+    <div class="nav-tabs" id="nav-tabs-container"></div>
 
-    <!-- LEVEL 1 PAGE -->
-    <section id="level-1" class="level-section active">
-        <div class="level-header">
-            <h2>Level 1: Single-Term Practice</h2>
-            <p>Focuses on applying the chain rule tag-along \(\dfrac{dy}{dx}\) to isolated \(y\) terms.</p>
-        </div>
-
-        <!-- Problem 1.1 -->
-        <div class="problem-card">
-            <div class="problem-top">
-                <span class="problem-text">1. \(\dfrac{d}{dx}[y^5]\)</span>
-                <button class="show-btn" onclick="toggleSolution(this)">Show Answer</button>
-            </div>
-            <div class="solution-panel">
-                <h4>Solution Steps:</h4>
-                <ul class="steps-list">
-                    <li>Apply standard power rule to the outside function: \(5y^4\)</li>
-                    <li>Multiply immediately by the derivative of the inside function: \(\dfrac{dy}{dx}\)</li>
-                </ul>
-                <div class="final-answer">Answer: \(5y^4 \dfrac{dy}{dx}\)</div>
-            </div>
-        </div>
-
-        <!-- Problem 1.2 -->
-        <div class="problem-card">
-            <div class="problem-top">
-                <span class="problem-text">2. \(\dfrac{d}{dx}[4x^3 - 3y^4]\)</span>
-                <button class="show-btn" onclick="toggleSolution(this)">Show Answer</button>
-            </div>
-            <div class="solution-panel">
-                <h4>Solution Steps:</h4>
-                <ul class="steps-list">
-                    <li>Differentiate the first term normally: \(\dfrac{d}{dx}[4x^3] = 12x^2\)</li>
-                    <li>Differentiate the second term using the power rule and chain rule: \(-3\left(4y^3 \dfrac{dy}{dx}\right) = -12y^3 \dfrac{dy}{dx}\)</li>
-                </ul>
-                <div class="final-answer">Answer: \(12x^2 - 12y^3 \dfrac{dy}{dx}\)</div>
-            </div>
-        </div>
-
-        <!-- Problem 1.3 -->
-        <div class="problem-card">
-            <div class="problem-top">
-                <span class="problem-text">3. \(\dfrac{d}{dx}[\sin(y)]\)</span>
-                <button class="show-btn" onclick="toggleSolution(this)">Show Answer</button>
-            </div>
-            <div class="solution-panel">
-                <h4>Solution Steps:</h4>
-                <ul class="steps-list">
-                    <li>Differentiate the outside function (sine becomes cosine): \(\cos(y)\)</li>
-                    <li>Multiply by the derivative of the inside function: \(\dfrac{dy}{dx}\)</li>
-                </ul>
-                <div class="final-answer">Answer: \(\cos(y) \dfrac{dy}{dx}\)</div>
-            </div>
-        </div>
-    </section>
-
-    <!-- LEVEL 2 PAGE -->
-    <section id="level-2" class="level-section">
-        <div class="level-header">
-            <h2>Level 2: Product Rule Practice</h2>
-            <p>Focuses on handling expressions where \(x\) and \(y\) are multiplied together.</p>
-        </div>
-
-        <!-- Problem 2.1 -->
-        <div class="problem-card">
-            <div class="problem-top">
-                <span class="problem-text">1. Find \(\dfrac{dy}{dx}\) for: \(x^2y = 5\)</span>
-                <button class="show-btn" onclick="toggleSolution(this)">Show Answer</button>
-            </div>
-            <div class="solution-panel">
-                <h4>Solution Steps:</h4>
-                <ul class="steps-list">
-                    <li>Apply product rule \((f \cdot g)' = f'g + fg'\) to left side: \((2x)(y) + (x^2)\left(\dfrac{dy}{dx}\right)\)</li>
-                    <li>Differentiate the right side constant: \(\dfrac{d}{dx}[5] = 0\)</li>
-                    <li>Set equation: \(2xy + x^2\dfrac{dy}{dx} = 0\)</li>
-                    <li>Isolate \(\dfrac{dy}{dx}\): \(x^2\dfrac{dy}{dx} = -2xy \implies \dfrac{dy}{dx} = \dfrac{-2xy}{x^2}\)</li>
-                </ul>
-                <div class="final-answer">Answer: \(\dfrac{dy}{dx} = -\dfrac{2y}{x}\)</div>
-            </div>
-        </div>
-
-        <!-- Problem 2.2 -->
-        <div class="problem-card">
-            <div class="problem-top">
-                <span class="problem-text">2. Find \(\dfrac{dy}{dx}\) for: \(xy^2 = 12\)</span>
-                <button class="show-btn" onclick="toggleSolution(this)">Show Answer</button>
-            </div>
-            <div class="solution-panel">
-                <h4>Solution Steps:</h4>
-                <ul class="steps-list">
-                    <li>Apply product rule: \((1)(y^2) + (x)\left(2y \dfrac{dy}{dx}\right) = 0\)</li>
-                    <li>Simplify: \(y^2 + 2xy\dfrac{dy}{dx} = 0\)</li>
-                    <li>Move non-derivative term: \(2xy\dfrac{dy}{dx} = -y^2\)</li>
-                    <li>Divide to isolate: \(\dfrac{dy}{dx} = \dfrac{-y^2}{2xy}\)</li>
-                </ul>
-                <div class="final-answer">Answer: \(\dfrac{dy}{dx} = -\dfrac{y}{2x}\)</div>
-            </div>
-        </div>
-
-        <!-- Problem 2.3 -->
-        <div class="problem-card">
-            <div class="problem-top">
-                <span class="problem-text">3. Find \(\dfrac{dy}{dx}\) for: \(3xy - y = 4\)</span>
-                <button class="show-btn" onclick="toggleSolution(this)">Show Answer</button>
-            </div>
-            <div class="solution-panel">
-                <h4>Solution Steps:</h4>
-                <ul class="steps-list">
-                    <li>Differentiate term by term, applying product rule to \(3xy\): \(3\left(1 \cdot y + x \cdot \dfrac{dy}{dx}\right) - \dfrac{dy}{dx} = 0\)</li>
-                    <li>Expand: \(3y + 3x\dfrac{dy}{dx} - \dfrac{dy}{dx} = 0\)</li>
-                    <li>Group \(\dfrac{dy}{dx}\) terms: \((3x - 1)\dfrac{dy}{dx} = -3y\)</li>
-                    <li>Isolate: \(\dfrac{dy}{dx} = \dfrac{-3y}{3x - 1}\)</li>
-                </ul>
-                <div class="final-answer">Answer: \(\dfrac{dy}{dx} = -\dfrac{3y}{3x - 1}\)</div>
-            </div>
-        </div>
-    </section>
-
-    <!-- LEVEL 3 PAGE -->
-    <section id="level-3" class="level-section">
-        <div class="level-header">
-            <h2>Level 3: Full Equation & Factoring</h2>
-            <p>Focuses on equations where \(\dfrac{dy}{dx}\) appears on multiple terms and requires algebraic factoring.</p>
-        </div>
-
-        <!-- Problem 3.1 -->
-        <div class="problem-card">
-            <div class="problem-top">
-                <span class="problem-text">1. Find \(\dfrac{dy}{dx}\) for: \(x^2 + y^2 = 10\)</span>
-                <button class="show-btn" onclick="toggleSolution(this)">Show Answer</button>
-            </div>
-            <div class="solution-panel">
-                <h4>Solution Steps:</h4>
-                <ul class="steps-list">
-                    <li>Differentiate all terms: \(2x + 2y\dfrac{dy}{dx} = 0\)</li>
-                    <li>Isolate the derivative term: \(2y\dfrac{dy}{dx} = -2x\)</li>
-                    <li>Divide both sides by \(2y\): \(\dfrac{dy}{dx} = \dfrac{-2x}{2y}\)</li>
-                </ul>
-                <div class="final-answer">Answer: \(\dfrac{dy}{dx} = -\dfrac{x}{y}\)</div>
-            </div>
-        </div>
-
-        <!-- Problem 3.2 -->
-        <div class="problem-card">
-            <div class="problem-top">
-                <span class="problem-text">2. Find \(\dfrac{dy}{dx}\) for: \(x^3 + y^3 = 3xy\)</span>
-                <button class="show-btn" onclick="toggleSolution(this)">Show Answer</button>
-            </div>
-            <div class="solution-panel">
-                <h4>Solution Steps:</h4>
-                <ul class="steps-list">
-                    <li>Differentiate term by term (using product rule on right side): \(3x^2 + 3y^2\dfrac{dy}{dx} = 3\left(y + x\dfrac{dy}{dx}\right)\)</li>
-                    <li>Expand right side: \(3x^2 + 3y^2\dfrac{dy}{dx} = 3y + 3x\dfrac{dy}{dx}\)</li>
-                    <li>Gather all \(\dfrac{dy}{dx}\) terms on the left: \(3y^2\dfrac{dy}{dx} - 3x\dfrac{dy}{dx} = 3y - 3x^2\)</li>
-                    <li>Factor out \(\dfrac{dy}{dx}\): \(\dfrac{dy}{dx}(3y^2 - 3x) = 3y - 3x^2\)</li>
-                    <li>Divide to isolate and simplify: \(\dfrac{dy}{dx} = \dfrac{3y - 3x^2}{3y^2 - 3x}\)</li>
-                </ul>
-                <div class="final-answer">Answer: \(\dfrac{dy}{dx} = \dfrac{y - x^2}{y^2 - x}\)</div>
-            </div>
-        </div>
-
-        <!-- Problem 3.3 -->
-        <div class="problem-card">
-            <div class="problem-top">
-                <span class="problem-text">3. Find \(\dfrac{dy}{dx}\) for: \(y^2 - 5x = y + x^2\)</span>
-                <button class="show-btn" onclick="toggleSolution(this)">Show Answer</button>
-            </div>
-            <div class="solution-panel">
-                <h4>Solution Steps:</h4>
-                <ul class="steps-list">
-                    <li>Differentiate every term: \(2y\dfrac{dy}{dx} - 5 = \dfrac{dy}{dx} + 2x\)</li>
-                    <li>Collect all \(\dfrac{dy}{dx}\) terms on the left side: \(2y\dfrac{dy}{dx} - \dfrac{dy}{dx} = 2x + 5\)</li>
-                    <li>Factor out \(\dfrac{dy}{dx}\): \(\dfrac{dy}{dx}(2y - 1) = 2x + 5\)</li>
-                    <li>Divide to isolate: \(\dfrac{dy}{dx} = \dfrac{2x + 5}{2y - 1}\)</li>
-                </ul>
-                <div class="final-answer">Answer: \(\dfrac{dy}{dx} = \dfrac{2x + 5}{2y - 1}\)</div>
-            </div>
-        </div>
-    </section>
-
+    <!-- Dynamic Content Sections Container -->
+    <div id="content-container"></div>
 </div>
 
 <script>
+    // ==========================================
+    // LESSON CONFIGURATION (EDIT THIS FOR NEW TOPICS)
+    // ==========================================
+    const lessonData = {
+        title: "Implicit Differentiation Practice",
+        subtitle: "Step-by-step interactive problem sets",
+        levels: [
+            {
+                levelNumber: 1,
+                tabName: "Level 1: Single Terms",
+                headerTitle: "Level 1: Single-Term Practice",
+                headerDesc: "Focuses on applying the chain rule tag-along \\(\\dfrac{dy}{dx}\\) to isolated \\(y\\) terms.",
+                problems: [
+                    {
+                        question: "1. \\(\\dfrac{d}{dx}[y^5]\\)",
+                        steps: [
+                            "Apply standard power rule to the outside function: \\(5y^4\\)",
+                            "Multiply immediately by the derivative of the inside function: \\(\\dfrac{dy}{dx}\\)"
+                        ],
+                        answer: "\\(5y^4 \\dfrac{dy}{dx}\\)"
+                    },
+                    {
+                        question: "2. \\(\\dfrac{d}{dx}[4x^3 - 3y^4]\\)",
+                        steps: [
+                            "Differentiate the first term normally: \\(\\dfrac{d}{dx}[4x^3] = 12x^2\\)",
+                            "Differentiate the second term using the power rule and chain rule: \\(-3\\left(4y^3 \\dfrac{dy}{dx}\\) = -12y^3 \\dfrac{dy}{dx}\\)"
+                        ],
+                        answer: "\\(12x^2 - 12y^3 \\dfrac{dy}{dx}\\)"
+                    },
+                    {
+                        question: "3. \\(\\dfrac{d}{dx}[\\sin(y)]\\)",
+                        steps: [
+                            "Differentiate the outside function (sine becomes cosine): \\(\\cos(y)\\)",
+                            "Multiply by the derivative of the inside function: \\(\\dfrac{dy}{dx}\\)"
+                        ],
+                        answer: "\\(\\cos(y) \\dfrac{dy}{dx}\\)"
+                    }
+                ]
+            },
+            {
+                levelNumber: 2,
+                tabName: "Level 2: Product Rule",
+                headerTitle: "Level 2: Product Rule Practice",
+                headerDesc: "Focuses on handling expressions where \\(x\\) and \\(y\\) are multiplied together.",
+                problems: [
+                    {
+                        question: "1. Find \\(\\dfrac{dy}{dx}\\) for: \\(x^2y = 5\\)",
+                        steps: [
+                            "Apply product rule \\((f \\cdot g)' = f'g + fg'\\) to left side: \\((2x)(y) + (x^2)\\left(\\dfrac{dy}{dx}\\)\\)",
+                            "Differentiate the right side constant: \\(\\dfrac{d}{dx}[5] = 0\\)",
+                            "Set equation: \\(2xy + x^2\\dfrac{dy}{dx} = 0\\)",
+                            "Isolate \\(\\dfrac{dy}{dx}\\): \\(x^2\\dfrac{dy}{dx} = -2xy \\implies \\dfrac{dy}{dx} = \\dfrac{-2xy}{x^2}\\)"
+                        ],
+                        answer: "\\(\\dfrac{dy}{dx} = -\\dfrac{2y}{x}\\)"
+                    },
+                    {
+                        question: "2. Find \\(\\dfrac{dy}{dx}\\) for: \\(xy^2 = 12\\)",
+                        steps: [
+                            "Apply product rule: \\((1)(y^2) + (x)\\left(2y \\dfrac{dy}{dx}\\) = 0\\)",
+                            "Simplify: \\(y^2 + 2xy\\dfrac{dy}{dx} = 0\\)",
+                            "Move non-derivative term: \\(2xy\\dfrac{dy}{dx} = -y^2\\)",
+                            "Divide to isolate: \\(\\dfrac{dy}{dx} = \\dfrac{-y^2}{2xy}\\)"
+                        ],
+                        answer: "\\(\\dfrac{dy}{dx} = -\\dfrac{y}{2x}\\)"
+                    },
+                    {
+                        question: "3. Find \\(\\dfrac{dy}{dx}\\) for: \\(3xy - y = 4\\)",
+                        steps: [
+                            "Differentiate term by term, applying product rule to \\(3xy\\): \\(3\\left(1 \\cdot y + x \\cdot \\dfrac{dy}{dx}\\) - \\dfrac{dy}{dx} = 0\\)",
+                            "Expand: \\(3y + 3x\\dfrac{dy}{dx} - \\dfrac{dy}{dx} = 0\\)",
+                            "Group \\(\\dfrac{dy}{dx}\\) terms: \\((3x - 1)\\dfrac{dy}{dx} = -3y\\)",
+                            "Isolate: \\(\\dfrac{dy}{dx} = \\dfrac{-3y}{3x - 1}\\)"
+                        ],
+                        answer: "\\(\\dfrac{dy}{dx} = -\\dfrac{3y}{3x - 1}\\)"
+                    }
+                ]
+            },
+            {
+                levelNumber: 3,
+                tabName: "Level 3: Full Equation & Factoring",
+                headerTitle: "Level 3: Full Equation & Factoring",
+                headerDesc: "Focuses on equations where \\(\\dfrac{dy}{dx}\\) appears on multiple terms and requires algebraic factoring.",
+                problems: [
+                    {
+                        question: "1. Find \\(\\dfrac{dy}{dx}\\) for: \\(x^2 + y^2 = 10\\)",
+                        steps: [
+                            "Differentiate all terms: \\(2x + 2y\\dfrac{dy}{dx} = 0\\)",
+                            "Isolate the derivative term: \\(2y\\dfrac{dy}{dx} = -2x\\)",
+                            "Divide both sides by \\(2y\\): \\(\\dfrac{dy}{dx} = \\dfrac{-2x}{2y}\\)"
+                        ],
+                        answer: "\\(\\dfrac{dy}{dx} = -\\dfrac{x}{y}\\)"
+                    },
+                    {
+                        question: "2. Find \\(\\dfrac{dy}{dx}\\) for: \\(x^3 + y^3 = 3xy\\)",
+                        steps: [
+                            "Differentiate term by term (using product rule on right side): \\(3x^2 + 3y^2\\dfrac{dy}{dx} = 3\\left(y + x\\dfrac{dy}{dx}\\)\\)",
+                            "Expand right side: \\(3x^2 + 3y^2\\dfrac{dy}{dx} = 3y + 3x\\dfrac{dy}{dx}\\)",
+                            "Gather all \\(\\dfrac{dy}{dx}\\) terms on the left: \\(3y^2\\dfrac{dy}{dx} - 3x\\dfrac{dy}{dx} = 3y - 3x^2\\)",
+                            "Factor out \\(\\dfrac{dy}{dx}\\): \\(\\dfrac{dy}{dx}(3y^2 - 3x) = 3y - 3x^2\\)",
+                            "Divide to isolate and simplify: \\(\\dfrac{dy}{dx} = \\dfrac{3y - 3x^2}{3y^2 - 3x}\\)"
+                        ],
+                        answer: "\\(\\dfrac{dy}{dx} = \\dfrac{y - x^2}{y^2 - x}\\)"
+                    },
+                    {
+                        question: "3. Find \\(\\dfrac{dy}{dx}\\) for: \\(y^2 - 5x = y + x^2\\)",
+                        steps: [
+                            "Differentiate every term: \\(2y\\dfrac{dy}{dx} - 5 = \\dfrac{dy}{dx} + 2x\\)",
+                            "Collect all \\(\\dfrac{dy}{dx}\\) terms on the left side: \\(2y\\dfrac{dy}{dx} - \\dfrac{dy}{dx} = 2x + 5\\)",
+                            "Factor out \\(\\dfrac{dy}{dx}\\): \\(\\dfrac{dy}{dx}(2y - 1) = 2x + 5\\)",
+                            "Divide to isolate: \\(\\dfrac{dy}{dx} = \\dfrac{2x + 5}{2y - 1}\\)"
+                        ],
+                        answer: "\\(\\dfrac{dy}{dx} = \\dfrac{2x + 5}{2y - 1}\\)"
+                    }
+                ]
+            }
+        ]
+    };
+
+    // ==========================================
+    // TEMPLATE GENERATOR ENGINE (DO NOT EDIT)
+    // ==========================================
+    function renderLesson() {
+        // Set Header
+        document.getElementById('lesson-title').textContent = lessonData.title;
+        document.getElementById('lesson-subtitle').textContent = lessonData.subtitle;
+
+        const tabsContainer = document.getElementById('nav-tabs-container');
+        const contentContainer = document.getElementById('content-container');
+
+        tabsContainer.innerHTML = '';
+        contentContainer.innerHTML = '';
+
+        lessonData.levels.forEach((level, index) => {
+            const isActive = index === 0 ? 'active' : '';
+
+            // 1. Create Navigation Tab Button
+            const tabBtn = document.createElement('button');
+            tabBtn.className = `tab-btn ${isActive}`;
+            tabBtn.setAttribute('onclick', `switchLevel(${level.levelNumber})`);
+            tabBtn.textContent = level.tabName;
+            tabsContainer.appendChild(tabBtn);
+
+            // 2. Create Level Section Page
+            const section = document.createElement('section');
+            section.id = `level-${level.levelNumber}`;
+            section.className = `level-section ${isActive}`;
+
+            let problemsHTML = '';
+            level.problems.forEach(prob => {
+                let stepsListHTML = prob.steps.map(step => `<li>${step}</li>`).join('');
+                
+                problemsHTML += `
+                    <div class="problem-card">
+                        <div class="problem-top">
+                            <span class="problem-text">${prob.question}</span>
+                            <button class="show-btn" onclick="toggleSolution(this)">Show Answer</button>
+                        </div>
+                        <div class="solution-panel">
+                            <h4>Solution Steps:</h4>
+                            <ul class="steps-list">${stepsListHTML}</ul>
+                            <div class="final-answer">Answer: ${prob.answer}</div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            section.innerHTML = `
+                <div class="level-header">
+                    <h2>${level.headerTitle}</h2>
+                    <p>${level.headerDesc}</p>
+                </div>
+                ${problemsHTML}
+            `;
+            contentContainer.appendChild(section);
+        });
+
+        // Tell MathJax to typeset the dynamically injected equations
+        if (window.MathJax) {
+            MathJax.typeset();
+        }
+    }
+
     function switchLevel(levelNumber) {
-        // Hide all sections
-        const sections = document.querySelectorAll('.level-section');
-        sections.forEach(sec => sec.classList.remove('active'));
+        document.querySelectorAll('.level-section').forEach(sec => sec.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
 
-        // Remove active class from all tab buttons
-        const buttons = document.querySelectorAll('.tab-btn');
-        buttons.forEach(btn => btn.classList.remove('active'));
-
-        // Show target section and highlight corresponding tab
         document.getElementById(`level-${levelNumber}`).classList.add('active');
         event.currentTarget.classList.add('active');
     }
@@ -408,12 +402,15 @@
         
         if (panel.classList.contains('open')) {
             button.textContent = "Hide Answer";
-            button.style.backgroundColor = "#475569";
+            button.style.backgroundColor = "#5b21b6";
         } else {
             button.textContent = "Show Answer";
             button.style.backgroundColor = "";
         }
     }
+
+    // Run on load
+    window.onload = renderLesson;
 </script>
 
 </body>
