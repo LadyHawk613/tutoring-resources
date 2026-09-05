@@ -1,10 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Implicit Differentiation Practice Guide</title>
+    
+    <!-- MathJax CDN for rendering equations -->
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
     <style>
         :root {
             --primary: #2563eb;
@@ -121,9 +124,8 @@
         }
 
         .problem-text {
-            font-size: 1.2rem;
+            font-size: 1.15rem;
             font-weight: 500;
-            font-family: monospace;
         }
 
         .show-btn {
@@ -154,7 +156,7 @@
         }
 
         .solution-panel.open {
-            max-height: 500px;
+            max-height: 600px;
             margin-top: 15px;
             padding: 15px;
             border: 1px solid var(--border-color);
@@ -174,8 +176,7 @@
         }
 
         .steps-list li {
-            margin-bottom: 8px;
-            font-family: monospace;
+            margin-bottom: 10px;
         }
 
         .final-answer {
@@ -183,7 +184,6 @@
             padding-top: 8px;
             border-top: 1px dashed var(--border-color);
             font-weight: bold;
-            font-family: monospace;
             color: #047857;
         }
     </style>
@@ -213,48 +213,48 @@
         <!-- Problem 1.1 -->
         <div class="problem-card">
             <div class="problem-top">
-                <span class="problem-text">1. \(\frac{d}{dx}[y^5]\)</span>
+                <span class="problem-text">1. \(\dfrac{d}{dx}[y^5]\)</span>
                 <button class="show-btn" onclick="toggleSolution(this)">Show Answer</button>
             </div>
             <div class="solution-panel">
                 <h4>Solution Steps:</h4>
                 <ul class="steps-list">
                     <li>Apply standard power rule to the outside function: \(5y^4\)</li>
-                    <li>Multiply immediately by the derivative of the inside function: \(\frac{dy}{dx}\)</li>
+                    <li>Multiply immediately by the derivative of the inside function: \(\dfrac{dy}{dx}\)</li>
                 </ul>
-                <div class="final-answer">Answer: 5y⁴(dy/dx)</div>
+                <div class="final-answer">Answer: \(5y^4 \dfrac{dy}{dx}\)</div>
             </div>
         </div>
 
         <!-- Problem 1.2 -->
         <div class="problem-card">
             <div class="problem-top">
-                <span class="problem-text">2. \(\frac{d}{dx}[4x^3 - 3y^4]\)</span>
+                <span class="problem-text">2. \(\dfrac{d}{dx}[4x^3 - 3y^4]\)</span>
                 <button class="show-btn" onclick="toggleSolution(this)">Show Answer</button>
             </div>
             <div class="solution-panel">
                 <h4>Solution Steps:</h4>
                 <ul class="steps-list">
-                    <li>Differentiate the first term normally: \(\frac{d}{dx}[4x^3] = 12x^2\)</li>
-                    <li>Differentiate the second term using the power rule and chain rule: \(-3(4y^3 \frac{dy}{dx}) = -12y^3 \frac{dy}{dx}\)</li>
+                    <li>Differentiate the first term normally: \(\dfrac{d}{dx}[4x^3] = 12x^2\)</li>
+                    <li>Differentiate the second term using the power rule and chain rule: \(-3\left(4y^3 \dfrac{dy}{dx}\right) = -12y^3 \dfrac{dy}{dx}\)</li>
                 </ul>
-                <div class="final-answer">Answer: 12x² - 12y³(dy/dx)</div>
+                <div class="final-answer">Answer: \(12x^2 - 12y^3 \dfrac{dy}{dx}\)</div>
             </div>
         </div>
 
         <!-- Problem 1.3 -->
         <div class="problem-card">
             <div class="problem-top">
-                <span class="problem-text">3. \(\frac{d}{dx}[\sin(y)]\)</span>
+                <span class="problem-text">3. \(\dfrac{d}{dx}[\sin(y)]\)</span>
                 <button class="show-btn" onclick="toggleSolution(this)">Show Answer</button>
             </div>
             <div class="solution-panel">
                 <h4>Solution Steps:</h4>
                 <ul class="steps-list">
                     <li>Differentiate the outside function (sine becomes cosine): \(\cos(y)\)</li>
-                    <li>Multiply by the derivative of the inside function: \(\frac{dy}{dx}\)</li>
+                    <li>Multiply by the derivative of the inside function: \(\dfrac{dy}{dx}\)</li>
                 </ul>
-                <div class="final-answer">Answer: cos(y)(dy/dx)</div>
+                <div class="final-answer">Answer: \(\cos(y) \dfrac{dy}{dx}\)</div>
             </div>
         </div>
     </section>
@@ -269,54 +269,54 @@
         <!-- Problem 2.1 -->
         <div class="problem-card">
             <div class="problem-top">
-                <span class="problem-text">1. Find \(\frac{dy}{dx}\) for: \(x^2y = 5\)</span>
+                <span class="problem-text">1. Find \(\dfrac{dy}{dx}\) for: \(x^2y = 5\)</span>
                 <button class="show-btn" onclick="toggleSolution(this)">Show Answer</button>
             </div>
             <div class="solution-panel">
                 <h4>Solution Steps:</h4>
                 <ul class="steps-list">
-                    <li>Apply product rule \((f \cdot g)' = f'g + fg'\) to left side: \((2x)(y) + (x^2)(\frac{dy}{dx})\)</li>
-                    <li>Differentiate the right side constant: \(\frac{d}{dx}[5] = 0\)</li>
-                    <li>Set equation: \(2xy + x^2\frac{dy}{dx} = 0\)</li>
-                    <li>Isolate \(\frac{dy}{dx}\): \(x^2\frac{dy}{dx} = -2xy \implies \frac{dy}{dx} = \frac{-2xy}{x^2}\)</li>
+                    <li>Apply product rule \((f \cdot g)' = f'g + fg'\) to left side: \((2x)(y) + (x^2)\left(\dfrac{dy}{dx}\right)\)</li>
+                    <li>Differentiate the right side constant: \(\dfrac{d}{dx}[5] = 0\)</li>
+                    <li>Set equation: \(2xy + x^2\dfrac{dy}{dx} = 0\)</li>
+                    <li>Isolate \(\dfrac{dy}{dx}\): \(x^2\dfrac{dy}{dx} = -2xy \implies \dfrac{dy}{dx} = \dfrac{-2xy}{x^2}\)</li>
                 </ul>
-                <div class="final-answer">Answer: dy/dx = -2y / x</div>
+                <div class="final-answer">Answer: \(\dfrac{dy}{dx} = -\dfrac{2y}{x}\)</div>
             </div>
         </div>
 
         <!-- Problem 2.2 -->
         <div class="problem-card">
             <div class="problem-top">
-                <span class="problem-text">2. Find \(\frac{dy}{dx}\) for: \(xy^2 = 12\)</span>
+                <span class="problem-text">2. Find \(\dfrac{dy}{dx}\) for: \(xy^2 = 12\)</span>
                 <button class="show-btn" onclick="toggleSolution(this)">Show Answer</button>
             </div>
             <div class="solution-panel">
                 <h4>Solution Steps:</h4>
                 <ul class="steps-list">
-                    <li>Apply product rule: \((1)(y^2) + (x)(2y \frac{dy}{dx}) = 0\)</li>
-                    <li>Simplify: \(y^2 + 2xy\frac{dy}{dx} = 0\)</li>
-                    <li>Move non-derivative term: \(2xy\frac{dy}{dx} = -y^2\)</li>
-                    <li>Divide to isolate: \(\frac{dy}{dx} = \frac{-y^2}{2xy}\)</li>
+                    <li>Apply product rule: \((1)(y^2) + (x)\left(2y \dfrac{dy}{dx}\right) = 0\)</li>
+                    <li>Simplify: \(y^2 + 2xy\dfrac{dy}{dx} = 0\)</li>
+                    <li>Move non-derivative term: \(2xy\dfrac{dy}{dx} = -y^2\)</li>
+                    <li>Divide to isolate: \(\dfrac{dy}{dx} = \dfrac{-y^2}{2xy}\)</li>
                 </ul>
-                <div class="final-answer">Answer: dy/dx = -y / (2x)</div>
+                <div class="final-answer">Answer: \(\dfrac{dy}{dx} = -\dfrac{y}{2x}\)</div>
             </div>
         </div>
 
         <!-- Problem 2.3 -->
         <div class="problem-card">
             <div class="problem-top">
-                <span class="problem-text">3. Find \(\frac{dy}{dx}\) for: \(3xy - y = 4\)</span>
+                <span class="problem-text">3. Find \(\dfrac{dy}{dx}\) for: \(3xy - y = 4\)</span>
                 <button class="show-btn" onclick="toggleSolution(this)">Show Answer</button>
             </div>
             <div class="solution-panel">
                 <h4>Solution Steps:</h4>
                 <ul class="steps-list">
-                    <li>Differentiate term by term, applying product rule to \(3xy\): \(3(1 \cdot y + x \cdot \frac{dy}{dx}) - \frac{dy}{dx} = 0\)</li>
-                    <li>Expand: \(3y + 3x\frac{dy}{dx} - \frac{dy}{dx} = 0\)</li>
-                    <li>Group \(\frac{dy}{dx}\) terms: \((3x - 1)\frac{dy}{dx} = -3y\)</li>
-                    <li>Isolate: \(\frac{dy}{dx} = \frac{-3y}{3x - 1}\)</li>
+                    <li>Differentiate term by term, applying product rule to \(3xy\): \(3\left(1 \cdot y + x \cdot \dfrac{dy}{dx}\right) - \dfrac{dy}{dx} = 0\)</li>
+                    <li>Expand: \(3y + 3x\dfrac{dy}{dx} - \dfrac{dy}{dx} = 0\)</li>
+                    <li>Group \(\dfrac{dy}{dx}\) terms: \((3x - 1)\dfrac{dy}{dx} = -3y\)</li>
+                    <li>Isolate: \(\dfrac{dy}{dx} = \dfrac{-3y}{3x - 1}\)</li>
                 </ul>
-                <div class="final-answer">Answer: dy/dx = -3y / (3x - 1)</div>
+                <div class="final-answer">Answer: \(\dfrac{dy}{dx} = -\dfrac{3y}{3x - 1}\)</div>
             </div>
         </div>
     </section>
@@ -325,60 +325,60 @@
     <section id="level-3" class="level-section">
         <div class="level-header">
             <h2>Level 3: Full Equation & Factoring</h2>
-            <p>Focuses on equations where \(\frac{dy}{dx}\) appears on multiple terms and requires algebraic factoring.</p>
+            <p>Focuses on equations where \(\dfrac{dy}{dx}\) appears on multiple terms and requires algebraic factoring.</p>
         </div>
 
         <!-- Problem 3.1 -->
         <div class="problem-card">
             <div class="problem-top">
-                <span class="problem-text">1. Find \(\frac{dy}{dx}\) for: \(x^2 + y^2 = 10\)</span>
+                <span class="problem-text">1. Find \(\dfrac{dy}{dx}\) for: \(x^2 + y^2 = 10\)</span>
                 <button class="show-btn" onclick="toggleSolution(this)">Show Answer</button>
             </div>
             <div class="solution-panel">
                 <h4>Solution Steps:</h4>
                 <ul class="steps-list">
-                    <li>Differentiate all terms: \(2x + 2y\frac{dy}{dx} = 0\)</li>
-                    <li>Isolate the derivative term: \(2y\frac{dy}{dx} = -2x\)</li>
-                    <li>Divide both sides by \(2y\): \(\frac{dy}{dx} = \frac{-2x}{2y}\)</li>
+                    <li>Differentiate all terms: \(2x + 2y\dfrac{dy}{dx} = 0\)</li>
+                    <li>Isolate the derivative term: \(2y\dfrac{dy}{dx} = -2x\)</li>
+                    <li>Divide both sides by \(2y\): \(\dfrac{dy}{dx} = \dfrac{-2x}{2y}\)</li>
                 </ul>
-                <div class="final-answer">Answer: dy/dx = -x / y</div>
+                <div class="final-answer">Answer: \(\dfrac{dy}{dx} = -\dfrac{x}{y}\)</div>
             </div>
         </div>
 
         <!-- Problem 3.2 -->
         <div class="problem-card">
             <div class="problem-top">
-                <span class="problem-text">2. Find \(\frac{dy}{dx}\) for: \(x^3 + y^3 = 3xy\)</span>
+                <span class="problem-text">2. Find \(\dfrac{dy}{dx}\) for: \(x^3 + y^3 = 3xy\)</span>
                 <button class="show-btn" onclick="toggleSolution(this)">Show Answer</button>
             </div>
             <div class="solution-panel">
                 <h4>Solution Steps:</h4>
                 <ul class="steps-list">
-                    <li>Differentiate term by term (using product rule on right side): \(3x^2 + 3y^2\frac{dy}{dx} = 3(y + x\frac{dy}{dx})\)</li>
-                    <li>Expand right side: \(3x^2 + 3y^2\frac{dy}{dx} = 3y + 3x\frac{dy}{dx}\)</li>
-                    <li>Gather all \(\frac{dy}{dx}\) terms on the left: \(3y^2\frac{dy}{dx} - 3x\frac{dy}{dx} = 3y - 3x^2\)</li>
-                    <li>Factor out \(\frac{dy}{dx}\): \(\frac{dy}{dx}(3y^2 - 3x) = 3y - 3x^2\)</li>
-                    <li>Divide to isolate and simplify (divide numerator and denominator by 3): \(\frac{dy}{dx} = \frac{y - x^2}{y^2 - x}\)</li>
+                    <li>Differentiate term by term (using product rule on right side): \(3x^2 + 3y^2\dfrac{dy}{dx} = 3\left(y + x\dfrac{dy}{dx}\right)\)</li>
+                    <li>Expand right side: \(3x^2 + 3y^2\dfrac{dy}{dx} = 3y + 3x\dfrac{dy}{dx}\)</li>
+                    <li>Gather all \(\dfrac{dy}{dx}\) terms on the left: \(3y^2\dfrac{dy}{dx} - 3x\dfrac{dy}{dx} = 3y - 3x^2\)</li>
+                    <li>Factor out \(\dfrac{dy}{dx}\): \(\dfrac{dy}{dx}(3y^2 - 3x) = 3y - 3x^2\)</li>
+                    <li>Divide to isolate and simplify: \(\dfrac{dy}{dx} = \dfrac{3y - 3x^2}{3y^2 - 3x}\)</li>
                 </ul>
-                <div class="final-answer">Answer: dy/dx = (y - x²) / (y² - x)</div>
+                <div class="final-answer">Answer: \(\dfrac{dy}{dx} = \dfrac{y - x^2}{y^2 - x}\)</div>
             </div>
         </div>
 
         <!-- Problem 3.3 -->
         <div class="problem-card">
             <div class="problem-top">
-                <span class="problem-text">3. Find \(\frac{dy}{dx}\) for: \(y^2 - 5x = y + x^2\)</span>
+                <span class="problem-text">3. Find \(\dfrac{dy}{dx}\) for: \(y^2 - 5x = y + x^2\)</span>
                 <button class="show-btn" onclick="toggleSolution(this)">Show Answer</button>
             </div>
             <div class="solution-panel">
                 <h4>Solution Steps:</h4>
                 <ul class="steps-list">
-                    <li>Differentiate every term: \(2y\frac{dy}{dx} - 5 = \frac{dy}{dx} + 2x\)</li>
-                    <li>Collect all \(\frac{dy}{dx}\) terms on the left side: \(2y\frac{dy}{dx} - \frac{dy}{dx} = 2x + 5\)</li>
-                    <li>Factor out \(\frac{dy}{dx}\): \(\frac{dy}{dx}(2y - 1) = 2x + 5\)</li>
-                    <li>Divide to isolate: \(\frac{dy}{dx} = \frac{2x + 5}{2y - 1}\)</li>
+                    <li>Differentiate every term: \(2y\dfrac{dy}{dx} - 5 = \dfrac{dy}{dx} + 2x\)</li>
+                    <li>Collect all \(\dfrac{dy}{dx}\) terms on the left side: \(2y\dfrac{dy}{dx} - \dfrac{dy}{dx} = 2x + 5\)</li>
+                    <li>Factor out \(\dfrac{dy}{dx}\): \(\dfrac{dy}{dx}(2y - 1) = 2x + 5\)</li>
+                    <li>Divide to isolate: \(\dfrac{dy}{dx} = \dfrac{2x + 5}{2y - 1}\)</li>
                 </ul>
-                <div class="final-answer">Answer: dy/dx = (2x + 5) / (2y - 1)</div>
+                <div class="final-answer">Answer: \(\dfrac{dy}{dx} = \dfrac{2x + 5}{2y - 1}\)</div>
             </div>
         </div>
     </section>
