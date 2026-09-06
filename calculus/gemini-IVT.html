@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Intermediate Value Theorem (IVT) Step-by-Step Guide</title>
+    <!-- Include Chart.js for the IVT visual graph -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f4f8;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 750px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #1e3a8a;
+            text-align: center;
+            margin-bottom: 5px;
+        }
+        .subtitle {
+            text-align: center;
+            color: #64748b;
+            margin-bottom: 25px;
+        }
+        .step-box {
+            display: none;
+            background: #f8fafc;
+            border-left: 6px solid #3b82f6;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 6px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            animation: fadeIn 0.4s ease-in-out;
+        }
+        .step-box.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        h3 {
+            color: #1e40af;
+            margin-top: 0;
+        }
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 25px;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 15px;
+        }
+        button {
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            padding: 10px 22px;
+            font-size: 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        button:hover {
+            background-color: #1d4ed8;
+        }
+        button:disabled {
+            background-color: #cbd5e1;
+            cursor: not-allowed;
+        }
+        .math-block {
+            background: #e2e8f0;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-family: 'Cambria Math', serif;
+            display: inline-block;
+            margin: 2px 0;
+        }
+        .canvas-container {
+            position: relative;
+            width: 100%;
+            max-width: 480px;
+            margin: 20px auto;
+            background: #fff;
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Intermediate Value Theorem (IVT)</h1>
+    <div class="subtitle">Step-by-Step Proof Guide for AP Calculus AB</div>
+
+    <!-- STEP 1 -->
+    <div id="step-1" class="step-box active">
+        <h3>Step 1: State Continuity</h3>
+        <p>Before applying the Intermediate Value Theorem, you <strong>must</strong> verify that the function is continuous on a closed interval.</p>
+        <p><strong>What to write:</strong></p>
+        <div class="math-block">Because f(x) = x³ - 5x² + 7x - 9 is a polynomial function, it is continuous for all real numbers.</div>
+    </div>
+
+    <!-- STEP 2 -->
+    <div id="step-2" class="step-box">
+        <h3>Step 2: Test Endpoints to Trap the Target Value</h3>
+        <p>Find two values <span class="math-block">a</span> and <span class="math-block">b</span> such that the target output (<span class="math-block">100</span>) falls strictly between <span class="math-block">f(a)</span> and <span class="math-block">f(b)</span>.</p>
+        <ul>
+            <li>Test <span class="math-block">x = 5</span>:<br>
+                <span class="math-block">f(5) = (5)³ - 5(5)² + 7(5) - 9 = 26</span>
+            </li>
+            <br>
+            <li>Test <span class="math-block">x = 8</span>:<br>
+                <span class="math-block">f(8) = (8)³ - 5(8)² + 7(8) - 9 = 239</span>
+            </li>
+        </ul>
+        <p>Since <span class="math-block">26 ≤ 100 ≤ 239</span>, our target value of <span class="math-block">100</span> sits cleanly between the two outputs.</p>
+    </div>
+
+    <!-- STEP 3 -->
+    <div id="step-3" class="step-box">
+        <h3>Step 3: Write the Final IVT Conclusion Statement</h3>
+        <p>Connect your findings using the formal requirements of the theorem to secure full credit on your test.</p>
+        <div class="math-block" style="display: block; padding: 12px; line-height: 1.6;">
+            <strong>Conclusion:</strong> Since <span class="math-block">f(x)</span> is continuous on the closed interval <span class="math-block">[5, 8]</span>, and <span class="math-block">100</span> is a value between <span class="math-block">f(5) = 26</span> and <span class="math-block">f(8) = 239</span>, by the <strong>Intermediate Value Theorem</strong>, there exists at least one real number <span class="math-block">a</span> in the open interval <span class="math-block">(5, 8)</span> such that <span class="math-block">f(a) = 100</span>.
+        </div>
+    </div>
+
+    <!-- STEP 4: Visualizing IVT -->
+    <div id="step-4" class="step-box">
+        <h3>Step 4: Visualizing the Theorem</h3>
+        <p>Because the curve is continuous and goes from a low point (26) to a high point (239), it <em>must</em> cross every horizontal line in between—including y = 100!</p>
+        <div class="canvas-container">
+            <canvas id="ivtGraph"></canvas>
+        </div>
+    </div>
+
+    <!-- Navigation Buttons -->
+    <div class="nav-buttons">
+        <button id="prevBtn" onclick="navigateSteps(-1)" disabled>Previous Step</button>
+        <span id="stepIndicator" style="align-self: center; font-weight: bold; color: #475569;">Step 1 of 4</span>
+        <button id="nextBtn" onclick="navigateSteps(1)">Next Step</button>
+    </div>
+</div>
+
+<script>
+    let currentStep = 1;
+    const totalSteps = 4;
+
+    function navigateSteps(direction) {
+        document.getElementById(`step-${currentStep}`).classList.remove('active');
+        currentStep += direction;
+        document.getElementById(`step-${currentStep}`).classList.add('active');
+
+        document.getElementById('prevBtn').disabled = (currentStep === 1);
+        document.getElementById('nextBtn').disabled = (currentStep === totalSteps);
+        document.getElementById('stepIndicator').innerText = `Step ${currentStep} of ${totalSteps}`;
+    }
+
+    // Render IVT visual chart on Step 4
+    const ctx = document.getElementById('ivtGraph').getContext('2d');
+    const ivtGraph = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: [4, 5, 6, 7, 8],
+            datasets: [{
+                label: 'f(x) curve',
+                data: [-15, 26, 73, 142, 239],
+                borderColor: '#2563eb',
+                backgroundColor: 'rgba(37, 99, 235, 0.1)',
+                borderWidth: 3,
+                pointRadius: [4, 6, 6, 6, 4],
+                pointBackgroundColor: ['#2563eb', '#dc2626', '#16a34a', '#16a34a', '#2563eb']
+            }, {
+                label: 'Target y = 100',
+                data: [100, 100, 100, 100, 100],
+                borderColor: '#94a3b8',
+                borderDash: [5, 5],
+                borderWidth: 2,
+                pointRadius: 0
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    display: false // Completely hides the legend and ugly boxes
+                }
+            },
+            scales: {
+                x: { title: { display: true, text: 'x values' } },
+                y: { title: { display: true, text: 'f(x) output' }, min: -20, max: 260 }
+            }
+        }
+    });
+</script>
+
+</body>
+</html>
