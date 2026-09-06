@@ -3,286 +3,92 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Intermediate Value Theorem (IVT) Step-by-Step Guide & Practice</title>
-    <!-- Include Chart.js for the IVT visual graph -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <title>Calculus</title>
+    
+    <!-- Import the hand-drawn chalk style font from Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cabin+Sketch:wght@700&display=swap" rel="stylesheet">
+
     <style>
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f0f4f8;
-            color: #333;
-            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: transparent;
+            color: #333333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
             padding: 20px;
+            margin: 0;
         }
+
         .container {
-            max-width: 750px;
-            margin: 0 auto;
-            background: white;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            background-color: transparent;
+            padding: 20px;
+            width: 100%;
+            max-width: 600px;
+            text-align: center;
+            box-shadow: none;
         }
+
         h1 {
-            color: #1e3a8a;
-            text-align: center;
-            margin-bottom: 5px;
-        }
-        .subtitle {
-            text-align: center;
-            color: #64748b;
+            font-family: 'Cabin Sketch', cursive, sans-serif;
+            color: #F07167;
+            font-size: 36px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            margin-top: 0;
             margin-bottom: 25px;
         }
-        .step-box {
-            display: none;
-            background: #f8fafc;
-            border-left: 6px solid #3b82f6;
-            padding: 20px;
-            margin-bottom: 20px;
-            border-radius: 6px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            animation: fadeIn 0.4s ease-in-out;
+
+        /* 3-Column Grid Layout for buttons */
+        .button-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+            margin-bottom: 30px;
         }
-        .step-box.active {
-            display: block;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(8px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        h3 {
-            color: #1e40af;
-            margin-top: 0;
-        }
-        .nav-buttons {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 25px;
-            border-top: 1px solid #e2e8f0;
-            padding-top: 15px;
-        }
-        button {
-            background-color: #2563eb;
-            color: white;
+
+        /* Main Dashboard Button Style */
+        .dashboard-button {
+            background-color: #00838f;
+            color: #ffffff;
+            padding: 15px 10px;
             border: none;
-            padding: 10px 22px;
-            font-size: 16px;
             border-radius: 6px;
+            font-size: 14px;
+            font-weight: bold;
             cursor: pointer;
+            text-align: center;
             transition: background-color 0.2s;
         }
-        button:hover {
-            background-color: #1d4ed8;
+
+        .dashboard-button:hover {
+            background-color: #005f6b;
         }
-        button:disabled {
-            background-color: #cbd5e1;
-            cursor: not-allowed;
-        }
-        .math-block {
-            background: #e2e8f0;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-family: 'Cambria Math', serif;
-            display: inline-block;
-            margin: 2px 0;
-        }
-        .canvas-container {
-            position: relative;
-            width: 100%;
-            max-width: 480px;
-            margin: 20px auto;
-            background: #fff;
-            padding: 10px;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-        }
-        .reveal-btn {
-            background-color: #0d9488;
-            margin-top: 10px;
-            font-size: 14px;
-            padding: 8px 16px;
-        }
-        .reveal-btn:hover {
-            background-color: #0f766e;
-        }
-        .solution-content {
-            display: none;
-            margin-top: 12px;
-            background: #f0fdf4;
-            border: 1px solid #bbf7d0;
-            padding: 12px;
-            border-radius: 6px;
-        }
-        .fraction {
-            display: inline-flex;
-            flex-direction: column;
-            vertical-align: middle;
-            text-align: center;
-            font-size: 0.9em;
-            padding: 0 2px;
-        }
-        .numerator {
-            border-bottom: 1px solid black;
-            padding-bottom: 1px;
-        }
-        .denominator {
-            padding-top: 1px;
-        }
+
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h1>Intermediate Value Theorem (IVT)</h1>
-    <div class="subtitle">Step-by-Step Proof Guide & Practice for AP Calculus AB</div>
-
-    <!-- STEP 1 -->
-    <div id="step-1" class="step-box active">
-        <h3>Step 1: State Continuity</h3>
-        <p>Before applying the Intermediate Value Theorem, you <strong>must</strong> verify that the function is continuous on a closed interval.</p>
-        <p><strong>What to write:</strong></p>
-        <div class="math-block">Because f(x) = x³ - 5x² + 7x - 9 is a polynomial function, it is continuous for all real numbers.</div>
-    </div>
-
-    <!-- STEP 2 -->
-    <div id="step-2" class="step-box">
-        <h3>Step 2: Test Endpoints to Trap the Target Value</h3>
-        <p>Find two values <span class="math-block">a</span> and <span class="math-block">b</span> such that the target output (<span class="math-block">100</span>) falls strictly between <span class="math-block">f(a)</span> and <span class="math-block">f(b)</span>.</p>
-        <ul>
-            <li>Test <span class="math-block">x = 5</span>:<br>
-                <span class="math-block">f(5) = (5)³ - 5(5)² + 7(5) - 9 = 26</span>
-            </li>
-            <br>
-            <li>Test <span class="math-block">x = 8</span>:<br>
-                <span class="math-block">f(8) = (8)³ - 5(8)² + 7(8) - 9 = 239</span>
-            </li>
-        </ul>
-        <p>Since <span class="math-block">26 ≤ 100 ≤ 239</span>, our target value of <span class="math-block">100</span> sits cleanly between the two outputs.</p>
-    </div>
-
-    <!-- STEP 3 -->
-    <div id="step-3" class="step-box">
-        <h3>Step 3: Write the Final IVT Conclusion Statement</h3>
-        <p>Connect your findings using the formal requirements of the theorem to secure full credit on your test.</p>
-        <div class="math-block" style="display: block; padding: 12px; line-height: 1.6;">
-            <strong>Conclusion:</strong> Since <span class="math-block">f(x)</span> is continuous on the closed interval <span class="math-block">[5, 8]</span>, and <span class="math-block">100</span> is a value between <span class="math-block">f(5) = 26</span> and <span class="math-block">f(8) = 239</span>, by the <strong>Intermediate Value Theorem</strong>, there exists at least one real number <span class="math-block">a</span> in the open interval <span class="math-block">(5, 8)</span> such that <span class="math-block">f(a) = 100</span>.
-        </div>
-    </div>
-
-    <!-- STEP 4: Visualizing IVT -->
-    <div id="step-4" class="step-box">
-        <h3>Step 4: Visualizing the Theorem</h3>
-        <p>Because the curve is continuous and goes from a low point (26) to a high point (239), it <em>must</em> cross every horizontal line in between—including y = 100!</p>
-        <div class="canvas-container">
-            <canvas id="ivtGraph"></canvas>
-        </div>
-    </div>
-
-    <!-- STEP 5: Practice Problems -->
-    <div id="step-5" class="step-box">
-        <h3>Step 5: IVT Practice Problems</h3>
-        <p>Try solving these two problems on your own, then click the buttons to check your work.</p>
+    <div class="container">
+        <h1>Calculus Activities</h1>
         
-        <div style="background: #fff; padding: 15px; border-radius: 6px; margin-bottom: 15px; border: 1px solid #cbd5e1;">
-            <p><strong>Practice Problem 1:</strong> Use the IVT to prove that <span class="math-block">f(x) = x³ + 2x - 1</span> has a root (i.e., <span class="math-block">f(c) = 0</span>) somewhere in the interval <span class="math-block">[0, 1]</span>.</p>
-            <button class="reveal-btn" onclick="toggleSolution('sol1')">Reveal Solution 1</button>
-            <div id="sol1" class="solution-content">
-                <p><strong>Solution 1 Steps:</strong></p>
-                <ol>
-                    <li><strong>Continuity:</strong> <span class="math-block">f(x)</span> is a polynomial, so it is continuous on <span class="math-block">[0, 1]</span>.</li>
-                    <li><strong>Endpoint check:</strong> 
-                        <br><span class="math-block">f(0) = (0)³ + 2(0) - 1 = -1</span>
-                        <br><span class="math-block">f(1) = (1)³ + 2(1) - 1 = 2</span>
-                    </li>
-                    <li><strong>Conclusion:</strong> Since <span class="math-block">-1 ≤ 0 ≤ 2</span>, by the Intermediate Value Theorem, there is a value <span class="math-block">c</span> in <span class="math-block">(0, 1)</span> such that <span class="math-block">f(c) = 0</span>.</li>
-                </ol>
-            </div>
+        <!-- 3-Column Grid Container -->
+        <div class="button-grid">
+          
+            <!-- Sample Derivative -->
+            <button class="dashboard-button" onclick="top.location.href='derivative-problem-v2.html'">Logarithm Derivative</button>
+            <button class="dashboard-button" onclick="top.location.href='implicit-differentiation-practice.html'">Implicit Differentiation Practice</button>
+            <button class="dashboard-button" onclick="top.location.href='intermediate-value-theorem.html'">Intermediate Value Theorem</button>
+
+            <!-- Future Use 
+            <button class="dashboard-button" onclick="top.location.href='../engines/multiple-choice-engine.html?topic=zeros'">Multiple Choice-1</button>
+            <!-- Future buttons added here will automatically fill the 2nd and 3rd columns -->
+          
         </div>
 
-        <div style="background: #fff; padding: 15px; border-radius: 6px; border: 1px solid #cbd5e1;">
-            <p><strong>Practice Problem 2:</strong> Show that <span class="math-block">f(x) = x² - 4x + 2</span> takes on the value <span class="math-block">5</span> on the interval <span class="math-block">[4, 6]</span>.</p>
-            <button class="reveal-btn" onclick="toggleSolution('sol2')">Reveal Solution 2</button>
-            <div id="sol2" class="solution-content">
-                <p><strong>Solution 2 Steps:</strong></p>
-                <ol>
-                    <li><strong>Continuity:</strong> <span class="math-block">f(x)</span> is a polynomial, making it continuous on <span class="math-block">[4, 6]</span>.</li>
-                    <li><strong>Endpoint check:</strong>
-                        <br><span class="math-block">f(4) = (4)² - 4(4) + 2 = 2</span>
-                        <br><span class="math-block">f(6) = (6)² - 4(6) + 2 = 14</span>
-                    </li>
-                    <li><strong>Conclusion:</strong> Since <span class="math-block">2 ≤ 5 ≤ 14</span>, by the Intermediate Value Theorem, there exists a number <span class="math-block">c</span> in <span class="math-block">(4, 6)</span> such that <span class="math-block">f(c) = 5</span>.</li>
-                </ol>
-            </div>
-        </div>
     </div>
-
-    <!-- Navigation Buttons -->
-    <div class="nav-buttons">
-        <button id="prevBtn" onclick="navigateSteps(-1)" disabled>Previous Step</button>
-        <span id="stepIndicator" style="align-self: center; font-weight: bold; color: #475569;">Step 1 of 5</span>
-        <button id="nextBtn" onclick="navigateSteps(1)">Next Step</button>
-    </div>
-</div>
-
-<script>
-    let currentStep = 1;
-    const totalSteps = 5;
-
-    function navigateSteps(direction) {
-        document.getElementById(`step-${currentStep}`).classList.remove('active');
-        currentStep += direction;
-        document.getElementById(`step-${currentStep}`).classList.add('active');
-
-        document.getElementById('prevBtn').disabled = (currentStep === 1);
-        document.getElementById('nextBtn').disabled = (currentStep === totalSteps);
-        document.getElementById('stepIndicator').innerText = `Step ${currentStep} of ${totalSteps}`;
-    }
-
-    function toggleSolution(id) {
-        const sol = document.getElementById(id);
-        if (sol.style.display === "block") {
-            sol.style.display = "none";
-        } else {
-            sol.style.display = "block";
-        }
-    }
-
-    // Render IVT visual chart on Step 4
-    const ctx = document.getElementById('ivtGraph').getContext('2d');
-    const ivtGraph = new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: [4, 5, 6, 7, 8],
-            datasets: [{
-                label: 'f(x) curve',
-                data: [-15, 26, 73, 142, 239],
-                borderColor: '#2563eb',
-                backgroundColor: 'rgba(37, 99, 235, 0.1)',
-                borderWidth: 3,
-                pointRadius: [4, 6, 6, 6, 4],
-                pointBackgroundColor: ['#2563eb', '#dc2626', '#16a34a', '#16a34a', '#2563eb']
-            }, {
-                label: 'Target y = 100',
-                data: [100, 100, 100, 100, 100],
-                borderColor: '#94a3b8',
-                borderDash: [5, 5],
-                borderWidth: 2,
-                pointRadius: 0
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                legend: {
-                    display: false
-                }
-            },
-            scales: {
-                x: { title: { display: true, text: 'x values' } },
-                y: { title: { display: true, text: 'f(x) output' }, min: -20, max: 260 }
-            }
-        }
-    });
-</script>
-
 </body>
 </html>
