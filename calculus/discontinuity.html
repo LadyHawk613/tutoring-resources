@@ -332,11 +332,11 @@
     </div>
 
     <!-- PAGE 1: REMOVABLE DISCONTINUITY -->
-    <div class="page-section active card" id="page-0">
+    <div class="page-section card active" id="page-0">
         <h2>Type 1: Removable (Point) Discontinuity</h2>
-        <p><strong>Definition:</strong> The limit lim<sub>x→a</sub> f(x) exists, but either f(a) is undefined or lim<sub>x→a</sub> f(x) ≠ f(a) (the graph has a single missing or displaced point).</p>
+        <p><strong>Definition:</strong> The limit lim<sub>x→a</sub> f(x) exists, but either f(a) is undefined or lim<sub>x→a</sub> f(x) ≠ f(a) (the graph has a single missing or displaced point / "hole").</p>
         
-        <h3>Walkthrough Example</h3>
+        <h3>Walkthrough Example 1: Piecewise Function with a Displaced Point</h3>
         <p><strong>Function:</strong></p>
         <div class="piecewise">
             <span style="margin-right: 8px;">f(x) =</span>
@@ -373,6 +373,47 @@
             
             <img src="continuity-image-1.png" alt="Graph of Removable Discontinuity at x = 1" class="walkthrough-img">
             <p style="text-align: center; font-size: 0.85rem; color: #64748b; margin-top: 4px;">Visual representation showing the hole at (1, 2) and the displaced point at (1, 1).</p>
+        </div>
+
+        <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 30px 0;">
+
+        <h3>Walkthrough Example 2: Rational Function with a Hole (Undefined Point)</h3>
+        <p><strong>Function:</strong><br>
+           f(x) = 
+           <div class="math-expr">
+               <div class="fraction">
+                   <span class="num">x² - 9</span>
+                   <span class="den">x - 3</span>
+               </div>
+           </div> 
+           at point of interest <strong>x = 3</strong>
+        </p>
+
+        <button class="btn" onclick="revealStep('removable2', 1)">Next Step: Check f(3) and Simplify</button>
+
+        <div id="removable2-step-1" class="step-box">
+            <strong>Step 1: Evaluate f(3) & Factor</strong><br>
+            • Plugging in x = 3 gives <div class="math-expr"><div class="fraction"><span class="num">(3)² - 9</span><span class="den">3 - 3</span></div></div> = <div class="math-expr"><div class="fraction"><span class="num">0</span><span class="den">0</span></div></div> (indeterminate form), so <strong>f(3) is undefined</strong> (a hole exists on the graph).<br>
+            • Factor the numerator: x² - 9 = (x - 3)(x + 3).<br>
+            • Simplify the expression for x ≠ 3:
+            <div class="math-expr">
+                <div class="fraction">
+                    <span class="num">(x - 3)(x + 3)</span>
+                    <span class="den">x - 3</span>
+                </div>
+                <span>= x + 3</span>
+            </div>
+            <br><button class="btn" onclick="revealStep('removable2', 2)">Next Step: Evaluate Limit & Classify</button>
+        </div>
+
+        <div id="removable2-step-2" class="step-box">
+            <strong>Step 2: Find the Limit & Conclusion</strong><br>
+            Evaluate the limit using the simplified expression:
+            <div class="math-expr">
+                <div class="lim-block"><span class="lim-text">lim</span><span class="lim-sub">x→3</span></div>
+                <span>(x + 3) = 3 + 3 = <strong>6</strong></span>
+            </div><br>
+            Because the limit exists (<b style="color:var(--primary);">6</b>) but the function value f(3) is undefined, the graph has a clean missing point (hole) at (3, 6). This confirms a <strong>Removable Discontinuity</strong>!
         </div>
     </div>
 
