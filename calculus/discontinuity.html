@@ -373,7 +373,6 @@
             Since the left-hand limit (2) equals the right-hand limit (2), the overall limit exists: lim<sub>x→1</sub> f(x) = 2.<br>
             However, the function value is f(1) = 1. Because lim<sub>x→1</sub> f(x) ≠ f(1), this is a <strong>Removable (Point) Discontinuity</strong>!
             
-            <!-- Graph linked directly to your GitHub repository file -->
             <img src="continuity-image-1.png" alt="Graph of Removable Discontinuity at x = 1" class="walkthrough-img">
             <p style="text-align: center; font-size: 0.85rem; color: #64748b; margin-top: 4px;">Visual representation showing the hole at (1, 2) and the displaced point at (1, 1).</p>
         </div>
@@ -513,7 +512,14 @@
             <div class="practice-card" onclick="openProblem(2)">
                 <span class="badge badge-removable">Removable #2</span>
                 <div>Classify at x = 1:</div>
-                <div style="font-size: 0.9rem; margin-top:5px;">f(x) = {x + 3 for x ≠ 1; 10 for x = 1}</div>
+                <div class="piecewise" style="margin-top: 5px; font-size: 0.85rem; padding: 4px 8px;">
+                    <span style="margin-right: 4px;">f(x) =</span>
+                    <span class="brace" style="font-size: 1.3rem;">{</span>
+                    <div class="piece-rows">
+                        <div class="piece-row"><span>x + 3</span> <span style="color:#64748b; margin-left: 8px;">if x ≠ 1</span></div>
+                        <div class="piece-row"><span>10</span> <span style="color:#64748b; margin-left: 8px;">if x = 1</span></div>
+                    </div>
+                </div>
             </div>
             <div class="practice-card" onclick="openProblem(3)">
                 <span class="badge badge-removable">Removable #3</span>
@@ -529,17 +535,38 @@
             <div class="practice-card" onclick="openProblem(4)">
                 <span class="badge badge-jump">Jump #1</span>
                 <div>Classify at x = 2:</div>
-                <div style="font-size: 0.9rem; margin-top:5px;">f(x) = {2x for x &lt; 2; 5 - x for x ≥ 2}</div>
+                <div class="piecewise" style="margin-top: 5px; font-size: 0.85rem; padding: 4px 8px;">
+                    <span style="margin-right: 4px;">f(x) =</span>
+                    <span class="brace" style="font-size: 1.3rem;">{</span>
+                    <div class="piece-rows">
+                        <div class="piece-row"><span>2x</span> <span style="color:#64748b; margin-left: 8px;">if x &lt; 2</span></div>
+                        <div class="piece-row"><span>5 - x</span> <span style="color:#64748b; margin-left: 8px;">if x ≥ 2</span></div>
+                    </div>
+                </div>
             </div>
             <div class="practice-card" onclick="openProblem(5)">
                 <span class="badge badge-jump">Jump #2</span>
                 <div>Classify at x = 0:</div>
-                <div style="font-size: 0.9rem; margin-top:5px;">f(x) = {x² for x &lt; 0; x + 2 for x ≥ 0}</div>
+                <div class="piecewise" style="margin-top: 5px; font-size: 0.85rem; padding: 4px 8px;">
+                    <span style="margin-right: 4px;">f(x) =</span>
+                    <span class="brace" style="font-size: 1.3rem;">{</span>
+                    <div class="piece-rows">
+                        <div class="piece-row"><span>x²</span> <span style="color:#64748b; margin-left: 8px;">if x &lt; 0</span></div>
+                        <div class="piece-row"><span>x + 2</span> <span style="color:#64748b; margin-left: 8px;">if x ≥ 0</span></div>
+                    </div>
+                </div>
             </div>
             <div class="practice-card" onclick="openProblem(6)">
                 <span class="badge badge-jump">Jump #3</span>
                 <div>Classify at x = 0:</div>
-                <div style="font-size: 0.9rem; margin-top:5px;">f(x) = {-1 for x &lt; 0; 1 for x ≥ 0}</div>
+                <div class="piecewise" style="margin-top: 5px; font-size: 0.85rem; padding: 4px 8px;">
+                    <span style="margin-right: 4px;">f(x) =</span>
+                    <span class="brace" style="font-size: 1.3rem;">{</span>
+                    <div class="piece-rows">
+                        <div class="piece-row"><span>-1</span> <span style="color:#64748b; margin-left: 8px;">if x &lt; 0</span></div>
+                        <div class="piece-row"><span>1</span> <span style="color:#64748b; margin-left: 8px;">if x ≥ 0</span></div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -626,7 +653,7 @@
         },
         2: {
             title: "Removable Practice #2",
-            q: "Classify the discontinuity for f(x) = {x + 3 for x ≠ 1; 10 for x = 1} at x = 1.",
+            q: "Classify the discontinuity for <div class='piecewise' style='margin-top: 8px;'><span style='margin-right: 6px;'>f(x) =</span><span class='brace'>{</span><div class='piece-rows'><div class='piece-row'><span>x + 3</span> <span style='color:#64748b; margin-left: 12px;'>if x ≠ 1</span></div><div class='piece-row'><span>10</span> <span style='color:#64748b; margin-left: 12px;'>if x = 1</span></div></div></div> at x = 1.",
             options: [
                 { text: "A) Jump Discontinuity", correct: false },
                 { text: "B) Removable Discontinuity", correct: true, exp: "Correct! lim(x→1) [x + 3] = 4, but f(1) = 10. Limit exists but doesn't equal function value." },
@@ -644,7 +671,7 @@
         },
         4: {
             title: "Jump Practice #1",
-            q: "Classify the discontinuity for f(x) = {2x for x &lt; 2; 5 - x for x ≥ 2} at x = 2.",
+            q: "Classify the discontinuity for <div class='piecewise' style='margin-top: 8px;'><span style='margin-right: 6px;'>f(x) =</span><span class='brace'>{</span><div class='piece-rows'><div class='piece-row'><span>2x</span> <span style='color:#64748b; margin-left: 12px;'>if x &lt; 2</span></div><div class='piece-row'><span>5 - x</span> <span style='color:#64748b; margin-left: 12px;'>if x ≥ 2</span></div></div></div> at x = 2.",
             options: [
                 { text: "A) Removable Discontinuity", correct: false },
                 { text: "B) Jump Discontinuity", correct: true, exp: "Correct! Left-hand limit = 4, right-hand limit = 3. Unequal finite limits produce a jump." },
@@ -653,7 +680,7 @@
         },
         5: {
             title: "Jump Practice #2",
-            q: "Classify the discontinuity for f(x) = {x² for x &lt; 0; x + 2 for x ≥ 0} at x = 0.",
+            q: "Classify the discontinuity for <div class='piecewise' style='margin-top: 8px;'><span style='margin-right: 6px;'>f(x) =</span><span class='brace'>{</span><div class='piece-rows'><div class='piece-row'><span>x²</span> <span style='color:#64748b; margin-left: 12px;'>if x &lt; 0</span></div><div class='piece-row'><span>x + 2</span> <span style='color:#64748b; margin-left: 12px;'>if x ≥ 0</span></div></div></div> at x = 0.",
             options: [
                 { text: "A) Jump Discontinuity", correct: true, exp: "Correct! Left-hand limit = 0, right-hand limit = 2. Finite unequal limits = jump discontinuity." },
                 { text: "B) Removable Discontinuity", correct: false },
@@ -662,7 +689,7 @@
         },
         6: {
             title: "Jump Practice #3",
-            q: "Classify the discontinuity for f(x) = {-1 for x &lt; 0; 1 for x ≥ 0} at x = 0.",
+            q: "Classify the discontinuity for <div class='piecewise' style='margin-top: 8px;'><span style='margin-right: 6px;'>f(x) =</span><span class='brace'>{</span><div class='piece-rows'><div class='piece-row'><span>-1</span> <span style='color:#64748b; margin-left: 12px;'>if x &lt; 0</span></div><div class='piece-row'><span>1</span> <span style='color:#64748b; margin-left: 12px;'>if x ≥ 0</span></div></div></div> at x = 0.",
             options: [
                 { text: "A) Infinite Discontinuity", correct: false },
                 { text: "B) Jump Discontinuity", correct: true, exp: "Correct! Left limit is -1, right limit is 1. Standard step function jump." },
