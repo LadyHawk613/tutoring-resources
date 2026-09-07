@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evaluating Limits: Complete Lesson & Practice</title>
+    <style>
+        :root {
+            --primary: #6b21a8;
+            --primary-hover: #581c87;
+            --bg-color: #f3e8ff;
+            --card-bg: #ffffff;
+            --text-color: #2e1065;
+            --border-color: #e9d5ff;
+            --step-bg: #faf5ff;
+            --success-bg: #fdf4ff;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 850px;
+            margin: 40px auto;
+            padding: 20px;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        .header-card {
+            background-color: var(--primary);
+            color: white;
+            padding: 25px;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 6px -1px rgba(107, 33, 168, 0.1);
+        }
+
+        .header-card h1 {
+            color: white;
+            margin: 0 0 10px 0;
+        }
+
+        .header-card p {
+            margin: 0;
+            color: #f3e8ff;
+        }
+
+        h2, h3 {
+            color: var(--primary);
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 6px -1px rgba(107, 33, 168, 0.05);
+        }
+
+        .step-box {
+            display: none;
+            margin-top: 15px;
+            padding: 15px;
+            background: var(--step-bg);
+            border-left: 4px solid var(--primary);
+            border-radius: 4px;
+        }
+
+        .answer-box {
+            display: none;
+            margin-top: 15px;
+            padding: 15px;
+            background: var(--success-bg);
+            border-left: 4px solid var(--primary);
+            border-radius: 4px;
+        }
+
+        .btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            font-size: 0.95rem;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background-color 0.2s;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-hover);
+        }
+
+        /* Vertical Fraction Styling */
+        .fraction {
+            display: inline-flex;
+            flex-direction: column;
+            vertical-align: middle;
+            text-align: center;
+            margin: 0 4px;
+        }
+
+        .num {
+            border-bottom: 1px solid var(--text-color);
+            padding-bottom: 2px;
+        }
+
+        .den {
+            padding-top: 2px;
+        }
+
+        .lim-block {
+            display: inline-flex;
+            flex-direction: column;
+            vertical-align: middle;
+            text-align: center;
+            font-size: 0.9rem;
+            margin-right: 4px;
+        }
+
+        .lim-text {
+            font-weight: bold;
+        }
+
+        .lim-sub {
+            font-size: 0.75rem;
+        }
+
+        .math-expr {
+            display: inline-flex;
+            align-items: center;
+            vertical-align: middle;
+            margin: 4px 0;
+        }
+
+        /* Proper Square Root Styling with Top Bar */
+        .sqrt-container {
+            display: inline-flex;
+            align-items: center;
+            vertical-align: middle;
+        }
+
+        .radical-symbol {
+            font-size: 1.15rem;
+            margin-right: 1px;
+            line-height: 1;
+        }
+
+        .radicand {
+            border-top: 1px solid var(--text-color);
+            padding-top: 1px;
+            margin-top: 3px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header-card">
+        <h1>Evaluating Limits</h1>
+        <p>Interactive Lesson & Practice covering all worksheet scenarios</p>
+    </div>
+
+    <!-- DEMONSTRATION SECTION -->
+    <div class="card">
+        <h2>Walkthrough Demonstration: Factoring & Direct Substitution</h2>
+        <p>Evaluate the limit:</p>
+        <div class="math-expr">
+            <div class="lim-block"><span class="lim-text">lim</span><span class="lim-sub">x &rarr; -1</span></div>
+            <div class="fraction">
+                <span class="num">x<sup>2</sup> - 1</span>
+                <span class="den">x + 1</span>
+            </div>
+        </div>
+
+        <br><button class="btn" onclick="revealStep('demo', 1)">Step 1: Test Direct Substitution</button>
+        
+        <div id="demo-step-1" class="step-box">
+            <strong>Step 1: Indeterminate Form Check</strong><br>
+            Plugging in x = -1 gives:
+            <div class="math-expr">
+                <div class="fraction">
+                    <span class="num">(-1)<sup>2</sup> - 1</span>
+                    <span class="den">-1 + 1</span>
+                </div>
+                <span>=</span>
+                <div class="fraction">
+                    <span class="num">0</span>
+                    <span class="den">0</span>
+                </div>
+            </div>
+            <br>Since we get zero over zero, the form is indeterminate. We must factor the numerator.
+            <br><button class="btn" onclick="revealStep('demo', 2)">Step 2: Factor and Simplify</button>
+        </div>
+
+        <div id="demo-step-2" class="step-box">
+            <strong>Step 2: Algebra & Cancellation</strong><br>
+            Factor the numerator as a difference of squares: x<sup>2</sup> - 1 = (x - 1)(x + 1).<br>
+            Cancel the common term (x + 1) from numerator and denominator:
+            <div class="math-expr">
+                <div class="fraction">
+                    <span class="num">(x - 1)(x + 1)</span>
+                    <span class="den">x + 1</span>
+                </div>
+                <span>= x - 1</span>
+            </div>
+            <br><button class="btn" onclick="revealStep('demo', 3)">Step 3: Evaluate Final Limit</button>
+        </div>
+
+        <div id="demo-step-3" class="step-box">
+            <strong>Step 3: Direct Substitution of Simplified Form</strong><br>
+            Evaluate the limit of the simplified expression as x approaches -1:
+            <div class="math-expr">
+                <div class="lim-block"><span class="lim-text">lim</span><span class="lim-sub">x &rarr; -1</span></div>
+                <span>(x - 1) = -1 - 1 = <strong>-2</strong></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- PRACTICE QUESTIONS (All 9 Worksheet Scenarios) -->
+    <div class="card">
+        <h2>Practice Questions (Worksheet Scenarios 1 - 9)</h2>
+        <p>Solve each problem on your own, then click the buttons to reveal the step-by-step solutions.</p>
+
+        <!-- Problem 1 -->
+        <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 20px 0;">
+        <h3>1. Difference of Squares</h3>
+        <p>
+            Evaluate: 
+            <div class="math-expr">
+                <div class="lim-block"><span class="lim-text">lim</span><span class="lim-sub">x &rarr; 2</span></div>
+                <div class="fraction">
+                    <span class="num">4 - x<sup>2</sup></span>
+                    <span class="den">x - 2</span>
+                </div>
+            </div>
+        </p>
+        <button class="btn" onclick="toggleAnswer('ans1')">Show Answer & Solution</button>
+        <div id="ans1" class="answer-box">
+            <strong>Solution:</strong><br>
+            1. Direct substitution yields zero over zero.<br>
+            2. Factor numerator: 4 - x<sup>2</sup> = (2 - x)(2 + x) = -(x - 2)(x + 2).<br>
+            3. Cancel (x - 2) to leave -(x + 2).<br>
+            4. Substitute x = 2: -(2 + 2) = <strong>-4</strong>
+        </div>
+
+        <!-- Problem 2 -->
+        <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 20px 0;">
+        <h3>2. Trinomial Denominator Factoring</h3>
+        <p>
+            Evaluate: 
+            <div class="math-expr">
+                <div class="lim-block"><span class="lim-text">lim</span><span class="lim-sub">x &rarr; 1</span></div>
+                <div class="fraction">
+                    <span class="num">x - 1</span>
+                    <span class="den">x<sup>2</sup> + 2x - 3</span>
+                </div>
+            </div>
+        </p>
+        <button class="btn" onclick="toggleAnswer('ans2')">Show Answer & Solution</button>
+        <div id="ans2" class="answer-box">
+            <strong>Solution:</strong><br>
+            1. Factor denominator: x<sup>2</sup> + 2x - 3 = (x - 1)(x + 3).<br>
+            2. Cancel (x - 1) to get 1 / (x + 3).<br>
+            3. Substitute x = 1: <strong>1/4</strong>
+        </div>
+
+        <!-- Problem 3 -->
+        <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 20px 0;">
+        <h3>3. Linear Denominator Factoring</h3>
+        <p>
+            Evaluate: 
+            <div class="math-expr">
+                <div class="lim-block"><span class="lim-text">lim</span><span class="lim-sub">x &rarr; -2</span></div>
+                <div class="fraction">
+                    <span class="num">x + 2</span>
+                    <span class="den">x<sup>2</sup> + 5x + 6</span>
+                </div>
+            </div>
+        </p>
+        <button class="btn" onclick="toggleAnswer('ans3')">Show Answer & Solution</button>
+        <div id="ans3" class="answer-box">
+            <strong>Solution:</strong><br>
+            1. Factor denominator: x<sup>2</sup> + 5x + 6 = (x + 2)(x + 3).<br>
+            2. Cancel (x + 2) to get 1 / (x + 3).<br>
+            3. Substitute x = -2: 1 / (-2 + 3) = <strong>1</strong>
+        </div>
+
+        <!-- Problem 4 -->
+        <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 20px 0;">
+        <h3>4. Rationalizing Radicals</h3>
+        <p>
+            Evaluate: 
+            <div class="math-expr">
+                <div class="lim-block"><span class="lim-text">lim</span><span class="lim-sub">x &rarr; 0</span></div>
+                <div class="fraction">
+                    <span class="num">
+                        <span class="sqrt-container"><span class="radical-symbol">&radic;</span><span class="radicand">x + 5</span></span> - <span class="sqrt-container"><span class="radical-symbol">&radic;</span><span class="radicand">5</span></span>
+                    </span>
+                    <span class="den">x</span>
+                </div>
+            </div>
+        </p>
+        <button class="btn" onclick="toggleAnswer('ans4')">Show Answer & Solution</button>
+        <div id="ans4" class="answer-box">
+            <strong>Solution:</strong><br>
+            1. Multiply by the conjugate: <span class="sqrt-container"><span class="radical-symbol">&radic;</span><span class="radicand">x + 5</span></span> + <span class="sqrt-container"><span class="radical-symbol">&radic;</span><span class="radicand">5</span></span>.<br>
+            2. Simplify numerator: (x + 5) - 5 = x.<br>
+            3. Cancel x and substitute x = 0: <strong>1 / (2&radic;(5))</strong>
+        </div>
+
+        <!-- Problem 5 -->
+        <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 20px 0;">
+        <h3>5. Rationalizing Radicals (Negative Shift)</h3>
+        <p>
+            Evaluate: 
+            <div class="math-expr">
+                <div class="lim-block"><span class="lim-text">lim</span><span class="lim-sub">x &rarr; -3</span></div>
+                <div class="fraction">
+                    <span class="num">
+                        <span class="sqrt-container"><span class="radical-symbol">&radic;</span><span class="radicand">1 - x</span></span> - 2
+                    </span>
+                    <span class="den">x + 3</span>
+                </div>
+            </div>
+        </p>
+        <button class="btn" onclick="toggleAnswer('ans5')">Show Answer & Solution</button>
+        <div id="ans5" class="answer-box">
+            <strong>Solution:</strong><br>
+            1. Multiply by conjugate <span class="sqrt-container"><span class="radical-symbol">&radic;</span><span class="radicand">1 - x</span></span> + 2.<br>
+            2. Simplify numerator: (1 - x) - 4 = -(x + 3).<br>
+            3. Cancel (x + 3) and substitute x = -3: <strong>-1/4</strong>
+        </div>
+
+        <!-- Problem 6 -->
+        <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 20px 0;">
+        <h3>6. Nested Fraction Combination</h3>
+        <p>
+            Evaluate: 
+            <div class="math-expr">
+                <div class="lim-block"><span class="lim-text">lim</span><span class="lim-sub">x &rarr; -4</span></div>
+                <div class="fraction">
+                    <span class="num">
+                        <div class="fraction"><span class="num">x</span><span class="den">x + 2</span></div>
+                        <span> - 2</span>
+                    </span>
+                    <span class="den">x + 4</span>
+                </div>
+            </div>
+        </p>
+        <button class="btn" onclick="toggleAnswer('ans6')">Show Answer & Solution</button>
+        <div id="ans6" class="answer-box">
+            <strong>Solution:</strong><br>
+            1. Combine numerator terms over common denominator (x + 2) to get -(x + 4) / (x + 2).<br>
+            2. Divide by (x + 4) to leave -1 / (x + 2).<br>
+            3. Substitute x = -4: <strong>1/2</strong>
+        </div>
+
+        <!-- Problem 7 -->
+        <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 20px 0;">
+        <h3>7. Complex Fractions</h3>
+        <p>
+            Evaluate: 
+            <div class="math-expr">
+                <div class="lim-block"><span class="lim-text">lim</span><span class="lim-sub">x &rarr; 2</span></div>
+                <div class="fraction">
+                    <span class="num">
+                        <div class="fraction"><span class="num">1</span><span class="den">x + 2</span></div>
+                        <span> - </span>
+                        <div class="fraction"><span class="num">1</span><span class="den">4</span></div>
+                    </span>
+                    <span class="den">x - 2</span>
+                </div>
+            </div>
+        </p>
+        <button class="btn" onclick="toggleAnswer('ans7')">Show Answer & Solution</button>
+        <div id="ans7" class="answer-box">
+            <strong>Solution:</strong><br>
+            1. Common denominator for numerator is 4(x + 2).<br>
+            2. Simplify and cancel (x - 2), leaving -1 / (4(x + 2)).<br>
+            3. Substitute x = 2: <strong>-1/16</strong>
+        </div>
+
+        <!-- Problem 8 -->
+        <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 20px 0;">
+        <h3>8. Special Trigonometric Limits</h3>
+        <p>
+            Evaluate: 
+            <div class="math-expr">
+                <div class="lim-block"><span class="lim-text">lim</span><span class="lim-sub">x &rarr; 0</span></div>
+                <div class="fraction">
+                    <span class="num">sin(x)</span>
+                    <span class="den">x</span>
+                </div>
+            </div>
+        </p>
+        <button class="btn" onclick="toggleAnswer('ans8')">Show Answer & Solution</button>
+        <div id="ans8" class="answer-box">
+            <strong>Solution:</strong><br>
+            1. Direct substitution yields sin(0) / 0 (indeterminate form).<br>
+            2. This is a fundamental standard trigonometric limit proven via the Squeeze Theorem.<br>
+            3. Result: <strong>1</strong>
+        </div>
+    </div>
+
+    <script>
+        function revealStep(prefix, stepNum) {
+            document.getElementById(prefix + '-step-' + stepNum).style.display = 'block';
+        }
+        function toggleAnswer(id) {
+            var box = document.getElementById(id);
+            if (box.style.display === 'block') {
+                box.style.display = 'none';
+            } else {
+                box.style.display = 'block';
+            }
+        }
+    </script>
+
+</body>
+</html>
