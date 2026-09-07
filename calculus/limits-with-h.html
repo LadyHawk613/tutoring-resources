@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evaluating Limits (as h → 0)</title>
+    <style>
+        :root {
+            --primary: #6b21a8; /* Purple accent color */
+            --primary-hover: #581c87;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-color: #1e293b;
+            --border-color: #e2e8f0;
+        }
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        header {
+            background-color: var(--primary);
+            color: white;
+            padding: 24px;
+            text-align: center;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+        header h1 {
+            color: white;
+            margin: 0 0 5px 0;
+            font-size: 1.8rem;
+        }
+        header p {
+            color: #e9d5ff;
+            margin: 0;
+        }
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+        h2 {
+            color: var(--primary);
+            margin-top: 0;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 8px;
+        }
+        h3 {
+            color: #334155;
+            margin-top: 15px;
+        }
+        .step-box {
+            display: none;
+            margin-top: 15px;
+            padding: 15px;
+            background: #f1f5f9;
+            border-left: 4px solid var(--primary);
+            border-radius: 4px;
+        }
+        .answer-box {
+            display: none;
+            margin-top: 10px;
+            padding: 12px;
+            background: #f3e8ff;
+            border-left: 4px solid var(--primary);
+            border-radius: 4px;
+        }
+        .btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            font-size: 0.95rem;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background-color 0.2s;
+        }
+        .btn:hover {
+            background-color: var(--primary-hover);
+        }
+        /* Vertical Fraction & Limit Styling */
+        .math-expr {
+            display: inline-flex;
+            align-items: center;
+            font-family: 'Cambria Math', 'Times New Roman', serif;
+            font-size: 1.1rem;
+            margin: 4px 0;
+        }
+        .fraction {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            vertical-align: middle;
+            margin: 0 4px;
+        }
+        .num {
+            border-bottom: 1px solid #1e293b;
+            padding: 0 4px 2px 4px;
+            text-align: center;
+        }
+        .den {
+            padding: 2px 4px 0 4px;
+            text-align: center;
+        }
+        .lim-block {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            margin-right: 6px;
+            vertical-align: middle;
+        }
+        .lim-text {
+            font-weight: bold;
+        }
+        .lim-sub {
+            font-size: 0.75rem;
+            margin-top: -2px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Evaluating Limits (as h → 0)</h1>
+        <p>Master the difference quotient technique: Expand, Cancel, and Factor</p>
+    </header>
+
+    <!-- DEMONSTRATION SECTION -->
+    <div class="card">
+        <h2>Walkthrough Demonstration</h2>
+        <p>Evaluate the limit using the difference quotient method:</p>
+        <div class="math-expr">
+            <div class="lim-block"><span class="lim-text">lim</span><span class="lim-sub">h→0</span></div>
+            <div class="fraction">
+                <span class="num">(x + h)<sup>3</sup> - x<sup>3</sup></span>
+                <span class="den">h</span>
+            </div>
+        </div>
+        <br>
+
+        <button class="btn" onclick="revealStep('demo', 1)">Step 1: Expand the Numerator</button>
+        
+        <div id="demo-step-1" class="step-box">
+            <strong>Step 1: Expansion</strong><br>
+            Expand <span style="font-family: monospace;">(x + h)<sup>3</sup></span> using binomial expansion:
+            <br><br>
+            <div class="fraction">
+                <span class="num">x<sup>3</sup> + 3x<sup>2</sup>h + 3xh<sup>2</sup> + h<sup>3</sup> - x<sup>3</sup></span>
+                <span class="den">h</span>
+            </div>
+            <br><br>
+            <button class="btn" onclick="revealStep('demo', 2)">Step 2: Simplify & Factor Out h</button>
+        </div>
+
+        <div id="demo-step-2" class="step-box">
+            <strong>Step 2: Simplify and Factor</strong><br>
+            Subtract <span style="font-family: monospace;">x<sup>3</sup> - x<sup>3</sup></span> and factor out <span style="font-family: monospace;">h</span> from the numerator:
+            <br><br>
+            <div class="fraction">
+                <span class="num">h(3x<sup>2</sup> + 3xh + h<sup>2</sup>)</span>
+                <span class="den">h</span>
+            </div>
+            <br><br>
+            <button class="btn" onclick="revealStep('demo', 3)">Step 3: Cancel & Evaluate</button>
+        </div>
+
+        <div id="demo-step-3" class="step-box">
+            <strong>Step 3: Cancel Denominator & Substitute h = 0</strong><br>
+            Cancel the <span style="font-family: monospace;">h</span> in the denominator, leaving <span style="font-family: monospace;">3x<sup>2</sup> + 3xh + h<sup>2</sup></span>.<br>
+            Directly substitute <span style="font-family: monospace;">h = 0</span> to get the final answer: <strong>3x<sup>2</sup></strong>.
+        </div>
+    </div>
+
+    <!-- PRACTICE QUESTIONS -->
+    <div class="card">
+        <h2>Practice Questions</h2>
+        <p>Try solving these on your own, then click the buttons to check your work!</p>
+
+        <!-- Practice 1 -->
+        <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 20px 0;">
+        <h3>Practice Question 1</h3>
+        <div class="math-expr">
+            Evaluate: 
+            <div class="lim-block" style="margin-left: 10px;"><span class="lim-text">lim</span><span class="lim-sub">h→0</span></div>
+            <div class="fraction">
+                <span class="num">(x + h)<sup>2</sup> - x<sup>2</sup></span>
+                <span class="den">h</span>
+            </div>
+        </div>
+        <br>
+        <button class="btn" onclick="toggleAnswer('ans1')">Show Answer & Solution</button>
+        <div id="ans1" class="answer-box">
+            <strong>Solution:</strong><br>
+            1. Expand: <div class="fraction"><span class="num">x<sup>2</sup> + 2xh + h<sup>2</sup> - x<sup>2</sup></span><span class="den">h</span></div><br>
+            2. Factor out <span style="font-family: monospace;">h</span>: <div class="fraction"><span class="num">h(2x + h)</span><span class="den">h</span></div><br>
+            3. Cancel <span style="font-family: monospace;">h</span> and evaluate at <span style="font-family: monospace;">h = 0</span>: <strong>2x</strong>
+        </div>
+
+        <!-- Practice 2 -->
+        <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 20px 0;">
+        <h3>Practice Question 2</h3>
+        <div class="math-expr">
+            Evaluate: 
+            <div class="lim-block" style="margin-left: 10px;"><span class="lim-text">lim</span><span class="lim-sub">h→0</span></div>
+            <div class="fraction">
+                <span class="num">(x + h)<sup>4</sup> - x<sup>4</sup></span>
+                <span class="den">h</span>
+            </div>
+        </div>
+        <br>
+        <button class="btn" onclick="toggleAnswer('ans2')">Show Answer & Solution</button>
+        <div id="ans2" class="answer-box">
+            <strong>Solution:</strong><br>
+            1. Expand: <div class="fraction"><span class="num">x<sup>4</sup> + 4x<sup>3</sup>h + 6x<sup>2</sup>h<sup>2</sup> + 4xh<sup>3</sup> + h<sup>4</sup> - x<sup>4</sup></span><span class="den">h</span></div><br>
+            2. Factor out <span style="font-family: monospace;">h</span>: <div class="fraction"><span class="num">h(4x<sup>3</sup> + 6x<sup>2</sup>h + 4xh<sup>2</sup> + h<sup>3</sup>)</span><span class="den">h</span></div><br>
+            3. Cancel <span style="font-family: monospace;">h</span> and set <span style="font-family: monospace;">h = 0</span>: <strong>4x<sup>3</sup></strong>
+        </div>
+
+        <!-- Practice 3 (Challenging) -->
+        <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 20px 0;">
+        <h3>Practice Question 3 (Challenging 🔥)</h3>
+        <div class="math-expr">
+            Evaluate: 
+            <div class="lim-block" style="margin-left: 10px;"><span class="lim-text">lim</span><span class="lim-sub">h→0</span></div>
+            <div class="fraction">
+                <span class="num">(2x + 2h)<sup>3</sup> - 8x<sup>3</sup></span>
+                <span class="den">h</span>
+            </div>
+        </div>
+        <br>
+        <button class="btn" onclick="toggleAnswer('ans3')">Show Answer & Solution</button>
+        <div id="ans3" class="answer-box">
+            <strong>Solution:</strong><br>
+            1. Expand <span style="font-family: monospace;">(2x + 2h)<sup>3</sup> = 8x<sup>3</sup> + 24x<sup>2</sup>h + 24xh<sup>2</sup> + 8h<sup>3</sup></span>.<br>
+            2. Subtract <span style="font-family: monospace;">8x<sup>3</sup></span>: <div class="fraction"><span class="num">8x<sup>3</sup> + 24x<sup>2</sup>h + 24xh<sup>2</sup> + 8h<sup>3</sup> - 8x<sup>3</sup></span><span class="den">h</span></div><br>
+            3. Factor out <span style="font-family: monospace;">h</span>: <div class="fraction"><span class="num">h(24x<sup>2</sup> + 24xh + 8h<sup>2</sup>)</span><span class="den">h</span></div><br>
+            4. Cancel <span style="font-family: monospace;">h</span> and set <span style="font-family: monospace;">h = 0</span>: <strong>24x<sup>2</sup></strong>
+        </div>
+    </div>
+</div>
+
+<script>
+    function revealStep(prefix, stepNum) {
+        document.getElementById(prefix + '-step-' + stepNum).style.display = 'block';
+    }
+    function toggleAnswer(id) {
+        var box = document.getElementById(id);
+        box.style.display = (box.style.display === 'block') ? 'none' : 'block';
+    }
+</script>
+
+</body>
+</html>
