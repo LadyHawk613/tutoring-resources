@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matching Piecewise Limits & Continuity</title>
+    <style>
+        :root {
+            --primary: #6b21a8;
+            --primary-hover: #581c87;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-color: #1e293b;
+            --border-color: #e2e8f0;
+        }
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        header {
+            background-color: var(--primary);
+            color: white;
+            padding: 24px;
+            text-align: center;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+        header h1 {
+            color: white;
+            margin: 0 0 5px 0;
+            font-size: 1.8rem;
+        }
+        header p {
+            color: #e9d5ff;
+            margin: 0;
+        }
+        .page {
+            display: none;
+        }
+        .page.active {
+            display: block;
+        }
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+        h2 {
+            color: var(--primary);
+            margin-top: 0;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 8px;
+        }
+        h3 {
+            color: #334155;
+            margin-top: 15px;
+        }
+        .step-box {
+            display: none;
+            margin-top: 15px;
+            padding: 15px;
+            background: #f1f5f9;
+            border-left: 4px solid var(--primary);
+            border-radius: 4px;
+        }
+        .answer-box {
+            display: none;
+            margin-top: 10px;
+            padding: 12px;
+            background: #f3e8ff;
+            border-left: 4px solid var(--primary);
+            border-radius: 4px;
+        }
+        .btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            font-size: 0.95rem;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background-color 0.2s;
+        }
+        .btn:hover {
+            background-color: var(--primary-hover);
+        }
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        .piecewise {
+            display: inline-flex;
+            align-items: center;
+            font-size: 1.1rem;
+            margin: 10px 0;
+        }
+        .brace {
+            font-size: 2.5rem;
+            font-weight: 300;
+            margin-right: 8px;
+            line-height: 1;
+        }
+        .cases {
+            display: flex;
+            flex-direction: column;
+        }
+        .math-expr {
+            display: inline-flex;
+            align-items: center;
+            font-family: 'Cambria Math', 'Times New Roman', serif;
+            font-size: 1.1rem;
+            margin: 4px 0;
+        }
+        .fraction {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            vertical-align: middle;
+            margin: 0 4px;
+        }
+        .num {
+            border-bottom: 1px solid #1e293b;
+            padding: 0 4px 2px 4px;
+            text-align: center;
+        }
+        .den {
+            padding: 2px 4px 0 4px;
+            text-align: center;
+        }
+        /* Two-Column Proof Table Styling */
+        .proof-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            background: #ffffff;
+            border-radius: 6px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+        .proof-table th {
+            background-color: #e9d5ff;
+            color: var(--primary);
+            padding: 10px;
+            text-align: left;
+            font-size: 0.95rem;
+        }
+        .proof-table td {
+            padding: 10px;
+            border-bottom: 1px solid var(--border-color);
+            vertical-align: top;
+            font-size: 0.95rem;
+        }
+        .proof-table tr:last-child td {
+            border-bottom: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Matching Piecewise Limits & Continuity</h1>
+        <p>Find unknown constants (c or d) to make functions continuous</p>
+    </header>
+
+    <!-- PAGE 1: LESSON -->
+    <div id="page1" class="page active">
+        <div class="card">
+            <h2>Step-Through Lesson: Finding Unknown Constants</h2>
+            <p>To make a piecewise function continuous at a transition point, the limit from the left must equal the limit from the right (and equal the function value at that point).</p>
+            
+            <p><strong>Example Problem:</strong> Find the value of c such that f(x) is continuous everywhere:</p>
+            
+            <div class="piecewise">
+                <span class="brace">{</span>
+                <div class="cases">
+                    <span>cx<sup>2</sup> - 3, &nbsp;&nbsp; x &lt; 2</span>
+                    <span>cx + 2, &nbsp;&nbsp;&nbsp;&nbsp; x &ge; 2</span>
+                </div>
+            </div>
+            <br>
+
+            <button class="btn" onclick="revealStep('lesson', 1)">Step 1: Identify the Transition Value</button>
+            
+            <div id="lesson-step-1" class="step-box">
+                <strong>Step 1: Transition Point</strong><br>
+                The rule changes at x = 2. For f(x) to be continuous, the expression from the left side evaluated at x = 2 must equal the expression from the right side evaluated at x = 2.
+                <br><br>
+                <button class="btn" onclick="revealStep('lesson', 2)">Step 2: Set Left Side Equal to Right Side</button>
+            </div>
+
+            <div id="lesson-step-2" class="step-box">
+                <strong>Step 2: Equate Expressions at x = 2</strong><br>
+                Substitute x = 2 into both pieces and set them equal:<br>
+                c(2)<sup>2</sup> - 3 = c(2) + 2<br>
+                4c - 3 = 2c + 2
+                <br><br>
+                <button class="btn" onclick="revealStep('lesson', 3)">Step 3: Solve for c</button>
+            </div>
+
+            <div id="lesson-step-3" class="step-box">
+                <strong>Step 3: Algebraic Isolation</strong><br>
+                Subtract 2c from both sides: <br>
+                2c - 3 = 2<br>
+                Add 3 to both sides: <br>
+                2c = 5<br>
+                Divide by 2: 
+                <div class="math-expr" style="margin-left: 5px;">
+                    <div class="fraction">
+                        <span class="num">5</span>
+                        <span class="den">2</span>
+                    </div>
+                </div>
+                <br><br>
+                <strong>Final Answer:</strong> c = 5 / 2
+            </div>
+        </div>
+
+        <div class="nav-buttons">
+            <div></div>
+            <button class="btn" onclick="switchPage(2)">Go to Practice Questions Page ➔</button>
+        </div>
+    </div>
+
+    <!-- PAGE 2: PRACTICE -->
+    <div id="page2" class="page">
+        <div class="card">
+            <h2>Practice Questions</h2>
+            <p>Solve these problems on your own, then click the buttons to check your work!</p>
+
+            <!-- Practice 1 -->
+            <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 20px 0;">
+            <h3>Practice Question 1</h3>
+            <p>Find the value of c that makes the function continuous:</p>
+            <div class="piecewise">
+                <span class="brace">{</span>
+                <div class="cases">
+                    <span>cx + 5, &nbsp;&nbsp; x &le; 3</span>
+                    <span>x<sup>2</sup> - c, &nbsp;&nbsp; x &gt; 3</span>
+                </div>
+            </div>
+            <br>
+            <button class="btn" onclick="toggleAnswer('ans1')">Show Answer & Solution</button>
+            <div id="ans1" class="answer-box">
+                <strong>Solution:</strong>
+                
+                <table class="proof-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 50%;">Mathematical Steps</th>
+                            <th style="width: 50%;">Explanation</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>c(3) + 5 = (3)<sup>2</sup> - c</td>
+                            <td>Set left and right expressions equal at the transition point x = 3</td>
+                        </tr>
+                        <tr>
+                            <td>3c + 5 = 9 - c</td>
+                            <td>Simplify terms on both sides</td>
+                        </tr>
+                        <tr>
+                            <td>4c + 5 = 9</td>
+                            <td>Add c to both sides</td>
+                        </tr>
+                        <tr>
+                            <td>4c = 4</td>
+                            <td>Subtract 5 from both sides</td>
+                        </tr>
+                        <tr>
+                            <td>c = 1</td>
+                            <td>Divide by 4</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <p style="margin-top: 12px;"><strong>Final Answer:</strong> c = 1</p>
+            </div>
+
+            <!-- Practice 2 -->
+            <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 20px 0;">
+            <h3>Practice Question 2</h3>
+            <p>Find the value of c that makes the function continuous:</p>
+            <div class="piecewise">
+                <span class="brace">{</span>
+                <div class="cases">
+                    <span>cx<sup>2</sup>, &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; x &lt; 2</span>
+                    <span>2x + c, &nbsp;&nbsp; x &ge; 2</span>
+                </div>
+            </div>
+            <br>
+            <button class="btn" onclick="toggleAnswer('ans2')">Show Answer & Solution</button>
+            <div id="ans2" class="answer-box">
+                <strong>Solution:</strong>
+                
+                <table class="proof-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 50%;">Mathematical Steps</th>
+                            <th style="width: 50%;">Explanation</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>c(2)<sup>2</sup> = 2(2) + c</td>
+                            <td>Evaluate both pieces at the transition point x = 2 and set them equal</td>
+                        </tr>
+                        <tr>
+                            <td>4c = 4 + c</td>
+                            <td>Simplify terms on both sides</td>
+                        </tr>
+                        <tr>
+                            <td>3c = 4</td>
+                            <td>Subtract c from both sides</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="math-expr">
+                                    <div class="fraction">
+                                        <span class="num">4</span>
+                                        <span class="den">3</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>Divide by 3 to solve for c</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <p style="margin-top: 12px;"><strong>Final Answer:</strong> c = 4 / 3</p>
+            </div>
+
+            <!-- Practice 3 (Challenging) -->
+            <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 20px 0;">
+            <h3>Practice Question 3 (Challenging - Two Constants)</h3>
+            <p>Find the values of c and d such that f(x) is continuous for all real numbers:</p>
+            <div class="piecewise">
+                <span class="brace">{</span>
+                <div class="cases">
+                    <span>4x, &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; x &le; -1</span>
+                    <span>cx + d, &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -1 &lt; x &lt; 2</span>
+                    <span>-5x, &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; x &ge; 2</span>
+                </div>
+            </div>
+            <br>
+            <button class="btn" onclick="toggleAnswer('ans3')">Show Answer & Solution</button>
+            <div id="ans3" class="answer-box">
+                <strong>Solution:</strong>
+                
+                <table class="proof-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 50%;">Mathematical Steps</th>
+                            <th style="width: 50%;">Explanation</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>4(-1) = c(-1) + d</td>
+                            <td>Set first and second pieces equal at the transition x = -1</td>
+                        </tr>
+                        <tr>
+                            <td>-4 = -c + d &nbsp;&nbsp;&nbsp; (Equation 1)</td>
+                            <td>Simplify the left and right sides</td>
+                        </tr>
+                        <tr>
+                            <td>c(2) + d = -5(2)</td>
+                            <td>Set second and third pieces equal at the transition x = 2</td>
+                        </tr>
+                        <tr>
+                            <td>2c + d = -10 &nbsp;&nbsp; (Equation 2)</td>
+                            <td>Simplify the left and right sides</td>
+                        </tr>
+                        <tr>
+                            <td>(2c + d) - (-c + d) = -10 - (-4)<br>3c = -6</td>
+                            <td>Subtract Equation 1 from Equation 2 to eliminate d and solve for c</td>
+                        </tr>
+                        <tr>
+                            <td>c = -2</td>
+                            <td>Divide by 3</td>
+                        </tr>
+                        <tr>
+                            <td>-4 = -(-2) + d<br>-4 = 2 + d<br>d = -6</td>
+                            <td>Substitute c = -2 into Equation 1 and solve for d</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <p style="margin-top: 12px;"><strong>Final Answer:</strong> c = -2, d = -6</p>
+            </div>
+        </div>
+
+        <div class="nav-buttons">
+            <button class="btn" onclick="switchPage(1)">➔ Back to Lesson Page 1</button>
+            <div></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function revealStep(prefix, stepNum) {
+        document.getElementById(prefix + '-step-' + stepNum).style.display = 'block';
+    }
+    function toggleAnswer(id) {
+        var box = document.getElementById(id);
+        box.style.display = (box.style.display === 'block') ? 'none' : 'block';
+    }
+    function switchPage(pageNum) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.getElementById('page' + pageNum).classList.add('active');
+        window.scrollTo(0, 0);
+    }
+</script>
+
+</body>
+</html>
