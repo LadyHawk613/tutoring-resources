@@ -204,6 +204,25 @@
             padding: 4px;
         }
 
+        /* Image Placeholder Box for Practice Hub */
+        .img-placeholder {
+            width: 100%;
+            max-width: 300px;
+            height: 160px;
+            background: #f1f5f9;
+            border: 2px dashed #cbd5e1;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin: 15px auto;
+            color: #64748b;
+            font-size: 0.9rem;
+            text-align: center;
+            padding: 10px;
+        }
+
         /* Buttons */
         .btn {
             background-color: var(--primary);
@@ -245,17 +264,6 @@
             border-color: var(--primary);
         }
 
-        .badge {
-            display: inline-block;
-            padding: 3px 8px;
-            font-size: 0.75rem;
-            font-weight: 700;
-            border-radius: 4px;
-            margin-bottom: 8px;
-            background: #e2e8f0;
-            color: #334155;
-        }
-
         /* Modal for Practice Problems */
         .modal {
             display: none;
@@ -275,8 +283,10 @@
             background: white;
             padding: 30px;
             border-radius: 12px;
-            max-width: 500px;
+            max-width: 550px;
             width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
             box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1);
             position: relative;
         }
@@ -289,28 +299,12 @@
             color: #64748b;
         }
 
-        .option-btn {
-            display: block;
-            width: 100%;
-            background: white;
-            border: 1px solid var(--border-color);
-            padding: 10px 14px;
-            text-align: left;
-            border-radius: 6px;
-            margin-top: 8px;
-            cursor: pointer;
-            font-size: 0.95rem;
-            transition: all 0.2s;
-        }
-
-        .option-btn:hover {
-            background: #f1f5f9;
-            border-color: #94a3b8;
-        }
-
-        .feedback {
+        .answer-box {
+            background: #f0fdf4;
+            border-left: 4px solid var(--success);
+            padding: 15px;
+            border-radius: 0 8px 8px 0;
             margin-top: 15px;
-            font-weight: 600;
         }
     </style>
 </head>
@@ -537,7 +531,7 @@
     <!-- PAGE 5: MIXED PRACTICE HUB -->
     <div class="page-section card" id="page-4">
         <h2>Practice Hub</h2>
-        <p>Test your knowledge with these mixed practice problems! Click any card to analyze the function and classify its discontinuity.</p>
+        <p>Test your knowledge with these mixed practice problems! Click any card to inspect its solution and graph.</p>
         
         <div class="practice-grid" id="shuffled-grid">
             <!-- Populated dynamically via JavaScript in random order -->
@@ -549,10 +543,16 @@
 <div class="modal" id="problemModal">
     <div class="modal-content">
         <span class="close-btn" onclick="closeModal()">&times;</span>
-        <div id="modal-title" style="font-weight: bold; color: var(--primary); margin-bottom: 10px;"></div>
+        <div id="modal-title" style="font-weight: bold; color: var(--primary); margin-bottom: 10px; font-size: 1.1rem;"></div>
         <div id="modal-question" style="margin-bottom: 15px;"></div>
-        <div id="modal-options"></div>
-        <div id="modal-feedback" class="feedback"></div>
+        
+        <!-- Image Placeholder for when user provides images -->
+        <div class="img-placeholder" id="modal-img-container">
+            <span>[ Graph Image Placeholder ]</span>
+            <span style="font-size: 0.75rem; color: #94a3b8; margin-top: 4px;">Graph image will appear here</span>
+        </div>
+
+        <div id="modal-answer" class="answer-box"></div>
     </div>
 </div>
 
@@ -588,106 +588,70 @@
         }
     }
 
-    // Practice Problem Data Bank (Mixed & Neutral Badges)
+    // Practice Problem Data Bank (Mixed & No Headings)
     const problemsData = {
         1: {
-            badge: "Problem A",
-            title: "Practice Problem A",
+            title: "Analysis & Solution",
             q: "Classify the discontinuity for <div class='math-expr'><div class='fraction'><span class='num'>x² - 4</span><span class='den'>x - 2</span></div></div> at x = 2.",
             cardHtml: "<div>Classify at x = 2:</div><div class='math-expr' style='margin-top:5px;'><div class='fraction'><span class='num'>x² - 4</span><span class='den'>x - 2</span></div></div>",
-            options: [
-                { text: "A) Removable Discontinuity", correct: true, exp: "Correct! Factoring gives (x-2)(x+2)/(x-2). The limit as x→2 is 4, but f(2) is undefined, making it removable." },
-                { text: "B) Jump Discontinuity", correct: false },
-                { text: "C) Infinite Discontinuity", correct: false }
-            ]
+            answerText: "<strong>Answer: Removable Discontinuity</strong><br><span style='font-size:0.9rem; color:#334155;'>Factoring gives (x-2)(x+2)/(x-2). The limit as x→2 evaluates to 4, but f(2) is undefined, creating a single missing hole at (2, 4).</span>",
+            imgSrc: "" // Replace with filename when image is ready e.g., "graph-problem-a.png"
         },
         2: {
-            badge: "Problem B",
-            title: "Practice Problem B",
+            title: "Analysis & Solution",
             q: "Classify the discontinuity for <div class='piecewise' style='margin-top: 8px;'><span style='margin-right: 6px;'>f(x) =</span><span class='brace'>{</span><div class='piece-rows'><div class='piece-row'><span>x + 3</span> <span style='color:#64748b; margin-left: 12px;'>if x ≠ 1</span></div><div class='piece-row'><span>10</span> <span style='color:#64748b; margin-left: 12px;'>if x = 1</span></div></div></div> at x = 1.",
             cardHtml: "<div>Classify at x = 1:</div><div class='piecewise' style='margin-top: 5px; font-size: 0.85rem; padding: 4px 8px;'><span style='margin-right: 4px;'>f(x) =</span><span class='brace' style='font-size: 1.3rem;'>{</span><div class='piece-rows'><div class='piece-row'><span>x + 3</span> <span style='color:#64748b; margin-left: 8px;'>if x ≠ 1</span></div><div class='piece-row'><span>10</span> <span style='color:#64748b; margin-left: 8px;'>if x = 1</span></div></div></div>",
-            options: [
-                { text: "A) Jump Discontinuity", correct: false },
-                { text: "B) Removable Discontinuity", correct: true, exp: "Correct! lim(x→1) [x + 3] = 4, but f(1) = 10. Limit exists but doesn't equal function value." },
-                { text: "C) Continuous", correct: false }
-            ]
+            answerText: "<strong>Answer: Removable Discontinuity</strong><br><span style='font-size:0.9rem; color:#334155;'>The limit as x→1 of [x + 3] equals 4, but the actual function value is f(1) = 10. Because the limit exists but does not equal the function value, it is removable.</span>",
+            imgSrc: ""
         },
         3: {
-            badge: "Problem C",
-            title: "Practice Problem C",
+            title: "Analysis & Solution",
             q: "Classify the discontinuity for <div class='math-expr'><div class='fraction'><span class='num'>x³ - 1</span><span class='den'>x - 1</span></div></div> at x = 1.",
             cardHtml: "<div>Classify at x = 1:</div><div class='math-expr' style='margin-top:5px;'><div class='fraction'><span class='num'>x³ - 1</span><span class='den'>x - 1</span></div></div>",
-            options: [
-                { text: "A) Infinite Discontinuity", correct: false },
-                { text: "B) Removable Discontinuity", correct: true, exp: "Correct! Using difference of cubes (x-1)(x²+x+1)/(x-1), the limit evaluates to 3, forming a removable hole at x=1." },
-                { text: "C) Jump Discontinuity", correct: false }
-            ]
+            answerText: "<strong>Answer: Removable Discontinuity</strong><br><span style='font-size:0.9rem; color:#334155;'>Using difference of cubes factors the numerator to (x-1)(x²+x+1). Canceling (x-1) gives a limit of 3 as x→1, representing a hole at (1, 3).</span>",
+            imgSrc: ""
         },
         4: {
-            badge: "Problem D",
-            title: "Practice Problem D",
+            title: "Analysis & Solution",
             q: "Classify the discontinuity for <div class='piecewise' style='margin-top: 8px;'><span style='margin-right: 6px;'>f(x) =</span><span class='brace'>{</span><div class='piece-rows'><div class='piece-row'><span>2x</span> <span style='color:#64748b; margin-left: 12px;'>if x &lt; 2</span></div><div class='piece-row'><span>5 - x</span> <span style='color:#64748b; margin-left: 12px;'>if x ≥ 2</span></div></div></div> at x = 2.",
             cardHtml: "<div>Classify at x = 2:</div><div class='piecewise' style='margin-top: 5px; font-size: 0.85rem; padding: 4px 8px;'><span style='margin-right: 4px;'>f(x) =</span><span class='brace' style='font-size: 1.3rem;'>{</span><div class='piece-rows'><div class='piece-row'><span>2x</span> <span style='color:#64748b; margin-left: 8px;'>if x &lt; 2</span></div><div class='piece-row'><span>5 - x</span> <span style='color:#64748b; margin-left: 8px;'>if x ≥ 2</span></div></div></div>",
-            options: [
-                { text: "A) Removable Discontinuity", correct: false },
-                { text: "B) Jump Discontinuity", correct: true, exp: "Correct! Left-hand limit = 4, right-hand limit = 3. Unequal finite limits produce a jump." },
-                { text: "C) Infinite Discontinuity", correct: false }
-            ]
+            answerText: "<strong>Answer: Jump Discontinuity</strong><br><span style='font-size:0.9rem; color:#334155;'>The left-hand limit as x→2⁻ is 4, while the right-hand limit as x→2⁺ is 3. Since the one-sided limits are finite and unequal, it forms a jump step.</span>",
+            imgSrc: ""
         },
         5: {
-            badge: "Problem E",
-            title: "Practice Problem E",
+            title: "Analysis & Solution",
             q: "Classify the discontinuity for <div class='piecewise' style='margin-top: 8px;'><span style='margin-right: 6px;'>f(x) =</span><span class='brace'>{</span><div class='piece-rows'><div class='piece-row'><span>x²</span> <span style='color:#64748b; margin-left: 12px;'>if x &lt; 0</span></div><div class='piece-row'><span>x + 2</span> <span style='color:#64748b; margin-left: 12px;'>if x ≥ 0</span></div></div></div> at x = 0.",
             cardHtml: "<div>Classify at x = 0:</div><div class='piecewise' style='margin-top: 5px; font-size: 0.85rem; padding: 4px 8px;'><span style='margin-right: 4px;'>f(x) =</span><span class='brace' style='font-size: 1.3rem;'>{</span><div class='piece-rows'><div class='piece-row'><span>x²</span> <span style='color:#64748b; margin-left: 8px;'>if x &lt; 0</span></div><div class='piece-row'><span>x + 2</span> <span style='color:#64748b; margin-left: 8px;'>if x ≥ 0</span></div></div></div>",
-            options: [
-                { text: "A) Jump Discontinuity", correct: true, exp: "Correct! Left-hand limit = 0, right-hand limit = 2. Finite unequal limits = jump discontinuity." },
-                { text: "B) Removable Discontinuity", correct: false },
-                { text: "C) Continuous", correct: false }
-            ]
+            answerText: "<strong>Answer: Jump Discontinuity</strong><br><span style='font-size:0.9rem; color:#334155;'>The left-hand limit approaches 0, and the right-hand limit approaches 2. Unequal finite one-sided limits result in a jump discontinuity.</span>",
+            imgSrc: ""
         },
         6: {
-            badge: "Problem F",
-            title: "Practice Problem F",
+            title: "Analysis & Solution",
             q: "Classify the discontinuity for <div class='piecewise' style='margin-top: 8px;'><span style='margin-right: 6px;'>f(x) =</span><span class='brace'>{</span><div class='piece-rows'><div class='piece-row'><span>-1</span> <span style='color:#64748b; margin-left: 12px;'>if x &lt; 0</span></div><div class='piece-row'><span>1</span> <span style='color:#64748b; margin-left: 12px;'>if x ≥ 0</span></div></div></div> at x = 0.",
             cardHtml: "<div>Classify at x = 0:</div><div class='piecewise' style='margin-top: 5px; font-size: 0.85rem; padding: 4px 8px;'><span style='margin-right: 4px;'>f(x) =</span><span class='brace' style='font-size: 1.3rem;'>{</span><div class='piece-rows'><div class='piece-row'><span>-1</span> <span style='color:#64748b; margin-left: 8px;'>if x &lt; 0</span></div><div class='piece-row'><span>1</span> <span style='color:#64748b; margin-left: 8px;'>if x ≥ 0</span></div></div></div>",
-            options: [
-                { text: "A) Infinite Discontinuity", correct: false },
-                { text: "B) Jump Discontinuity", correct: true, exp: "Correct! Left limit is -1, right limit is 1. Standard step function jump." },
-                { text: "C) Removable Discontinuity", correct: false }
-            ]
+            answerText: "<strong>Answer: Jump Discontinuity</strong><br><span style='font-size:0.9rem; color:#334155;'>Left limit is -1 and right limit is 1, creating a classic step-function jump break.</span>",
+            imgSrc: ""
         },
         7: {
-            badge: "Problem G",
-            title: "Practice Problem G",
+            title: "Analysis & Solution",
             q: "Classify the discontinuity for <div class='math-expr'><div class='fraction'><span class='num'>1</span><span class='den'>x²</span></div></div> at x = 0.",
             cardHtml: "<div>Classify at x = 0:</div><div class='math-expr' style='margin-top:5px;'><div class='fraction'><span class='num'>1</span><span class='den'>x²</span></div></div>",
-            options: [
-                { text: "A) Removable Discontinuity", correct: false },
-                { text: "B) Infinite Discontinuity", correct: true, exp: "Correct! As x → 0, 1/x² approaches ∞, creating a vertical asymptote." },
-                { text: "C) Jump Discontinuity", correct: false }
-            ]
+            answerText: "<strong>Answer: Infinite Discontinuity</strong><br><span style='font-size:0.9rem; color:#334155;'>As x approaches 0 from either side, 1/x² grows without bound toward positive infinity (∞), forming a vertical asymptote.</span>",
+            imgSrc: ""
         },
         8: {
-            badge: "Problem H",
-            title: "Practice Problem H",
+            title: "Analysis & Solution",
             q: "Classify the discontinuity for <div class='math-expr'><div class='fraction'><span class='num'>5</span><span class='den'>x - 3</span></div></div> at x = 3.",
             cardHtml: "<div>Classify at x = 3:</div><div class='math-expr' style='margin-top:5px;'><div class='fraction'><span class='num'>5</span><span class='den'>x - 3</span></div></div>",
-            options: [
-                { text: "A) Infinite Discontinuity", correct: true, exp: "Correct! Denominator goes to 0 while numerator is constant non-zero, yielding vertical asymptote / infinite limit." },
-                { text: "B) Removable Discontinuity", correct: false },
-                { text: "C) Jump Discontinuity", correct: false }
-            ]
+            answerText: "<strong>Answer: Infinite Discontinuity</strong><br><span style='font-size:0.9rem; color:#334155;'>The denominator approaches 0 while the numerator remains a constant non-zero value (5), yielding an infinite limit and vertical asymptote at x = 3.</span>",
+            imgSrc: ""
         },
         9: {
-            badge: "Problem I",
-            title: "Practice Problem I",
+            title: "Analysis & Solution",
             q: "Classify the discontinuity for <div class='math-expr'><div class='fraction'><span class='num'>-2</span><span class='den'>(x + 1)²</span></div></div> at x = -1.",
             cardHtml: "<div>Classify at x = -1:</div><div class='math-expr' style='margin-top:5px;'><div class='fraction'><span class='num'>-2</span><span class='den'>(x + 1)²</span></div></div>",
-            options: [
-                { text: "A) Infinite Discontinuity", correct: true, exp: "Correct! Approaches -∞ from both sides, forming an infinite discontinuity." },
-                { text: "B) Removable Discontinuity", correct: false },
-                { text: "C) Jump Discontinuity", correct: false }
-            ]
+            answerText: "<strong>Answer: Infinite Discontinuity</strong><br><span style='font-size:0.9rem; color:#334155;'>As x approaches -1, the expression decreases without bound toward negative infinity (-∞), indicating an infinite discontinuity.</span>",
+            imgSrc: ""
         }
     };
 
@@ -707,10 +671,7 @@
             let card = document.createElement('div');
             card.className = 'practice-card';
             card.onclick = () => openProblem(id);
-            card.innerHTML = `
-                <span class="badge">${prob.badge}</span>
-                ${prob.cardHtml}
-            `;
+            card.innerHTML = prob.cardHtml;
             grid.appendChild(card);
         });
     });
@@ -719,34 +680,17 @@
         const prob = problemsData[id];
         document.getElementById('modal-title').textContent = prob.title;
         document.getElementById('modal-question').innerHTML = prob.q;
-        document.getElementById('modal-feedback').textContent = '';
+        document.getElementById('modal-answer').innerHTML = prob.answerText;
 
-        const optsContainer = document.getElementById('modal-options');
-        optsContainer.innerHTML = '';
-
-        // Shuffle options inside the modal too so order is randomized
-        let shuffledOpts = [...prob.options];
-        for (let i = shuffledOpts.length - 1; i > 0; i--) {
-            let j = Math.floor(Math.random() * (i + 1));
-            [shuffledOpts[i], shuffledOpts[j]] = [shuffledOpts[j], shuffledOpts[i]];
+        const imgContainer = document.getElementById('modal-img-container');
+        if (prob.imgSrc && prob.imgSrc.trim() !== "") {
+            imgContainer.innerHTML = `<img src="${prob.imgSrc}" alt="Graph of problem" style="max-width:100%; height:auto; border-radius:6px;">`;
+        } else {
+            imgContainer.innerHTML = `
+                <span>[ Graph Image Placeholder ]</span>
+                <span style="font-size: 0.75rem; color: #94a3b8; margin-top: 4px;">Graph image will appear here</span>
+            `;
         }
-
-        shuffledOpts.forEach(opt => {
-            let btn = document.createElement('button');
-            btn.className = 'option-btn';
-            btn.textContent = opt.text;
-            btn.onclick = () => {
-                const feedbackEl = document.getElementById('modal-feedback');
-                if (opt.correct) {
-                    feedbackEl.style.color = "var(--success)";
-                    feedbackEl.innerHTML = opt.exp;
-                } else {
-                    feedbackEl.style.color = "var(--error)";
-                    feedbackEl.textContent = "Not quite. Review the definitions and try again!";
-                }
-            };
-            optsContainer.appendChild(btn);
-        });
 
         document.getElementById('problemModal').classList.add('active');
     }
