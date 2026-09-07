@@ -252,11 +252,9 @@
             font-weight: 700;
             border-radius: 4px;
             margin-bottom: 8px;
+            background: #e2e8f0;
+            color: #334155;
         }
-
-        .badge-removable { background: #dbeafe; color: #1e40af; }
-        .badge-jump { background: #fef3c7; color: #92400e; }
-        .badge-infinite { background: #fee2e2; color: #991b1b; }
 
         /* Modal for Practice Problems */
         .modal {
@@ -491,108 +489,17 @@
             </tbody>
         </table>
         <div style="margin-top: 20px; text-align: center;">
-            <button class="btn" onclick="switchPage(4)">Go to Non-Sequential Practice Hub &rarr;</button>
+            <button class="btn" onclick="switchPage(4)">Go to Practice Hub &rarr;</button>
         </div>
     </div>
 
-    <!-- PAGE 5: NON-SEQUENTIAL PRACTICE HUB -->
+    <!-- PAGE 5: MIXED PRACTICE HUB -->
     <div class="page-section card" id="page-4">
-        <h2>Non-Sequential Practice Hub</h2>
-        <p>Pick any problem you want to practice below! You are not required to complete them in order. Click any card to test your skills.</p>
-
-        <h3 style="margin-top: 20px; color: #1e40af;">Removable Discontinuity Practice</h3>
-        <div class="practice-grid">
-            <div class="practice-card" onclick="openProblem(1)">
-                <span class="badge badge-removable">Removable #1</span>
-                <div>Classify at x = 2:</div>
-                <div class="math-expr" style="margin-top:5px;">
-                    <div class="fraction"><span class="num">x² - 4</span><span class="den">x - 2</span></div>
-                </div>
-            </div>
-            <div class="practice-card" onclick="openProblem(2)">
-                <span class="badge badge-removable">Removable #2</span>
-                <div>Classify at x = 1:</div>
-                <div class="piecewise" style="margin-top: 5px; font-size: 0.85rem; padding: 4px 8px;">
-                    <span style="margin-right: 4px;">f(x) =</span>
-                    <span class="brace" style="font-size: 1.3rem;">{</span>
-                    <div class="piece-rows">
-                        <div class="piece-row"><span>x + 3</span> <span style="color:#64748b; margin-left: 8px;">if x ≠ 1</span></div>
-                        <div class="piece-row"><span>10</span> <span style="color:#64748b; margin-left: 8px;">if x = 1</span></div>
-                    </div>
-                </div>
-            </div>
-            <div class="practice-card" onclick="openProblem(3)">
-                <span class="badge badge-removable">Removable #3</span>
-                <div>Classify at x = 1:</div>
-                <div class="math-expr" style="margin-top:5px;">
-                    <div class="fraction"><span class="num">x³ - 1</span><span class="den">x - 1</span></div>
-                </div>
-            </div>
-        </div>
-
-        <h3 style="margin-top: 25px; color: #92400e;">Jump Discontinuity Practice</h3>
-        <div class="practice-grid">
-            <div class="practice-card" onclick="openProblem(4)">
-                <span class="badge badge-jump">Jump #1</span>
-                <div>Classify at x = 2:</div>
-                <div class="piecewise" style="margin-top: 5px; font-size: 0.85rem; padding: 4px 8px;">
-                    <span style="margin-right: 4px;">f(x) =</span>
-                    <span class="brace" style="font-size: 1.3rem;">{</span>
-                    <div class="piece-rows">
-                        <div class="piece-row"><span>2x</span> <span style="color:#64748b; margin-left: 8px;">if x &lt; 2</span></div>
-                        <div class="piece-row"><span>5 - x</span> <span style="color:#64748b; margin-left: 8px;">if x ≥ 2</span></div>
-                    </div>
-                </div>
-            </div>
-            <div class="practice-card" onclick="openProblem(5)">
-                <span class="badge badge-jump">Jump #2</span>
-                <div>Classify at x = 0:</div>
-                <div class="piecewise" style="margin-top: 5px; font-size: 0.85rem; padding: 4px 8px;">
-                    <span style="margin-right: 4px;">f(x) =</span>
-                    <span class="brace" style="font-size: 1.3rem;">{</span>
-                    <div class="piece-rows">
-                        <div class="piece-row"><span>x²</span> <span style="color:#64748b; margin-left: 8px;">if x &lt; 0</span></div>
-                        <div class="piece-row"><span>x + 2</span> <span style="color:#64748b; margin-left: 8px;">if x ≥ 0</span></div>
-                    </div>
-                </div>
-            </div>
-            <div class="practice-card" onclick="openProblem(6)">
-                <span class="badge badge-jump">Jump #3</span>
-                <div>Classify at x = 0:</div>
-                <div class="piecewise" style="margin-top: 5px; font-size: 0.85rem; padding: 4px 8px;">
-                    <span style="margin-right: 4px;">f(x) =</span>
-                    <span class="brace" style="font-size: 1.3rem;">{</span>
-                    <div class="piece-rows">
-                        <div class="piece-row"><span>-1</span> <span style="color:#64748b; margin-left: 8px;">if x &lt; 0</span></div>
-                        <div class="piece-row"><span>1</span> <span style="color:#64748b; margin-left: 8px;">if x ≥ 0</span></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <h3 style="margin-top: 25px; color: #991b1b;">Infinite Discontinuity Practice</h3>
-        <div class="practice-grid">
-            <div class="practice-card" onclick="openProblem(7)">
-                <span class="badge badge-infinite">Infinite #1</span>
-                <div>Classify at x = 0:</div>
-                <div class="math-expr" style="margin-top:5px;">
-                    <div class="fraction"><span class="num">1</span><span class="den">x²</span></div>
-                </div>
-            </div>
-            <div class="practice-card" onclick="openProblem(8)">
-                <span class="badge badge-infinite">Infinite #2</span>
-                <div>Classify at x = 3:</div>
-                <div class="math-expr" style="margin-top:5px;">
-                    <div class="fraction"><span class="num">5</span><span class="den">x - 3</span></div>
-                </div>
-            </div>
-            <div class="practice-card" onclick="openProblem(9)">
-                <span class="badge badge-infinite">Infinite #3</span>
-                <div>Classify at x = -1:</div>
-                <div class="math-expr" style="margin-top:5px;">
-                    <div class="fraction"><span class="num">-2</span><span class="den">(x + 1)²</span></div>
-                </div>
-            </div>
+        <h2>Practice Hub</h2>
+        <p>Test your knowledge with these mixed practice problems! Click any card to analyze the function and classify its discontinuity.</p>
+        
+        <div class="practice-grid" id="shuffled-grid">
+            <!-- Populated dynamically via JavaScript in random order -->
         </div>
     </div>
 </div>
@@ -640,11 +547,13 @@
         }
     }
 
-    // Practice Problem Data Bank
+    // Practice Problem Data Bank (Mixed & Neutral Badges)
     const problemsData = {
         1: {
-            title: "Removable Practice #1",
+            badge: "Problem A",
+            title: "Practice Problem A",
             q: "Classify the discontinuity for <div class='math-expr'><div class='fraction'><span class='num'>x² - 4</span><span class='den'>x - 2</span></div></div> at x = 2.",
+            cardHtml: "<div>Classify at x = 2:</div><div class='math-expr' style='margin-top:5px;'><div class='fraction'><span class='num'>x² - 4</span><span class='den'>x - 2</span></div></div>",
             options: [
                 { text: "A) Removable Discontinuity", correct: true, exp: "Correct! Factoring gives (x-2)(x+2)/(x-2). The limit as x→2 is 4, but f(2) is undefined, making it removable." },
                 { text: "B) Jump Discontinuity", correct: false },
@@ -652,8 +561,10 @@
             ]
         },
         2: {
-            title: "Removable Practice #2",
+            badge: "Problem B",
+            title: "Practice Problem B",
             q: "Classify the discontinuity for <div class='piecewise' style='margin-top: 8px;'><span style='margin-right: 6px;'>f(x) =</span><span class='brace'>{</span><div class='piece-rows'><div class='piece-row'><span>x + 3</span> <span style='color:#64748b; margin-left: 12px;'>if x ≠ 1</span></div><div class='piece-row'><span>10</span> <span style='color:#64748b; margin-left: 12px;'>if x = 1</span></div></div></div> at x = 1.",
+            cardHtml: "<div>Classify at x = 1:</div><div class='piecewise' style='margin-top: 5px; font-size: 0.85rem; padding: 4px 8px;'><span style='margin-right: 4px;'>f(x) =</span><span class='brace' style='font-size: 1.3rem;'>{</span><div class='piece-rows'><div class='piece-row'><span>x + 3</span> <span style='color:#64748b; margin-left: 8px;'>if x ≠ 1</span></div><div class='piece-row'><span>10</span> <span style='color:#64748b; margin-left: 8px;'>if x = 1</span></div></div></div>",
             options: [
                 { text: "A) Jump Discontinuity", correct: false },
                 { text: "B) Removable Discontinuity", correct: true, exp: "Correct! lim(x→1) [x + 3] = 4, but f(1) = 10. Limit exists but doesn't equal function value." },
@@ -661,8 +572,10 @@
             ]
         },
         3: {
-            title: "Removable Practice #3",
+            badge: "Problem C",
+            title: "Practice Problem C",
             q: "Classify the discontinuity for <div class='math-expr'><div class='fraction'><span class='num'>x³ - 1</span><span class='den'>x - 1</span></div></div> at x = 1.",
+            cardHtml: "<div>Classify at x = 1:</div><div class='math-expr' style='margin-top:5px;'><div class='fraction'><span class='num'>x³ - 1</span><span class='den'>x - 1</span></div></div>",
             options: [
                 { text: "A) Infinite Discontinuity", correct: false },
                 { text: "B) Removable Discontinuity", correct: true, exp: "Correct! Using difference of cubes (x-1)(x²+x+1)/(x-1), the limit evaluates to 3, forming a removable hole at x=1." },
@@ -670,8 +583,10 @@
             ]
         },
         4: {
-            title: "Jump Practice #1",
+            badge: "Problem D",
+            title: "Practice Problem D",
             q: "Classify the discontinuity for <div class='piecewise' style='margin-top: 8px;'><span style='margin-right: 6px;'>f(x) =</span><span class='brace'>{</span><div class='piece-rows'><div class='piece-row'><span>2x</span> <span style='color:#64748b; margin-left: 12px;'>if x &lt; 2</span></div><div class='piece-row'><span>5 - x</span> <span style='color:#64748b; margin-left: 12px;'>if x ≥ 2</span></div></div></div> at x = 2.",
+            cardHtml: "<div>Classify at x = 2:</div><div class='piecewise' style='margin-top: 5px; font-size: 0.85rem; padding: 4px 8px;'><span style='margin-right: 4px;'>f(x) =</span><span class='brace' style='font-size: 1.3rem;'>{</span><div class='piece-rows'><div class='piece-row'><span>2x</span> <span style='color:#64748b; margin-left: 8px;'>if x &lt; 2</span></div><div class='piece-row'><span>5 - x</span> <span style='color:#64748b; margin-left: 8px;'>if x ≥ 2</span></div></div></div>",
             options: [
                 { text: "A) Removable Discontinuity", correct: false },
                 { text: "B) Jump Discontinuity", correct: true, exp: "Correct! Left-hand limit = 4, right-hand limit = 3. Unequal finite limits produce a jump." },
@@ -679,8 +594,10 @@
             ]
         },
         5: {
-            title: "Jump Practice #2",
+            badge: "Problem E",
+            title: "Practice Problem E",
             q: "Classify the discontinuity for <div class='piecewise' style='margin-top: 8px;'><span style='margin-right: 6px;'>f(x) =</span><span class='brace'>{</span><div class='piece-rows'><div class='piece-row'><span>x²</span> <span style='color:#64748b; margin-left: 12px;'>if x &lt; 0</span></div><div class='piece-row'><span>x + 2</span> <span style='color:#64748b; margin-left: 12px;'>if x ≥ 0</span></div></div></div> at x = 0.",
+            cardHtml: "<div>Classify at x = 0:</div><div class='piecewise' style='margin-top: 5px; font-size: 0.85rem; padding: 4px 8px;'><span style='margin-right: 4px;'>f(x) =</span><span class='brace' style='font-size: 1.3rem;'>{</span><div class='piece-rows'><div class='piece-row'><span>x²</span> <span style='color:#64748b; margin-left: 8px;'>if x &lt; 0</span></div><div class='piece-row'><span>x + 2</span> <span style='color:#64748b; margin-left: 8px;'>if x ≥ 0</span></div></div></div>",
             options: [
                 { text: "A) Jump Discontinuity", correct: true, exp: "Correct! Left-hand limit = 0, right-hand limit = 2. Finite unequal limits = jump discontinuity." },
                 { text: "B) Removable Discontinuity", correct: false },
@@ -688,8 +605,10 @@
             ]
         },
         6: {
-            title: "Jump Practice #3",
+            badge: "Problem F",
+            title: "Practice Problem F",
             q: "Classify the discontinuity for <div class='piecewise' style='margin-top: 8px;'><span style='margin-right: 6px;'>f(x) =</span><span class='brace'>{</span><div class='piece-rows'><div class='piece-row'><span>-1</span> <span style='color:#64748b; margin-left: 12px;'>if x &lt; 0</span></div><div class='piece-row'><span>1</span> <span style='color:#64748b; margin-left: 12px;'>if x ≥ 0</span></div></div></div> at x = 0.",
+            cardHtml: "<div>Classify at x = 0:</div><div class='piecewise' style='margin-top: 5px; font-size: 0.85rem; padding: 4px 8px;'><span style='margin-right: 4px;'>f(x) =</span><span class='brace' style='font-size: 1.3rem;'>{</span><div class='piece-rows'><div class='piece-row'><span>-1</span> <span style='color:#64748b; margin-left: 8px;'>if x &lt; 0</span></div><div class='piece-row'><span>1</span> <span style='color:#64748b; margin-left: 8px;'>if x ≥ 0</span></div></div></div>",
             options: [
                 { text: "A) Infinite Discontinuity", correct: false },
                 { text: "B) Jump Discontinuity", correct: true, exp: "Correct! Left limit is -1, right limit is 1. Standard step function jump." },
@@ -697,8 +616,10 @@
             ]
         },
         7: {
-            title: "Infinite Practice #1",
+            badge: "Problem G",
+            title: "Practice Problem G",
             q: "Classify the discontinuity for <div class='math-expr'><div class='fraction'><span class='num'>1</span><span class='den'>x²</span></div></div> at x = 0.",
+            cardHtml: "<div>Classify at x = 0:</div><div class='math-expr' style='margin-top:5px;'><div class='fraction'><span class='num'>1</span><span class='den'>x²</span></div></div>",
             options: [
                 { text: "A) Removable Discontinuity", correct: false },
                 { text: "B) Infinite Discontinuity", correct: true, exp: "Correct! As x → 0, 1/x² approaches ∞, creating a vertical asymptote." },
@@ -706,8 +627,10 @@
             ]
         },
         8: {
-            title: "Infinite Practice #2",
+            badge: "Problem H",
+            title: "Practice Problem H",
             q: "Classify the discontinuity for <div class='math-expr'><div class='fraction'><span class='num'>5</span><span class='den'>x - 3</span></div></div> at x = 3.",
+            cardHtml: "<div>Classify at x = 3:</div><div class='math-expr' style='margin-top:5px;'><div class='fraction'><span class='num'>5</span><span class='den'>x - 3</span></div></div>",
             options: [
                 { text: "A) Infinite Discontinuity", correct: true, exp: "Correct! Denominator goes to 0 while numerator is constant non-zero, yielding vertical asymptote / infinite limit." },
                 { text: "B) Removable Discontinuity", correct: false },
@@ -715,8 +638,10 @@
             ]
         },
         9: {
-            title: "Infinite Practice #3",
+            badge: "Problem I",
+            title: "Practice Problem I",
             q: "Classify the discontinuity for <div class='math-expr'><div class='fraction'><span class='num'>-2</span><span class='den'>(x + 1)²</span></div></div> at x = -1.",
+            cardHtml: "<div>Classify at x = -1:</div><div class='math-expr' style='margin-top:5px;'><div class='fraction'><span class='num'>-2</span><span class='den'>(x + 1)²</span></div></div>",
             options: [
                 { text: "A) Infinite Discontinuity", correct: true, exp: "Correct! Approaches -∞ from both sides, forming an infinite discontinuity." },
                 { text: "B) Removable Discontinuity", correct: false },
@@ -724,6 +649,30 @@
             ]
         }
     };
+
+    // Shuffle and render practice grid on load
+    window.addEventListener('DOMContentLoaded', () => {
+        const grid = document.getElementById('shuffled-grid');
+        let keys = Object.keys(problemsData);
+        
+        // Fisher-Yates shuffle
+        for (let i = keys.length - 1; i > 0; i--) {
+            let j = Math.floor(Math.random() * (i + 1));
+            [keys[i], keys[j]] = [keys[j], keys[i]];
+        }
+
+        keys.forEach(id => {
+            let prob = problemsData[id];
+            let card = document.createElement('div');
+            card.className = 'practice-card';
+            card.onclick = () => openProblem(id);
+            card.innerHTML = `
+                <span class="badge">${prob.badge}</span>
+                ${prob.cardHtml}
+            `;
+            grid.appendChild(card);
+        });
+    });
 
     function openProblem(id) {
         const prob = problemsData[id];
@@ -734,7 +683,14 @@
         const optsContainer = document.getElementById('modal-options');
         optsContainer.innerHTML = '';
 
-        prob.options.forEach(opt => {
+        // Shuffle options inside the modal too so order is randomized
+        let shuffledOpts = [...prob.options];
+        for (let i = shuffledOpts.length - 1; i > 0; i--) {
+            let j = Math.floor(Math.random() * (i + 1));
+            [shuffledOpts[i], shuffledOpts[j]] = [shuffledOpts[j], shuffledOpts[i]];
+        }
+
+        shuffledOpts.forEach(opt => {
             let btn = document.createElement('button');
             btn.className = 'option-btn';
             btn.textContent = opt.text;
