@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Intermediate Value Theorem (IVT) Step-by-Step Guide</title>
+    <title>Intermediate Value Theorem (IVT) Step-by-Step Guide & Practice</title>
     <!-- Include Chart.js for the IVT visual graph -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
@@ -95,13 +95,45 @@
             border-radius: 8px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.08);
         }
+        .reveal-btn {
+            background-color: #0d9488;
+            margin-top: 10px;
+            font-size: 14px;
+            padding: 8px 16px;
+        }
+        .reveal-btn:hover {
+            background-color: #0f766e;
+        }
+        .solution-content {
+            display: none;
+            margin-top: 12px;
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            padding: 12px;
+            border-radius: 6px;
+        }
+        .fraction {
+            display: inline-flex;
+            flex-direction: column;
+            vertical-align: middle;
+            text-align: center;
+            font-size: 0.9em;
+            padding: 0 2px;
+        }
+        .numerator {
+            border-bottom: 1px solid black;
+            padding-bottom: 1px;
+        }
+        .denominator {
+            padding-top: 1px;
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
     <h1>Intermediate Value Theorem (IVT)</h1>
-    <div class="subtitle">Step-by-Step Proof Guide for AP Calculus AB</div>
+    <div class="subtitle">Step-by-Step Proof Guide & Practice for AP Calculus AB</div>
 
     <!-- STEP 1 -->
     <div id="step-1" class="step-box active">
@@ -145,17 +177,55 @@
         </div>
     </div>
 
+    <!-- STEP 5: Practice Problems -->
+    <div id="step-5" class="step-box">
+        <h3>Step 5: IVT Practice Problems</h3>
+        <p>Try solving these two problems on your own, then click the buttons to check your work.</p>
+        
+        <div style="background: #fff; padding: 15px; border-radius: 6px; margin-bottom: 15px; border: 1px solid #cbd5e1;">
+            <p><strong>Practice Problem 1:</strong> Use the IVT to prove that <span class="math-block">f(x) = x³ + 2x - 1</span> has a root (i.e., <span class="math-block">f(c) = 0</span>) somewhere in the interval <span class="math-block">[0, 1]</span>.</p>
+            <button class="reveal-btn" onclick="toggleSolution('sol1')">Reveal Solution 1</button>
+            <div id="sol1" class="solution-content">
+                <p><strong>Solution 1 Steps:</strong></p>
+                <ol>
+                    <li><strong>Continuity:</strong> <span class="math-block">f(x)</span> is a polynomial, so it is continuous on <span class="math-block">[0, 1]</span>.</li>
+                    <li><strong>Endpoint check:</strong> 
+                        <br><span class="math-block">f(0) = (0)³ + 2(0) - 1 = -1</span>
+                        <br><span class="math-block">f(1) = (1)³ + 2(1) - 1 = 2</span>
+                    </li>
+                    <li><strong>Conclusion:</strong> Since <span class="math-block">-1 ≤ 0 ≤ 2</span>, by the Intermediate Value Theorem, there is a value <span class="math-block">c</span> in <span class="math-block">(0, 1)</span> such that <span class="math-block">f(c) = 0</span>.</li>
+                </ol>
+            </div>
+        </div>
+
+        <div style="background: #fff; padding: 15px; border-radius: 6px; border: 1px solid #cbd5e1;">
+            <p><strong>Practice Problem 2:</strong> Show that <span class="math-block">f(x) = x² - 4x + 2</span> takes on the value <span class="math-block">5</span> on the interval <span class="math-block">[4, 6]</span>.</p>
+            <button class="reveal-btn" onclick="toggleSolution('sol2')">Reveal Solution 2</button>
+            <div id="sol2" class="solution-content">
+                <p><strong>Solution 2 Steps:</strong></p>
+                <ol>
+                    <li><strong>Continuity:</strong> <span class="math-block">f(x)</span> is a polynomial, making it continuous on <span class="math-block">[4, 6]</span>.</li>
+                    <li><strong>Endpoint check:</strong>
+                        <br><span class="math-block">f(4) = (4)² - 4(4) + 2 = 2</span>
+                        <br><span class="math-block">f(6) = (6)² - 4(6) + 2 = 14</span>
+                    </li>
+                    <li><strong>Conclusion:</strong> Since <span class="math-block">2 ≤ 5 ≤ 14</span>, by the Intermediate Value Theorem, there exists a number <span class="math-block">c</span> in <span class="math-block">(4, 6)</span> such that <span class="math-block">f(c) = 5</span>.</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
     <!-- Navigation Buttons -->
     <div class="nav-buttons">
         <button id="prevBtn" onclick="navigateSteps(-1)" disabled>Previous Step</button>
-        <span id="stepIndicator" style="align-self: center; font-weight: bold; color: #475569;">Step 1 of 4</span>
+        <span id="stepIndicator" style="align-self: center; font-weight: bold; color: #475569;">Step 1 of 5</span>
         <button id="nextBtn" onclick="navigateSteps(1)">Next Step</button>
     </div>
 </div>
 
 <script>
     let currentStep = 1;
-    const totalSteps = 4;
+    const totalSteps = 5;
 
     function navigateSteps(direction) {
         document.getElementById(`step-${currentStep}`).classList.remove('active');
@@ -165,6 +235,15 @@
         document.getElementById('prevBtn').disabled = (currentStep === 1);
         document.getElementById('nextBtn').disabled = (currentStep === totalSteps);
         document.getElementById('stepIndicator').innerText = `Step ${currentStep} of ${totalSteps}`;
+    }
+
+    function toggleSolution(id) {
+        const sol = document.getElementById(id);
+        if (sol.style.display === "block") {
+            sol.style.display = "none";
+        } else {
+            sol.style.display = "block";
+        }
     }
 
     // Render IVT visual chart on Step 4
@@ -194,7 +273,7 @@
             responsive: true,
             plugins: {
                 legend: {
-                    display: false // Completely hides the legend and ugly boxes
+                    display: false
                 }
             },
             scales: {
