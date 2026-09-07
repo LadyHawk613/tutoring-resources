@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Classifying Discontinuities - Interactive Lesson & Practice Hub</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-color: #1e293b;
+            --border-color: #e2e8f0;
+            --success: #16a34a;
+            --error: #dc2626;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        header h1 {
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+
+        header p {
+            color: #64748b;
+        }
+
+        /* Top Navigation Bar / Breadcrumbs */
+        .nav-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .nav-tab {
+            background-color: #e2e8f0;
+            color: #475569;
+            border: none;
+            padding: 8px 16px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .nav-tab.active {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        /* Page Sections */
+        .page-section {
+            display: none;
+        }
+
+        .page-section.active {
+            display: block;
+        }
+
+        h2 {
+            color: var(--primary);
+            margin-top: 0;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 8px;
+        }
+
+        h3 {
+            color: #334155;
+            margin-top: 15px;
+        }
+
+        /* Vertical Math Formatting */
+        .math-expr {
+            display: inline-flex;
+            align-items: center;
+            font-family: 'Cambria Math', 'Times New Roman', serif;
+            font-size: 1.15rem;
+            background: #f8fafc;
+            padding: 6px 12px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            margin: 4px 0;
+            color: black;
+        }
+
+        .lim-block {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            margin-right: 10px;
+        }
+
+        .lim-sub {
+            font-size: 0.75rem;
+            margin-top: -2px;
+        }
+
+        .fraction {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            vertical-align: middle;
+            margin: 0 4px;
+        }
+
+        .num {
+            border-bottom: 1px solid black;
+            padding: 0 4px 2px 4px;
+            text-align: center;
+        }
+
+        .den {
+            padding: 2px 4px 0 4px;
+            text-align: center;
+        }
+
+        /* Piecewise Function Formatting */
+        .piecewise {
+            display: inline-flex;
+            align-items: center;
+            font-family: 'Cambria Math', 'Times New Roman', serif;
+            font-size: 1.1rem;
+            background: #f8fafc;
+            padding: 8px 14px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            margin: 6px 0;
+        }
+
+        .brace {
+            font-size: 1.8rem;
+            line-height: 1;
+            margin-right: 8px;
+            font-weight: 300;
+        }
+
+        .piece-rows {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .piece-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        /* Walkthrough Step Boxes */
+        .step-box {
+            background: #f1f5f9;
+            border-left: 4px solid var(--primary);
+            padding: 15px;
+            border-radius: 0 8px 8px 0;
+            margin: 15px 0;
+            display: none;
+        }
+
+        .step-box.visible {
+            display: block;
+        }
+
+        /* Walkthrough Graph Illustration */
+        .walkthrough-img {
+            max-width: 320px;
+            width: 100%;
+            height: auto;
+            display: block;
+            margin: 15px auto 5px auto;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background: white;
+            padding: 4px;
+        }
+
+        /* Buttons */
+        .btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            margin-top: 10px;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-dark);
+        }
+
+        /* Practice Grid Hub */
+        .practice-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .practice-card {
+            background: #f8fafc;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 16px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .practice-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px -2px rgb(0 0 0 / 0.1);
+            border-color: var(--primary);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 3px 8px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            border-radius: 4px;
+            margin-bottom: 8px;
+        }
+
+        .badge-removable { background: #dbeafe; color: #1e40af; }
+        .badge-jump { background: #fef3c7; color: #92400e; }
+        .badge-infinite { background: #fee2e2; color: #991b1b; }
+
+        /* Modal for Practice Problems */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+            position: relative;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px; right: 20px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #64748b;
+        }
+
+        .option-btn {
+            display: block;
+            width: 100%;
+            background: white;
+            border: 1px solid var(--border-color);
+            padding: 10px 14px;
+            text-align: left;
+            border-radius: 6px;
+            margin-top: 8px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+        }
+
+        .option-btn:hover {
+            background: #f1f5f9;
+            border-color: #94a3b8;
+        }
+
+        .feedback {
+            margin-top: 15px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Classifying Discontinuities</h1>
+        <p>Interactive Lesson Walkthrough & Non-Sequential Practice Hub</p>
+    </header>
+
+    <!-- Top Tab Navigation -->
+    <div class="nav-tabs">
+        <button class="nav-tab active" onclick="switchPage(0)">1. Removable</button>
+        <button class="nav-tab" onclick="switchPage(1)">2. Jump</button>
+        <button class="nav-tab" onclick="switchPage(2)">3. Infinite</button>
+        <button class="nav-tab" onclick="switchPage(3)">Summary</button>
+        <button class="nav-tab" onclick="switchPage(4)">Practice Hub (9 Problems)</button>
+    </div>
+
+    <!-- PAGE 1: REMOVABLE DISCONTINUITY -->
+    <div class="page-section active card" id="page-0">
+        <h2>Type 1: Removable (Point) Discontinuity</h2>
+        <p><strong>Definition:</strong> The limit lim<sub>x→a</sub> f(x) exists, but either f(a) is undefined or lim<sub>x→a</sub> f(x) ≠ f(a) (the graph has a single missing or displaced point).</p>
+        
+        <h3>Walkthrough Example</h3>
+        <p><strong>Function:</strong></p>
+        <div class="piecewise">
+            <span style="margin-right: 8px;">f(x) =</span>
+            <span class="brace">{</span>
+            <div class="piece-rows">
+                <div class="piece-row"><span>x² + 1</span> <span style="color:#64748b; margin-left: 15px;">if x &lt; 1</span></div>
+                <div class="piece-row"><span>1</span> <span style="color:#64748b; margin-left: 15px;">if x = 1</span></div>
+                <div class="piece-row"><span>x + 1</span> <span style="color:#64748b; margin-left: 15px;">if x &gt; 1</span></div>
+            </div>
+        </div>
+        <p style="margin-top:10px;">at point of interest <strong>x = 1</strong></p>
+
+        <button class="btn" onclick="revealStep('removable', 1)">Next Step: Find One-Sided Limits</button>
+
+        <div id="removable-step-1" class="step-box">
+            <strong>Step 1: One-Sided Limits</strong><br>
+            • Left-hand limit (x → 1⁻): 
+            <div class="math-expr">
+                <div class="lim-block"><span class="lim-text">lim</span><span class="lim-sub">x→1⁻</span></div>
+                <span>(x² + 1) = (1)² + 1 = <strong>2</strong></span>
+            </div><br>
+            • Right-hand limit (x → 1⁺): 
+            <div class="math-expr">
+                <div class="lim-block"><span class="lim-text">lim</span><span class="lim-sub">x→1⁺</span></div>
+                <span>(x + 1) = 1 + 1 = <strong>2</strong></span>
+            </div>
+            <br><button class="btn" onclick="revealStep('removable', 2)">Next Step: Compare Limits & Function Value</button>
+        </div>
+
+        <div id="removable-step-2" class="step-box">
+            <strong>Step 2: Conclusion</strong><br>
+            Since the left-hand limit (2) equals the right-hand limit (2), the overall limit exists: lim<sub>x→1</sub> f(x) = 2.<br>
+            However, the function value is f(1) = 1. Because lim<sub>x→1</sub> f(x) ≠ f(1), this is a <strong>Removable (Point) Discontinuity</strong>!
+            
+            <!-- Graph linked directly to your GitHub repository file -->
+            <img src="continuity-image-1.png" alt="Graph of Removable Discontinuity at x = 1" class="walkthrough-img">
+            <p style="text-align: center; font-size: 0.85rem; color: #64748b; margin-top: 4px;">Visual representation showing the hole at (1, 2) and the displaced point at (1, 1).</p>
+        </div>
+    </div>
+
+    <!-- PAGE 2: JUMP DISCONTINUITY -->
+    <div class="page-section card" id="page-1">
+        <h2>Type 2: Jump Discontinuity</h2>
+        <p><strong>Definition:</strong> The left-hand limit and right-hand limit both exist and are finite, but they are not equal (lim<sub>x→a⁻</sub> f(x) ≠ lim<sub>x→a⁺</sub> f(x)).</p>
+        
+        <h3>Walkthrough Example</h3>
+        <p><strong>Function:</strong></p>
+        <div class="piecewise">
+            <span style="margin-right: 8px;">f(x) =</span>
+            <span class="brace">{</span>
+            <div class="piece-rows">
+                <div class="piece-row"><span>x³</span> <span style="color:#64748b; margin-left: 15px;">if x &lt; 1</span></div>
+                <div class="piece-row"><span>3 - x</span> <span style="color:#64748b; margin-left: 15px;">if x ≥ 1</span></div>
+            </div>
+        </div>
+        <p style="margin-top:10px;">at point of interest <strong>x = 1</strong></p>
+
+        <button class="btn" onclick="revealStep('jump', 1)">Next Step: Find One-Sided Limits</button>
+
+        <div id="jump-step-1" class="step-box">
+            <strong>Step 1: One-Sided Limits</strong><br>
+            • Left-hand limit (x → 1⁻): 
+            <div class="math-expr">
+                <div class="lim-block"><span class="lim-text">lim</span><span class="lim-sub">x→1⁻</span></div>
+                <span>(x³) = (1)³ = <strong>1</strong></span>
+            </div><br>
+            • Right-hand limit (x → 1⁺): 
+            <div class="math-expr">
+                <div class="lim-block"><span class="lim-text">lim</span><span class="lim-sub">x→1⁺</span></div>
+                <span>(3 - x) = 3 - 1 = <strong>2</strong></span>
+            </div>
+            <br><button class="btn" onclick="revealStep('jump', 2)">Next Step: Compare & Classify</button>
+        </div>
+
+        <div id="jump-step-2" class="step-box">
+            <strong>Step 2: Conclusion</strong><br>
+            The left-hand limit is 1 and the right-hand limit is 2. Since 1 ≠ 2, the two-sided limit does not exist due to a finite break.<br>
+            Because both one-sided limits are finite but unequal, this is a <strong>Jump Discontinuity</strong>!
+        </div>
+    </div>
+
+    <!-- PAGE 3: INFINITE DISCONTINUITY -->
+    <div class="page-section card" id="page-2">
+        <h2>Type 3: Infinite Discontinuity</h2>
+        <p><strong>Definition:</strong> At least one of the one-sided limits approaches infinity (∞ or -∞), creating a vertical asymptote.</p>
+        
+        <h3>Walkthrough Example</h3>
+        <p><strong>Function:</strong><br>
+           f(x) = 
+           <div class="math-expr">
+               <div class="fraction">
+                   <span class="num">3</span>
+                   <span class="den">(x - 4)²</span>
+               </div>
+           </div> 
+           at point of interest <strong>x = 4</strong>
+        </p>
+
+        <button class="btn" onclick="revealStep('infinite', 1)">Next Step: Evaluate Limit as x → 4</button>
+
+        <div id="infinite-step-1" class="step-box">
+            <strong>Step 1: Analyze Asymptotic Behavior</strong><br>
+            As x → 4, the denominator (x - 4)² approaches 0 through strictly positive numbers.<br>
+            • Limit expression:
+            <div class="math-expr">
+                <div class="lim-block"><span class="lim-text">lim</span><span class="lim-sub">x→4</span></div>
+                <div class="fraction">
+                    <span class="num">3</span>
+                    <span class="den">(x - 4)²</span>
+                </div>
+                <span>= <strong>∞</strong></span>
+            </div>
+            <br><button class="btn" onclick="revealStep('infinite', 2)">Next Step: Classify</button>
+        </div>
+
+        <div id="infinite-step-2" class="step-box">
+            <strong>Step 2: Conclusion</strong><br>
+            Because the limit grows without bound toward infinity, this represents an <strong>Infinite Discontinuity</strong> with a vertical asymptote at x = 4.
+        </div>
+    </div>
+
+    <!-- PAGE 4: SUMMARY PAGE -->
+    <div class="page-section card" id="page-3">
+        <h2>Discontinuity Classification Summary</h2>
+        <p>Quick reference guide for analyzing any point x = a:</p>
+        
+        <table style="width:100%; border-collapse: collapse; margin-top: 15px;">
+            <thead>
+                <tr style="background: #f1f5f9; text-align: left;">
+                    <th style="padding: 10px; border: 1px solid var(--border-color);">Type</th>
+                    <th style="padding: 10px; border: 1px solid var(--border-color);">Key Condition</th>
+                    <th style="padding: 10px; border: 1px solid var(--border-color);">Visual Characteristic</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>Removable</strong></td>
+                    <td style="padding: 10px; border: 1px solid var(--border-color);">lim<sub>x→a</sub> f(x) exists, but ≠ f(a) (or f(a) undefined)</td>
+                    <td style="padding: 10px; border: 1px solid var(--border-color);">A single hole or missing point in the graph.</td>
+                </tr>
+                <tr>
+                    <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>Jump</strong></td>
+                    <td style="padding: 10px; border: 1px solid var(--border-color);">One-sided limits exist and are finite, but lim<sub>x→a⁻</sub> f(x) ≠ lim<sub>x→a⁺</sub> f(x)</td>
+                    <td style="padding: 10px; border: 1px solid var(--border-color);">A finite break/step between two distinct horizontal levels.</td>
+                </tr>
+                <tr>
+                    <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>Infinite</strong></td>
+                    <td style="padding: 10px; border: 1px solid var(--border-color);">At least one one-sided limit approaches ∞ or -∞</td>
+                    <td style="padding: 10px; border: 1px solid var(--border-color);">A vertical asymptote where graph shoots upward/downward.</td>
+                </tr>
+            </tbody>
+        </table>
+        <div style="margin-top: 20px; text-align: center;">
+            <button class="btn" onclick="switchPage(4)">Go to Non-Sequential Practice Hub &rarr;</button>
+        </div>
+    </div>
+
+    <!-- PAGE 5: NON-SEQUENTIAL PRACTICE HUB -->
+    <div class="page-section card" id="page-4">
+        <h2>Non-Sequential Practice Hub</h2>
+        <p>Pick any problem you want to practice below! You are not required to complete them in order. Click any card to test your skills.</p>
+
+        <h3 style="margin-top: 20px; color: #1e40af;">Removable Discontinuity Practice</h3>
+        <div class="practice-grid">
+            <div class="practice-card" onclick="openProblem(1)">
+                <span class="badge badge-removable">Removable #1</span>
+                <div>Classify at x = 2:</div>
+                <div class="math-expr" style="margin-top:5px;">
+                    <div class="fraction"><span class="num">x² - 4</span><span class="den">x - 2</span></div>
+                </div>
+            </div>
+            <div class="practice-card" onclick="openProblem(2)">
+                <span class="badge badge-removable">Removable #2</span>
+                <div>Classify at x = 1:</div>
+                <div style="font-size: 0.9rem; margin-top:5px;">f(x) = {x + 3 for x ≠ 1; 10 for x = 1}</div>
+            </div>
+            <div class="practice-card" onclick="openProblem(3)">
+                <span class="badge badge-removable">Removable #3</span>
+                <div>Classify at x = 1:</div>
+                <div class="math-expr" style="margin-top:5px;">
+                    <div class="fraction"><span class="num">x³ - 1</span><span class="den">x - 1</span></div>
+                </div>
+            </div>
+        </div>
+
+        <h3 style="margin-top: 25px; color: #92400e;">Jump Discontinuity Practice</h3>
+        <div class="practice-grid">
+            <div class="practice-card" onclick="openProblem(4)">
+                <span class="badge badge-jump">Jump #1</span>
+                <div>Classify at x = 2:</div>
+                <div style="font-size: 0.9rem; margin-top:5px;">f(x) = {2x for x &lt; 2; 5 - x for x ≥ 2}</div>
+            </div>
+            <div class="practice-card" onclick="openProblem(5)">
+                <span class="badge badge-jump">Jump #2</span>
+                <div>Classify at x = 0:</div>
+                <div style="font-size: 0.9rem; margin-top:5px;">f(x) = {x² for x &lt; 0; x + 2 for x ≥ 0}</div>
+            </div>
+            <div class="practice-card" onclick="openProblem(6)">
+                <span class="badge badge-jump">Jump #3</span>
+                <div>Classify at x = 0:</div>
+                <div style="font-size: 0.9rem; margin-top:5px;">f(x) = {-1 for x &lt; 0; 1 for x ≥ 0}</div>
+            </div>
+        </div>
+
+        <h3 style="margin-top: 25px; color: #991b1b;">Infinite Discontinuity Practice</h3>
+        <div class="practice-grid">
+            <div class="practice-card" onclick="openProblem(7)">
+                <span class="badge badge-infinite">Infinite #1</span>
+                <div>Classify at x = 0:</div>
+                <div class="math-expr" style="margin-top:5px;">
+                    <div class="fraction"><span class="num">1</span><span class="den">x²</span></div>
+                </div>
+            </div>
+            <div class="practice-card" onclick="openProblem(8)">
+                <span class="badge badge-infinite">Infinite #2</span>
+                <div>Classify at x = 3:</div>
+                <div class="math-expr" style="margin-top:5px;">
+                    <div class="fraction"><span class="num">5</span><span class="den">x - 3</span></div>
+                </div>
+            </div>
+            <div class="practice-card" onclick="openProblem(9)">
+                <span class="badge badge-infinite">Infinite #3</span>
+                <div>Classify at x = -1:</div>
+                <div class="math-expr" style="margin-top:5px;">
+                    <div class="fraction"><span class="num">-2</span><span class="den">(x + 1)²</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- PRACTICE PROBLEM MODAL -->
+<div class="modal" id="problemModal">
+    <div class="modal-content">
+        <span class="close-btn" onclick="closeModal()">&times;</span>
+        <div id="modal-title" style="font-weight: bold; color: var(--primary); margin-bottom: 10px;"></div>
+        <div id="modal-question" style="margin-bottom: 15px;"></div>
+        <div id="modal-options"></div>
+        <div id="modal-feedback" class="feedback"></div>
+    </div>
+</div>
+
+<script>
+    // Tab switching logic
+    function switchPage(index) {
+        const sections = document.querySelectorAll('.page-section');
+        const tabs = document.querySelectorAll('.nav-tab');
+
+        sections.forEach((sec, idx) => {
+            if (idx === index) {
+                sec.classList.add('active');
+            } else {
+                sec.classList.remove('active');
+            }
+        });
+
+        tabs.forEach((tab, idx) => {
+            if (idx === index) {
+                tab.classList.add('active');
+            } else {
+                tab.classList.remove('active');
+            }
+        });
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Reveal walkthrough steps
+    function revealStep(category, stepNum) {
+        const stepEl = document.getElementById(`${category}-step-${stepNum}`);
+        if (stepEl) {
+            stepEl.classList.add('visible');
+        }
+    }
+
+    // Practice Problem Data Bank
+    const problemsData = {
+        1: {
+            title: "Removable Practice #1",
+            q: "Classify the discontinuity for <div class='math-expr'><div class='fraction'><span class='num'>x² - 4</span><span class='den'>x - 2</span></div></div> at x = 2.",
+            options: [
+                { text: "A) Removable Discontinuity", correct: true, exp: "Correct! Factoring gives (x-2)(x+2)/(x-2). The limit as x→2 is 4, but f(2) is undefined, making it removable." },
+                { text: "B) Jump Discontinuity", correct: false },
+                { text: "C) Infinite Discontinuity", correct: false }
+            ]
+        },
+        2: {
+            title: "Removable Practice #2",
+            q: "Classify the discontinuity for f(x) = {x + 3 for x ≠ 1; 10 for x = 1} at x = 1.",
+            options: [
+                { text: "A) Jump Discontinuity", correct: false },
+                { text: "B) Removable Discontinuity", correct: true, exp: "Correct! lim(x→1) [x + 3] = 4, but f(1) = 10. Limit exists but doesn't equal function value." },
+                { text: "C) Continuous", correct: false }
+            ]
+        },
+        3: {
+            title: "Removable Practice #3",
+            q: "Classify the discontinuity for <div class='math-expr'><div class='fraction'><span class='num'>x³ - 1</span><span class='den'>x - 1</span></div></div> at x = 1.",
+            options: [
+                { text: "A) Infinite Discontinuity", correct: false },
+                { text: "B) Removable Discontinuity", correct: true, exp: "Correct! Using difference of cubes (x-1)(x²+x+1)/(x-1), the limit evaluates to 3, forming a removable hole at x=1." },
+                { text: "C) Jump Discontinuity", correct: false }
+            ]
+        },
+        4: {
+            title: "Jump Practice #1",
+            q: "Classify the discontinuity for f(x) = {2x for x &lt; 2; 5 - x for x ≥ 2} at x = 2.",
+            options: [
+                { text: "A) Removable Discontinuity", correct: false },
+                { text: "B) Jump Discontinuity", correct: true, exp: "Correct! Left-hand limit = 4, right-hand limit = 3. Unequal finite limits produce a jump." },
+                { text: "C) Infinite Discontinuity", correct: false }
+            ]
+        },
+        5: {
+            title: "Jump Practice #2",
+            q: "Classify the discontinuity for f(x) = {x² for x &lt; 0; x + 2 for x ≥ 0} at x = 0.",
+            options: [
+                { text: "A) Jump Discontinuity", correct: true, exp: "Correct! Left-hand limit = 0, right-hand limit = 2. Finite unequal limits = jump discontinuity." },
+                { text: "B) Removable Discontinuity", correct: false },
+                { text: "C) Continuous", correct: false }
+            ]
+        },
+        6: {
+            title: "Jump Practice #3",
+            q: "Classify the discontinuity for f(x) = {-1 for x &lt; 0; 1 for x ≥ 0} at x = 0.",
+            options: [
+                { text: "A) Infinite Discontinuity", correct: false },
+                { text: "B) Jump Discontinuity", correct: true, exp: "Correct! Left limit is -1, right limit is 1. Standard step function jump." },
+                { text: "C) Removable Discontinuity", correct: false }
+            ]
+        },
+        7: {
+            title: "Infinite Practice #1",
+            q: "Classify the discontinuity for <div class='math-expr'><div class='fraction'><span class='num'>1</span><span class='den'>x²</span></div></div> at x = 0.",
+            options: [
+                { text: "A) Removable Discontinuity", correct: false },
+                { text: "B) Infinite Discontinuity", correct: true, exp: "Correct! As x → 0, 1/x² approaches ∞, creating a vertical asymptote." },
+                { text: "C) Jump Discontinuity", correct: false }
+            ]
+        },
+        8: {
+            title: "Infinite Practice #2",
+            q: "Classify the discontinuity for <div class='math-expr'><div class='fraction'><span class='num'>5</span><span class='den'>x - 3</span></div></div> at x = 3.",
+            options: [
+                { text: "A) Infinite Discontinuity", correct: true, exp: "Correct! Denominator goes to 0 while numerator is constant non-zero, yielding vertical asymptote / infinite limit." },
+                { text: "B) Removable Discontinuity", correct: false },
+                { text: "C) Jump Discontinuity", correct: false }
+            ]
+        },
+        9: {
+            title: "Infinite Practice #3",
+            q: "Classify the discontinuity for <div class='math-expr'><div class='fraction'><span class='num'>-2</span><span class='den'>(x + 1)²</span></div></div> at x = -1.",
+            options: [
+                { text: "A) Infinite Discontinuity", correct: true, exp: "Correct! Approaches -∞ from both sides, forming an infinite discontinuity." },
+                { text: "B) Removable Discontinuity", correct: false },
+                { text: "C) Jump Discontinuity", correct: false }
+            ]
+        }
+    };
+
+    function openProblem(id) {
+        const prob = problemsData[id];
+        document.getElementById('modal-title').textContent = prob.title;
+        document.getElementById('modal-question').innerHTML = prob.q;
+        document.getElementById('modal-feedback').textContent = '';
+
+        const optsContainer = document.getElementById('modal-options');
+        optsContainer.innerHTML = '';
+
+        prob.options.forEach(opt => {
+            let btn = document.createElement('button');
+            btn.className = 'option-btn';
+            btn.textContent = opt.text;
+            btn.onclick = () => {
+                const feedbackEl = document.getElementById('modal-feedback');
+                if (opt.correct) {
+                    feedbackEl.style.color = "var(--success)";
+                    feedbackEl.innerHTML = opt.exp;
+                } else {
+                    feedbackEl.style.color = "var(--error)";
+                    feedbackEl.textContent = "Not quite. Review the definitions and try again!";
+                }
+            };
+            optsContainer.appendChild(btn);
+        });
+
+        document.getElementById('problemModal').classList.add('active');
+    }
+
+    function closeModal() {
+        document.getElementById('problemModal').classList.remove('active');
+    }
+</script>
+
+</body>
+</html>
