@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Delta Activity</title>
+    
+    <!-- MathJax library to render math symbols beautifully -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            max-width: 1000px;
+            width: 100%;
+            justify-content: center;
+        }
+        .graph-container {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            flex: 2;
+            min-width: 400px;
+        }
+        .controls-container {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            flex: 1;
+            min-width: 300px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        canvas {
+            width: 100%;
+            height: auto;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+        }
+        .math-box {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #3498db;
+            font-size: 1.1em;
+            line-height: 1.6;
+        }
+        .slider-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        input[type=range] {
+            width: 100%;
+            cursor: pointer;
+        }
+        .status {
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            font-size: 1.1em;
+        }
+        .safe {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .unsafe {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .highlight-text {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Understanding \(\delta\) (Delta)</h1>
+    
+    <!-- The problem statement using MathJax -->
+    <p style="font-size: 1.2em; text-align: center;">
+        Find the largest \(\delta\) such that if \(|x - 4| < \delta\), then \(|\sqrt{x} - 2| < 0.4\).
+    </p>
+
+    <div class="container">
+        <!-- Graph Section -->
+        <div class="graph-container">
+            <canvas id="graphCanvas" width="600" height="400"></canvas>
+        </div>
+
+        <!-- Controls Section -->
+        <div class="controls-container">
+            
+            <!-- Math Explanation Box -->
+            <div class="math-box">
+                <strong>Target Output Window:</strong><br>
+                We want \(\sqrt{x}\) to be within \(0.4\) of \(2\).<br>
+                \(2 - 0.4 = 1.6\) and \(2 + 0.4 = 2.4\)<br><br>
+                
+                <strong>Target Input Window:</strong><br>
+                Solving \(\sqrt{x} = 1.6\) gives \(x = 2.56\)<br>
+                Solving \(\sqrt{x} = 2.4\) gives \(x = 5.76\)
+            </div>
+
+            <!-- Slider Control -->
+            <div class="slider-group">
+                <label for="deltaSlider" style="font-size: 1.1em;">
+                    <strong>Adjust \(\delta\) (Delta):</strong> <span id="deltaValue">1.00</span>
+                </label>
+                <input type="range" id="deltaSlider" min="0" max="3" step="0.01" value="1.00">
+            </div>
+
+            <!-- Status Indicator -->
+            <div class="status safe" id="statusBox">
+                Status: Safe
+            </div>
+
+            <!-- Dynamic Math Calculation Box -->
+            <div class="math-box">
+                <strong>Current Calculation:</strong><br>
+                Distance to right boundary: \(5.76 - 4 = 1.76\)<br>
+                Distance to left boundary: \(4 - 2.56 = 1.44\)<br><br>
+                To stay inside both boundaries, \(\delta\) must be \(\le 1.44\).
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('graphCanvas');
+        const ctx = canvas.getContext('2d');
+        const deltaSlider = document.getElementById('deltaSlider');
+        const deltaValueDisplay = document.getElementById('deltaValue');
+        const statusBox = document.getElementById('statusBox');
+
+        // Graph dimensions and scale
+        const padding = 40;
+        const graphWidth = canvas.width - 2 * padding;
+        const graphHeight = canvas.height - 2 * padding;
+        const xMax = 9; // Increased from 8 to 9 to make room for labels
+        const yMax = 3;
+
+        // Function to map math coordinates to canvas coordinates
+        function toCanvasX(x) {
+            return padding + (x / xMax) * graphWidth;
+        }
+        function toCanvasY(y) {
+            return canvas.height - padding - (y / yMax) * graphHeight;
+        }
+
+        // Draw the graph
+        function drawGraph(delta) {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Draw axes
+            ctx.beginPath();
+            ctx.strokeStyle = '#333';
+            ctx.lineWidth = 2;
+            // X-axis
+            ctx.moveTo(padding, canvas.height - padding);
+            ctx.lineTo(canvas.width - padding, canvas.height - padding);
+            // Y-axis
+            ctx.moveTo(padding, canvas.height - padding);
+            ctx.lineTo(padding, padding);
+            ctx.stroke();
+
+            // Draw axis labels
+            ctx.fillStyle = '#333';
+            ctx.font = '14px Arial';
+            ctx.fillText('x', canvas.width - padding + 10, canvas.height - padding + 5);
+            ctx.fillText('y', padding - 15, padding - 10);
+
+            // Draw grid lines and tick marks
+            ctx.strokeStyle = '#e0e0e0';
+            ctx.lineWidth = 1;
+            ctx.font = '12px Arial';
+            ctx.fillStyle = '#666';
+
+            // X-axis ticks
+            for (let i = 1; i <= xMax; i++) {
+                let cx = toCanvasX(i);
+                ctx.beginPath();
+                ctx.moveTo(cx, canvas.height - padding);
+                ctx.lineTo(cx, canvas.height - padding + 5);
+                ctx.stroke();
+                if (i % 2 === 0) {
+                    ctx.fillText(i, cx - 5, canvas.height - padding + 20);
+                }
+            }
+
+            // Y-axis ticks
+            for (let i = 1; i <= yMax; i++) {
+                let cy = toCanvasY(i);
+                ctx.beginPath();
+                ctx.moveTo(padding, cy);
+                ctx.lineTo(padding - 5, cy);
+                ctx.stroke();
+                ctx.fillText(i, padding - 20, cy + 5);
+            }
+
+            // Draw the function y = sqrt(x)
+            ctx.beginPath();
+            ctx.strokeStyle = '#3498db';
+            ctx.lineWidth = 3;
+            for (let px = 0; px <= canvas.width; px++) {
+                let mathX = (px - padding) / graphWidth * xMax;
+                if (mathX < 0) continue;
+                let mathY = Math.sqrt(mathX);
+                let py = toCanvasY(mathY);
+                if (px === padding) ctx.moveTo(px, py);
+                else ctx.lineTo(px, py);
+            }
+            ctx.stroke();
+
+            // Draw target y-range (1.6 to 2.4)
+            let y1 = toCanvasY(1.6);
+            let y2 = toCanvasY(2.4);
+            ctx.fillStyle = 'rgba(231, 76, 60, 0.1)';
+            ctx.fillRect(padding, y2, graphWidth, y1 - y2);
+
+            // Draw target x-range lines (2.56 and 5.76)
+            let x1 = toCanvasX(2.56);
+            let x2 = toCanvasX(5.76);
+            ctx.strokeStyle = '#e74c3c';
+            ctx.lineWidth = 2;
+            ctx.setLineDash([5, 5]);
+            
+            // Left boundary line
+            ctx.beginPath();
+            ctx.moveTo(x1, canvas.height - padding);
+            ctx.lineTo(x1, y1);
+            ctx.stroke();
+
+            // Right boundary line
+            ctx.beginPath();
+            ctx.moveTo(x2, canvas.height - padding);
+            ctx.lineTo(x2, y2);
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            // Draw the delta interval on x-axis
+            let deltaLeft = 4 - delta;
+            let deltaRight = 4 + delta;
+            let dx1 = toCanvasX(deltaLeft);
+            let dx2 = toCanvasX(deltaRight);
+            
+            ctx.fillStyle = 'rgba(46, 204, 113, 0.3)';
+            ctx.fillRect(dx1, canvas.height - padding - 10, dx2 - dx1, 10);
+
+            // Draw center line x=4
+            let cx4 = toCanvasX(4);
+            ctx.beginPath();
+            ctx.strokeStyle = '#2c3e50';
+            ctx.lineWidth = 1;
+            ctx.setLineDash([3, 3]);
+            ctx.moveTo(cx4, canvas.height - padding);
+            ctx.lineTo(cx4, padding);
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            // Draw points
+            // Point at x=4, y=2
+            ctx.beginPath();
+            ctx.arc(cx4, toCanvasY(2), 5, 0, 2 * Math.PI);
+            ctx.fillStyle = '#2c3e50';
+            ctx.fill();
+
+            // Point at left boundary (2.56, 1.6)
+            ctx.beginPath();
+            ctx.arc(x1, y1, 5, 0, 2 * Math.PI);
+            ctx.fillStyle = '#e74c3c';
+            ctx.fill();
+
+            // Point at right boundary (5.76, 2.4)
+            ctx.beginPath();
+            ctx.arc(x2, y2, 5, 0, 2 * Math.PI);
+            ctx.fillStyle = '#e74c3c';
+            ctx.fill();
+
+            // Labels moved to the right side to prevent overlap
+            ctx.fillStyle = '#333';
+            ctx.font = 'bold 14px Arial';
+            
+            // y = √x label moved further right and up
+            ctx.fillText('y = √x', toCanvasX(7.5), toCanvasY(2.8));
+            
+            // y = 2.4 and y = 1.6 labels moved to the far right
+            ctx.fillText('y = 2.4', toCanvasX(7.5), y2 - 5);
+            ctx.fillText('y = 1.6', toCanvasX(7.5), y1 - 5);
+            
+            // X-axis labels
+            ctx.fillText('x = 2.56', x1 - 20, canvas.height - padding + 35);
+            ctx.fillText('x = 5.76', x2 - 20, canvas.height - padding + 35);
+            ctx.fillText('x = 4', cx4 - 10, canvas.height - padding + 35);
+        }
+
+        // Update logic
+        function update() {
+            let delta = parseFloat(deltaSlider.value);
+            deltaValueDisplay.textContent = delta.toFixed(2);
+
+            // Check if safe
+            // The safe zone is between 1.44 and 1.76. 
+            // Since delta expands both ways, it must be <= 1.44 to stay safe.
+            if (delta <= 1.44) {
+                statusBox.textContent = 'Status: Safe (Inside the target zone)';
+                statusBox.className = 'status safe';
+            } else {
+                statusBox.textContent = 'Status: Unsafe (Exceeded left boundary)';
+                statusBox.className = 'status unsafe';
+            }
+
+            drawGraph(delta);
+        }
+
+        // Event listener
+        deltaSlider.addEventListener('input', update);
+
+        // Initial draw
+        update();
+    </script>
+</body>
+</html>
