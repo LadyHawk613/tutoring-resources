@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculus 1: Interactive Epsilon-Delta Explorer</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --accent: #ef4444;
+            --accent-green: #10b981;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            margin-top: 0;
+            color: var(--primary);
+            text-align: center;
+        }
+
+        p.intro {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-bottom: 25px;
+        }
+
+        .workspace {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 20px;
+            align-items: center;
+        }
+
+        @media (max-width: 700px) {
+            .workspace {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        canvas {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .controls-panel {
+            background: #f1f5f9;
+            padding: 20px;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        input[type="range"] {
+            width: 100%;
+            cursor: pointer;
+        }
+
+        .stats-box {
+            background: #ffffff;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #cbd5e1;
+            font-size: 0.85rem;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .stat-value {
+            font-weight: 700;
+            font-family: monospace;
+        }
+
+        .explanation {
+            margin-top: 25px;
+            background: #eff6ff;
+            border-left: 4px solid var(--primary);
+            padding: 15px;
+            border-radius: 0 8px 8px 0;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Epsilon-Delta (&epsilon; - &delta;) Visualizer</h1>
+    <p class="intro">Explore how changing the output tolerance (&epsilon;) on y = &radic;x around x = 4 affects your input wiggle-room (&delta;).</p>
+
+    <div class="workspace">
+        <!-- Canvas Graph -->
+        <div>
+            <canvas id="graphCanvas" width="450" height="350"></canvas>
+        </div>
+
+        <!-- Controls -->
+        <div class="controls-panel">
+            <div class="control-group">
+                <label for="epsilonSlider">Output Tolerance (&epsilon;): <span id="epsVal" style="color:var(--accent);">0.40</span></label>
+                <input type="range" id="epsilonSlider" min="0.10" max="0.90" step="0.05" value="0.40">
+            </div>
+
+            <div class="stats-box">
+                <div class="stat-row">
+                    <span>Target Output (L):</span>
+                    <span class="stat-value">2.00</span>
+                </div>
+                <div class="stat-row">
+                    <span>Target Input (a):</span>
+                    <span class="stat-value">4.00</span>
+                </div>
+                <div class="stat-row" style="color: var(--accent);">
+                    <span>Min / Max y:</span>
+                    <span class="stat-value" id="yBounds">1.60 – 2.40</span>
+                </div>
+                <div class="stat-row" style="color: var(--accent-green);">
+                    <span>Min / Max x:</span>
+                    <span class="stat-value" id="xBounds">2.56 – 5.76</span>
+                </div>
+                <hr style="border:0; border-top:1px solid #e2e8f0; margin:4px 0;">
+                <div class="stat-row" style="font-weight:bold; color:var(--primary);">
+                    <span>Final Safe (&delta;):</span>
+                    <span class="stat-value" id="deltaVal">1.44</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="explanation" id="dynamicExplanation">
+        <strong>How it works:</strong> The customer demands that output stay within 0.4 units of 2 (between 1.60 and 2.40). Working backward via squaring, this requires your input x to stay between 2.56 and 5.76. Because the curve is asymmetrical, you pick the smaller distance to error on the safe side, giving &delta; = 1.44.
+    </div>
+</div>
+
+<script>
+    const canvas = document.getElementById('graphCanvas');
+    const ctx = canvas.getContext('2d');
+    const slider = document.getElementById('epsilonSlider');
+    
+    const epsValDisplay = document.getElementById('epsVal');
+    const yBoundsDisplay = document.getElementById('yBounds');
+    const xBoundsDisplay = document.getElementById('xBounds');
+    const deltaValDisplay = document.getElementById('deltaVal');
+    const explanationBox = document.getElementById('dynamicExplanation');
+
+    // Graph mapping constants
+    const a = 4;
+    const L = 2;
+
+    function mapX(x) {
+        // Map domain [0, 8] to canvas [40, 420]
+        return 40 + (x / 8) * 380;
+    }
+
+    function mapY(y) {
+        // Map range [0, 4] to canvas [310, 40] (inverted Y)
+        return 310 - (y / 4) * 270;
+    }
+
+    function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        const epsilon = parseFloat(slider.value);
+        epsValDisplay.textContent = epsilon.toFixed(2);
+
+        const yMin = L - epsilon;
+        const yMax = L + epsilon;
+        
+        // Safeguard domain bounds for square root
+        const xMin = Math.max(0, Math.pow(yMin, 2));
+        const xMax = Math.pow(yMax, 2);
+
+        const deltaLeft = a - xMin;
+        const deltaRight = xMax - a;
+        const delta = Math.min(deltaLeft, deltaRight);
+
+        // Update Text metrics
+        yBoundsDisplay.textContent = `${yMin.toFixed(2)} – ${yMax.toFixed(2)}`;
+        xBoundsDisplay.textContent = `${xMin.toFixed(2)} – ${xMax.toFixed(2)}`;
+        deltaValDisplay.textContent = delta.toFixed(2);
+
+        explanationBox.innerHTML = `<strong>Current Analysis:</strong> Customer wants output within <strong>${epsilon.toFixed(2)}</strong> of 2 (range: ${yMin.toFixed(2)} to ${yMax.toFixed(2)}). Squaring limits yields inputs from ${xMin.toFixed(2)} to ${xMax.toFixed(2)}. Distances from 4 are ${deltaLeft.toFixed(2)} (left) and ${deltaRight.toFixed(2)} (right). Taking the tighter constraint gives safe input wiggle-room <strong>&delta; = ${delta.toFixed(2)}</strong>.`;
+
+        // Draw Axes grid lines & labels
+        ctx.strokeStyle = '#e2e8f0';
+        ctx.lineWidth = 1;
+
+        // X and Y Axis lines
+        ctx.beginPath();
+        ctx.moveTo(mapX(0), mapY(0));
+        ctx.lineTo(mapX(8), mapY(0));
+        ctx.moveTo(mapX(0), mapY(0));
+        ctx.lineTo(mapX(0), mapY(4));
+        ctx.stroke();
+
+        // --- DRAW EPSILON SHADING BAND (Horizontal strip on Y axis) ---
+        ctx.fillStyle = 'rgba(239, 68, 68, 0.1)';
+        ctx.fillRect(mapX(0), mapY(yMax), mapX(8) - mapX(0), mapY(yMin) - mapY(yMax));
+
+        // --- DRAW DELTA SHADING BAND (Vertical strip on X axis) ---
+        ctx.fillStyle = 'rgba(16, 185, 129, 0.1)';
+        ctx.fillRect(mapX(a - delta), mapY(0), mapX(a + delta) - mapX(a - delta), mapY(4) - mapY(0));
+
+        // Draw Function Curve: y = sqrt(x)
+        ctx.strokeStyle = '#2563eb';
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        for (let xVal = 0; xVal <= 8; xVal += 0.05) {
+            let px = mapX(xVal);
+            let py = mapY(Math.sqrt(xVal));
+            if (xVal === 0) ctx.moveTo(px, py);
+            else ctx.lineTo(px, py);
+        }
+        ctx.stroke();
+
+        // Draw Epsilon lines (horizontal dashed lines at yMin and yMax)
+        ctx.strokeStyle = '#ef4444';
+        ctx.lineWidth = 1.5;
+        ctx.setLineDash([4, 4]);
+
+        // yMin line
+        ctx.beginPath();
+        ctx.moveTo(mapX(0), mapY(yMin));
+        ctx.lineTo(mapX(xMin), mapY(yMin));
+        ctx.stroke();
+
+        // yMax line
+        ctx.beginPath();
+        ctx.moveTo(mapX(0), mapY(yMax));
+        ctx.lineTo(mapX(xMax), mapY(yMax));
+        ctx.stroke();
+
+        // Draw Delta projection lines down to X axis
+        ctx.strokeStyle = '#10b981';
+        
+        // xMin line
+        ctx.beginPath();
+        ctx.moveTo(mapX(xMin), mapY(yMin));
+        ctx.lineTo(mapX(xMin), mapY(0));
+        ctx.stroke();
+
+        // xMax line
+        ctx.beginPath();
+        ctx.moveTo(mapX(xMax), mapY(yMax));
+        ctx.lineTo(mapX(xMax), mapY(0));
+        ctx.stroke();
+
+        ctx.setLineDash([]); // Reset line style
+
+        // Center point (4, 2) marker
+        ctx.fillStyle = '#1e293b';
+        ctx.beginPath();
+        ctx.arc(mapX(a), mapY(L), 5, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Axis labels
+        ctx.fillStyle = '#64748b';
+        ctx.font = '11px sans-serif';
+        ctx.fillText('0', mapX(0) - 12, mapY(0) + 12);
+        ctx.fillText('4 (a)', mapX(4) - 12, mapY(0) + 18);
+        ctx.fillText('2 (L)', mapX(0) - 28, mapY(2) + 4);
+    }
+
+    // Initial render call on load
+    window.onload = draw;
+    slider.addEventListener('input', draw);
+</script>
+
+</body>
+</html>
