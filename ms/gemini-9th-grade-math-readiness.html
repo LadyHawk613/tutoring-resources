@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Integrated Math 1 - Comprehensive Middle School Skills Diagnostic Assessment</title>
+    <!-- MathJax for rendering mathematical notation -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        :root {
+            --primary-purple: #4A154B;
+            --light-purple: #F3EFEF;
+            --accent-purple: #6F2DA8;
+            --border-color: #D1C4E9;
+            --text-main: #2C2C2C;
+            --bg-color: #F8F9FA;
+            --white: #FFFFFF;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: var(--primary-purple);
+            color: var(--white);
+            padding: 2.5rem 1rem;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        header h1 {
+            margin: 0 0 0.5rem 0;
+            font-size: 2.2rem;
+            letter-spacing: -0.5px;
+        }
+
+        header p {
+            margin: 0;
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .card {
+            background: var(--white);
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(74, 21, 75, 0.08);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border-top: 5px solid var(--accent-purple);
+        }
+
+        .instructions {
+            background-color: var(--light-purple);
+            border-left: 4px solid var(--accent-purple);
+            padding: 1.25rem;
+            margin-bottom: 2rem;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .instructions h3 {
+            margin-top: 0;
+            color: var(--primary-purple);
+        }
+
+        .domain-section {
+            margin-bottom: 2.5rem;
+        }
+
+        .domain-title {
+            color: var(--primary-purple);
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 0.5rem;
+            margin-bottom: 1.5rem;
+            font-size: 1.4rem;
+        }
+
+        .question-box {
+            background: var(--white);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 1.25rem;
+            margin-bottom: 1.25rem;
+            transition: box-shadow 0.2s ease;
+        }
+
+        .question-box:hover {
+            box-shadow: 0 4px 12px rgba(111, 45, 168, 0.1);
+        }
+
+        .question-header {
+            font-weight: 600;
+            color: var(--primary-purple);
+            margin-bottom: 0.75rem;
+            font-size: 1.05rem;
+        }
+
+        .question-text {
+            margin-bottom: 1rem;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem 1rem;
+        }
+
+        @media (max-width: 600px) {
+            .options-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .option-label {
+            display: flex;
+            align-items: center;
+            padding: 0.5rem 0.75rem;
+            background-color: #FAFAFA;
+            border: 1px solid #E0E0E0;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .option-label:hover {
+            background-color: var(--light-purple);
+            border-color: var(--accent-purple);
+        }
+
+        .option-label input {
+            margin-right: 0.75rem;
+            accent-color: var(--accent-purple);
+        }
+
+        .actions {
+            text-align: center;
+            margin: 3rem 0;
+        }
+
+        button {
+            background-color: var(--accent-purple);
+            color: var(--white);
+            border: none;
+            padding: 0.875rem 2.5rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(74, 21, 75, 0.2);
+            transition: background-color 0.2s, transform 0.1s;
+        }
+
+        button:hover {
+            background-color: var(--primary-purple);
+            transform: translateY(-1px);
+        }
+
+        #results-card {
+            display: none;
+            background: var(--white);
+            border-radius: 8px;
+            padding: 2rem;
+            margin-top: 2rem;
+            border: 2px solid var(--accent-purple);
+            text-align: center;
+        }
+
+        #results-card h2 {
+            color: var(--primary-purple);
+            margin-top: 0;
+        }
+
+        .score-display {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--accent-purple);
+            margin: 1rem 0;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Integrated Math 1 Readiness Assessment</h1>
+        <p>Comprehensive 40-Question Middle School Skills Diagnostic</p>
+    </header>
+
+    <div class="container">
+        <div class="card">
+            <div class="instructions">
+                <h3>Instructions</h3>
+                <p>This diagnostic assessment contains 40 multiple-choice questions covering key middle school mathematical domains required for success in Integrated Math 1 (9th Grade). Take your time, show your work on scratch paper, and select the best answer for each question. Click the submit button at the bottom to evaluate your responses.</p>
+            </div>
+
+            <form id="assessment-form">
+                
+                <!-- DOMAIN 1: NUMBER SENSE AND OPERATIONS -->
+                <div class="domain-section">
+                    <h2 class="domain-title">1. Number Sense and Operations</h2>
+
+                    <!-- Q1 -->
+                    <div class="question-box">
+                        <div class="question-header">Question 1</div>
+                        <div class="question-text">Evaluate: \(-12 + 28 - (-5)\)</div>
+                        <div class="options-grid">
+                            <label class="option-label"><input type="radio" name="q1" value="A"> A) 11</label>
+                            <label class="option-label"><input type="radio" name="q1" value="B"> B) 16</label>
+                            <label class="option-label"><input type="radio" name="q1" value="C" data-correct="true"> C) 21</label>
+                            <label class="option-label"><input type="radio" name="q1" value="D"> D) 45</label>
+                        </div>
+                    </div>
+
+                    <!-- Q2 -->
+                    <div class="question-box">
+                        <div class="question-header">Question 2</div>
+                        <div class="question-text">Find the product: \(-8 \times (-6)\)</div>
+                        <div class="options-grid">
+                            <label class="option-label"><input type="radio" name="q2" value="A"> A) -48</label>
+                            <label class="option-label"><input type="radio" name="q2" value="B" data-correct="true"> B) 48</label>
+                            <label class="option-label"><input type="radio" name="q2" value="C"> C) -14</label>
+                            <label class="option-label"><input type="radio" name="q2" value="D"> D) 14</label>
+                        </div>
+                    </div>
+
+                    <!-- Q3 -->
+                    <div class="question-box">
+                        <div class="question-header">Question 3</div>
+                        <div class="question-text">Evaluate the expression: \(\frac{3}{4} \div \left(-\frac{9}{10}\right)\)</div>
+                        <div class="options-grid">
+                            <label class="option-label"><input type="radio" name="q3" value="A" data-correct="true"> A) \(-\frac{5}{6}\)</label>
+                            <label class="option-label"><input type="radio" name="q3" value="B"> B) \(-\frac{27}{40}\)</label>
+                            <label class="option-label"><input type="radio" name="q3" value="C"> C) \(\frac{5}{6}\)</label>
+                            <label class="option-label"><input type="radio" name="q3" value="D"> D) \(-\frac{6}{5}\)</label>
+                        </div>
+                    </div>
+
+                    <!-- Q4 -->
+                    <div class="question-box">
+                        <div class="question-header">Question 4</div>
+                        <div class="question-text">Simplify: \(5.2 + 3.8 \times 2 - 4.1\)</div>
+                        <div class="options-grid">
+                            <label class="option-label"><input type="radio" name="q4" value="A"> A) 14.1</label>
+                            <label class="option-label"><input type="radio" name="q4" value="B" data-correct="true"> B) 8.9</label>
+                            <label class="option-label"><input type="radio" name="q4" value="C"> C) 13.9</label>
+                            <label class="option-label"><input type="radio" name="q4" value="D"> D) 7.9</label>
+                        </div>
+                    </div>
+
+                    <!-- Q5 -->
+                    <div class="question-box">
+                        <div class="question-header">Question 5</div>
+                        <div class="question-text">Evaluate \((-3)^4\)</div>
+                        <div class="options-grid">
+                            <label class="option-label"><input type="radio" name="q5" value="A"> A) -81</label>
+                            <label class="option-label"><input type="radio" name="q5" value="B"> B) -12</label>
+                            <label class="option-label"><input type="radio" name="q5" value="C" data-correct="true"> C) 81</label>
+                            <label class="option-label"><input type="radio" name="q5" value="D"> D) 12</label>
+                        </div>
+                    </div>
+
+                    <!-- Q6 -->
+                    <div class="question-box">
+                        <div class="question-header">Question 6</div>
+                        <div class="question-text">Simplify using exponent rules: \(x^3 \cdot x^5\)</div>
+                        <div class="options-grid">
+                            <label class="option-label"><input type="radio" name="q6" value="A"> A) \(x^{15}\)</label>
+                            <label class="option-label"><input type="radio" name="q6" value="B" data-correct="true"> B) \(x^8\)</label>
+                            <label class="option-label"><input type="radio" name="q6" value="C"> C) \(2x^8\)</label>
+                            <label class="option-label"><input type="radio" name="q6" value="D"> D) \(x^2\)</label>
+                        </div>
+                    </div>
+
+                    <!-- Q7 -->
+                    <div class="question-box">
+                        <div class="question-header">Question 7</div>
+                        <div class="question-text">Evaluate: \(\sqrt{196} + \sqrt[3]{27}\)</div>
+                        <div class="options-grid">
+                            <label class="option-label"><input type="radio" name="q7" value="A"> A) 14</label>
+                            <label class="option-label"><input type="radio" name="q7" value="B"> B) 16</label>
+                            <label class="option-label"><input type="radio" name="q7" value="C" data-correct="true"> C) 17</label>
+                            <label class="option-label"><input type="radio" name="q7" value="D"> D) 29</label>
+                        </div>
+                    </div>
+
+                    <!-- Q8 -->
+                    <div class="question-box">
+                        <div class="question-header">Question 8</div>
+                        <div class="question-text">Convert \(0.375\) to a fraction in simplest form.</div>
+                        <div class="options-grid">
+                            <label class="option-label"><input type="radio" name="q8" value="A"> A) \(\frac{37}{50}\)</label>
+                            <label class="option-label"><input type="radio" name="q8" value="B" data-correct="true"> B) \(\frac{3}{8}\)</label>
+                            <label class="option-label"><input type="radio" name="q8" value="C"> C) \(\frac{375}{100}\)</label>
+                            <label class="option-label"><input type="radio" name="q8" value="D"> D) \(\frac{5}{8}\)</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- DOMAIN 2: EXPRESSIONS AND LINEAR EQUATIONS -->
+                <div class="domain-section">
+                    <h2 class="domain-title">2. Expressions and Linear Equations</h2>
+
+                    <!-- Q9 -->
+                    <div class="question-box">
+                        <div class="question-header">Question 9</div>
+                        <div class="question-text">Simplify by combining like terms: \(5x - 3y - 2x + 7y - 4\)</div>
+                        <div class="options-grid">
+                            <label class="option-label"><input type="radio" name="q9" value="A" data-correct="true"> A) \(3x + 4y - 4\)</label>
+                            <label class="option-label"><input type="radio" name="q9" value="B"> B) \(7x + 10y - 4\)</label>
+                            <label class="option-label"><input type="radio" name="q9" value="C"> C) \(3x - 10y - 4\)</label>
+                            <label class="option-label"><input type="radio" name="q9" value="D"> D) \(3x + 4y\)</label>
+                        </div>
+                    </div>
+
+                    <!-- Q10 -->
+                    <div class="question-box">
+                        <div class="question-header">Question 10</div>
+                        <div class="question-text">Expand using the distributive property: \(-3(4x - 5)\)</div>
+                        <div class="options-grid">
+                            <label class="option-label"><input type="radio" name="q10" value="A"> A) \(-12x - 15\)</label>
+                            <label class="option-label"><input type="radio" name="q10" value="B" data-correct="true"> B) \(-12x + 15\)</label>
+                            <label class="option-label"><input type="radio" name="q10" value="C"> C) \(12x - 15\)</label>
+                            <label class="option-label"><input type="radio" name="q10" value="D"> D) \(-12x - 5\)</label>
+                        </div>
+                    </div>
+
+                    <!-- Q11 -->
+                    <div class="question-box">
+                        <div class="question-header">Question 11</div>
+                        <div class="question-text">Solve for \(x\): \(3x - 7 = 20\)</div>
+                        <div class="options-grid">
+                            <label class="option-label"><input type="radio" name="q11" value="A"> A) \(x = 4\)</label>
+                            <label class="option-label"><input type="radio" name="q11" value="B"> B) \(x = 7\)</label>
+                            <label class="option-label"><input type="radio" name="q11" value="C" data-correct="true"> C) \(x = 9\)</label>
+                            <label class="option-label"><input type="radio" name="q11" value="D"> D) \(x = 27\)</label>
+                        </div>
+                    </div>
+
+                    <!-- Q12 -->
+                    <div class="question-box">
+                        <div class="question-header">Question 12</div>
+                        <div class="question-text">Solve for \(x\): \(5x + 3 = 2x - 9\)</div>
+                        <div class="options-grid">
+                            <label class="option-label"><input type="radio" name="q12" value="A" data-correct="true"> A) \(x = -4\)</label>
+                            <label class="option-label"><input type="radio" name="q12" value="B"> B) \(x = 4\)</label>
+                            <label class="option-label"><input type="radio" name="q12" value="C"> C) \(x = -2\)</label>
+                            <label class="option-label"><input type="radio" name="q12" value="D"> D) \(x = 2\)</label>
+                        </div>
+                    </div>
+
+                    <!-- Q13 -->
+                    <div class="question-box">
+                        <div class="question-header">Question 13</div>
+                        <div class="question-text">Solve for \(x\): \(2(x - 4) + 3 = 11\)</div>
+                        <div class="options-grid">
+                            <label class="option-label"><input type="radio" name="q13" value="A"> A) \(x = 4\)</label>
+                            <label class="option-label"><input type="radio" name="q13" value="B"> B) \(x = 6\)</label>
+                            <label class="option-label"><input type="radio" name="q13" value="C" data-correct="true"> C) \(x = 8\)</label>
+                            <label class="option-label"><input type="radio" name="q13" value="D"> D) \(x = 10\)</label>
+                        </div>
+                    </div>
+
+                    <!-- Q14 -->
+                    <div class="question-box">
+                        <div class="question-header">Question 14</div>
+                        <div class="question-text">Solve and graph the inequality: \(-4x + 6 \leq 22\)</div>
+                        <div class="options-grid">
+                            <label class="option-label"><input type="radio" name="q14" value="A"> A) \(x \leq -4\)</label>
+                            <label class="option-label"><input type="radio" name="q14" value="B" data-correct="true"> B) \(x \geq -4\)</label>
+                            <label class="option-label"><input type="radio" name="q14" value="C"> C) \(x \geq 4\)</label>
+                            <label class="option-label"><input type="radio" name="q14" value="D"> D) \(x \leq 4\)</label>
+                        </div>
+                    </div>
+
+                    <!-- Q15 -->
+                    <div class="question-box">
+                        <div class="question-header">Question 15</div>
+                        <div class="question-text">Rearrange the formula \(I = Prt\) to solve for \(t\).</div>
+                        <div class="options-grid">
+                            <label class="option-label"><input type="radio" name="q15" value="A" data-correct="true"> A) \(t = \frac{I}{Pr}\)</label>
+                            <label class="option-label"><input type="radio" name="q15" value="B"> B) \(t = I - Pr\)</label>
+                            <label class="option-label"><input type="radio" name="q15" value="C"> C) \(t = PrI\)</label>
+                            <label class="option-label"><input type="radio" name="q15" value="D"> D) \(t = \frac{Pr}{I}\)</label>
+                        </div>
+                    </div>
+
+                    <!-- Q16 -->
+                    <div class="question-box">
+                        <div class="question-header">Question 16</div>
+                        <div class="question-text">Solve for \(y\): \(3x - 2y = 12\)</div>
+                        <div class="options-grid">
+                            <label class="option-label"><input type="radio" name="q16" value="A"> A) \(y = \frac{3}{2}x - 12\)</label>
+                            <label class="option-label"><input type="radio" name="q16" value="B" data-correct="true"> B) \(y = \frac{3}{2}x - 6\)</label>
+                            <label class="option-label"><input type="radio" name="q16" value="C"> C) \(y = -\frac{3}{2}x + 6\)</label>
+                            <label class="option-label"><input type="radio" name="q16" value="D"> D) \(y = 3x - 12\)</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- DOMAIN 3: RATIOS, PROPORTIONS, AND FUNCTIONS -->
+                <div class="domain-section">
+                    <h2 class="domain-title">3. Ratios, Proportions, and Functions</h2>
+
+                    <!-- Q17 -->
+                    <div class="question-box">
+                        <div class="question-header">Question 17</div>
+                        <div class="question-text">Solve the proportion: \(\frac{4}{7} = \frac{x}{35}\)</div>
+                        <div class="options-grid">
+                            <label class="option-label"><input type="radio" name="q17" value="A"> A) \(x = 12\)</label>
+                            <label class="option-label"><input type="radio" name="q17" value="B"> B) \(x = 16\)</label>
+                            <label class="option-label"><input type="radio" name="q17" value="C" data-correct="true"> C) \(x = 20\)</label>
+                            <label class="option-label"><input type="radio" name="q17" value="D"> D) \(x = 28\)</label>
+                        </div>
+                    </div>
+
+                    <!-- Q18 -->
+                    <div class="question-box">
+                        <div class="question-header">Question 18</div>
+                        <div class="question-text">A car travels 210 miles in 3.5 hours. What is its unit rate of speed in miles per hour?</div>
+                        <div class="options-grid">
+                            <label class="option-label"><input type="radio" name="q18" value="A"> A) 55 mph</label>
+                            <label class="option-label"><input type="radio" name="q18" value="B" data-correct="true"> B) 60 mph</label>
+                            <label class="option-label"><input type="radio" name="q18" value="C"> C) 65 mph</label>
+                            <label class="option-label"><input type="radio" name="q18" value="D"> D) 70 mph</label>
+                        </div>
+                    </div>
+
+                    <!-- Q19 -->
+                    <div class="question-box">
+                        <div class="question-header">Question 19</div>
+                        <div class="question-text">What is the slope of the line passing through points \((2, 3)\) and \((6, 11)\)?</div>
+                        <div class="options-grid">
+                            <label class="option-label"><input type="radio" name="q19" value="A"> A) \(m = \frac{1}{2}\)</label>
+                            <label class="option-label"><input type="radio" name="q19" value="B"> B) \(m = 1\)</label>
+                            <label class="option-label"><input type="radio" name="q19" value="C" data-correct="true"> C) \(m = 2\)</label>
+                            <label class="option-label"><input type="radio" name="q19" value="D"> D) \(m = 4\)</label>
+                        </div>
+                    </div>
+
+                    <!-- Q20 -->
+                    <div class="question-box">
+                        <div class="question-header">Question 20</div>
+                        <div class="question-text">Find the slope and y-intercept of the linear equation: \(y = -3x + 7\)</div>
+                        <div class="options-grid">
+                            <label class="option-label"><input type="radio" name="q20" value="A" data-correct="true"> A) Slope \(= -3\), y-intercept \(= 7\)</label>
+                            <label class="option-label"><input type="radio" name="q20" value="B"> B) Slope \(= 7\), y-intercept \(= -3\)</label>
+                            <label class="option-label"><input type="radio" name="q20" value="C"> C) Slope \(= 3\), y-intercept \(= -7\)</label>
+                            <label class="option-label"><input type="radio" name="q20" value="D"> D) Slope \(= -3\), y-intercept \(= -7\)</label>
+                        </div>
+                    </div>
+
+                    <!-- Q21 -->
+                    <div class="question-box">
+                        <div class="question-header">Question 21</div>
+                        <div class="question-text">Write the equation of a line in slope-intercept form with slope \(m = \frac{2}{3}\) and y-intercept \(b = -4\).</div>
+                        <div class="options-grid">
+                            <label class="option-label"><input type="radio" name="q21" value="A"> A) \(y = -4x + \frac{2}{3}\)</label>
+                            <label class="option-label"><input type="radio" name="q21" value="B" data-correct="true"> B) \(y = \frac{2}{3}x - 4\)</label>
+                            <label class="option-label"><input type="radio" name="q21" value="C"> C) \(y = \frac{2}{3}x + 4\)</label>
+                            <label class="option-label"><input type="radio" name="q21" value="D"> D) \(y = -\frac{2}{3}x - 4\)</label>
+                        </div>
+                    </div>
+
+                    <!-- Q22 -->
+                    <div class="question-box">
+                        <div class="question-header">Question 22</div>
+                        <div class="question-text">Evaluate the function \(f(x) = -2x^2 + 5x - 3\) when \(x = 3\).</div>
+                        <div class="options-grid">
+                            <label class="option-label"><input type="radio" name="q22" value="A" data-correct="true"> A) \(-6\)</label>
+                            <label class="option-label"><input type="radio" name="q22" value="B"> B) 0</label>
+                            <label class="option-label"><input type="radio" name="q22" value="C"> C) 6</label>
+                            <label class="option-label"><input type="radio" name="q22" value="D"> D) 30</label>
+                        </div>
+                    </div>
+
+                    <!-- Q23 -->
+                    <div class="question-box">
+                        <div class="question-header">Question 23</div>
+                        <div class="question-text">Which of the following tables represents a nonlinear function?</div>
+                        <div class="options-grid">
+                            <label class="option-label"><input type="radio" name="q23" value="A"> A) Constant rate of change in \(y\) per unit \(x\)</label>
+                            <label class="option-label"><input type="radio" name="q23" value="B" data-correct="true"> B) \(y\) increases by multiplying by 2 for each step in \(x\)</label>
+                            <label class="option-label"><input type="radio" name="q23" value="C"> C) Equation in the form \(y = mx + b\)</label>
+                            <label class="option-label"><input type="radio" name="q23" value="D"> D) Constant first differences</label>
+                        </div>
+                    </div>
+
+                    <!-- Q24 -->
+                    <div class="question-box">
+                        <div class="question-header">Question 24</div>
+                        <div class="question-text">Find the x-intercept of the line \(2x + 5y = 20\).</div>
+                        <div class="options-grid">
+                            <label class="option-label"><input type="radio" name="q24" value="A"> A) \((0, 4)\)</label>
+                            <label class="option-label"><input type="radio" name="q24" value="B"> B) \((0, 10)\)</label>
+                            <label class="option-label"><input type="radio" name="q24" value="C" data-correct="true"> C) \((10, 0)\)</label>
+                            <label class="option-label"><input type="radio" name="q24" value="D"> D) \((5, 0)\)</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- DOMAIN 4: GEOMETRY AND THE COORDINATE PLANE -->
+                <div class="domain-section">
+                    <h2 class="domain-title">4. Geometry and the Coordinate Plane</h2>
+
+                    <!-- Q25 -->
+                    <div class="question-box">
+                        <div class="question-header">Question 25</div>
+                        <div class="question-text">Find the distance between the points \((-3, 4)\) and \((9, 4)\) on the coordinate plane.</div>
+                        <div class="options-grid">
+                            <label class="option-label"><input type="radio" name="q25" value="A"> A) 6</label>
+                            <label class="option-label"><input type="radio" name="q25" value="B"> B) 9</label>
+                            <label class="option-label"><input type="radio" name="q25" value="C" data-correct="true"> C) 12</label>
+                            <label class="option-label"><input type="radio" name="q25" value="D"> D) 15</label>
+                        </div>
+                    </div>
+
+                    <!-- Q26 -->
+                    <div class="question-box">
+                        <div class="question-header">Question 26</div>
+                        <div class="question-text">In a right triangle, the two legs measure 9 cm and 12 cm. What is the length of the hypotenuse?</div>
+                        <div class="options-grid">
+                            <label class="option-label"><input type="radio" name="q26" value="A"> A) 13 cm</label>
+                            <label class="option-label"><input type="radio" name="q26" value="B" data-correct="true"> B) 15 cm</label>
+                            <label class="option-label"><input type="radio" name="q26" value="C"> C) 21 cm</label>
+                            <label class="option-label"><input type="radio" name="q26" value="D"> D) 225 cm</label>
+                        </div>
+                    </div>
+
+                    <!-- Q27 -->
+                    <div class="question-box">
+                        <div class="question-header">Question 27</div>
+                        <div class="question-text">Find the midpoint of the line segment with endpoints \((2, 5)\) and \((8, 11)\).</div>
+                        <div class="options-grid">
+                            <label class="option-label"><input type="radio" name="q27" value="A"> A) \((3, 3)\)</label>
+                            <label class="option-label"><input type="radio" name="q27" value="B" data-correct="true"> B) \((5, 8)\)</label>
+                            <label class="option-label"><input type="radio" name="q27" value="C"> C) \((6, 6)\)</label>
+                            <label class="option-label"><input type="radio" name="q27" value="D"> D) \((10, 16)\)</label>
+                        </div>
+                    </div>
+
+                    <!-- Q28 -->
+                    <div class="question-box">
+                        <div class="question-header">Question 28</div>
+                        <div class="question-text">A triangle has vertices at \((1, 1)\), \((4, 1)\), and \((1, 5)\). What is the area of the triangle?</div>
+                        <div class="options-grid">
+                            <label class="option-label"><input type="radio" name="q28" value="A"> A) 4 square units</label>
+                            <label class="option-label"><input type="radio" name="q28" value="B" data-correct="true"> B) 6 square units</label>
+                            <label class="option-label"><input type="radio" name="q28" value="C"> C) 12 square units</label>
+                            <label class="option-label"><input type="radio" name="q28" value="D"> D) 10 square units</label>
+                        </div>
+                    </div>
+
+                    <!-- Q29 -->
+                    <div class="question-box">
+                        <div class="question-header">Question 29</div>
+                        <div class="question-text">What are the coordinates of point \((-3, 5)\) after a reflection across the y-axis?</div>
+                        <div class="options-grid">
+                            <label class="option-label"><input type="radio" name="q29" value="A"> A) \((-3, -5)\)</label>
+                            <label class="option-label"><input type="radio" name="q29" value="B" data-correct="true"> B) \((3, 5)\)</label>
+                            <label class="option-label"><input type="radio" name="q29" value="C"> C) \((3, -5)\)</label>
+                            <label class="option-label"><input type="radio" name="q29" value="D"> D) \((5, -3)\)</label>
+                        </div>
+                    </div>
+
+                    <!-- Q30 -->
+                    <div class="question-box">
+                        <div class="question-header">Question 30</div>
+                        <div class="question-text">What is the volume of a cylinder with radius \(r = 3\) cm and height \(h = 10\) cm? (Use \(\pi \approx 3.14\))</div>
+                        <div class="options-grid">
+                            <label class="option-label"><input type="radio" name="q30" value="A"> A) 94.2 \(\text{cm}^3\)</label>
+                            <label class="option-label"><input type="radio" name="q30" value="B"> B) 188.4 \(\text{cm}^3\)</label>
+                            <label class="option-label"><input type="radio" name="q30" value="C" data-correct="true"> C) 282.6 \(\text{cm}^3\)</label>
+                            <label class="option-label"><input type="radio" name="q30" value="D"> D) 565.2 \(\text{cm}^3\)</label>
+                        </div>
+                    </div>
+
+                    <!-- Q31 -->
+                    <div class="question-box">
+                        <div class="question-header">Question 31</div>
+                        <div class="question-text">If two parallel lines are cut by a transversal, alternate interior angles are:</div>
+                        <div class="options-grid">
+                            <label class="option-label"><input type="radio" name="q31" value="A" data-correct="true"> A) Congruent (equal in measure)</label>
+                            <label class="option-label"><input type="radio" name="q31" value="B"> B) Supplementary (add to \(180^\circ\))</label>
+                            <label class="option-label"><input type="radio" name="q31" value="C"> C) Complementary (add to \(90^\circ\))</label>
+                            <label class="option-label"><input type="radio" name="q31" value="D"> D) Unrelated</label>
+                        </div>
+                    </div>
+
+                    <!-- Q32 -->
+                    <div class="question-box">
+                        <div class="question-header">Question 32</div>
+                        <div class="question-text">What is the sum of the interior angles of a pentagon (5 sides)?</div>
+                        <div class="options-grid">
+                            <label class="option-label"><input type="radio" name="q32" value="A"> A) \(360^\circ\)</label>
+                            <label class="option-label"><input type="radio" name="q32" value="B"> B) \(405^\circ\)</label>
+                            <label class="option-label"><input type="radio" name="q32" value="C" data-correct="true"> C) \(540^\circ\)</label>
+                            <label class="option-label"><input type="radio" name="q32" value="D"> D) \(720^\circ\)</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- DOMAIN 5: STATISTICS AND DATA ANALYSIS -->
+                <div class="domain-section">
+                    <h2 class="domain-title">5. Statistics and Data Analysis</h2>
+
+                    <!-- Q33 -->
+                    <div class="question-box">
+                        <div class="question-header">Question 33</div>
+                        <div class="question-text">Find the mean of the data set: \(12, 15, 8, 22, 18\).</div>
+                        <div class="options-grid">
+                            <label class="option-label"><input type="radio" name="q33" value="A"> A) 14</label>
+                            <label class="option-label"><input type="radio" name="q33" value="B" data-correct="true"> B) 15</label>
+                            <label class="option-label"><input type="radio" name="q33" value="C"> C) 16</label>
+                            <label class="option-label"><input type="radio" name="q33" value="D"> D) 75</label>
+                        </div>
+                    </div>
+
+                    <!-- Q34 -->
+                    <div class="question-box">
+                        <div class="question-header">Question 34</div>
+                        <div class="question-text">Find the median of the data set: \(7, 3, 14, 19, 21, 9\).</div>
+                        <div class="options-grid">
+                            <label class="option-label"><input type="radio" name="q34" value="A"> A) 10.5</label>
+                            <label class="option-label"><input type="radio" name="q34" value="B" data-correct="true"> B) 11.5</label>
+                            <label class="option-label"><input type="radio" name="q34" value="C"> C) 12</label>
+                            <label class="option-label"><input type="radio" name="q34" value="D"> D) 14</label>
+                        </div>
+                    </div>
+
+                    <!-- Q35 -->
+                    <div class="question-box">
+                        <div class="question-header">Question 35</div>
+                        <div class="question-text">What is the range of the data set: \(4, 11, 7, 22, 15, 9, 3\)?</div>
+                        <div class="options-grid">
+                            <label class="option-label"><input type="radio" name="q35" value="A"> A) 15</label>
+                            <label class="option-label"><input type="radio" name="q35" value="B"> B) 18</label>
+                            <label class="option-label"><input type="radio" name="q35" value="C" data-correct="true"> C) 19</label>
+                            <label class="option-label"><input type="radio" name="q35" value="D"> D) 22</label>
+                        </div>
+                    </div>
+
+                    <!-- Q36 -->
+                    <div class="question-box">
+                        <div class="question-header">Question 36</div>
+                        <div class="question-text">In a box plot, what does the line inside the box represent?</div>
+                        <div class="options-grid">
+                            <label class="option-label"><input type="radio" name="q36" value="A"> A) The mean</label>
+                            <label class="option-label"><input type="radio" name="q36" value="B" data-correct="true"> B) The median</label>
+                            <label class="option-label"><input type="radio" name="q36" value="C"> C) The mode</label>
+                            <label class="option-label"><input type="radio" name="q36" value="D"> D) The range</label>
+                        </div>
+                    </div>
+
+                    <!-- Q37 -->
+                    <div class="question-box">
+                        <div class="question-header">Question 37</div>
+                        <div class="question-text">A scatter plot shows a strong downhill trend from left to right. What type of correlation does this indicate?</div>
+                        <div class="options-grid">
+                            <label class="option-label"><input type="radio" name="q37" value="A"> A) Strong positive correlation</label>
+                            <label class="option-label"><input type="radio" name="q37" value="B" data-correct="true"> B) Strong negative correlation</label>
+                            <label class="option-label"><input type="radio" name="q37" value="C"> C) No correlation</label>
+                            <label class="option-label"><input type="radio" name="q37" value="D"> D) Nonlinear correlation</label>
+                        </div>
+                    </div>
+
+                    <!-- Q38 -->
+                    <div class="question-box">
+                        <div class="question-header">Question 38</div>
+                        <div class="question-text">If a data set contains an extreme outlier on the high end, which measure of center is most resistant (least affected)?</div>
+                        <div class="options-grid">
+                            <label class="option-label"><input type="radio" name="q38" value="A"> A) Mean</label>
+                            <label class="option-label"><input type="radio" name="q38" value="B" data-correct="true"> B) Median</label>
+                            <label class="option-label"><input type="radio" name="q38" value="C"> C) Both mean and median are equally resistant</label>
+                            <label class="option-label"><input type="radio" name="q38" value="D"> D) Neither is resistant</label>
+                        </div>
+                    </div>
+
+                    <!-- Q39 -->
+                    <div class="question-box">
+                        <div class="question-header">Question 39</div>
+                        <div class="question-text">If you roll a standard 6-sided die, what is the probability of rolling a number greater than 4?</div>
+                        <div class="options-grid">
+                            <label class="option-label"><input type="radio" name="q39" value="A"> A) \(\frac{1}{6}\)</label>
+                            <label class="option-label"><input type="radio" name="q39" value="B" data-correct="true"> B) \(\frac{1}{3}\)</label>
+                            <label class="option-label"><input type="radio" name="q39" value="C"> C) \(\frac{1}{2}\)</label>
+                            <label class="option-label"><input type="radio" name="q39" value="D"> D) \(\frac{2}{3}\)</label>
+                        </div>
+                    </div>
+
+                    <!-- Q40 -->
+                    <div class="question-box">
+                        <div class="question-header">Question 40</div>
+                        <div class="question-text">A bag contains 3 red marbles, 5 blue marbles, and 2 green marbles. If one marble is drawn at random, what is the probability that it is NOT blue?</div>
+                        <div class="options-grid">
+                            <label class="option-label"><input type="radio" name="q40" value="A"> A) \(\frac{3}{10}\)</label>
+                            <label class="option-label"><input type="radio" name="q40" value="B"> B) \(\frac{2}{5}\)</label>
+                            <label class="option-label"><input type="radio" name="q40" value="C"> C) \(\frac{3}{5}\)</label>
+                            <label class="option-label"><input type="radio" name="q40" value="D" data-correct="true"> D) \(\frac{1}{2}\)</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="actions">
+                    <button type="button" onclick="calculateScore()">Submit Assessment</button>
+                </div>
+
+            </form>
+
+            <div id="results-card">
+                <h2>Assessment Results</h2>
+                <div class="score-display" id="score-text">0 / 40</div>
+                <p id="feedback-text"></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function calculateScore() {
+            let score = 0;
+            const totalQuestions = 40;
+            
+            for (let i = 1; i <= totalQuestions; i++) {
+                const radios = document.getElementsByName('q' + i);
+                for (let r of radios) {
+                    if (r.checked && r.getAttribute('data-correct') === 'true') {
+                        score++;
+                    }
+                }
+            }
+
+            const resultsCard = document.getElementById('results-card');
+            const scoreText = document.getElementById('score-text');
+            const feedbackText = document.getElementById('feedback-text');
+
+            scoreText.innerText = `${score} / ${totalQuestions} (${Math.round((score/totalQuestions)*100)}%)`;
+
+            if (score >= 34) {
+                feedbackText.innerText = "Fantastic job! You show a strong mastery of middle school math foundations and are well-prepared for success in Integrated Math 1.";
+            } else if (score >= 26) {
+                feedbackText.innerText = "Good effort! You have a solid grasp of most concepts, but you might want to review a few specific topics before jumping into 9th-grade math.";
+            } else {
+                feedbackText.innerText = "Keep working hard! You would benefit from a focused review of core middle school algebraic and proportional concepts before starting Integrated Math 1.";
+            }
+
+            resultsCard.style.display = 'block';
+            resultsCard.scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
