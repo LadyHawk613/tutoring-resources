@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Linear Algebra Cheat Sheet</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #FAF8F3;
+    --paper-raised: #FFFFFF;
+    --ink: #24272E;
+    --ink-soft: #565B66;
+    --rule: #DCD5C7;
+    --brass: #8A5A34;
+    --brass-soft: #F1E6D8;
+    --pine: #33594A;
+    --pine-soft: #E6EDE9;
+    --focus: #2A5CAA;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper: #1B1C20;
+      --paper-raised: #232428;
+      --ink: #EDEAE2;
+      --ink-soft: #A9A9A3;
+      --rule: #3A3B3F;
+      --brass: #D6A15E;
+      --brass-soft: #332B1E;
+      --pine: #7FB89C;
+      --pine-soft: #1E2C26;
+      --focus: #7FAEEB;
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper: #1B1C20;
+    --paper-raised: #232428;
+    --ink: #EDEAE2;
+    --ink-soft: #A9A9A3;
+    --rule: #3A3B3F;
+    --brass: #D6A15E;
+    --brass-soft: #332B1E;
+    --pine: #7FB89C;
+    --pine-soft: #1E2C26;
+    --focus: #7FAEEB;
+  }
+
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'IBM Plex Sans', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .page {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 2.5rem 1.5rem 4rem;
+  }
+
+  header.masthead {
+    border-bottom: 2px solid var(--ink);
+    padding-bottom: 1.1rem;
+    margin-bottom: 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: .5rem 1.5rem;
+  }
+  header.masthead h1 {
+    font-family: 'Source Serif 4', serif;
+    font-weight: 700;
+    font-size: clamp(1.6rem, 3.2vw, 2.35rem);
+    margin: 0;
+    letter-spacing: -0.01em;
+  }
+  header.masthead .sub {
+    font-size: .85rem;
+    color: var(--ink-soft);
+    font-style: italic;
+    font-family: 'Source Serif 4', serif;
+  }
+
+  .layout {
+    display: grid;
+    grid-template-columns: 230px 1fr;
+    gap: 2.25rem;
+    align-items: start;
+  }
+  @media (max-width: 760px) {
+    .layout { grid-template-columns: 1fr; }
+  }
+
+  nav.toc { position: sticky; top: 1.5rem; }
+  nav.toc .toc-label {
+    font-size: .72rem;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    color: var(--ink-soft);
+    margin: 0 0 .6rem .1rem;
+  }
+  .tablist {
+    list-style: none;
+    margin: 0; padding: 0;
+    display: flex;
+    flex-direction: column;
+    border-left: 2px solid var(--rule);
+  }
+  @media (max-width: 760px) {
+    .tablist {
+      flex-direction: row;
+      overflow-x: auto;
+      border-left: none;
+      border-bottom: 2px solid var(--rule);
+      padding-bottom: 2px;
+      -webkit-overflow-scrolling: touch;
+    }
+    .tablist::-webkit-scrollbar { height: 4px; }
+  }
+  .tab-btn {
+    all: unset;
+    cursor: pointer;
+    padding: .55rem .9rem;
+    font-size: .88rem;
+    font-family: 'IBM Plex Sans', sans-serif;
+    color: var(--ink-soft);
+    border-left: 2px solid transparent;
+    margin-left: -2px;
+    white-space: nowrap;
+    transition: color .12s ease, border-color .12s ease, background .12s ease;
+  }
+  @media (max-width: 760px) {
+    .tab-btn {
+      border-left: none;
+      border-bottom: 2px solid transparent;
+      margin-left: 0;
+      margin-bottom: -2px;
+    }
+  }
+  .tab-btn:hover { color: var(--ink); background: var(--brass-soft); }
+  .tab-btn:focus-visible { outline: 2px solid var(--focus); outline-offset: -2px; }
+  .tab-btn[aria-selected="true"] {
+    color: var(--brass);
+    font-weight: 600;
+    border-color: var(--brass);
+    background: var(--brass-soft);
+  }
+  .tab-btn .num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: .72rem;
+    color: var(--ink-soft);
+    margin-right: .5rem;
+  }
+  .tab-btn[aria-selected="true"] .num { color: var(--brass); }
+
+  main.panel {
+    background: var(--paper-raised);
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    padding: 1.9rem 2rem 2.2rem;
+    min-height: 420px;
+  }
+  @media (max-width: 500px) {
+    main.panel { padding: 1.3rem 1.1rem 1.6rem; }
+  }
+
+  .topic { display: none; }
+  .topic.active { display: block; animation: fade .18s ease; }
+  @media (prefers-reduced-motion: reduce) {
+    .topic.active { animation: none; }
+  }
+  @keyframes fade { from { opacity: 0; transform: translateY(3px); } to { opacity: 1; transform: none; } }
+
+  .topic h2 {
+    font-family: 'Source Serif 4', serif;
+    font-size: 1.4rem;
+    margin: 0 0 .3rem;
+    color: var(--ink);
+  }
+  .topic .kicker {
+    color: var(--pine);
+    font-size: .82rem;
+    margin: 0 0 1.3rem;
+  }
+
+  /* Math styling — plain HTML/CSS, no external renderer */
+  .m { font-family: 'Source Serif 4', serif; font-style: italic; }
+  .m sub, .m sup { font-style: normal; }
+  .eq {
+    font-family: 'Source Serif 4', serif;
+    font-style: italic;
+    font-size: 1.08rem;
+    text-align: center;
+    margin: 1.4rem 0;
+  }
+  .eq-row { display: block; margin: .3rem 0; }
+
+  .frac-note {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    vertical-align: middle;
+    margin: 0 .15rem;
+    font-size: .85em;
+  }
+  .brace-label {
+    text-align: center;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-style: normal;
+    font-size: .68em;
+    color: var(--ink-soft);
+    border-top: 1px solid var(--ink-soft);
+    padding-top: 2px;
+    margin-top: 2px;
+  }
+  .size-tag {
+    display: inline-block;
+    text-align: center;
+    vertical-align: bottom;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0 1.5rem;
+    font-size: .92rem;
+  }
+  th, td {
+    text-align: left;
+    padding: .55rem .7rem;
+    border-bottom: 1px solid var(--rule);
+    vertical-align: top;
+  }
+  th {
+    font-size: .74rem;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    color: var(--ink-soft);
+    font-weight: 600;
+    border-bottom: 2px solid var(--ink);
+  }
+  tr:last-child td { border-bottom: none; }
+  td .m, th .m { font-size: 1.02em; }
+
+  .callout {
+    background: var(--pine-soft);
+    border-left: 3px solid var(--pine);
+    padding: .8rem 1rem;
+    border-radius: 3px;
+    margin: 1rem 0 1.5rem;
+    font-size: .92rem;
+  }
+  .callout strong { color: var(--pine); }
+
+  .warn {
+    background: var(--brass-soft);
+    border-left: 3px solid var(--brass);
+    padding: .8rem 1rem;
+    border-radius: 3px;
+    margin: 1rem 0 1.5rem;
+    font-size: .92rem;
+  }
+  .warn strong { color: var(--brass); }
+
+  .fact-list { margin: 0 0 1rem; padding-left: 1.1rem; }
+  .fact-list li { margin-bottom: .5rem; line-height: 1.5; }
+
+  p { line-height: 1.6; }
+
+  ::selection { background: var(--brass-soft); }
+
+  footer {
+    margin-top: 2.5rem;
+    text-align: center;
+    font-size: .78rem;
+    color: var(--ink-soft);
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header class="masthead">
+    <h1>Linear Algebra Cheat Sheet</h1>
+    <span class="sub">key properties &amp; rules, by topic</span>
+  </header>
+
+  <div class="layout">
+    <nav class="toc" aria-label="Topics">
+      <p class="toc-label">Topics</p>
+      <ul class="tablist" role="tablist" aria-orientation="vertical" id="tablist"></ul>
+    </nav>
+
+    <main class="panel">
+      <div id="panels"></div>
+    </main>
+  </div>
+
+  <footer>Reference sheet for tutoring — organized for quick lookup mid-session.</footer>
+</div>
+
+<script>
+const topics = [
+  {
+    id: "arithmetic",
+    title: "Matrix Arithmetic",
+    kicker: "The basic rules of the road",
+    html: `
+      <table>
+        <thead><tr><th>Property</th><th>Rule</th></tr></thead>
+        <tbody>
+          <tr><td>Commutative (addition)</td><td><span class="m">A + B = B + A</span></td></tr>
+          <tr><td>Associative (addition)</td><td><span class="m">(A+B)+C = A+(B+C)</span></td></tr>
+          <tr><td>Associative (multiplication)</td><td><span class="m">(AB)C = A(BC)</span></td></tr>
+          <tr><td>Distributive (left)</td><td><span class="m">A(B+C) = AB + AC</span></td></tr>
+          <tr><td>Distributive (right)</td><td><span class="m">(A+B)C = AC + BC</span></td></tr>
+          <tr><td>Scalar distributes</td><td><span class="m">c(A+B) = cA + cB</span></td></tr>
+          <tr><td>Scalar association</td><td><span class="m">c(AB) = (cA)B = A(cB)</span></td></tr>
+        </tbody>
+      </table>
+      <div class="warn"><strong>The one that trips everyone up:</strong> matrix multiplication is <em>not</em> commutative. <span class="m">AB &ne; BA</span> in general — and sometimes only one order is even defined.</div>
+    `
+  },
+  {
+    id: "multiplication",
+    title: "Multiplication — Sizes",
+    kicker: "Whether a product is even defined",
+    html: `
+      <p>To multiply <span class="m">A &times; B</span>, the number of <strong>columns</strong> of <span class="m">A</span> must equal the number of <strong>rows</strong> of <span class="m">B</span>.</p>
+      <div class="eq">
+        <span class="size-tag"><span class="m">A</span><div class="brace-label">m&times;n</div></span>
+        &nbsp;&middot;&nbsp;
+        <span class="size-tag"><span class="m">B</span><div class="brace-label">n&times;p</div></span>
+        &nbsp;=&nbsp;
+        <span class="size-tag"><span class="m">AB</span><div class="brace-label">m&times;p</div></span>
+      </div>
+      <div class="callout"><strong>Memory trick:</strong> the "inner" numbers must match (<span class="m">n = n</span>); the "outer" numbers (<span class="m">m, p</span>) give the result's size.</div>
+      <p><strong>Column-by-column view:</strong> if <span class="m">B</span> has columns <span class="m">b<sub>1</sub>, b<sub>2</sub>, &hellip;</span>, then</p>
+      <p class="eq"><span class="m">AB = [ Ab<sub>1</sub>&nbsp;&nbsp;Ab<sub>2</sub>&nbsp;&nbsp;&hellip; ]</span></p>
+    `
+  },
+  {
+    id: "identity",
+    title: "The Identity Matrix",
+    kicker: "The matrix version of the number 1",
+    html: `
+      <p><span class="m">I<sub>n</sub></span> = the <span class="m">n&times;n</span> matrix with 1's on the diagonal, 0's elsewhere.</p>
+      <table>
+        <thead><tr><th>Property</th><th>Rule</th></tr></thead>
+        <tbody>
+          <tr><td>Multiplying by identity does nothing</td><td><span class="m">AI = A</span> and <span class="m">IA = A</span></td></tr>
+          <tr><td>Identity times a vector</td><td><span class="m">Ix = x</span></td></tr>
+        </tbody>
+      </table>
+      <div class="callout"><strong>Tutoring tip:</strong> "inserting" <span class="m">I</span> into a proof (as <span class="m">I = AD</span> or similar) is a classic trick — it changes nothing, but lets you swap in a more useful expression.</div>
+    `
+  },
+  {
+    id: "inverses",
+    title: "Inverses",
+    kicker: "Only square matrices are eligible — and not all of them",
+    html: `
+      <p><span class="m">A<sup>-1</sup></span> exists only if <span class="m">A</span> is <strong>square</strong> (<span class="m">n &times; n</span>) — and even then, not always.</p>
+      <table>
+        <thead><tr><th>Property</th><th>Rule</th></tr></thead>
+        <tbody>
+          <tr><td>Definition</td><td><span class="m">AA<sup>-1</sup> = A<sup>-1</sup>A = I</span></td></tr>
+          <tr><td>Inverse of a product (order flips!)</td><td><span class="m">(AB)<sup>-1</sup> = B<sup>-1</sup>A<sup>-1</sup></span></td></tr>
+          <tr><td>Inverse of an inverse</td><td><span class="m">(A<sup>-1</sup>)<sup>-1</sup> = A</span></td></tr>
+          <tr><td>Inverse of a transpose</td><td><span class="m">(A<sup>T</sup>)<sup>-1</sup> = (A<sup>-1</sup>)<sup>T</sup></span></td></tr>
+          <tr><td>Using inverse to solve <span class="m">Ax=b</span></td><td><span class="m">x = A<sup>-1</sup>b</span></td></tr>
+        </tbody>
+      </table>
+      <div class="callout"><strong>Key fact for square matrices:</strong> if <span class="m">A</span> has a left inverse <em>and</em> a right inverse, they must be the same matrix.</div>
+      <div class="warn"><strong>When A is not invertible ("singular"):</strong> happens when columns are linearly dependent, or equivalently when <span class="m">det(A) = 0</span>.</div>
+    `
+  },
+  {
+    id: "transpose",
+    title: "Transpose",
+    kicker: "Flipping rows and columns",
+    html: `
+      <p>Flips rows and columns: <span class="m">(A<sup>T</sup>)<sub>ij</sub> = A<sub>ji</sub></span></p>
+      <table>
+        <thead><tr><th>Property</th><th>Rule</th></tr></thead>
+        <tbody>
+          <tr><td>Transpose of a transpose</td><td><span class="m">(A<sup>T</sup>)<sup>T</sup> = A</span></td></tr>
+          <tr><td>Transpose of a sum</td><td><span class="m">(A+B)<sup>T</sup> = A<sup>T</sup> + B<sup>T</sup></span></td></tr>
+          <tr><td>Transpose of a product (order flips!)</td><td><span class="m">(AB)<sup>T</sup> = B<sup>T</sup>A<sup>T</sup></span></td></tr>
+          <tr><td>Scalar</td><td><span class="m">(cA)<sup>T</sup> = cA<sup>T</sup></span></td></tr>
+        </tbody>
+      </table>
+    `
+  },
+  {
+    id: "vectors",
+    title: "Span &amp; Independence",
+    kicker: "The vocabulary that everything else builds on",
+    html: `
+      <table>
+        <thead><tr><th>Concept</th><th>Meaning</th></tr></thead>
+        <tbody>
+          <tr><td>Linear combination</td><td><span class="m">c<sub>1</sub>v<sub>1</sub> + c<sub>2</sub>v<sub>2</sub> + &hellip; + c<sub>k</sub>v<sub>k</sub></span></td></tr>
+          <tr><td>Span</td><td>The set of <em>all</em> linear combinations of a set of vectors</td></tr>
+          <tr><td>Linearly independent</td><td>No vector in the set can be written as a combination of the others</td></tr>
+          <tr><td>Linearly dependent</td><td>The opposite — at least one vector is "redundant"</td></tr>
+        </tbody>
+      </table>
+      <div class="callout"><strong>Key spanning fact:</strong> <span class="m">k</span> vectors can span a space of dimension <em>at most</em> <span class="m">k</span>. To span all of <span class="m">&Ropf;<sup>m</sup></span>, you need <em>at least</em> <span class="m">m</span> vectors.</div>
+      <div class="callout"><strong>Key independence fact:</strong> at most <span class="m">m</span> linearly independent vectors can exist in <span class="m">&Ropf;<sup>m</sup></span>.</div>
+    `
+  },
+  {
+    id: "solving",
+    title: "Solving Ax = b",
+    kicker: "Existence and uniqueness of solutions",
+    html: `
+      <table>
+        <thead><tr><th>Situation</th><th>What it means</th></tr></thead>
+        <tbody>
+          <tr><td>Consistent system</td><td>At least one solution exists</td></tr>
+          <tr><td>Inconsistent system</td><td>No solution exists (row reduction leads to something like <span class="m">0 = 5</span>)</td></tr>
+          <tr><td>Unique solution</td><td>Exactly one solution (no free variables)</td></tr>
+          <tr><td>Infinitely many solutions</td><td>At least one free variable in the row-reduced system</td></tr>
+        </tbody>
+      </table>
+      <div class="callout"><strong>Existence for every b:</strong> happens exactly when <span class="m">A</span>'s columns span the whole output space (<span class="m">&Ropf;<sup>m</sup></span>) — requires <span class="m">A</span> to have <em>at least</em> as many columns as rows.</div>
+      <div class="callout"><strong>Uniqueness (when a solution exists):</strong> happens exactly when <span class="m">A</span>'s columns are linearly independent — requires <span class="m">A</span> to have <em>at most</em> as many columns as rows.</div>
+    `
+  },
+  {
+    id: "transformations",
+    title: "Linear Transformations",
+    kicker: "Two properties define the whole concept",
+    html: `
+      <p><span class="m">T: &Ropf;<sup>n</sup> &rarr; &Ropf;<sup>m</sup></span> is <strong>linear</strong> if, for all vectors <span class="m">u, v</span> and scalar <span class="m">c</span>:</p>
+      <table>
+        <thead><tr><th>Property</th><th>Rule</th></tr></thead>
+        <tbody>
+          <tr><td>Additivity</td><td><span class="m">T(u+v) = T(u) + T(v)</span></td></tr>
+          <tr><td>Scaling (homogeneity)</td><td><span class="m">T(cu) = cT(u)</span></td></tr>
+          <tr><td>Consequence</td><td><span class="m">T(0) = 0</span> always</td></tr>
+          <tr><td>Matrix form</td><td>Every linear transformation can be written as <span class="m">T(x) = Ax</span> for some matrix <span class="m">A</span></td></tr>
+        </tbody>
+      </table>
+      <div class="callout"><strong>Tutoring tip:</strong> additivity + scaling is the <em>whole</em> definition. Any proof about what <span class="m">T</span> "does" to a combination of vectors almost always starts by applying these two rules.</div>
+    `
+  },
+  {
+    id: "facts",
+    title: "Quick Sanity-Check Facts",
+    kicker: "Good for catching mistakes on the fly",
+    html: `
+      <ul class="fact-list">
+        <li><span class="m">A0 = 0</span> for any matrix <span class="m">A</span></li>
+        <li>If <span class="m">Ax = 0</span> only when <span class="m">x=0</span>, then <span class="m">A</span>'s columns are independent</li>
+        <li>A square matrix is invertible &hArr; its columns are independent &hArr; its columns span the whole space &hArr; <span class="m">det(A)&ne;0</span></li>
+        <li>The zero vector is <em>always</em> in the span of any set of vectors (use all coefficients = 0)</li>
+        <li>Two vectors are parallel (one is a scalar multiple of the other) &hArr; they're linearly dependent</li>
+      </ul>
+    `
+  },
+  {
+    id: "notation",
+    title: "Notation Reference",
+    kicker: "Decoding the symbols",
+    html: `
+      <table>
+        <thead><tr><th>Symbol</th><th>Meaning</th></tr></thead>
+        <tbody>
+          <tr><td><span class="m">v</span> (bold in print)</td><td>A vector</td></tr>
+          <tr><td><span class="m">A</span> (plain capital)</td><td>A matrix</td></tr>
+          <tr><td><span class="m">&forall;</span></td><td>"for all"</td></tr>
+          <tr><td><span class="m">&exist;</span></td><td>"there exists"</td></tr>
+          <tr><td><span class="m">&isin;</span></td><td>"is an element of" / "is in"</td></tr>
+          <tr><td><span class="m">&Ropf;<sup>n</sup></span></td><td>The set of all vectors with <span class="m">n</span> real-number entries</td></tr>
+          <tr><td>s.t. or : or |</td><td>"such that"</td></tr>
+          <tr><td><span class="m">&#9632;</span> or Q.E.D.</td><td>End of proof ("which was to be demonstrated")</td></tr>
+        </tbody>
+      </table>
+    `
+  }
+];
+
+const tablist = document.getElementById('tablist');
+const panels = document.getElementById('panels');
+
+topics.forEach((t, i) => {
+  const li = document.createElement('li');
+  const btn = document.createElement('button');
+  btn.className = 'tab-btn';
+  btn.setAttribute('role', 'tab');
+  btn.setAttribute('id', 'tab-' + t.id);
+  btn.setAttribute('aria-controls', 'panel-' + t.id);
+  btn.setAttribute('aria-selected', i === 0 ? 'true' : 'false');
+  btn.innerHTML = '<span class="num">' + String(i+1).padStart(2,'0') + '</span>' + t.title;
+  btn.addEventListener('click', () => selectTopic(t.id));
+  li.appendChild(btn);
+  tablist.appendChild(li);
+
+  const div = document.createElement('div');
+  div.className = 'topic' + (i === 0 ? ' active' : '');
+  div.id = 'panel-' + t.id;
+  div.setAttribute('role', 'tabpanel');
+  div.setAttribute('aria-labelledby', 'tab-' + t.id);
+  div.innerHTML = '<h2>' + t.title + '</h2><p class="kicker">' + t.kicker + '</p>' + t.html;
+  panels.appendChild(div);
+});
+
+function selectTopic(id) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.setAttribute('aria-selected', b.id === 'tab-' + id ? 'true' : 'false'));
+  document.querySelectorAll('.topic').forEach(p => p.classList.toggle('active', p.id === 'panel-' + id));
+}
+
+tablist.addEventListener('keydown', (e) => {
+  const buttons = Array.from(tablist.querySelectorAll('.tab-btn'));
+  const currentIndex = buttons.findIndex(b => b.getAttribute('aria-selected') === 'true');
+  let nextIndex = null;
+  if (e.key === 'ArrowDown' || e.key === 'ArrowRight') nextIndex = (currentIndex + 1) % buttons.length;
+  if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') nextIndex = (currentIndex - 1 + buttons.length) % buttons.length;
+  if (nextIndex !== null) {
+    e.preventDefault();
+    buttons[nextIndex].focus();
+    buttons[nextIndex].click();
+  }
+});
+</script>
+</body>
+</html>
