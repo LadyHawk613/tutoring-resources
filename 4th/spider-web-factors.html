@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spider Web Factors - 4th Grade Math Adventure</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Comic+Neue:wght@700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Fredoka', sans-serif;
+            background: radial-gradient(circle at center, #2e1045 0%, #150524 100%);
+            color: #f3e8ff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .chalkboard {
+            background: #1e112d;
+            border: 4px solid #7c3aed;
+            box-shadow: 0 0 25px rgba(124, 58, 237, 0.4), inset 0 0 15px rgba(0, 0, 0, 0.6);
+        }
+
+        .web-canvas-container {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            aspect-ratio: 1 / 1;
+            margin: 0 auto;
+        }
+
+        .dew-drop {
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+        }
+
+        .dew-drop:hover {
+            transform: scale(1.15);
+        }
+
+        @keyframes floatSpider {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-8px) rotate(2deg); }
+        }
+
+        .spider-anim {
+            animation: floatSpider 3s ease-in-out infinite;
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 15px rgba(234, 179, 8, 0.5); }
+            50% { box-shadow: 0 0 30px rgba(234, 179, 8, 0.9); }
+        }
+
+        .center-target {
+            animation: pulseGlow 2.5s infinite;
+        }
+
+        @keyframes webShake {
+            0%, 100% { transform: translate(0, 0); }
+            20% { transform: translate(-4px, 2px); }
+            40% { transform: translate(4px, -2px); }
+            60% { transform: translate(-2px, -2px); }
+            80% { transform: translate(2px, 2px); }
+        }
+
+        .shake-web {
+            animation: webShake 0.4s ease-in-out;
+        }
+    </style>
+</head>
+<body class="flex flex-col items-center justify-between p-4 min-h-screen">
+
+    <header class="w-full max-w-2xl flex flex-col md:flex-row items-center justify-between bg-purple-950/80 border border-purple-800 rounded-2xl p-4 shadow-xl backdrop-blur-md mb-4 gap-4">
+        <div class="flex items-center gap-3">
+            <div class="text-4xl">🕷️</div>
+            <div>
+                <h1 class="text-2xl font-bold text-amber-300 tracking-wide">Spider Web Factors</h1>
+                <p class="text-xs text-purple-300">Help Inky spin the correct factor webs!</p>
+            </div>
+        </div>
+
+        <div class="flex items-center gap-4 bg-purple-900/60 px-4 py-2 rounded-xl border border-purple-700/50">
+            <div class="text-center">
+                <div class="text-xs text-purple-300 font-semibold">SCORE</div>
+                <div id="scoreDisplay" class="text-xl font-bold text-amber-400">0</div>
+            </div>
+            <div class="h-8 w-px bg-purple-700"></div>
+            <div class="text-center">
+                <div class="text-xs text-purple-300 font-semibold">STREAK</div>
+                <div id="streakDisplay" class="text-xl font-bold text-emerald-400">🔥 0</div>
+            </div>
+            <div class="h-8 w-px bg-purple-700"></div>
+            <div class="text-center">
+                <div class="text-xs text-purple-300 font-semibold">LEVEL</div>
+                <div id="levelDisplay" class="text-xl font-bold text-cyan-300">1</div>
+            </div>
+        </div>
+    </header>
+
+    <main class="w-full max-w-2xl flex flex-col items-center flex-grow justify-center">
+        
+        <!-- Instructions / Status Banner -->
+        <div id="messageBanner" class="mb-4 bg-purple-900/70 border border-purple-600/60 rounded-xl px-6 py-3 text-center text-sm md:text-base font-semibold text-amber-200 shadow-lg transition-all duration-300">
+            Find all the <span class="text-white underline decoration-amber-400">factors</span> of the target number! Click the correct dew drops on the web.
+        </div>
+
+        <!-- The Spider Web Arena -->
+        <div class="chalkboard rounded-3xl p-6 w-full max-w-[460px] relative shadow-2xl overflow-hidden flex flex-col items-center" id="webContainer">
+            
+            <!-- Cute Spider Character Header -->
+            <div class="absolute top-3 left-4 flex items-center gap-2 z-20">
+                <div id="spiderAvatar" class="text-3xl spider-anim select-none">🕷️</div>
+                <div id="spiderSpeech" class="bg-purple-900/90 border border-purple-600 text-xs px-3 py-1 rounded-full text-purple-200 shadow">
+                    Spin with me!
+                </div>
+            </div>
+
+            <!-- SVG Spider Web background & interactive nodes -->
+            <div class="web-canvas-container mt-6">
+                <svg class="w-full h-full absolute inset-0 pointer-events-none" viewBox="0 0 400 400" id="webSvg">
+                    <!-- Web Strands rendered dynamically via JS -->
+                </svg>
+
+                <!-- Center Target Number Node -->
+                <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
+                    <div class="center-target w-20 h-20 rounded-full bg-gradient-to-br from-amber-400 to-amber-600 border-4 border-amber-200 flex flex-col items-center justify-center text-purple-950 font-black shadow-2xl">
+                        <span class="text-[10px] uppercase tracking-tighter opacity-80 leading-none">Target</span>
+                        <span id="targetNumberText" class="text-2xl leading-tight">12</span>
+                    </div>
+                </div>
+
+                <!-- Interactive Factor Dew Drops (Nodes) positioned dynamically -->
+                <div id="dewDropsContainer" class="absolute inset-0 z-20">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+
+            <!-- Bottom Control Panel inside Chalkboard -->
+            <div class="w-full mt-6 flex flex-col sm:flex-row items-center justify-between gap-3 pt-4 border-t border-purple-900/60">
+                <div class="text-xs text-purple-300 font-medium text-center sm:text-left">
+                    Found: <span id="foundCount" class="text-amber-300 font-bold">0</span> / <span id="totalFactorsCount" class="text-amber-300 font-bold">0</span> correct factors
+                </div>
+                <div class="flex gap-2 w-full sm:w-auto">
+                    <button onclick="app.checkAnswers()" class="flex-1 sm:flex-initial bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold py-2 px-5 rounded-xl shadow-lg border border-emerald-400/30 transition transform active:scale-95 text-sm">
+                        ✨ Check Web!
+                    </button>
+                    <button onclick="app.nextRound()" id="nextBtn" class="hidden flex-1 sm:flex-initial bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-purple-950 font-bold py-2 px-5 rounded-xl shadow-lg border border-amber-300/30 transition transform active:scale-95 text-sm">
+                        Next Web 🕸️
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <div id="completionModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-purple-950 border-2 border-amber-400 rounded-3xl p-6 max-w-sm w-full text-center shadow-2xl animate-bounce-short">
+            <div class="text-5xl mb-3">🎉</div>
+            <h3 class="text-2xl font-bold text-amber-300 mb-1">Web Mastered!</h3>
+            <p id="modalMessage" class="text-purple-200 text-sm mb-5">You successfully spun the correct factor web!</p>
+            <button onclick="app.closeModalAndNext()" class="w-full bg-gradient-to-r from-amber-400 to-orange-500 hover:from-amber-300 hover:to-orange-400 text-purple-950 font-extrabold py-3 rounded-2xl shadow-lg transition">
+                Spin Next Web 🚀
+            </button>
+        </div>
+    </div>
+
+    <script>
+        class SpiderFactorsGame {
+            constructor() {
+                this.score = 0;
+                this.streak = 0;
+                this.level = 1;
+                this.target = 12;
+                this.allFactors = [];
+                this.choices = [];
+                this.selectedChoices = new Set();
+                this.isComplete = false;
+
+                this.initLevelNumbers();
+                this.setupRound();
+            }
+
+            initLevelNumbers() {
+                // Number pools organized by difficulty/level
+                this.levelPools = {
+                    1: [6, 8, 10, 12, 14, 15, 16],
+                    2: [18, 20, 21, 24, 25, 27, 28],
+                    3: [30, 32, 36, 40, 42, 45, 48, 50]
+                };
+            }
+
+            getRandomNumber() {
+                const pool = this.levelPools[Math.min(this.level, 3)];
+                const randomIndex = Math.floor(Math.random() * pool.length);
+                return pool[randomIndex];
+            }
+
+            getFactors(n) {
+                const factors = [];
+                for (let i = 1; i <= n; i++) {
+                    if (n % i === 0) factors.push(i);
+                }
+                return factors;
+            }
+
+            getDistractors(n, actualFactors) {
+                const distractors = [];
+                // Generate numbers close to n or non-factors
+                for (let i = 1; i <= n + 6 && distractors.length < 4; i++) {
+                    if (!actualFactors.includes(i) && i > 0) {
+                        distractors.push(i);
+                    }
+                }
+                // Shuffle and pick 3-4 distractors
+                const shuffledDistractors = distractors.sort(() => 0.5 - Math.random()).slice(0, 4);
+                return shuffledDistractors;
+            }
+
+            setupRound() {
+                this.target = this.getRandomNumber();
+                this.allFactors = this.getFactors(this.target);
+                
+                const distractors = this.getDistractors(this.target, this.allFactors);
+                // Combine actual factors and distractors, then shuffle
+                let combined = [...this.allFactors, ...distractors];
+                // Ensure we have between 8 to 10 nodes for a nice web
+                while (combined.length < 8) {
+                    let rand = Math.floor(Math.random() * (this.target + 5)) + 1;
+                    if (!combined.includes(rand)) combined.push(rand);
+                }
+                this.choices = combined.sort(() => 0.5 - Math.random());
+                this.selectedChoices.clear();
+                this.isComplete = false;
+
+                document.getElementById('nextBtn').classList.add('hidden');
+                document.getElementById('completionModal').classList.add('hidden');
+                this.updateUI();
+                this.renderWeb();
+                this.setSpiderReaction("Spin the correct factors!", "🕷️");
+            }
+
+            updateUI() {
+                document.getElementById('scoreDisplay').textContent = this.score;
+                document.getElementById('streakDisplay').textContent = `🔥 ${this.streak}`;
+                document.getElementById('levelDisplay').textContent = this.level;
+                document.getElementById('targetNumberText').textContent = this.target;
+                document.getElementById('totalFactorsCount').textContent = this.allFactors.length;
+                
+                let foundCorrectCount = 0;
+                this.selectedChoices.forEach(num => {
+                    if (this.allFactors.includes(num)) foundCorrectCount++;
+                });
+                document.getElementById('foundCount').textContent = foundCorrectCount;
+            }
+
+            renderWeb() {
+                const svg = document.getElementById('webSvg');
+                const container = document.getElementById('dewDropsContainer');
+                svg.innerHTML = '';
+                container.innerHTML = '';
+
+                const totalNodes = this.choices.length;
+                const centerX = 200;
+                const centerY = 200;
+                const radius = 135; // Web circle radius
+
+                // Draw web background rings and spokes
+                let svgContent = '';
+                // Draw concentric web polygons/circles
+                for (let r = 45; r <= radius; r += 45) {
+                    svgContent += `<circle cx="${centerX}" cy="${centerY}" r="${r}" fill="none" stroke="#7c3aed" stroke-width="1.5" stroke-opacity="0.4" />`;
+                }
+
+                const coords = [];
+                for (let i = 0; i < totalNodes; i++) {
+                    const angle = (i * 2 * Math.PI) / totalNodes - Math.PI / 2;
+                    const x = centerX + radius * Math.cos(angle);
+                    const y = centerY + radius * Math.sin(angle);
+                    coords.push({ x, y });
+
+                    // Draw spoke from center to node
+                    svgContent += `<line x1="${centerX}" y1="${centerY}" x2="${x}" y2="${y}" stroke="#7c3aed" stroke-width="1.5" stroke-opacity="0.5" />`;
+                }
+
+                // Connect adjacent outer nodes to form web strands
+                for (let i = 0; i < totalNodes; i++) {
+                    const next = (i + 1) % totalNodes;
+                    svgContent += `<line x1="${coords[i].x}" y1="${coords[i].y}" x2="${coords[next].x}" y2="${coords[next].y}" stroke="#a78bfa" stroke-width="1" stroke-opacity="0.3" />`;
+                }
+
+                svg.innerHTML = svgContent;
+
+                // Render Dew Drop buttons at each node position
+                this.choices.forEach((num, index) => {
+                    const pos = coords[index];
+                    // Convert SVG coordinate space (400x400) to percentage for responsive positioning
+                    const leftPct = (pos.x / 400) * 100;
+                    const topPct = (pos.y / 400) * 100;
+
+                    const isSelected = this.selectedChoices.has(num);
+                    
+                    let bgClass = "bg-purple-900/90 border-purple-500 text-purple-200 hover:bg-purple-800";
+                    if (isSelected) {
+                        bgClass = "bg-amber-400 border-amber-200 text-purple-950 font-black shadow-lg shadow-amber-400/50 scale-105";
+                    }
+
+                    const dropEl = document.createElement('div');
+                    dropEl.className = `dew-drop absolute -translate-x-1/2 -translate-y-1/2 w-11 h-11 rounded-full border-2 flex items-center justify-center font-bold text-base transition-all duration-200 select-none ${bgClass}`;
+                    dropEl.style.left = `${leftPct}%`;
+                    dropEl.style.top = `${topPct}%`;
+                    dropEl.textContent = num;
+
+                    dropEl.onclick = () => this.toggleChoice(num);
+                    container.appendChild(dropEl);
+                });
+            }
+
+            toggleChoice(num) {
+                if (this.isComplete) return;
+
+                if (this.selectedChoices.has(num)) {
+                    this.selectedChoices.delete(num);
+                } else {
+                    this.selectedChoices.add(num);
+                }
+                this.renderWeb();
+                this.updateUI();
+            }
+
+            checkAnswers() {
+                if (this.isComplete) return;
+
+                let correctSelectedCount = 0;
+                let incorrectSelectedCount = 0;
+
+                this.selectedChoices.forEach(num => {
+                    if (this.allFactors.includes(num)) {
+                        correctSelectedCount++;
+                    } else {
+                        incorrectSelectedCount++;
+                    }
+                });
+
+                const totalRequired = this.allFactors.length;
+
+                if (incorrectSelectedCount === 0 && correctSelectedCount === totalRequired) {
+                    // Perfect! All correct factors selected and no mistakes
+                    this.isComplete = true;
+                    this.score += 50 + (this.streak * 10);
+                    this.streak++;
+                    
+                    if (this.score >= this.level * 150 && this.level < 3) {
+                        this.level++;
+                    }
+
+                    this.setSpiderReaction("Woohoo! Perfect web!", "🎉");
+                    this.showModal(`Fantastic! All correct factors of ${this.target} found!`);
+                    document.getElementById('nextBtn').classList.remove('hidden');
+                } else if (incorrectSelectedCount > 0) {
+                    // Mistakes made
+                    this.streak = 0;
+                    this.shakeWebEffect();
+                    this.setSpiderReaction("Oof! That's not a factor!", "😵‍💫");
+                    this.updateBanner(`Careful! You selected some incorrect numbers. Try again!`, "text-rose-300");
+                } else {
+                    // Incomplete
+                    this.setSpiderReaction("Keep going! Find more factors!", "🧐");
+                    const missing = totalRequired - correctSelectedCount;
+                    this.updateBanner(`Good start! You need to find ${missing} more factor(s).`, "text-amber-300");
+                }
+                this.updateUI();
+            }
+
+            shakeWebEffect() {
+                const container = document.getElementById('webContainer');
+                container.classList.add('shake-web');
+                setTimeout(() => {
+                    container.classList.remove('shake-web');
+                }, 400);
+            }
+
+            setSpiderReaction(text, emoji) {
+                document.getElementById('spiderSpeech').textContent = text;
+                document.getElementById('spiderAvatar').textContent = emoji;
+            }
+
+            updateBanner(text, colorClass = "text-amber-200") {
+                const banner = document.getElementById('messageBanner');
+                banner.className = `mb-4 bg-purple-900/70 border border-purple-600/60 rounded-xl px-6 py-3 text-center text-sm md:text-base font-semibold ${colorClass} shadow-lg transition-all duration-300`;
+                banner.innerHTML = text;
+            }
+
+            showModal(message) {
+                document.getElementById('modalMessage').textContent = message;
+                document.getElementById('completionModal').classList.remove('hidden');
+            }
+
+            closeModalAndNext() {
+                document.getElementById('completionModal').classList.add('hidden');
+                this.setupRound();
+            }
+
+            nextRound() {
+                this.setupRound();
+            }
+        }
+
+        // Initialize game on window load
+        let app;
+        window.onload = function() {
+            app = new SpiderFactorsGame();
+        };
+    </script>
+</body>
+</html>
