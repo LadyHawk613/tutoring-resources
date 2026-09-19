@@ -60,7 +60,7 @@
 <body class="h-screen w-screen flex flex-col justify-between p-2 select-none">
 
     <!-- TOP HEADER -->
-    <header class="w-full max-w-2xl mx-auto flex items-center justify-between bg-spiderCard/80 backdrop-blur border border-spiderAccent/40 rounded-xl px-4 py-2 shadow-lg">
+    <header class="w-full max-w-2xl mx-auto flex items-center justify-between bg-spiderCard/85 backdrop-blur border border-spiderAccent/40 rounded-xl px-4 py-2 shadow-lg">
         <div class="flex items-center space-x-2">
             <span class="text-2xl">🕷️</span>
             <div>
@@ -89,7 +89,7 @@
         </div>
 
         <!-- WEB CANVAS AREA (Fixed compact sizing to avoid scrolling) -->
-        <div id="game-board" class="relative w-[340px] h-[340px] sm:w-[380px] sm:h-[380px] flex items-center justify-center">
+        <div id="game-board" class="relative w-[320px] h-[320px] sm:w-[360px] sm:h-[360px] flex items-center justify-center">
             
             <!-- SVG Spider Web Background Lines -->
             <svg class="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 400 400">
@@ -100,7 +100,6 @@
                 
                 <!-- Radial Spokes -->
                 <g stroke="#7c3aed" stroke-width="1.5" stroke-opacity="0.4" id="web-spokes">
-                    <!-- Spoke lines dynamically injected or hardcoded through center 200,200 -->
                 </g>
             </svg>
 
@@ -112,7 +111,6 @@
 
             <!-- DEW DROP FACTOR NODES CONTAINER -->
             <div id="nodes-container" class="absolute inset-0">
-                <!-- Factor nodes will be dynamically positioned in a circle via JS -->
             </div>
         </div>
 
@@ -121,7 +119,7 @@
     </main>
 
     <!-- FOOTER CONTROLS -->
-    <footer class="w-full max-w-xl mx-auto flex items-center justify-between bg-spiderCard/80 backdrop-blur border border-spiderAccent/40 rounded-xl px-4 py-2 shadow-lg mb-1">
+    <footer class="w-full max-w-xl mx-auto flex items-center justify-between bg-spiderCard/85 backdrop-blur border border-spiderAccent/40 rounded-xl px-4 py-2 shadow-lg mb-1">
         <div class="text-xs text-purple-300">
             Found: <span id="found-count" class="font-bold text-white">0</span> / <span id="total-factors-count" class="font-bold text-spiderGold">6</span> correct factors
         </div>
@@ -133,9 +131,9 @@
 
     <!-- LEVEL COMPLETE / CELEBRATION MODAL -->
     <div id="modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
-        <div class="bg-spiderCard border-2 border-spiderGold rounded-2xl p-6 max-w-sm w-full text-center shadow-2xl animate-bounce-subtle">
+        <div class="bg-spiderCard border-2 border-spiderGold rounded-2xl p-6 max-w-sm w-full text-center shadow-2xl">
             <div class="text-5xl mb-2">🎉🕷️</div>
- magnífico! <h2 id="modal-title" class="chalk-title text-3xl text-spiderGold mb-1">Web Mastered!</h2>
+            <h2 id="modal-title" class="chalk-title text-3xl text-spiderGold mb-1">Web Mastered!</h2>
             <p id="modal-text" class="text-sm text-purple-200 mb-4">You found all the correct factors for this number!</p>
             <button onclick="nextLevel()" class="w-full bg-spiderGold hover:bg-amber-400 text-spiderDark font-bold py-3 rounded-xl shadow-lg transition text-base cursor-pointer">
                 Next Web 🕸️
@@ -145,7 +143,6 @@
 
     <!-- GAME LOGIC SCRIPT -->
     <script>
-        // Game State
         let currentLevel = 1;
         let score = 0;
         let streak = 0;
@@ -154,7 +151,6 @@
         let correctFactors = [];
         let selectedNumbers = new Set();
 
-        // Level target numbers suitable for 4th Grade
         const levelTargets = [12, 16, 18, 20, 24, 30, 36, 40, 48, 50];
 
         function getFactors(n) {
@@ -166,31 +162,25 @@
         }
 
         function initGame() {
-            // Pick target based on level (looping if past array length)
             const targetIndex = (currentLevel - 1) % levelTargets.length;
             targetNum = levelTargets[targetIndex];
             correctFactors = getFactors(targetNum);
             selectedNumbers.clear();
 
-            document.getElementById('target-numberinnerText' || 'target-number').innerText = targetNum;
+            document.getElementById('target-number').innerText = targetNum;
             
-            // Generate distractor numbers (non-factors) to fill out 10 total nodes around the web
             let distractors = [];
             for (let i = 2; i <= Math.max(targetNum + 5, 20); i++) {
                 if (!correctFactors.includes(i) && i !== targetNum && !distractors.includes(i)) {
                     distractors.push(i);
                 }
             }
-            // Shuffle distractors and pick enough to make total nodes = 10
             distractors.sort(() => Math.random() - 0.5);
             const neededDistractorsCount = Math.max(4, 10 - correctFactors.length);
             let selectedDistractors = distractors.slice(0, neededDistractorsCount);
 
-            // Combine correct factors and distractors, then shuffle
             allPossibleNumbers = [...correctFactors, ...selectedDistractors].sort(() => Math.random() - 0.5);
-            // Limit to max 10 nodes for clean circular layout
             if (allPossibleNumbers.length > 10) {
-                // Ensure all correct factors are kept, trim excess distractors if needed
                 let onlyDistractors = allPossibleNumbers.filter(n => !correctFactors.includes(n));
                 onlyDistractors = onlyDistractors.slice(0, 10 - correctFactors.length);
                 allPossibleNumbers = [...correctFactors, ...onlyDistractors].sort(() => Math.random() - 0.5);
@@ -213,19 +203,16 @@
             spokesGroup.innerHTML = '';
 
             const totalNodes = allPossibleNumbers.length;
-            const radius = 130; // Distance from center (200, 200 in 400x400 viewBox)
+            const radius = 130;
             const centerX = 200;
             const centerY = 200;
 
             allPossibleNumbers.forEach((num, index) => {
                 const angle = (index / totalNodes) * 2 * Math.PI - Math.PI / 2;
                 
-                // Calculate pixel position inside the 380x380 board (scaled to container)
-                // Board center is 50%, offset by radius
                 const xPct = 50 + (Math.cos(angle) * (radius / 200) * 44);
                 const yPct = 50 + (Math.sin(angle) * (radius / 200) * 44);
 
-                // Add SVG spoke line from center to node
                 const nodeX = centerX + Math.cos(angle) * radius;
                 const nodeY = centerY + Math.sin(angle) * radius;
                 const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
@@ -238,7 +225,6 @@
                 line.setAttribute('stroke-opacity', '0.4');
                 spokesGroup.appendChild(line);
 
-                // Create HTML Node Element (Stationary on hover, clean highlight)
                 const nodeEl = document.createElement('div');
                 const isSelected = selectedNumbers.has(num);
                 
@@ -264,7 +250,6 @@
                 selectedNumbers.add(num);
             }
             
-            // Update UI for this node instantly
             const isSelected = selectedNumbers.has(num);
             element.className = `absolute w-11 h-11 sm:w-12 sm:h-12 -ml-5.5 -mt-5.5 rounded-full flex items-center justify-center font-bold text-base sm:text-lg cursor-pointer transition-colors duration-200 shadow-md border-2 ${
                 isSelected 
@@ -291,7 +276,6 @@
             const boardEl = document.getElementById('game-board');
 
             if (incorrectSelected || correctSelected < correctFactors.length) {
-                // Shake board on error
                 boardEl.classList.add('animate-shake');
                 setTimeout(() => boardEl.classList.remove('animate-shake'), 400);
 
@@ -306,7 +290,6 @@
                     feedbackEl.innerText = `You found ${correctSelected} out of ${correctFactors.length} factors. Keep looking!`;
                 }
             } else {
-                // Success!
                 streak++;
                 score += 100 + (streak * 10);
                 updateStats();
@@ -314,7 +297,6 @@
                 feedbackEl.className = "h-6 text-center text-xs font-semibold text-spiderTeal";
                 feedbackEl.innerText = "Fantastic job! Web completed!";
 
-                // Show celebration modal
                 setTimeout(() => {
                     const modal = document.getElementById('modal');
                     modal.classList.remove('hidden');
@@ -334,7 +316,6 @@
             initGame();
         }
 
-        // Initialize on load
         window.onload = initGame;
     </script>
 </body>
