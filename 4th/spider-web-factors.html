@@ -227,8 +227,8 @@
 
                 const nodeEl = document.createElement('div');
                 const isSelected = selectedNumbers.has(num);
-                
-                nodeEl.className = `absolute w-11 h-11 sm:w-12 sm:h-12 -ml-5.5 -mt-5.5 rounded-full flex items-center justify-center font-bold text-base sm:text-lg cursor-pointer transition-colors duration-200 shadow-md border-2 ${
+
+                nodeEl.className = `absolute w-11 h-11 sm:w-12 sm:h-12 transform -translate-x-1/2 -translate-y-1/2 rounded-full flex items-center justify-center font-bold text-base sm:text-lg cursor-pointer transition-colors duration-200 shadow-md border-2 ${
                     isSelected 
                         ? 'bg-spiderTeal text-white border-white ring-4 ring-spiderTeal/40 scale-105' 
                         : 'bg-spiderPurple hover:bg-spiderAccent text-purple-100 border-spiderAccent/80'
