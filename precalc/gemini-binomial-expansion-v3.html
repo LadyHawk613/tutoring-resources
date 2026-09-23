@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MathMaster: Binomial Expansion</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Cabin+Sketch:wght@700&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- MathJax Configuration & Script -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['\\(', '\\)']],
+                displayMath: [['$$', '$$']]
+            },
+            startup: {
+                pageReady: () => {
+                    return MathJax.startup.defaultPageReady().then(() => {
+                        console.log('MathJax initial typesetting complete');
+                    });
+                }
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        :root {
+            --bg-dark: #0f0c1b;
+            --panel-bg: #1e1b4b;
+            --panel-border: #311060;
+            --accent-purple: #9333ea;
+            --accent-light: #c084fc;
+            --text-main: #f3f4f6;
+            --text-muted: #cbd5e1;
+            --card-inner: #171238;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            margin: 0;
+            padding: 1.5rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(135deg, #2e1065, #1e1b4b);
+            padding: 1.5rem 2rem;
+            border-radius: 16px;
+            border: 1px solid var(--panel-border);
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .header-title h1 {
+            font-family: 'Cabin Sketch', cursive;
+            font-size: 2.2rem;
+            margin: 0;
+            color: #ffffff;
+            letter-spacing: 1px;
+        }
+
+        .header-title p {
+            margin: 0.2rem 0 0 0;
+            font-size: 0.95rem;
+            color: var(--text-muted);
+        }
+
+        .progress-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            background: rgba(15, 12, 27, 0.6);
+            padding: 0.6rem 1.2rem;
+            border-radius: 30px;
+            border: 1px solid rgba(192, 132, 252, 0.2);
+        }
+
+        .progress-bar-bg {
+            width: 120px;
+            height: 8px;
+            background: #311060;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-purple), var(--accent-light));
+            width: 11.11%;
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--accent-light);
+            white-space: nowrap;
+        }
+
+        .main-layout {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 1.5rem;
+        }
+
+        @media (max-width: 900px) {
+            .main-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background: var(--panel-bg);
+            border: 1px solid var(--panel-border);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+
+        .step-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid #311060;
+            padding-bottom: 1rem;
+        }
+
+        .step-badge {
+            background: var(--accent-purple);
+            color: white;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .step-title {
+            font-family: 'Cabin Sketch', cursive;
+            font-size: 1.8rem;
+            margin: 0;
+            color: #fff;
+        }
+
+        .btn-restart {
+            background: transparent;
+            border: 1px solid rgba(192, 132, 252, 0.4);
+            color: var(--text-muted);
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+
+        .btn-restart:hover {
+            border-color: var(--accent-light);
+            color: #fff;
+            background: rgba(192, 132, 252, 0.1);
+        }
+
+        .content-box {
+            background: var(--card-inner);
+            border: 1px solid #311060;
+            padding: 1.2rem;
+            border-radius: 10px;
+            margin: 1rem 0;
+            text-align: center;
+            font-size: 1.1rem;
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid #311060;
+        }
+
+        .nav-btn {
+            background: var(--accent-purple);
+            color: white;
+            border: none;
+            padding: 0.6rem 1.4rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            transition: background 0.2s;
+        }
+
+        .nav-btn:hover {
+            background: #7e22ce;
+        }
+
+        .nav-btn:disabled {
+            background: #311060;
+            color: #64748b;
+            cursor: not-allowed;
+        }
+
+        .sidebar-card {
+            background: var(--panel-bg);
+            border: 1px solid var(--panel-border);
+            border-radius: 16px;
+            padding: 1.5rem;
+        }
+
+        .sidebar-title {
+            font-family: 'Cabin Sketch', cursive;
+            font-size: 1.4rem;
+            margin-top: 0;
+            color: #fff;
+            border-bottom: 1px solid #311060;
+            padding-bottom: 0.5rem;
+        }
+
+        .pascal-row {
+            display: flex;
+            justify-content: center;
+            gap: 0.8rem;
+            margin: 0.4rem 0;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .pascal-num {
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: rgba(147, 51, 234, 0.15);
+            color: var(--accent-light);
+        }
+
+        .pascal-num.active {
+            background: var(--accent-purple);
+            color: white;
+            box-shadow: 0 0 10px rgba(147, 51, 234, 0.5);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <div class="header-title">
+            <h1>MathMaster: Binomial Expansion</h1>
+            <p>Guided Interactive Practice for \(f(x) = (x - 3)^4\)</p>
+        </div>
+        <div class="progress-container">
+            <span class="progress-text" id="progressLabel">Step 1 of 9</span>
+            <div class="progress-bar-bg">
+                <div class="progress-bar-fill" id="progressBarFill" style="width: 11.11%;"></div>
+            </div>
+        </div>
+    </header>
+
+    <div class="main-layout">
+        <!-- Main Step Card -->
+        <div class="card" id="stepCardContainer">
+            <!-- Dynamic Step Content Injected Here -->
+        </div>
+
+        <!-- Sidebar / Pascal's Triangle -->
+        <div class="sidebar-card">
+            <h3 class="sidebar-title">Pascal's Triangle</h3>
+            <p style="font-size: 0.85rem; color: var(--text-muted);">Quick coefficient lookup:</p>
+            <div style="margin-top: 1rem; background: var(--card-inner); padding: 1rem; border-radius: 10px; border: 1px solid #311060;">
+                <div class="pascal-row"><span class="pascal-num">1</span></div>
+                <div class="pascal-row"><span class="pascal-num">1</span><span class="pascal-num">1</span></div>
+                <div class="pascal-row"><span class="pascal-num">1</span><span class="pascal-num">2</span><span class="pascal-num">1</span></div>
+                <div class="pascal-row"><span class="pascal-num">1</span><span class="pascal-num">3</span><span class="pascal-num">3</span><span class="pascal-num">1</span></div>
+                <div class="pascal-row">
+                    <span class="pascal-num active">1</span>
+                    <span class="pascal-num active">4</span>
+                    <span class="pascal-num active">6</span>
+                    <span class="pascal-num active">4</span>
+                    <span class="pascal-num active">1</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let currentStep = 1;
+    const totalSteps = 9;
+
+    const stepsData = {
+        1: {
+            title: "Understanding the Binomial Theorem",
+            badge: "Step 1",
+            content: `
+                <p>We want to expand the binomial function \\((x - 3)^4\\) into its standard polynomial form, and compare it with \\(g(x) = x^4 - 12x^3 + 54x^2 - 108x + 81\\).</p>
+                <div style="background: rgba(147, 51, 234, 0.1); border-left: 4px solid var(--accent-purple); padding: 1rem; border-radius: 0 8px 8px 0; margin: 1rem 0; text-align: left;">
+                    <strong>💡 Key Concept:</strong><br>
+                    When expanding \\((a + b)^n\\), each term follows the general formula:
+                    <div class="content-box">$$\\binom{n}{k} a^{n-k} b^k$$</div>
+                    Here, \\(a = x\\), \\(b = -3\\), and \\(n = 4\\). As index \\(k\\) ranges from \\(0\\) to \\(4\\), we generate all \\(5\\) terms of the expansion.
+                </div>
+            `
+        },
+        2: {
+            title: "First Term (k = 0)",
+            badge: "Step 2",
+            content: `
+                <p>Let's calculate the first term where \\(k = 0\\):</p>
+                <div class="content-box">
+                    $$\\binom{4}{0} x^{4-0} (-3)^0$$
+                </div>
+                <p><strong>Evaluation:</strong></p>
+                <ul>
+                    <li>\\(\\binom{4}{0} = \\frac{4!}{0!4!} = 1\\)</li>
+                    <li>\\(x^4 \\cdot 1 = x^4\\)</li>
+                </ul>
+                <div class="content-box" style="background: rgba(147, 51, 234, 0.15); color: #e9d5ff;">
+                    <strong>Result:</strong> \\(1x^4\\)
+                </div>
+            `
+        },
+        3: {
+            title: "Second Term (k = 1)",
+            badge: "Step 3",
+            content: `
+                <p>Next, calculate the second term where \\(k = 1\\):</p>
+                <div class="content-box">
+                    $$\\binom{4}{1} x^{4-1} (-3)^1$$
+                </div>
+                <p><strong>Evaluation:</strong></p>
+                <ul>
+                    <li>\\(\\binom{4}{1} = \\frac{4!}{1!3!} = 4\\)</li>
+                    <li>\\(4 \\cdot x^3 \\cdot (-3) = -12x^3\\)</li>
+                </ul>
+                <div class="content-box" style="background: rgba(147, 51, 234, 0.15); color: #e9d5ff;">
+                    <strong>Result:</strong> \\(-12x^3\\)
+                </div>
+            `
+        },
+        4: {
+            title: "Third Term (k = 2)",
+            badge: "Step 4",
+            content: `
+                <p>Calculate the middle term where \\(k = 2\\):</p>
+                <div class="content-box">
+                    $$\\binom{4}{2} x^{4-2} (-3)^2$$
+                </div>
+                <p><strong>Evaluation:</strong></p>
+                <ul>
+                    <li>\\(\\binom{4}{2} = \\frac{4!}{2!2!} = 6\\)</li>
+                    <li>\\(6 \\cdot x^2 \\cdot 9 = 54x^2\\)</li>
+                </ul>
+                <div class="content-box" style="background: rgba(147, 51, 234, 0.15); color: #e9d5ff;">
+                    <strong>Result:</strong> \\(54x^2\\)
+                </div>
+            `
+        },
+        5: {
+            title: "Fourth & Fifth Terms (k = 3 and k = 4)",
+            badge: "Step 5",
+            content: `
+                <p>Calculate the final two terms:</p>
+                <div class="content-box">
+                    <strong>\\(k = 3\\):</strong> \\(\\binom{4}{3} x^1 (-3)^3 = 4 \\cdot x \\cdot (-27) = -108x\\)<br><br>
+                    <strong>\\(k = 4\\):</strong> \\(\\binom{4}{4} x^0 (-3)^4 = 1 \\cdot 1 \\cdot 81 = 81\\)
+                </div>
+            `
+        },
+        6: {
+            title: "Final Polynomial Form",
+            badge: "Step 6",
+            content: `
+                <p>Combining all expanded terms together gives our standard form polynomial:</p>
+                <div class="content-box" style="background: rgba(147, 51, 234, 0.2); border: 2px solid var(--accent-purple);">
+                    $$f(x) = x^4 - 12x^3 + 54x^2 - 108x + 81$$
+                </div>
+                <p style="text-align: center; color: var(--accent-light); margin-top: 1rem;">✨ This matches \\(g(x)\\) perfectly! Therefore, \\(f\\) and \\(g\\) are equivalent functions.</p>
+            `
+        },
+        7: {
+            title: "Practice Problem 1",
+            badge: "Practice 1",
+            content: `
+                <p>Expand the binomial expression: \\((x + 2)^3\\)</p>
+                <p style="font-size: 0.9rem; color: var(--text-muted);">Work out your expansion on paper, then click the button below to check your steps and solution.</p>
+                <div style="margin: 1.2rem 0;">
+                    <button class="nav-btn" onclick="toggleSolution(1)">Reveal Solution & Steps</button>
+                </div>
+                <div id="solution1" style="display: none; background: rgba(147, 51, 234, 0.15); border: 1px solid var(--accent-purple); padding: 1.2rem; border-radius: 10px; margin-top: 1rem; text-align: left;">
+                    <strong>✅ Solution & Step-by-Step Breakdown:</strong>
+                    <div class="content-box" style="margin-top: 0.8rem;">
+                        $$\\binom{3}{0} x^3(2)^0 + \\binom{3}{1} x^2(2)^1 + \\binom{3}{2} x^1(2)^2 + \\binom{3}{3} x^0(2)^3$$
+                    </div>
+                    <ul style="line-height: 1.8;">
+                        <li><strong>Term 1 (\\(k=0\\)):</strong> \\(1 \\cdot x^3 \\cdot 1 = x^3\\)</li>
+                        <li><strong>Term 2 (\\(k=1\\)):</strong> \\(3 \\cdot x^2 \\cdot 2 = 6x^2\\)</li>
+                        <li><strong>Term 3 (\\(k=2\\)):</strong> \\(3 \\cdot x \\cdot 4 = 12x\\)</li>
+                        <li><strong>Term 4 (\\(k=3\\)):</strong> \\(1 \\cdot 1 \\cdot 8 = 8\\)</li>
+                    </ul>
+                    <div class="content-box" style="background: rgba(147, 51, 234, 0.3); font-weight: 600; margin-top: 1rem;">
+                        Final Answer: \\(x^3 + 6x^2 + 12x + 8\\)
+                    </div>
+                </div>
+            `
+        },
+        8: {
+            title: "Practice Problem 2",
+            badge: "Practice 2",
+            content: `
+                <p>Expand the binomial expression: \\((x + 1)^4\\)</p>
+                <p style="font-size: 0.9rem; color: var(--text-muted);">Work out your expansion on paper, then click the button below to check your steps and solution.</p>
+                <div style="margin: 1.2rem 0;">
+                    <button class="nav-btn" onclick="toggleSolution(2)">Reveal Solution & Steps</button>
+                </div>
+                <div id="solution2" style="display: none; background: rgba(147, 51, 234, 0.15); border: 1px solid var(--accent-purple); padding: 1.2rem; border-radius: 10px; margin-top: 1rem; text-align: left;">
+                    <strong>✅ Solution & Step-by-Step Breakdown:</strong>
+                    <div class="content-box" style="margin-top: 0.8rem;">
+                        $$\\binom{4}{0} x^4(1)^0 + \\binom{4}{1} x^3(1)^1 + \\binom{4}{2} x^2(1)^2 + \\binom{4}{3} x^1(1)^3 + \\binom{4}{4} x^0(1)^4$$
+                    </div>
+                    <ul style="line-height: 1.8;">
+                        <li><strong>Term 1 (\\(k=0\\)):</strong> \\(1 \\cdot x^4 \\cdot 1 = x^4\\)</li>
+                        <li><strong>Term 2 (\\(k=1\\)):</strong> \\(4 \\cdot x^3 \\cdot 1 = 4x^3\\)</li>
+                        <li><strong>Term 3 (\\(k=2\\)):</strong> \\(6 \\cdot x^2 \\cdot 1 = 6x^2\\)</li>
+                        <li><strong>Term 4 (\\(k=3\\)):</strong> \\(4 \\cdot x \\cdot 1 = 4x\\)</li>
+                        <li><strong>Term 5 (\\(k=4\\)):</strong> \\(1 \\cdot 1 \\cdot 1 = 1\\)</li>
+                    </ul>
+                    <div class="content-box" style="background: rgba(147, 51, 234, 0.3); font-weight: 600; margin-top: 1rem;">
+                        Final Answer: \\(x^4 + 4x^3 + 6x^2 + 4x + 1\\)
+                    </div>
+                </div>
+            `
+        },
+        9: {
+            title: "Practice Problem 3",
+            badge: "Practice 3",
+            content: `
+                <p>Expand the binomial expression: \\((x - 2)^3\\)</p>
+                <p style="font-size: 0.9rem; color: var(--text-muted);">Work out your expansion on paper, then click the button below to check your steps and solution.</p>
+                <div style="margin: 1.2rem 0;">
+                    <button class="nav-btn" onclick="toggleSolution(3)">Reveal Solution & Steps</button>
+                </div>
+                <div id="solution3" style="display: none; background: rgba(147, 51, 234, 0.15); border: 1px solid var(--accent-purple); padding: 1.2rem; border-radius: 10px; margin-top: 1rem; text-align: left;">
+                    <strong>✅ Solution & Step-by-Step Breakdown:</strong>
+                    <div class="content-box" style="margin-top: 0.8rem;">
+                        $$\\binom{3}{0} x^3(-2)^0 + \\binom{3}{1} x^2(-2)^1 + \\binom{3}{2} x^1(-2)^2 + \\binom{3}{3} x^0(-2)^3$$
+                    </div>
+                    <ul style="line-height: 1.8;">
+                        <li><strong>Term 1 (\\(k=0\\)):</strong> \\(1 \\cdot x^3 \\cdot 1 = x^3\\)</li>
+                        <li><strong>Term 2 (\\(k=1\\)):</strong> \\(3 \\cdot x^2 \\cdot (-2) = -6x^2\\)</li>
+                        <li><strong>Term 3 (\\(k=2\\)):</strong> \\(3 \\cdot x \\cdot 4 = 12x\\)</li>
+                        <li><strong>Term 4 (\\(k=3\\)):</strong> \\(1 \\cdot 1 \\cdot (-8) = -8\\)</li>
+                    </ul>
+                    <div class="content-box" style="background: rgba(147, 51, 234, 0.3); font-weight: 600; margin-top: 1rem;">
+                        Final Answer: \\(x^3 - 6x^2 + 12x - 8\\)
+                    </div>
+                </div>
+            `
+        }
+    };
+
+    function renderStep() {
+        const step = stepsData[currentStep];
+        const container = document.getElementById('stepCardContainer');
+        
+        container.innerHTML = `
+            <div class="step-header">
+                <div>
+                    <span class="step-badge">${step.badge}</span>
+                    <h2 class="step-title">${step.title}</h2>
+                </div>
+                <button class="btn-restart" onclick="goToStep(1)">↺ Restart</button>
+            </div>
+            <div class="step-body">
+                ${step.content}
+            </div>
+            <div class="nav-buttons">
+                <button class="nav-btn" onclick="changeStep(-1)" ${currentStep === 1 ? 'disabled' : ''}>← Previous</button>
+                <button class="nav-btn" onclick="changeStep(1)" ${currentStep === totalSteps ? 'disabled' : ''}>Next →</button>
+            </div>
+        `;
+
+        // Update progress bar
+        document.getElementById('progressLabel').innerText = `Step ${currentStep} of ${totalSteps}`;
+        document.getElementById('progressBarFill').style.width = `${(currentStep / totalSteps) * 100}%`;
+
+        // Typeset MathJax
+        if (window.MathJax) {
+            MathJax.typesetPromise();
+        }
+    }
+
+    function toggleSolution(num) {
+        const sol = document.getElementById('solution' + num);
+        if (sol.style.display === 'none') {
+            sol.style.display = 'block';
+        } else {
+            sol.style.display = 'none';
+        }
+        if (window.MathJax) {
+            MathJax.typesetPromise();
+        }
+    }
+
+    function changeStep(direction) {
+        currentStep += direction;
+        if (currentStep < 1) currentStep = 1;
+        if (currentStep > totalSteps) currentStep = totalSteps;
+        renderStep();
+    }
+
+    function goToStep(stepNum) {
+        currentStep = stepNum;
+        renderStep();
+    }
+
+    // Initial render
+    window.onload = () => {
+        renderStep();
+    };
+</script>
+
+</body>
+</html>
