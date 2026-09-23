@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rational Functions Study Guide</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Cabin+Sketch:wght@700&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- MathJax for Vertical Fractions -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        :root {
+            --primary-purple: #581c87;
+            --light-purple: #f3e8ff;
+            --accent-purple: #7e22ce;
+            --dark-slate: #1e1b4b;
+            --bg-color: #faf5ff;
+            --card-bg: #ffffff;
+            --text-color: #334155;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            background: linear-gradient(135deg, var(--primary-purple), var(--dark-slate));
+            color: white;
+            padding: 2.5rem;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(88, 28, 135, 0.2);
+            margin-bottom: 2rem;
+        }
+
+        header h1 {
+            font-family: 'Cabin Sketch', cursive;
+            font-size: 3rem;
+            margin: 0 0 0.5rem 0;
+            letter-spacing: 2px;
+        }
+
+        header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin: 0;
+        }
+
+        section {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            margin-bottom: 1.5rem;
+            border-left: 6px solid var(--accent-purple);
+        }
+
+        h2 {
+            color: var(--primary-purple);
+            font-family: 'Cabin Sketch', cursive;
+            font-size: 2rem;
+            margin-top: 0;
+            border-bottom: 2px solid var(--light-purple);
+            padding-bottom: 0.5rem;
+        }
+
+        h3 {
+            color: var(--dark-slate);
+            font-size: 1.2rem;
+            margin-top: 1.5rem;
+        }
+
+        ul {
+            padding-left: 1.5rem;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+        }
+
+        .formula-box {
+            background: var(--light-purple);
+            border-left: 4px solid var(--primary-purple);
+            padding: 1rem;
+            border-radius: 0 8px 8px 0;
+            font-size: 1.1rem;
+            color: var(--dark-slate);
+            margin: 1rem 0;
+            text-align: center;
+        }
+
+        .practice-card {
+            background: #ffffff;
+            border: 1px solid #e9d5ff;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .solution {
+            background: #f8fafc;
+            border-left: 4px solid #64748b;
+            padding: 1rem;
+            margin-top: 1rem;
+            border-radius: 0 8px 8px 0;
+            display: none;
+        }
+
+        button.toggle-btn {
+            background-color: var(--primary-purple);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            margin-top: 0.5rem;
+            transition: background 0.2s;
+        }
+
+        button.toggle-btn:hover {
+            background-color: var(--accent-purple);
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 3rem;
+            font-size: 0.9rem;
+            color: #64748b;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Rational Functions Master Guide</h1>
+        <p>Comprehensive Study Notes & 10 Practice Problems</p>
+    </header>
+
+    <section>
+        <h2>Step 0: The Golden Rule</h2>
+        <p>Before analyzing any rational function of the general form, you must <strong>completely factor both the numerator and the denominator</strong> first.</p>
+        <div class="formula-box">
+            $$f(x) = \frac{P(x)}{Q(x)}$$
+        </div>
+    </section>
+
+    <section>
+        <h2>Core Features Cheat Sheet</h2>
+        
+        <h3>1. Domain</h3>
+        <p>Includes all real numbers except those that make the <em>original</em> denominator equal to zero.</p>
+        
+        <h3>2. Holes (Removable Discontinuities)</h3>
+        <p>Occur when a factor cancels out from both the numerator and denominator. Find the x-coordinate by setting the cancelled factor to zero, then plug it into the simplified function to find y.</p>
+
+        <h3>3. Vertical Asymptotes</h3>
+        <p>Occur where the denominator equals zero for factors that do <strong>not</strong> cancel out. Written as equations like \(x = c\).</p>
+
+        <h3>4. X-Intercepts</h3>
+        <p>Points where the graph crosses the x-axis. Set the numerator of the <em>simplified</em> function equal to zero and solve for x.</p>
+
+        <h3>5. Y-Intercept</h3>
+        <p>Evaluate the function at zero: \(f(0)\).</p>
+
+        <h3>6. Horizontal Asymptotes</h3>
+        <p>Compare degrees of numerator (\(n\)) and denominator (\(m\)):</p>
+        <ul>
+            <li><strong>If \(n < m\):</strong> Horizontal asymptote at \(y = 0\).</li>
+            <li><strong>If \(n = m\):</strong> Horizontal asymptote at \(y = \frac{a}{b}\) (ratio of leading coefficients).</li>
+            <li><strong>If \(n > m\):</strong> No horizontal asymptote (check for slant asymptote).</li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>Practice Problems</h2>
+
+        <!-- Problem 1 -->
+        <div class="practice-card">
+            <h3>Problem 1: Vertical Asymptotes</h3>
+            <p>Find the vertical asymptote(s) of:</p>
+            <div class="formula-box">$$f(x) = \frac{(x - 9)(x + 2)}{(x + 2)(x + 4)}$$</div>
+            <button class="toggle-btn" onclick="toggleSolution('sol1')">Toggle Solution</button>
+            <div id="sol1" class="solution">
+                <p><strong>Solution:</strong> The factor \((x + 2)\) cancels out, creating a hole at \(x = -2\). The remaining factor in the denominator is \((x + 4)\). Setting it to zero gives:</p>
+                <div class="formula-box">$$x = -4$$</div>
+            </div>
+        </div>
+
+        <!-- Problem 2 -->
+        <div class="practice-card">
+            <h3>Problem 2: Domain Calculation</h3>
+            <p>Find the domain of the function:</p>
+            <div class="formula-box">$$g(x) = \frac{x^2 - 16}{x^2 + x - 12}$$</div>
+            <button class="toggle-btn" onclick="toggleSolution('sol2')">Toggle Solution</button>
+            <div id="sol2" class="solution">
+                <p><strong>Solution:</strong> Factor the denominator into \((x + 4)(x - 3) = 0\). Restrictions are \(x = -4\) and \(x = 3\).<br>
+                <strong>Interval Notation:</strong> \((-\infty, -4) \cup (-4, 3) \cup (3, \infty)\)</p>
+            </div>
+        </div>
+
+        <!-- Problem 3 -->
+        <div class="practice-card">
+            <h3>Problem 3: Word Problem Application</h3>
+            <p>The cost of renting an AirBnB is $74 per guest plus a cleaning fee of $130. Write the cost per guest function \(C(x)\) and find how many guests are needed so each pays $100.</p>
+            <button class="toggle-btn" onclick="toggleSolution('sol3')">Toggle Solution</button>
+            <div id="sol3" class="solution">
+                <p><strong>Solution:</strong><br>
+                1. Equation:</p>
+                <div class="formula-box">$$C(x) = \frac{74x + 130}{x}$$</div>
+                <p>2. Set equal to 100 and solve:</p>
+                <div class="formula-box">$$\frac{74x + 130}{x} = 100 \implies 74x + 130 = 100x \implies x = 5 \text{ guests}$$</div>
+            </div>
+        </div>
+
+        <!-- Problem 4 -->
+        <div class="practice-card">
+            <h3>Problem 4: Finding Holes</h3>
+            <p>Find the coordinates of any hole(s) for the function:</p>
+            <div class="formula-box">$$h(x) = \frac{x^2 - x - 2}{x - 2}$$</div>
+            <button class="toggle-btn" onclick="toggleSolution('sol4')">Toggle Solution</button>
+            <div id="sol4" class="solution">
+                <p><strong>Solution:</strong> Factor the numerator as \((x - 2)(x + 1)\). The factor \((x - 2)\) cancels out. Setting \(x - 2 = 0\) gives \(x = 2\). Plugging into the reduced function \(y = x + 1\) gives \(y = 3\).</p>
+                <div class="formula-box">$$\text{Hole at } (2, 3)$$</div>
+            </div>
+        </div>
+
+        <!-- Problem 5 -->
+        <div class="practice-card">
+            <h3>Problem 5: X-Intercepts</h3>
+            <p>Find the x-intercept(s) of the function:</p>
+            <div class="formula-box">$$f(x) = \frac{x^2 - 9}{x^2 + 5x + 6}$$</div>
+            <button class="toggle-btn" onclick="toggleSolution('sol5')">Toggle Solution</button>
+            <div id="sol5" class="solution">
+                <p><strong>Solution:</strong> Factor numerator to \((x-3)(x+3)\) and denominator to \((x+2)(x+3)\). The factor \((x+3)\) cancels, leaving simplified numerator \((x-3)\). Set numerator to zero:</p>
+                <div class="formula-box">$$x = 3 \quad (\text{Point: } (3, 0))$$</div>
+            </div>
+        </div>
+
+        <!-- Problem 6 -->
+        <div class="practice-card">
+            <h3>Problem 6: Y-Intercept</h3>
+            <p>Find the y-intercept of the function:</p>
+            <div class="formula-box">$$f(x) = \frac{3x - 12}{x^2 + 2x + 4}$$</div>
+            <button class="toggle-btn" onclick="toggleSolution('sol6')">Toggle Solution</button>
+            <div id="sol6" class="solution">
+                <p><strong>Solution:</strong> Evaluate \(f(0)\) by substituting \(0\) for all \(x\):</p>
+                <div class="formula-box">$$f(0) = \frac{3(0) - 12}{(0)^2 + 2(0) + 4} = \frac{-12}{4} = -3 \quad (\text{Point: } (0, -3))$$</div>
+            </div>
+        </div>
+
+        <!-- Problem 7 -->
+        <div class="practice-card">
+            <h3>Problem 7: Horizontal Asymptote (Equal Degrees)</h3>
+            <p>Determine the horizontal asymptote of:</p>
+            <div class="formula-box">$$f(x) = \frac{5x^2 - 8x + 1}{2x^2 + 3}$$</div>
+            <button class="toggle-btn" onclick="toggleSolution('sol7')">Toggle Solution</button>
+            <div id="sol7" class="solution">
+                <p><strong>Solution:</strong> The degree of the numerator equals the degree of the denominator (\(n = 2, m = 2\)). Take the ratio of the leading coefficients:</p>
+                <div class="formula-box">$$y = \frac{5}{2}$$</div>
+            </div>
+        </div>
+
+        <!-- Problem 8 -->
+        <div class="practice-card">
+            <h3>Problem 8: Horizontal Asymptote (Bottom Heavy)</h3>
+            <p>Determine the horizontal asymptote of:</p>
+            <div class="formula-box">$$f(x) = \frac{4x + 7}{x^3 - 2x + 1}$$</div>
+            <button class="toggle-btn" onclick="toggleSolution('sol8')">Toggle Solution</button>
+            <div id="sol8" class="solution">
+                <p><strong>Solution:</strong> The degree of the numerator is less than the denominator (\(n = 1, m = 3\)). Since it is bottom heavy:</p>
+                <div class="formula-box">$$y = 0$$</div>
+            </div>
+        </div>
+
+        <!-- Problem 9 -->
+        <div class="practice-card">
+            <h3>Problem 9: Complete Analysis</h3>
+            <p>Find all vertical asymptotes and holes for:</p>
+            <div class="formula-box">$$f(x) = \frac{x(x - 5)}{(x - 5)(x + 3)}$$</div>
+            <button class="toggle-btn" onclick="toggleSolution('sol9')">Toggle Solution</button>
+            <div id="sol9" class="solution">
+                <p><strong>Solution:</strong><br>
+                - Hole: Factor \((x - 5)\) cancels out, giving a hole at \(x = 5\).<br>
+                - Vertical Asymptote: Remaining factor in the denominator is \((x + 3)\):</p>
+                <div class="formula-box">$$x = -3$$</div>
+            </div>
+        </div>
+
+        <!-- Problem 10 -->
+        <div class="practice-card">
+            <h3>Problem 10: Average Cost Application</h3>
+            <p>A company produces custom skateboards. The fixed startup cost is $1,200 and each skateboard costs $45 to manufacture. Write the average cost function \(A(x)\) to produce \(x\) skateboards, and find the average cost if 100 skateboards are made.</p>
+            <button class="toggle-btn" onclick="toggleSolution('sol10')">Toggle Solution</button>
+            <div id="sol10" class="solution">
+                <p><strong>Solution:</strong><br>
+                1. Equation:</p>
+                <div class="formula-box">$$A(x) = \frac{45x + 1200}{x}$$</div>
+                <p>2. Substitute \(x = 100\):</p>
+                <div class="formula-box">$$A(100) = \frac{45(100) + 1200}{100} = \frac{5700}{100} = \$57 \text{ per skateboard}$$</div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>Designed with deep purple styling and vertical mathematical formatting.</p>
+    </footer>
+</div>
+
+<script>
+    function toggleSolution(id) {
+        const sol = document.getElementById(id);
+        if (sol.style.display === "block") {
+            sol.style.display = "none";
+        } else {
+            sol.style.display = "block";
+        }
+    }
+</script>
+
+</body>
+</html>
