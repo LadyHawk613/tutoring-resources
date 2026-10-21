@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AP Precalculus worksheet maker</title>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;600&family=STIX+Two+Text:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#e7eaef;--panel:#fbfbfc;--ink:#1d2330;--muted:#566073;--line:#c9d0da;--field:#fff;--accent:#1f55a8;--on:#fff;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#15181e;--panel:#1e232c;--ink:#e6e9ef;--muted:#9ba5b6;--line:#353d4a;--field:#151920;--accent:#8db6f2;--on:#0c1a2e;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#15181e;--panel:#1e232c;--ink:#e6e9ef;--muted:#9ba5b6;--line:#353d4a;--field:#151920;--accent:#8db6f2;--on:#0c1a2e;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}*{box-sizing:inherit}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.4 'Public Sans',system-ui,sans-serif}
+.app{max-width:1180px;margin:0 auto;padding:16px;display:grid;gap:20px}
+@media(min-width:880px){.app{grid-template-columns:300px minmax(0,1fr);align-items:start;padding:24px}.panel{position:sticky;top:24px}}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:18px}
+.panel h1{font-size:1.15rem;margin:0 0 2px}.sub{margin:0 0 14px;color:var(--muted);font-size:.88rem}
+.panel h2{font-size:.95rem;margin:16px 0 8px;padding-top:14px;border-top:1px solid var(--line)}
+label{display:block;margin-bottom:10px;font-size:.84rem;color:var(--muted)}
+select,input[type=text],input[type=number]{display:block;width:100%;height:38px;margin-top:4px;padding:0 10px;border:1px solid var(--line);border-radius:5px;background:var(--field);color:var(--ink);font:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+label.ck{display:flex;gap:8px;align-items:center;color:var(--ink);font-size:.92rem}
+.btn{display:block;width:100%;height:40px;margin-bottom:8px;border-radius:5px;border:1px solid var(--accent);background:var(--accent);color:var(--on);font:600 1em inherit;cursor:pointer}
+.btn.g{background:none;color:var(--accent)}.hint{color:var(--muted);font-size:.8rem;margin:8px 0 0}
+.sheet{background:#fff;color:#1b1d22;width:100%;max-width:8.5in;margin:0 auto 20px;padding:.55in .6in .4in;box-shadow:0 1px 4px rgb(0 0 0/.28);font:16px/1.3 'STIX Two Text','Times New Roman',serif}
+.head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px 28px;flex-wrap:wrap}
+.head h2{margin:0;font-size:1.6rem;font-weight:400}
+.fields{display:grid;gap:8px;flex:1 1 15rem;max-width:20rem}.pair{display:grid;grid-template-columns:1.5fr 1fr;gap:14px}
+.f{display:flex;align-items:flex-end;gap:.35em;font-size:.95rem}.f i{flex:1;border-bottom:1px solid #1b1d22;height:1.1em}
+.instr{font-weight:700;margin:1.3em 0 1em}
+.qs{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(var(--cols,2),minmax(0,1fr));column-gap:2rem}
+.qs li{padding-bottom:var(--sp,60px);break-inside:avoid}
+.row{display:flex;align-items:center;gap:.55em;min-height:2.8em}.qs.g .row{align-items:flex-start}
+.n{min-width:1.9em;font-size:.95rem}.q{font-size:1.15rem}.q svg{display:block;max-width:100%;height:auto;margin-top:4px}
+sup,sub{font-size:.7em;line-height:0}
+.frac{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;line-height:1.15;margin:0 .15em}
+.frac span:first-child{padding:0 .3em;border-bottom:1.5px solid currentColor}.frac span+span{padding:0 .3em}
+.foot{margin-top:1rem;font-size:.75rem;color:#5a606b}
+.ans{display:grid;grid-template-columns:repeat(var(--kc,3),minmax(0,1fr));gap:.3rem 1.5rem;margin-top:1.2rem;font-size:1.02rem}.a{display:flex;gap:.45em;min-height:2.1em;align-items:center;break-inside:avoid}
+@media screen and (max-width:640px){.sheet{padding:22px 18px}.qs{grid-template-columns:1fr}}
+@page{margin:.6in}
+@media print{:root{padding:0}body{background:#fff}.panel{display:none!important}.app{display:block;padding:0;max-width:none}.sheet{box-shadow:none;margin:0;padding:0;max-width:none}.key{break-before:page}}
+</style></head><body>
+<div class="app">
+<aside class="panel"><h1>AP Precalculus worksheet maker</h1><p class="sub">Pick a topic, set the length, then print.</p>
+<label>Topic<select id="topic"></select></label>
+<label>Difficulty<select id="level"><option value="1">Easy</option><option value="2">Medium</option><option value="3">Hard</option></select></label>
+<h2>Set up the page</h2>
+<div class="two"><label>Questions<input id="count" type="number" min="1" max="40"></label>
+<label>Columns<select id="cols"><option>1</option><option>2</option><option>3</option></select></label></div>
+<label>Work space<select id="space"><option value=".4">Small</option><option value="1">Medium</option><option value="2">Large</option></select></label>
+<label>Title (blank = topic)<input id="title" type="text" maxlength="80"></label>
+<label class="ck"><input id="key" type="checkbox"> Add an answer key on a new page</label>
+<h2>Print</h2>
+<button class="btn" id="fresh">New questions</button><button class="btn g" id="print">Print worksheet</button>
+<label>Worksheet code (re-enter to get the same questions)<input id="seed" type="text" inputmode="numeric"></label>
+<p class="hint">If printing is blocked here, open the page in its own browser tab. Turn off “Headers and footers” in the print window.</p></aside>
+<main id="out"></main></div>
+<script>
+const M='\u2212',D='\u00B7';
+function mb(a){return()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+let rnd=mb(1);const ri=(a,b)=>Math.floor(rnd()*(b-a+1))+a,pick=a=>a[Math.floor(rnd()*a.length)],sign=()=>rnd()<.5?-1:1,sg=(a,b)=>sign()*ri(a,b);
+const n$=n=>n<0?M+Math.abs(n):''+n,gcd=(a,b)=>{a=Math.abs(a);b=Math.abs(b);while(b)[a,b]=[b,a%b];return a};
+const frac=(n,d)=>`<span class="frac"><span>${n}</span><span>${d}</span></span>`;
+function fi(n,d){const g=gcd(n,d)||1;n/=g;d/=g;if(d<0){n=-n;d=-d}return d===1?n$(n):(n<0?M:'')+frac(Math.abs(n),d)}
+function poly(c){let o='';c.forEach((k,i)=>{const p=c.length-1-i;if(!k)return;const b=p?(Math.abs(k)===1?'':Math.abs(k))+'x'+(p>1?`<sup>${p}</sup>`:''):Math.abs(k);o+=o?` ${k<0?M:'+'} ${b}`:(k<0?M:'')+b});return o||'0'}
+const sup=(b,n)=>`${b}<sup>${n}</sup>`;
+/* graph: curve f over window [x0,x1,y0,y1] with optional dots */
+function graph(f,[x0,x1,y0,y1],pts=[]){
+ const W=240,m=12,s=W-2*m,X=x=>m+(x-x0)/(x1-x0)*s,Y=y=>W-m-(y-y0)/(y1-y0)*s;let g='';
+ for(let x=Math.ceil(x0);x<=x1;x++){g+=`<path d="M${X(x)} ${m}V${W-m}" stroke="${x?'#ccc':'#222'}" stroke-width="${x?.6:1.2}"/>`;if(x&&x%2==0)g+=`<text x="${X(x)}" y="${Y(0)+10}" text-anchor="middle">${x}</text>`}
+ for(let y=Math.ceil(y0);y<=y1;y++){g+=`<path d="M${m} ${Y(y)}H${W-m}" stroke="${y?'#ccc':'#222'}" stroke-width="${y?.6:1.2}"/>`;if(y&&y%2==0)g+=`<text x="${X(0)-3}" y="${Y(y)+3}" text-anchor="end">${y}</text>`}
+ let p='',on=0;for(let x=x0;x<=x1+1e-9;x+=.05){const y=f(x);if(y>=y0&&y<=y1){p+=(on?'L':'M')+X(x).toFixed(1)+' '+Y(y).toFixed(1);on=1}else on=0}
+ g+=`<path d="${p}" fill="none" stroke="#111" stroke-width="1.8"/>`;
+ pts.forEach(([x,y])=>g+=`<circle cx="${X(x)}" cy="${Y(y)}" r="3.4" fill="#111"/>`);
+ return `<svg viewBox="0 0 240 240" width="210" style="font:9px sans-serif;fill:#333"><rect x="${m}" y="${m}" width="${s}" height="${s}" fill="none" stroke="#222"/>${g}</svg>`}
+/* ---- generators ---- */
+function gZeros(L){const k=L===1?2:3,r=[];while(r.length<k){const v=ri(-4,4);if(!r.includes(v))r.push(v)}r.sort((a,b)=>a-b);
+ const ex=r.map((_,i)=>L===3&&i===1&&rnd()<.6?2:1),raw=x=>r.reduce((p,v,i)=>p*Math.pow(x-v,ex[i]),1);
+ let mx=0;for(let x=-5;x<=5;x+=.1)mx=Math.max(mx,Math.abs(raw(x)));const sc=sign()*7/mx;
+ return{q:graph(x=>sc*raw(x),[-5,5,-8,8]),a:'x = '+r.map((v,i)=>n$(v)+(ex[i]>1?' (multiplicity 2)':'')).join(', ')}}
+function gRate(L){const a=pick(L===1?[1,-1]:[1,-1,2,-2]),h=ri(-3,3),k=ri(-2,2),f=x=>a*(x-h)**2+k;
+ const len=ri(1,[2,3,4][L-1]);let p=ri(h-2,h+2-len);if(p+len>h+2)p=h+2-len;const q=p+len;
+ return{q:`<div>Interval [${n$(p)}, ${n$(q)}]</div>`+graph(f,[-6,6,-10,10],[[p,f(p)],[q,f(q)]]),a:fi(f(q)-f(p),q-p)}}
+function gVertex(L){const a=pick(L===1?[1,-1]:L===2?[1,-1,2,-2]:[.5,-.5,1,-1,2,-2]),h=ri(-3,3),k=ri(-3,3),d=Math.abs(a)===.5?2:1,f=x=>a*(x-h)**2+k;
+ const c=a===1?'':a===-1?M:a===.5?'½':a===-.5?M+'½':n$(a),inn=h?`(x ${h>0?M:'+'} ${Math.abs(h)})`:'x';
+ return{q:graph(f,[-6,6,-8,8],[[h,k],[h+d,f(h+d)]]),a:`y = ${c}${inn}<sup>2</sup>${k?` ${k<0?M:'+'} ${Math.abs(k)}`:''}`}}
+function gSin(L){const a=ri(1,3),d=L===1?0:ri(-2,2),P=pick(L===1?[4,8]:[2,4,6,8]),cos=L>1&&rnd()<.5,f=x=>a*(cos?Math.cos:Math.sin)(2*Math.PI/P*x)+d;
+ let ans=`amplitude ${a}, midline y = ${d}, period ${P}`;
+ if(L===3){const b=P===2?'π':frac('π',P/2);ans+=`<br>y = ${a>1?a+' ':''}${cos?'cos':'sin'}(${b}x)${d?` ${d<0?M:'+'} ${Math.abs(d)}`:''}`}
+ return{q:graph(f,[0,8,-6,6]),a:ans}}
+function gExp(L){const b=pick([2,3,.5]),a=b===.5?pick([2,4]):L===1?1:pick([1,2,3,-1,-2]),f=x=>a*b**x;
+ return{q:graph(f,[-5,5,-10,10],[[0,a],[1,a*b]]),a:`y = ${a===1?'':a===-1?M:n$(a)+' '}${b===.5?'(½)':b}<sup>x</sup>`}}
+function gLog(L){const lg=(b,v)=>`log<sub>${b}</sub>(${v})`,b=pick([2,3,5]),n=ri(1,L===1?3:4);
+ if(L===1)return{q:lg(b,b**n),a:''+n};
+ if(L===2)return rnd()<.5?{q:lg(b,frac(1,b**n)),a:n$(-n)}:{q:`${sup(b,'x')} = ${b**n}`,a:'x = '+n};
+ const t=ri(0,2);return t===0?{q:`${lg(b,'x')} = ${n}`,a:'x = '+b**n}:t===1?{q:`${sup(b,'x + 1')} = ${b**(n+1)}`,a:'x = '+n}:{q:`${lg(b,'x')} + ${lg(b,ri(2,4)*0+b)} = ${n+1}`,a:'x = '+b**n}}
+function gTrig(L){const th=pick(L===1?[0,30,45,60,90]:L===2?[0,30,45,60,90,120,135,150,180]:[0,30,45,60,90,120,135,150,180,210,225,240,270,300,315,330]),fn=pick(['sin','cos','tan']);
+ const r=th<=90?th:th<=180?180-th:th<=270?th-180:360-th,S={0:'0',30:'1/2',45:'√2/2',60:'√3/2',90:'1'},C={0:'1',30:'√3/2',45:'√2/2',60:'1/2',90:'0'},T={0:'0',30:'√3/3',45:'1',60:'√3',90:'u'};
+ const ss=th>180?-1:1,cs=th>90&&th<270?-1:1;let v=fn==='sin'?S[r]:fn==='cos'?C[r]:T[r];const neg=(fn==='sin'?ss:fn==='cos'?cs:ss*cs)<0;
+ if(v==='u')v='undefined';else if(v!=='0'&&neg)v='-'+v;
+ const html=v==='undefined'?v:(v[0]==='-'?M:'')+(v.replace('-','').includes('/')?frac(...v.replace('-','').split('/')):v);
+ const g=gcd(th,180),nn=th/g,dd=180/g,rad=th===0?'0':(dd===1?`${nn===1?'':nn}π`:frac(`${nn===1?'':nn}π`,dd));
+ return{q:`${fn}(${rad})`,a:html}}
+function gRat(L){const v=ri(-4,4),c=L===1?1:sg(1,3),d=-c*v;let a,b;do{a=sg(1,5);b=sg(1,6)}while(a*v+b===0);
+ return{q:`f(x) = ${frac(poly([a,b]),poly([c,d]))}`,a:`vertical asymptote x = ${n$(v)}<br>horizontal asymptote y = ${fi(a,c)}`}}
+function gComp(L){const a=sg(2,5),b=sg(1,9),c=sg(1,5),d=sg(1,9);
+ if(L===1){const k=sg(1,4);return{q:`f(x) = ${poly([a,b])}, g(x) = ${poly([c,d])}<br>Find f(g(${n$(k)})).`,a:n$(a*(c*k+d)+b)}}
+ if(L===2)return{q:`f(x) = ${poly([a,b])}, g(x) = ${poly([1,0,c])}<br>Find (f ∘ g)(x).`,a:poly([a,0,a*c+b])}
+ return{q:`f(x) = ${poly([a,b])}<br>Find f<sup>−1</sup>(x).`,a:frac(poly([1,-b]),n$(a))}}
+function gSeq(L){const a=sg(1,9),n=ri(6,15),a1=`a<sub>1</sub> = ${n$(a)}`;
+ if(L===1){const d=sg(1,6);return{q:`${a1}, d = ${n$(d)}. Find a<sub>${n}</sub>.`,a:n$(a+(n-1)*d)}}
+ if(L===2){const r=pick([2,3,-2]),k=ri(3,6);return{q:`${a1}, r = ${n$(r)}. Find a<sub>${k}</sub>.`,a:n$(a*r**(k-1))}}
+ const d=sg(1,5);return{q:`${a1}, d = ${n$(d)}. Find S<sub>${n}</sub>, the sum of the first ${n} terms.`,a:n$(n*(2*a+(n-1)*d)/2)}}
+const T=[
+['gr','Polynomial zeros from a graph','Find the real zeros of the polynomial graphed.',gZeros,1],
+['rt','Average rate of change from a graph','Find the average rate of change of f over the interval shown.',gRate,1],
+['vx','Quadratic in vertex form from a graph','Write the equation of each parabola in vertex form.',gVertex,1],
+['sn','Sinusoidal functions from a graph','State the amplitude, midline and period of each graph.',gSin,1],
+['ex','Exponential functions from a graph','Write an equation for each exponential graph.',gExp,1],
+['lg','Logarithms and exponential equations','Evaluate or solve.',gLog],
+['tg','Exact trigonometric values','Find the exact value.',gTrig],
+['ra','Rational function asymptotes','Find the asymptotes of each function.',gRat],
+['cp','Composition and inverses','Find each value or expression.',gComp],
+['sq','Arithmetic and geometric sequences','Solve each problem.',gSeq]];
+function build(t,L,n,seed){rnd=mb(seed);const seen=new Set,o=[];let k=0;while(o.length<n){const it=t[3](L);k++;if(seen.has(it.q)&&k<n*40)continue;seen.add(it.q);o.push(it)}return o}
+/* ---- page ---- */
+const $=i=>document.getElementById(i),esc=s=>s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const ns=()=>ri0();function ri0(){return Math.floor(Math.random()*900000)+100000}
+const S={topic:'gr',level:2,count:6,cols:2,space:1,title:'',key:true,seed:ri0()};
+$('topic').innerHTML=T.map(t=>`<option value="${t[0]}">${t[1]}${t[4]?' (graphs)':''}</option>`).join('');
+function sync(){$('topic').value=S.topic;$('level').value=S.level;$('count').value=S.count;$('cols').value=S.cols;$('space').value=S.space;$('title').value=S.title;$('key').checked=S.key;$('seed').value=S.seed}
+function render(){const t=T.find(x=>x[0]===S.topic),it=build(t,S.level,S.count,S.seed),ti=esc(S.title.trim()||t[1]);
+ let h=`<article class="sheet"><header class="head"><h2>${ti}</h2><div class="fields"><div class="f">Name<i></i></div><div class="pair"><div class="f">Date<i></i></div><div class="f">Period<i></i></div></div></div></header><p class="instr">${t[2]}</p><ol class="qs${t[4]?' g':''}" style="--cols:${S.cols};--sp:${Math.round(S.space*(t[4]?24:70))}px">`;
+ it.forEach((x,i)=>h+=`<li><div class="row"><span class="n">${i+1})</span><div class="q">${x.q}</div></div></li>`);
+ h+=`</ol><div class="foot">Worksheet code ${S.seed}</div></article>`;
+ if(S.key){const L=Math.max(...it.map(x=>x.a.replace(/<[^>]+>/g,'').length));h+=`<article class="sheet key"><header class="head"><h2>Answer key: ${ti}</h2></header><div class="ans" style="--kc:${L>30?1:L>14?2:4}">`+it.map((x,i)=>`<div class="a"><span class="n">${i+1})</span><span>${x.a}</span></div>`).join('')+`</div><div class="foot">Worksheet code ${S.seed}</div></article>`}
+ $('out').innerHTML=h;document.title=ti}
+sync();render();
+const on=(id,ev,fn)=>$(id).addEventListener(ev,fn);
+on('topic','change',e=>{S.topic=e.target.value;render()});
+on('level','change',e=>{S.level=+e.target.value;render()});
+on('count','input',e=>{const n=parseInt(e.target.value);if(n>0){S.count=Math.min(40,n);render()}});
+on('cols','change',e=>{S.cols=+e.target.value;render()});
+on('space','change',e=>{S.space=+e.target.value;render()});
+on('title','input',e=>{S.title=e.target.value;render()});
+on('key','change',e=>{S.key=e.target.checked;render()});
+on('seed','input',e=>{const n=parseInt(e.target.value);if(n>0){S.seed=n;render()}});
+on('fresh','click',()=>{S.seed=ri0();sync();render()});
+on('print','click',()=>{try{window.print()}catch(e){alert('Use Ctrl+P or \u2318P.')}});
+</script></body></html>
