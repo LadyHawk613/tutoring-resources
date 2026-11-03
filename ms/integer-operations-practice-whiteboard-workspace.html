@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Integer Operations Practice & Interactive Whiteboard</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#f5f3ff',
+              100: '#ede9fe',
+              200: '#ddd6fe',
+              500: '#8b5cf6',
+              600: '#6b46c1',
+              700: '#5b21b6',
+              800: '#4c1d95',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+    
+    /* Grid Canvas Pattern overlays */
+    .bg-grid-lines {
+      background-image: linear-gradient(to right, rgba(203, 213, 225, 0.4) 1px, transparent 1px),
+                        linear-gradient(to bottom, rgba(203, 213, 225, 0.4) 1px, transparent 1px);
+      background-size: 24px 24px;
+    }
+    .bg-grid-dots {
+      background-image: radial-gradient(rgba(148, 163, 184, 0.5) 1.5px, transparent 1.5px);
+      background-size: 20px 20px;
+    }
+
+    /* Custom Scrollbars */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+  </style>
+</head>
+<body class="bg-slate-100 text-slate-800 h-screen flex flex-col overflow-hidden">
+
+  <!-- Header Navigation -->
+  <header class="bg-gradient-to-r from-brand-700 via-brand-600 to-purple-800 text-white shadow-md z-30 shrink-0">
+    <div class="px-4 py-3 flex justify-between items-center">
+      <div class="flex items-center space-x-3">
+        <div class="bg-white/10 p-2 rounded-xl backdrop-blur-md">
+          <i class="fa-solid fa-calculator text-xl text-purple-200"></i>
+        </div>
+        <div>
+          <h1 class="text-base font-bold tracking-tight">Integer Operations Practice Workspace</h1>
+          <p class="text-xs text-purple-200 hidden sm:block">Solve problems on the left • Use scratchpad whiteboard on the right</p>
+        </div>
+      </div>
+      
+      <div class="flex items-center gap-2">
+        <button onclick="toggleAnswerKey()" class="px-3 py-1.5 bg-white/10 hover:bg-white/20 text-xs font-medium rounded-lg backdrop-blur-sm transition border border-white/20 flex items-center gap-1.5">
+          <i class="fa-solid fa-key text-yellow-300"></i>
+          <span id="keyBtnText" class="hidden sm:inline">Answer Key</span>
+        </button>
+        <button onclick="resetAll()" class="px-3 py-1.5 bg-white/10 hover:bg-white/20 text-xs font-medium rounded-lg backdrop-blur-sm transition border border-white/20 flex items-center gap-1.5">
+          <i class="fa-solid fa-rotate-right"></i>
+          <span class="hidden sm:inline">Reset All</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Answer Key Modal / Banner -->
+  <div id="answerKeyBox" class="hidden bg-purple-50 border-b-2 border-brand-200 p-4 shadow-md overflow-y-auto max-h-48 z-20 shrink-0">
+    <div class="flex justify-between items-center mb-2">
+      <h3 class="text-xs font-bold text-brand-800 flex items-center gap-2 uppercase tracking-wider">
+        <i class="fa-solid fa-key text-brand-600"></i> Full Answer Key
+      </h3>
+      <button onclick="toggleAnswerKey()" class="text-slate-400 hover:text-slate-600 text-xs">
+        <i class="fa-solid fa-xmark text-sm"></i>
+      </button>
+    </div>
+    <div class="grid grid-cols-3 sm:grid-cols-6 lg:grid-cols-10 gap-2 text-xs font-medium" id="answerKeyGrid">
+      <!-- Populated by JS -->
+    </div>
+  </div>
+
+  <!-- Main Split View Container -->
+  <div class="flex flex-col lg:flex-row flex-grow overflow-hidden w-full relative">
+
+    <!-- LEFT COLUMN: 1/3 Width Questions Panel -->
+    <div class="w-full lg:w-1/3 border-r border-slate-200 bg-slate-50 flex flex-col h-1/2 lg:h-full z-10 shadow-lg">
+      
+      <!-- Progress Bar & Grade Header -->
+      <div class="p-4 bg-white border-b border-slate-200 shadow-2xs shrink-0">
+        <div class="flex justify-between items-center mb-2">
+          <div class="flex items-center gap-2">
+            <span id="scorePercent" class="text-lg font-extrabold text-brand-600">0%</span>
+            <span class="text-xs text-slate-500 font-medium">(<span id="correctCount">0</span>/30 Correct)</span>
+          </div>
+          <button onclick="checkAnswers()" class="px-3 py-1.5 bg-brand-600 hover:bg-brand-700 text-white text-xs font-bold rounded-lg shadow-sm transition flex items-center gap-1.5 active:scale-95">
+            <i class="fa-solid fa-circle-check"></i>
+            <span>Grade Quiz</span>
+          </button>
+        </div>
+        <div class="w-full bg-slate-100 rounded-full h-2 overflow-hidden border border-slate-200">
+          <div id="progressBar" class="bg-brand-600 h-full rounded-full transition-all duration-300 w-0"></div>
+        </div>
+      </div>
+
+      <!-- Section Filter Tabs -->
+      <div class="flex border-b border-slate-200 bg-white text-xs font-semibold text-slate-600 shrink-0">
+        <button id="tab-all" onclick="filterSection('all')" class="flex-1 py-2.5 text-center border-b-2 border-brand-600 text-brand-600">All (30)</button>
+        <button id="tab-s1" onclick="filterSection(1)" class="flex-1 py-2.5 text-center border-b-2 border-transparent hover:text-brand-600">S1 (1-10)</button>
+        <button id="tab-s2" onclick="filterSection(2)" class="flex-1 py-2.5 text-center border-b-2 border-transparent hover:text-brand-600">S2 (11-20)</button>
+        <button id="tab-s3" onclick="filterSection(3)" class="flex-1 py-2.5 text-center border-b-2 border-transparent hover:text-brand-600">S3 (21-30)</button>
+      </div>
+
+      <!-- Scrollable Questions List -->
+      <div class="flex-grow overflow-y-auto p-3 space-y-3" id="questionsList">
+        <!-- Rendered by JS -->
+      </div>
+    </div>
+
+    <!-- RIGHT COLUMN: 2/3 Width Interactive Whiteboard -->
+    <div class="w-full lg:w-2/3 flex flex-col h-1/2 lg:h-full bg-slate-200 relative">
+      
+      <!-- Whiteboard Controls Toolbar -->
+      <div class="bg-white border-b border-slate-200 px-3 py-2 flex flex-wrap items-center justify-between gap-2 shadow-2xs z-20 shrink-0">
+        
+        <!-- Drawing Tools -->
+        <div class="flex items-center gap-2">
+          <!-- Pen Button -->
+          <button id="toolPen" onclick="setTool('pen')" class="p-2 rounded-lg bg-brand-50 text-brand-700 font-semibold border border-brand-200 text-xs flex items-center gap-1 shadow-2xs">
+            <i class="fa-solid fa-pen text-sm"></i>
+            <span class="hidden sm:inline">Pen</span>
+          </button>
+          
+          <!-- Eraser Button -->
+          <button id="toolEraser" onclick="setTool('eraser')" class="p-2 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 text-xs flex items-center gap-1 transition">
+            <i class="fa-solid fa-eraser text-sm"></i>
+            <span class="hidden sm:inline">Eraser</span>
+          </button>
+
+          <!-- Color Palette Picker -->
+          <div class="flex items-center gap-1 bg-slate-100 p-1 rounded-lg border border-slate-200">
+            <button onclick="setColor('#6b46c1')" class="w-5 h-5 rounded-full bg-[#6b46c1] ring-2 ring-brand-500 focus:outline-none transition" title="Purple"></button>
+            <button onclick="setColor('#000000')" class="w-5 h-5 rounded-full bg-black hover:scale-110 transition" title="Black"></button>
+            <button onclick="setColor('#2563eb')" class="w-5 h-5 rounded-full bg-blue-600 hover:scale-110 transition" title="Blue"></button>
+            <button onclick="setColor('#dc2626')" class="w-5 h-5 rounded-full bg-red-600 hover:scale-110 transition" title="Red"></button>
+            <button onclick="setColor('#16a34a')" class="w-5 h-5 rounded-full bg-green-600 hover:scale-110 transition" title="Green"></button>
+            <button onclick="setColor('#facc15')" class="w-5 h-5 rounded-full bg-yellow-400 hover:scale-110 transition" title="Highlighter Yellow"></button>
+          </div>
+
+          <!-- Size Slider -->
+          <div class="flex items-center gap-1.5 bg-slate-100 px-2 py-1 rounded-lg border border-slate-200 text-xs">
+            <i class="fa-solid fa-circle text-[8px] text-slate-400"></i>
+            <input type="range" id="brushSize" min="1" max="25" value="3" oninput="setBrushSize(this.value)" class="w-16 accent-brand-600 cursor-pointer">
+            <i class="fa-solid fa-circle text-xs text-slate-700"></i>
+          </div>
+        </div>
+
+        <!-- Canvas Background & Operations -->
+        <div class="flex items-center gap-2">
+          <!-- Grid Background Toggle -->
+          <select id="gridStyle" onchange="changeGridStyle(this.value)" class="px-2 py-1.5 bg-slate-100 hover:bg-slate-200 border border-slate-300 rounded-lg text-xs font-medium text-slate-700 focus:outline-none">
+            <option value="lines">Graph Grid</option>
+            <option value="dots">Dot Grid</option>
+            <option value="blank">Blank White</option>
+          </select>
+
+          <!-- Undo / Redo -->
+          <div class="flex items-center gap-1">
+            <button onclick="undo()" class="p-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs transition" title="Undo">
+              <i class="fa-solid fa-rotate-left"></i>
+            </button>
+            <button onclick="redo()" class="p-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs transition" title="Redo">
+              <i class="fa-solid fa-rotate-right"></i>
+            </button>
+          </div>
+
+          <!-- Clear Canvas -->
+          <button onclick="clearCanvas()" class="px-2.5 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-700 font-semibold border border-rose-200 text-xs rounded-lg transition flex items-center gap-1">
+            <i class="fa-solid fa-trash-can"></i>
+            <span class="hidden sm:inline">Clear Board</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Canvas Container -->
+      <div class="flex-grow w-full h-full relative overflow-hidden bg-white bg-grid-lines" id="canvasWrapper">
+        <canvas id="whiteboard" class="w-full h-full cursor-crosshair block"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- Explanation Modal -->
+  <div id="explanationModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full overflow-hidden border border-slate-100 animate-in fade-in zoom-in duration-200">
+      <div class="bg-brand-700 text-white p-4 flex justify-between items-center">
+        <div class="flex items-center gap-2">
+          <i class="fa-solid fa-lightbulb text-yellow-300 text-lg"></i>
+          <h3 class="font-bold text-base" id="modalTitle">Step-by-Step Solution</h3>
+        </div>
+        <button onclick="closeModal()" class="text-white/80 hover:text-white text-lg">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <div class="p-5">
+        <div class="mb-3 bg-slate-50 p-3 rounded-xl border border-slate-200 text-center">
+          <span class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider block mb-0.5">Problem</span>
+          <span class="text-xl font-bold text-slate-800" id="modalProblem">(-8) + 15</span>
+        </div>
+        <div class="space-y-3" id="modalBody"></div>
+        <div class="mt-5 pt-3 border-t border-slate-100 flex justify-end">
+          <button onclick="closeModal()" class="px-4 py-2 bg-brand-600 hover:bg-brand-700 text-white text-sm font-medium rounded-xl transition">
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Application JS Logic -->
+  <script>
+    // --- QUESTION DATASET ---
+    const questions = [
+      { id: 1, section: 1, problem: "(-8) + 15", ans: 7, exp: "Different signs: Subtract absolute values (15 - 8 = 7). Keep the sign of the larger absolute value (+15), giving +7." },
+      { id: 2, section: 1, problem: "(-12) - (-7)", ans: -5, exp: "Subtracting a negative is adding a positive: (-12) + 7. Subtract 12 - 7 = 5. Keep sign of -12, giving -5." },
+      { id: 3, section: 1, problem: "14 + (-22)", ans: -8, exp: "Different signs: Subtract absolute values (22 - 14 = 8). Keep sign of -22, giving -8." },
+      { id: 4, section: 1, problem: "(-9) - 13", ans: -22, exp: "Subtracting 13 is adding -13: (-9) + (-13). Same signs: Add (9 + 13 = 22) and keep negative sign: -22." },
+      { id: 5, section: 1, problem: "25 - (-11)", ans: 36, exp: "Subtracting a negative turns into addition: 25 + 11 = 36." },
+      { id: 6, section: 1, problem: "(-17) + (-8)", ans: -25, exp: "Same signs: Add absolute values (17 + 8 = 25) and keep negative sign: -25." },
+      { id: 7, section: 1, problem: "(-30) + 18", ans: -12, exp: "Different signs: Subtract absolute values (30 - 18 = 12). Keep sign of -30, giving -12." },
+      { id: 8, section: 1, problem: "6 - 19", ans: -13, exp: "Subtracting a larger positive number gives a negative result: 6 - 19 = -13." },
+      { id: 9, section: 1, problem: "(-15) - (-15)", ans: 0, exp: "Subtracting a negative turns into addition: (-15) + 15. Opposite numbers sum to 0." },
+      { id: 10, section: 1, problem: "(-42) + 27", ans: -15, exp: "Different signs: Subtract absolute values (42 - 27 = 15). Keep sign of -42, giving -15." },
+
+      { id: 11, section: 2, problem: "(-7) × 6", ans: -42, exp: "Multiply absolute values (7 × 6 = 42). Negative × positive = negative: -42." },
+      { id: 12, section: 2, problem: "(-9) × (-8)", ans: 72, exp: "Multiply absolute values (9 × 8 = 72). Negative × negative = positive: 72." },
+      { id: 13, section: 2, problem: "48 ÷ (-6)", ans: -8, exp: "Divide absolute values (48 ÷ 6 = 8). Positive ÷ negative = negative: -8." },
+      { id: 14, section: 2, problem: "(-72) ÷ (-9)", ans: 8, exp: "Divide absolute values (72 ÷ 9 = 8). Negative ÷ negative = positive: 8." },
+      { id: 15, section: 2, problem: "12 × (-5)", ans: -60, exp: "Multiply absolute values (12 × 5 = 60). Positive × negative = negative: -60." },
+      { id: 16, section: 2, problem: "(-56) ÷ 8", ans: -7, exp: "Divide absolute values (56 ÷ 8 = 7). Negative ÷ positive = negative: -7." },
+      { id: 17, section: 2, problem: "(-11) × (-11)", ans: 121, exp: "Multiply absolute values (11 × 11 = 121). Negative × negative = positive: 121." },
+      { id: 18, section: 2, problem: "90 ÷ (-15)", ans: -6, exp: "Divide absolute values (90 ÷ 15 = 6). Positive ÷ negative = negative: -6." },
+      { id: 19, section: 2, problem: "(-13) × 4", ans: -52, exp: "Multiply absolute values (13 × 4 = 52). Negative × positive = negative: -52." },
+      { id: 20, section: 2, problem: "-84 / -7", ans: 12, exp: "Divide 84 ÷ 7 = 12. Negative divided by negative is positive: 12." },
+
+      { id: 21, section: 3, problem: "(-4) + (-3) × 5", ans: -19, exp: "1. Multiply first: (-3) × 5 = -15.<br>2. Add: (-4) + (-15) = -19." },
+      { id: 22, section: 3, problem: "18 - (-6) ÷ 2", ans: 21, exp: "1. Divide first: (-6) ÷ 2 = -3.<br>2. Subtract: 18 - (-3) = 18 + 3 = 21." },
+      { id: 23, section: 3, problem: "(-8) × 3 + (-12)", ans: -36, exp: "1. Multiply first: (-8) × 3 = -24.<br>2. Add: (-24) + (-12) = -36." },
+      { id: 24, section: 3, problem: "(-36 ÷ 4) - (-7)", ans: -2, exp: "1. Divide first: -36 ÷ 4 = -9.<br>2. Subtract: -9 - (-7) = -9 + 7 = -2." },
+      { id: 25, section: 3, problem: "(-5)² + (-15)", ans: 10, exp: "1. Evaluate exponent first: (-5)² = 25.<br>2. Add: 25 + (-15) = 10." },
+      { id: 26, section: 3, problem: "3 × (-7) - (-10)", ans: -11, exp: "1. Multiply first: 3 × (-7) = -21.<br>2. Subtract: -21 - (-10) = -21 + 10 = -11." },
+      { id: 27, section: 3, problem: "(-20) ÷ 4 - (-9)", ans: 4, exp: "1. Divide first: (-20) ÷ 4 = -5.<br>2. Subtract: -5 - (-9) = -5 + 9 = 4." },
+      { id: 28, section: 3, problem: "(-2) × (-4) × (-3)", ans: -24, exp: "1. Left to right: (-2) × (-4) = 8.<br>2. Multiply remaining: 8 × (-3) = -24." },
+      { id: 29, section: 3, problem: "15 + (-3) × (-8) ÷ 4", ans: 21, exp: "1. Multiply: (-3) × (-8) = 24.<br>2. Divide: 24 ÷ 4 = 6.<br>3. Add: 15 + 6 = 21." },
+      { id: 30, section: 3, problem: "((-16) + (-8)) / -4", ans: 6, exp: "1. Numerator: (-16) + (-8) = -24.<br>2. Divide: -24 ÷ -4 = 6." }
+    ];
+
+    let currentSectionFilter = 'all';
+
+    // DOM Setup
+    document.addEventListener('DOMContentLoaded', () => {
+      renderQuestions();
+      renderAnswerKey();
+      initWhiteboard();
+    });
+
+    // Render questions to Left Panel
+    function renderQuestions() {
+      const container = document.getElementById('questionsList');
+      container.innerHTML = '';
+
+      const filtered = questions.filter(q => currentSectionFilter === 'all' || q.section === currentSectionFilter);
+
+      filtered.forEach(q => {
+        const card = document.createElement('div');
+        card.className = "bg-white rounded-xl border border-slate-200 p-3 shadow-2xs hover:shadow-xs transition relative";
+        card.id = `card-${q.id}`;
+
+        card.innerHTML = `
+          <div class="flex justify-between items-center mb-1.5">
+            <span class="text-[10px] font-bold text-slate-400 bg-slate-100 px-1.5 py-0.5 rounded">#${q.id}</span>
+            <button onclick="showExplanation(${q.id})" class="text-[11px] text-brand-600 hover:text-brand-800 font-medium flex items-center gap-1">
+              <i class="fa-regular fa-lightbulb"></i> Hint
+            </button>
+          </div>
+          <div class="flex items-center justify-between gap-3">
+            <span class="text-sm font-bold text-slate-800 tracking-tight">${q.problem} =</span>
+            <div class="flex items-center gap-1.5 w-28">
+              <input type="number" id="input-${q.id}" onkeydown="handleEnter(event, ${q.id})" placeholder="?" 
+                class="w-full text-center py-1 px-2 border border-slate-300 rounded-lg text-sm font-semibold focus:outline-none focus:border-brand-600 focus:ring-1 focus:ring-brand-200 transition">
+              <div id="status-${q.id}" class="w-5 h-5 flex items-center justify-center shrink-0"></div>
+            </div>
+          </div>
+          <div id="feedback-${q.id}" class="hidden text-xs mt-1.5 p-1.5 rounded-md"></div>
+        `;
+
+        container.appendChild(card);
+      });
+    }
+
+    // Render static Answer Key Grid
+    function renderAnswerKey() {
+      const grid = document.getElementById('answerKeyGrid');
+      grid.innerHTML = questions.map(q => `
+        <div class="bg-white p-1.5 rounded border border-purple-100 flex justify-between items-center shadow-2xs">
+          <span class="text-slate-400 font-bold">#${q.id}</span>
+          <span class="text-brand-700 font-bold">${q.ans}</span>
+        </div>
+      `).join('');
+    }
+
+    // Filter Section Tabs
+    function filterSection(sec) {
+      currentSectionFilter = sec;
+      ['all', 's1', 's2', 's3'].forEach(t => {
+        const btn = document.getElementById(`tab-${t}`);
+        btn.className = "flex-1 py-2.5 text-center border-b-2 border-transparent hover:text-brand-600";
+      });
+      
+      const activeTabId = sec === 'all' ? 'tab-all' : `tab-s${sec}`;
+      document.getElementById(activeTabId).className = "flex-1 py-2.5 text-center border-b-2 border-brand-600 text-brand-600 font-bold";
+      
+      renderQuestions();
+    }
+
+    function handleEnter(e, id) {
+      if (e.key === 'Enter') {
+        const nextInput = document.getElementById(`input-${id + 1}`);
+        if (nextInput) nextInput.focus();
+        else checkAnswers();
+      }
+    }
+
+    // Check Answers
+    function checkAnswers() {
+      let correct = 0;
+
+      questions.forEach(q => {
+        const input = document.getElementById(`input-${q.id}`);
+        if (!input) return; // Might be filtered out
+
+        const card = document.getElementById(`card-${q.id}`);
+        const status = document.getElementById(`status-${q.id}`);
+        const feedback = document.getElementById(`feedback-${q.id}`);
+        const val = input.value.trim();
+
+        if (val === '') {
+          card.className = "bg-white rounded-xl border border-amber-300 p-3 shadow-2xs relative";
+          status.innerHTML = `<i class="fa-solid fa-circle-question text-amber-500 text-xs"></i>`;
+          feedback.className = "text-xs mt-1.5 p-1.5 rounded-md bg-amber-50 text-amber-700 block font-medium";
+          feedback.textContent = "Unanswered";
+        } else if (parseInt(val, 10) === q.ans) {
+          correct++;
+          card.className = "bg-emerald-50/60 rounded-xl border border-emerald-400 p-3 shadow-2xs relative";
+          status.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-600 text-sm"></i>`;
+          feedback.className = "text-xs mt-1.5 p-1.5 rounded-md bg-emerald-100 text-emerald-800 block font-medium";
+          feedback.textContent = "Correct!";
+        } else {
+          card.className = "bg-rose-50/60 rounded-xl border border-rose-300 p-3 shadow-2xs relative";
+          status.innerHTML = `<i class="fa-solid fa-circle-xmark text-rose-500 text-sm"></i>`;
+          feedback.className = "text-xs mt-1.5 p-1.5 rounded-md bg-rose-100 text-rose-800 block font-medium flex justify-between items-center";
+          feedback.innerHTML = `<span>Incorrect (Ans: <b>${q.ans}</b>)</span> <button onclick="showExplanation(${q.id})" class="underline font-bold text-brand-700">Steps</button>`;
+        }
+      });
+
+      // Also count hidden/filtered correct answers
+      let totalCorrect = 0;
+      questions.forEach(q => {
+        const inp = document.getElementById(`input-${q.id}`);
+        if (inp && parseInt(inp.value.trim(), 10) === q.ans) {
+          totalCorrect++;
+        }
+      });
+
+      const pct = Math.round((totalCorrect / 30) * 100);
+      document.getElementById('scorePercent').textContent = `${pct}%`;
+      document.getElementById('correctCount').textContent = totalCorrect;
+      document.getElementById('progressBar').style.width = `${pct}%`;
+    }
+
+    function toggleAnswerKey() {
+      const box = document.getElementById('answerKeyBox');
+      const btnText = document.getElementById('keyBtnText');
+      box.classList.toggle('hidden');
+      btnText.textContent = box.classList.contains('hidden') ? "Answer Key" : "Hide Key";
+    }
+
+    function resetAll() {
+      questions.forEach(q => {
+        const input = document.getElementById(`input-${q.id}`);
+        if (input) input.value = '';
+      });
+      renderQuestions();
+      document.getElementById('scorePercent').textContent = '0%';
+      document.getElementById('correctCount').textContent = '0';
+      document.getElementById('progressBar').style.width = '0%';
+      clearCanvas();
+    }
+
+    function showExplanation(id) {
+      const q = questions.find(item => item.id === id);
+      if (!q) return;
+
+      document.getElementById('modalTitle').textContent = `Problem #${q.id} Hint`;
+      document.getElementById('modalProblem').textContent = q.problem;
+      document.getElementById('modalBody').innerHTML = `
+        <div class="text-sm text-slate-700 leading-relaxed bg-brand-50/60 p-3 rounded-xl border border-brand-100">
+          ${q.exp}
+        </div>
+        <div class="flex justify-between items-center bg-slate-100 p-2.5 rounded-xl text-sm font-semibold text-slate-800 mt-2">
+          <span>Correct Answer:</span>
+          <span class="text-brand-700 font-bold text-base">${q.ans}</span>
+        </div>
+      `;
+      document.getElementById('explanationModal').classList.remove('hidden');
+    }
+
+    function closeModal() {
+      document.getElementById('explanationModal').classList.add('hidden');
+    }
+
+    // --- INTERACTIVE WHITEBOARD LOGIC ---
+    let canvas, ctx;
+    let isDrawing = false;
+    let currentTool = 'pen'; // 'pen' or 'eraser'
+    let currentColor = '#6b46c1';
+    let currentSize = 3;
+    let undoStack = [];
+    let redoStack = [];
+    const MAX_STACK = 15;
+
+    function initWhiteboard() {
+      canvas = document.getElementById('whiteboard');
+      ctx = canvas.getContext('2d');
+
+      resizeCanvas();
+      window.addEventListener('resize', resizeCanvas);
+
+      // Mouse Event Listeners
+      canvas.addEventListener('mousedown', startDrawing);
+      canvas.addEventListener('mousemove', draw);
+      canvas.addEventListener('mouseup', stopDrawing);
+      canvas.addEventListener('mouseleave', stopDrawing);
+
+      // Touch Event Listeners for Tablets & Phones
+      canvas.addEventListener('touchstart', handleTouchStart, { passive: false });
+      canvas.addEventListener('touchmove', handleTouchMove, { passive: false });
+      canvas.addEventListener('touchend', stopDrawing);
+
+      saveState();
+    }
+
+    function resizeCanvas() {
+      const wrapper = document.getElementById('canvasWrapper');
+      // Save content before resize
+      const tempImageData = ctx ? ctx.getImageData(0, 0, canvas.width, canvas.height) : null;
+      
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = wrapper.clientWidth * dpr;
+      canvas.height = wrapper.clientHeight * dpr;
+      
+      ctx.scale(dpr, dpr);
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+
+      // Restore
+      if (tempImageData) {
+        ctx.putImageData(tempImageData, 0, 0);
+      }
+    }
+
+    function saveState() {
+      if (undoStack.length >= MAX_STACK) undoStack.shift();
+      undoStack.push(ctx.getImageData(0, 0, canvas.width, canvas.height));
+      redoStack = []; // Clear redo on new action
+    }
+
+    function undo() {
+      if (undoStack.length > 1) {
+        redoStack.push(undoStack.pop());
+        const lastState = undoStack[undoStack.length - 1];
+        ctx.putImageData(lastState, 0, 0);
+      }
+    }
+
+    function redo() {
+      if (redoStack.length > 0) {
+        const nextState = redoStack.pop();
+        undoStack.push(nextState);
+        ctx.putImageData(nextState, 0, 0);
+      }
+    }
+
+    function getCoordinates(e) {
+      const rect = canvas.getBoundingClientRect();
+      return {
+        x: e.clientX - rect.left,
+        y: e.clientY - rect.top
+      };
+    }
+
+    function startDrawing(e) {
+      isDrawing = true;
+      const coords = getCoordinates(e);
+      ctx.beginPath();
+      ctx.moveTo(coords.x, coords.y);
+    }
+
+    function draw(e) {
+      if (!isDrawing) return;
+      const coords = getCoordinates(e);
+
+      ctx.lineWidth = currentSize;
+      if (currentTool === 'eraser') {
+        ctx.globalCompositeOperation = 'destination-out';
+      } else {
+        ctx.globalCompositeOperation = 'source-over';
+        ctx.strokeStyle = currentColor;
+      }
+
+      ctx.lineTo(coords.x, coords.y);
+      ctx.stroke();
+    }
+
+    function stopDrawing() {
+      if (isDrawing) {
+        isDrawing = false;
+        ctx.beginPath();
+        saveState();
+      }
+    }
+
+    function handleTouchStart(e) {
+      e.preventDefault();
+      if (e.touches.length === 1) {
+        const touch = e.touches[0];
+        startDrawing(touch);
+      }
+    }
+
+    function handleTouchMove(e) {
+      e.preventDefault();
+      if (e.touches.length === 1) {
+        const touch = e.touches[0];
+        draw(touch);
+      }
+    }
+
+    function setTool(tool) {
+      currentTool = tool;
+      const penBtn = document.getElementById('toolPen');
+      const eraserBtn = document.getElementById('toolEraser');
+
+      if (tool === 'pen') {
+        penBtn.className = "p-2 rounded-lg bg-brand-50 text-brand-700 font-semibold border border-brand-200 text-xs flex items-center gap-1 shadow-2xs";
+        eraserBtn.className = "p-2 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 text-xs flex items-center gap-1 transition";
+      } else {
+        eraserBtn.className = "p-2 rounded-lg bg-brand-50 text-brand-700 font-semibold border border-brand-200 text-xs flex items-center gap-1 shadow-2xs";
+        penBtn.className = "p-2 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 text-xs flex items-center gap-1 transition";
+      }
+    }
+
+    function setColor(color) {
+      currentColor = color;
+      setTool('pen');
+    }
+
+    function setBrushSize(size) {
+      currentSize = size;
+    }
+
+    function clearCanvas() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      saveState();
+    }
+
+    function changeGridStyle(style) {
+      const wrapper = document.getElementById('canvasWrapper');
+      wrapper.className = "flex-grow w-full h-full relative overflow-hidden bg-white ";
+      if (style === 'lines') wrapper.classList.add('bg-grid-lines');
+      else if (style === 'dots') wrapper.classList.add('bg-grid-dots');
+    }
+  </script>
+</body>
+</html>
