@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ACT Geometry & Trigonometry Practice Quiz</title>
+    <!-- Configure MathJax 3 to use \( ... \) for inline math to prevent $ currency bugs -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['\\(', '\\)']],
+                displayMath: [['\\[', '\\]']]
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e1b4b;
+            --card-border: #312e81;
+            --accent-purple: #6b46c1;
+            --accent-gold: #f59e0b;
+            --text-main: #f8fafc;
+            --text-muted: #cbd5e1;
+            --correct-bg: #064e3b;
+            --correct-border: #10b981;
+            --incorrect-bg: #7f1d1d;
+            --incorrect-border: #ef4444;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .header-container {
+            width: 100%;
+            max-width: 800px;
+            text-align: center;
+            margin-bottom: 24px;
+            position: sticky;
+            top: 0;
+            background-color: rgba(15, 23, 42, 0.95);
+            padding: 15px 0;
+            backdrop-filter: blur(8px);
+            z-index: 100;
+            border-bottom: 2px solid var(--accent-purple);
+        }
+
+        h1 {
+            margin: 0 0 10px 0;
+            color: var(--text-main);
+            font-size: 1.8rem;
+        }
+
+        .score-board {
+            display: inline-flex;
+            gap: 20px;
+            background: var(--card-bg);
+            padding: 8px 20px;
+            border-radius: 20px;
+            border: 1px solid var(--card-border);
+            font-weight: bold;
+        }
+
+        .score-item span {
+            color: var(--accent-gold);
+        }
+
+        .quiz-container {
+            width: 100%;
+            max-width: 800px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .question-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+        }
+
+        .question-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: var(--text-main);
+        }
+
+        .options-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .option-btn {
+            background-color: #2e2a72;
+            border: 1px solid var(--card-border);
+            color: var(--text-main);
+            padding: 12px 16px;
+            border-radius: 8px;
+            text-align: left;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            background-color: var(--accent-purple);
+            border-color: var(--accent-gold);
+        }
+
+        .option-btn:disabled {
+            cursor: default;
+        }
+
+        .option-btn.correct {
+            background-color: var(--correct-bg) !important;
+            border-color: var(--correct-border) !important;
+        }
+
+        .option-btn.incorrect {
+            background-color: var(--incorrect-bg) !important;
+            border-color: var(--incorrect-border) !important;
+        }
+
+        .explanation {
+            display: none;
+            margin-top: 16px;
+            padding: 16px;
+            background-color: #111827;
+            border-left: 4px solid var(--accent-gold);
+            border-radius: 4px;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .explanation.visible {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header-container">
+        <h1>ACT Geometry & Trigonometry Quiz</h1>
+        <div class="score-board">
+            <div class="score-item">Answered: <span id="answered-count">0</span> / 30</div>
+            <div class="score-item">Score: <span id="score">0</span></div>
+        </div>
+    </div>
+
+    <div class="quiz-container" id="quiz-container"></div>
+
+    <script>
+        const questions = [
+            {
+                id: 1,
+                q: "In a plane, two parallel lines are cut by a transversal. If one of the interior alternate angles measures \\(65^\\circ\\), what is the measure of the other alternate interior angle?",
+                options: ["A. \\(25^\\circ\\)", "B. \\(65^\\circ\\)", "C. \\(115^\\circ\\)", "D. \\(125^\\circ\\)", "E. \\(180^\\circ\\)"],
+                correct: 1,
+                explanation: "Alternate interior angles formed by parallel lines cut by a transversal are equal in measure, so the angle is \\(65^\\circ\\)."
+            },
+            {
+                id: 2,
+                q: "In \\(\\triangle ABC\\), the measure of \\(\\angle A = 42^\\circ\\) and the measure of \\(\\angle B = 68^\\circ\\). What is the measure of \\(\\angle C\\)?",
+                options: ["A. \\(50^\\circ\\)", "B. \\(60^\\circ\\)", "C. \\(70^\\circ\\)", "D. \\(110^\\circ\\)", "E. \\(138^\\circ\\)"],
+                correct: 2,
+                explanation: "The sum of interior angles in a triangle is \\(180^\\circ\\). \\(\\angle C = 180^\\circ - (42^\\circ + 68^\\circ) = 180^\\circ - 110^\\circ = 70^\\circ\\)."
+            },
+            {
+                id: 3,
+                q: "A right-angled triangle has legs of length 9 inches and 12 inches. What is the length of the hypotenuse, in inches?",
+                options: ["A. 13", "B. 14", "C. 15", "D. 18", "E. 21"],
+                correct: 2,
+                explanation: "Use the Pythagorean theorem: \\(a^2 + b^2 = c^2 \\rightarrow 9^2 + 12^2 = 81 + 144 = 225\\). Thus \\(c = \\sqrt{225} = 15\\)."
+            },
+            {
+                id: 4,
+                q: "In a \\(30^\\circ\\text{-}60^\\circ\\text{-}90^\\circ\\) right triangle, the length of the shorter leg (opposite the \\(30^\\circ\\) angle) is 7 centimeters. What is the length of the hypotenuse?",
+                options: ["A. \\(7\\sqrt{3}\\)", "B. \\(14\\)", "C. \\(14\\sqrt{3}\\)", "D. \\(21\\)", "E. \\(28\\)"],
+                correct: 1,
+                explanation: "In a \\(30^\\circ\\text{-}60^\\circ\\text{-}90^\\circ\\) triangle, the hypotenuse is always twice the length of the shorter leg: \\(2 \\times 7 = 14\\)."
+            },
+            {
+                id: 5,
+                q: "What is the perimeter of an isosceles right triangle whose legs measure \\(5\\) cm each?",
+                options: ["A. \\(10 + 5\\sqrt{2}\\)", "B. \\(10 + 10\\sqrt{2}\\)", "C. \\(25\\)", "D. \\(10\\sqrt{2}\\)", "E. \\(5 + 5\\sqrt{2}\\)"],
+                correct: 0,
+                explanation: "The hypotenuse is \\(5\\sqrt{2}\\). Perimeter = \\(5 + 5 + 5\\sqrt{2} = 10 + 5\\sqrt{2}\\)."
+            },
+            {
+                id: 6,
+                q: "Two similar triangles have a ratio of corresponding sides of \\(2:5\\). If the area of the smaller triangle is \\(16\\text{ cm}^2\\), what is the area of the larger triangle?",
+                options: ["A. \\(40\\text{ cm}^2\\)", "B. \\(64\\text{ cm}^2\\)", "C. \\(100\\text{ cm}^2\\)", "D. \\(250\\text{ cm}^2\\)", "E. \\(400\\text{ cm}^2\\)"],
+                correct: 2,
+                explanation: "The ratio of areas is the square of the ratio of side lengths: \\((2/5)^2 = 4/25\\). Setting up the proportion: \\(\\frac{4}{25} = \\frac{16}{x} \\rightarrow 4x = 400 \\rightarrow x = 100\\)."
+            },
+            {
+                id: 7,
+                q: "Which of the following sets of side lengths could form a valid triangle?",
+                options: ["A. \\(3, 4, 8\\)", "B. \\(5, 6, 11\\)", "C. \\(7, 10, 15\\)", "D. \\(2, 9, 12\\)", "E. \\(1, 4, 6\\)"],
+                correct: 2,
+                explanation: "By the Triangle Inequality Theorem, the sum of any two sides must be strictly greater than the third side. For \\(7, 10, 15\\): \\(7 + 10 > 15\\) (True)."
+            },
+            {
+                id: 8,
+                q: "What is the sum of the interior angle measures of a regular octagon (an 8-sided polygon)?",
+                options: ["A. \\(720^\\circ\\)", "B. \\(1080^\\circ\\)", "C. \\(1260^\\circ\\)", "D. \\(1440^\\circ\\)", "E. \\(1800^\\circ\\)"],
+                correct: 1,
+                explanation: "Formula for interior angle sum: \\((n - 2) \\times 180^\\circ = (8 - 2) \\times 180^\\circ = 6 \\times 180^\\circ = 1080^\\circ\\)."
+            },
+            {
+                id: 9,
+                q: "A circle has a diameter of \\(14\\) centimeters. What is the area of the circle, in square centimeters?",
+                options: ["A. \\(7\\pi\\)", "B. \\(14\\pi\\)", "C. \\(28\\pi\\)", "D. \\(49\\pi\\)", "E. \\(196\\pi\\)"],
+                correct: 3,
+                explanation: "Radius \\(r = 14 / 2 = 7\\). Area \\(A = \\pi r^2 = \\pi (7^2) = 49\\pi\\)."
+            },
+            {
+                id: 10,
+                q: "An arc of a circle has a central measure of \\(60^\\circ\\) and the circle has a radius of \\(6\\) inches. What is the length of this arc?",
+                options: ["A. \\(\\pi\\)", "B. \\(2\\pi\\)", "C. \\(3\\pi\\)", "D. \\(6\\pi\\)", "E. \\(12\\pi\\)"],
+                correct: 1,
+                explanation: "Arc length = \\(\\frac{60^\\circ}{360^\\circ} \\times 2\\pi r = \\frac{1}{6} \\times 2\\pi (6) = 2\\pi\\)."
+            },
+            {
+                id: 11,
+                q: "What is the area of a trapezoid whose parallel bases measure \\(8\\) cm and \\(12\\) cm, and whose height is \\(5\\) cm?",
+                options: ["A. \\(40\\text{ cm}^2\\)", "B. \\(50\\text{ cm}^2\\)", "C. \\(60\\text{ cm}^2\\)", "D. \\(100\\text{ cm}^2\\)", "E. \\(120\\text{ cm}^2\\)"],
+                correct: 1,
+                explanation: "Area = \\(\\frac{b_1 + b_2}{2} \\times h = \\frac{8 + 12}{2} \\times 5 = 10 \\times 5 = 50\\)."
+            },
+            {
+                id: 12,
+                q: "In a circle, an inscribed angle measures \\(35^\\circ\\). What is the measure of its intercepted central angle?",
+                options: ["A. \\(17.5^\\circ\\)", "B. \\(35^\\circ\\)", "C. \\(70^\\circ\\)", "D. \\(105^\\circ\\)", "E. \\(140^\\circ\\)"],
+                correct: 2,
+                explanation: "The central angle is always twice the measure of an inscribed angle that intercepts the same arc: \\(35^\\circ \\times 2 = 70^\\circ\\)."
+            },
+            {
+                id: 13,
+                q: "A right circular cylinder has a radius of \\(3\\) inches and a height of \\(10\\) inches. What is the volume of the cylinder, in cubic inches?",
+                options: ["A. \\(30\\pi\\)", "B. \\(45\\pi\\)", "C. \\(60\\pi\\)", "D. \\(90\\pi\\)", "E. \\(180\\pi\\)"],
+                correct: 3,
+                explanation: "Volume = \\(\\pi r^2 h = \\pi (3^2)(10) = \\pi (9)(10) = 90\\pi\\)."
+            },
+            {
+                id: 14,
+                q: "What is the volume of a sphere with a radius of \\(3\\) centimeters?",
+                options: ["A. \\(12\\pi\\)", "B. \\(18\\pi\\)", "C. \\(36\\pi\\)", "D. \\(54\\pi\\)", "E. \\(108\\pi\\)"],
+                correct: 2,
+                explanation: "Volume = \\(\\frac{4}{3}\\pi r^3 = \\frac{4}{3}\\pi (3^3) = \\frac{4}{3}\\pi (27) = 36\\pi\\)."
+            },
+            {
+                id: 15,
+                q: "What is the distance between the points \\((-1, 3)\\) and \\(4, -9\\) in the standard \\((x, y)\\) coordinate plane?",
+                options: ["A. 5", "B. 11", "C. 12", "D. 13", "E. 17"],
+                correct: 3,
+                explanation: "Distance formula: \\(d = \\sqrt{(4 - (-1))^2 + (-9 - 3)^2} = \\sqrt{5^2 + (-12)^2} = \\sqrt{25 + 144} = \\sqrt{169} = 13\\)."
+            },
+            {
+                id: 16,
+                q: "What is the midpoint of the line segment joining the endpoints \\((-3, 5)\\) and \\((7, -1)\\)?",
+                options: ["A. \\((2, 2)\\)", "B. \\((5, -3)\\)", "C. \\((2, 4)\\)", "D. \\((5, 2)\\)", "E. \\((4, 4)\\)"],
+                correct: 0,
+                explanation: "Midpoint formula: \\(\\left(\\frac{-3 + 7}{2}, \\frac{5 + (-1)}{2}\\) = \\left(\\frac{4}{2}, \\frac{4}{2}\\) = (2, 2)\\)."
+            },
+            {
+                id: 17,
+                q: "What is the slope of a line that is perpendicular to the line \\(3x - 4y = 12\\)?",
+                options: ["A. \\(-\\frac{4}{3}\\)", "B. \\(-\\frac{3}{4}\\)", "C. \\(\\frac{3}{4}\\)", "D. \\(\\frac{4}{3}\\)", "E. \\(\\frac{4}{5}\\)"],
+                correct: 0,
+                explanation: "Rearranging \\(3x - 4y = 12\\) into slope-intercept form gives \\(y = \\frac{3}{4}x - 3\\), so its slope is \\(\\frac{3}{4}\\). Perpendicular lines have negative reciprocal slopes, so \\(-\\frac{4}{3}\\)."
+            },
+            {
+                id: 18,
+                q: "What is the radius of the circle defined by the equation \\((x - 2)^2 + (y + 5)^2 = 81\\)?",
+                options: ["A. 3", "B. 9", "C. 18", "D. 40.5", "E. 81"],
+                correct: 1,
+                explanation: "Standard form is \\((x - h)^2 + (y - k)^2 = r^2\\). Here \\(r^2 = 81\\), so radius \\(r = 9\\)."
+            },
+            {
+                id: 19,
+                q: "If the point \\((3, -4)\\) is reflected across the \\(y\\)-axis, what are its new coordinates?",
+                options: ["A. \\((-3, -4)\\)", "B. \\((3, 4)\\)", "C. \\((-3, 4)\\)", "D. \\((4, -3)\\)", "E. \\((-4, -3)\\)"],
+                correct: 0,
+                explanation: "Reflecting across the \\(y\\)-axis negates the \\(x\\)-coordinate while keeping the \\(y\\)-coordinate the same: \\((-3, -4)\\)."
+            },
+            {
+                id: 20,
+                q: "What are the coordinates of the vertex of the parabola given by \\(y = 2(x - 3)^2 + 5\\)?",
+                options: ["A. \\((-3, 5)\\)", "B. \\((3, -5)\\)", "C. \\((-3, -5)\\)", "D. \\((3, 5)\\)", "E. \\((5, 3)\\)"],
+                correct: 3,
+                explanation: "Vertex form is \\(y = a(x - h)^2 + k\\), where the vertex is \\((h, k)\\). Here \\(h = 3, k = 5\\)."
+            },
+            {
+                id: 21,
+                q: "What is the total surface area of a rectangular prism with length \\(5\\) cm, width \\(4\\) cm, and height \\(3\\) cm?",
+                options: ["A. \\(47\\text{ cm}^2\\)", "B. \\(60\\text{ cm}^2\\)", "C. \\(94\\text{ cm}^2\\)", "D. \\(120\\text{ cm}^2\\)", "E. \\(140\\text{ cm}^2\\)"],
+                correct: 2,
+                explanation: "Surface area \\(SA = 2(lw + lh + wh) = 2(5\\times4 + 5\\times3 + 4\\times3) = 2(20 + 15 + 12) = 2(47) = 94\\)."
+            },
+            {
+                id: 22,
+                q: "What is the area of a triangle in the coordinate plane with vertices at \\((0,0)\\), \\(6,0)\\), and \\((0, 8)\\)?",
+                options: ["A. 12", "B. 24", "C. 48", "D. 25", "E. 14"],
+                correct: 1,
+                explanation: "The vertices form a right triangle along the axes with legs of length 6 and 8. Area = \\(\\frac{1}{2} \\times 6 \\times 8 = 24\\)."
+            },
+            {
+                id: 23,
+                q: "In a right triangle, acute angle \\(\\theta\\) has an opposite side of \\(5\\) and a hypotenuse of \\(13\\). What is the value of \\(\\tan(\\theta)\\)?",
+                options: ["A. \\(\\frac{5}{13}\\)", "B. \\(\\frac{12}{13}\\)", "C. \\(\\frac{5}{12}\\)", "D. \\(\\frac{12}{5}\\)", "E. \\(\\frac{13}{5}\\)"],
+                correct: 2,
+                explanation: "By the Pythagorean triple \\(5\\text{-}12\\text{-}13\\), the adjacent side is \\(12\\). \\(\\tan(\\theta) = \\frac{\\text{opp}}{\\text{adj}} = \\frac{5}{12}\\)."
+            },
+            {
+                id: 24,
+                q: "Which of the following trigonometric identities is always true for any angle \\(\\theta\\)?",
+                options: ["A. \\(\\sin^2(\\theta) - \\cos^2(\\theta) = 1\\)", "B. \\(\\sin(\\theta) + \\cos(\\theta) = 1\\)", "C. \\(\\sin^2(\\theta) + \\cos^2(\\theta) = 1\\)", "D. \\(\\tan(\\theta) = \\frac{\\cos(\\theta)}{\\sin(\\theta)}\\)", "E. \\(\\sin(\\theta) = \\cos(\\theta)\\)"],
+                correct: 2,
+                explanation: "The Pythagorean trigonometric identity is \\(\\sin^2(\\theta) + \\cos^2(\\theta) = 1\\)."
+            },
+            {
+                id: 25,
+                q: "What is the amplitude of the trigonometric function \\(y = -3 \\sin(2x) + 4\\)?",
+                options: ["A. -3", "B. 2", "C. 3", "D. 4", "E. 5"],
+                correct: 2,
+                explanation: "Amplitude is always the absolute value of the coefficient in front of the sine function: \\(|-3| = 3\\)."
+            },
+            {
+                id: 26,
+                q: "In \\(\\triangle ABC\\), \\(\\angle A = 30^\\circ\\), \\(\\angle B = 45^\\circ\\), and side \\(a = 10\\). Using the Law of Sines, what is the length of side \\(b\\)?",
+                options: ["A. \\(10\\sqrt{2}\\)", "B. \\(5\\sqrt{2}\\)", "C. \\(10\\sqrt{3}\\)", "D. \\(20\\)", "E. \\(5\\sqrt{3}\\)"],
+                correct: 0,
+                explanation: "\\(\\frac{a}{\\sin(A)} = \\frac{b}{\\sin(B)} \\rightarrow \\frac{10}{\\sin(30^\\circ)} = \\frac{b}{\\sin(45^\\circ)} \\rightarrow \\frac{10}{0.5} = \\frac{b}{\\frac{\\sqrt{2}}{2}} \\rightarrow 20 = \\frac{2b}{\\sqrt{2}} \\rightarrow b = 10\\sqrt{2}\\)."
+            },
+            {
+                id: 27,
+                q: "What is the equivalent angle measure in radians for \\(150^\\circ\\)?",
+                options: ["A. \\(/3\\)", "B. \\(\\frac{3\\pi}{4}\\)", "C. \\(\\frac{5\\pi}{6}\\)", "D. \\(\\frac{7\\pi}{6}\\)", "E. \\(\\frac{4\\pi}{3}\\)"],
+                correct: 2,
+                explanation: "Multiply degrees by \\(\\frac{\\pi}{180^\\circ}\\): \\(150^\\circ \\times \\frac{\\pi}{180^\\circ} = \\frac{15\\pi}{18} = \\frac{5\\pi}{6}\\)."
+            },
+            {
+                id: 28,
+                q: "What is the exact value of \\(\\cos\\left(\\frac{\\pi}{3}\\)\\)?",
+                options: ["A. \\(0\\)", "B. \\(\\frac{1}{2}\\)", "C. \\(\\frac{\\sqrt{2}}{2}\\)", "D. \\(\\frac{\\sqrt{3}}{2}\\)", "E. \\(1\\)"],
+                correct: 1,
+                explanation: "\\(\\frac{\\pi}{3}\\) radians equals \\(60^\\circ\\). The cosine of \\(60^\\circ\\) is \\(\\frac{1}{2}\\)."
+            },
+            {
+                id: 29,
+                q: "What is the period of the function \\(y = 4 \\cos(3x - \\pi)\\)?",
+                options: ["A. \\(\\frac{2\\pi}{3}\\)", "B. \\(\\pi\\)", "C. \\(\\frac{3\\pi}{2}\\)", "D. \\(2\\pi\\)", "E. \\(6\\pi\\)"],
+                correct: 0,
+                explanation: "The period of \\(y = A \\cos(Bx + C)\\) is given by \\(\\frac{2\\pi}{B}\\). Here \\(B = 3\\), so the period is \\(\\frac{2\\pi}{3}\\)."
+            },
+            {
+                id: 30,
+                q: "In a triangle with sides \\(a = 5\\), \\(b = 7\\), and included angle \\(C = 60^\\circ\\), what is the length of side \\(c\\) using the Law of Cosines?",
+                options: ["A. \\(\\sqrt{39}\\)", "B. \\(\\sqrt{74}\\)", "C. \\(6\\)", "D. \\(\\sqrt{109}\\)", "E. \\(39\\)"],
+                correct: 0,
+                explanation: "Law of Cosines: \\(c^2 = a^2 + b^2 - 2ab \\cos(C) = 5^2 + 7^2 - 2(5)(7)\\cos(60^\\circ) = 25 + 49 - 70(0.5) = 74 - 35 = 39\\). Thus \\(c = \\sqrt{39}\\)."
+            }
+        ];
+
+        let score = 0;
+        let answeredCount = 0;
+
+        function renderQuiz() {
+            const container = document.getElementById('quiz-container');
+            container.innerHTML = '';
+            
+            questions.forEach((q, index) => {
+                const card = document.createElement('div');
+                card.className = 'question-card';
+                card.id = `q-${index}`;
+
+                const title = document.createElement('div');
+                title.className = 'question-title';
+                title.innerHTML = `${q.id}. ${q.q}`;
+                card.appendChild(title);
+
+                const optionsGrid = document.createElement('div');
+                optionsGrid.className = 'options-grid';
+
+                q.options.forEach((opt, optIdx) => {
+                    const btn = document.createElement('button');
+                    btn.className = 'option-btn';
+                    btn.innerHTML = opt;
+                    btn.onclick = () => handleAnswer(index, optIdx);
+                    optionsGrid.appendChild(btn);
+                });
+
+                card.appendChild(optionsGrid);
+
+                const exp = document.createElement('div');
+                exp.className = 'explanation';
+                exp.id = `exp-${index}`;
+                exp.innerHTML = `<strong>Step-by-Step Solution:</strong><br>${q.explanation}`;
+                card.appendChild(exp);
+
+                container.appendChild(card);
+            });
+
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                window.MathJax.typesetPromise();
+            }
+        }
+
+        function handleAnswer(qIndex, selectedOpt) {
+            const q = questions[qIndex];
+            const card = document.getElementById(`q-${qIndex}`);
+            const buttons = card.querySelectorAll('.option-btn');
+            const exp = document.getElementById(`exp-${qIndex}`);
+
+            buttons.forEach(btn => btn.disabled = true);
+
+            if (selectedOpt === q.correct) {
+                buttons[selectedOpt].classList.add('correct');
+                score++;
+            } else {
+                buttons[selectedOpt].classList.add('incorrect');
+                buttons[q.correct].classList.add('correct');
+            }
+
+            exp.classList.add('visible');
+
+            answeredCount++;
+            document.getElementById('answered-count').innerText = answeredCount;
+            document.getElementById('score').innerText = score;
+
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                window.MathJax.typesetPromise([exp]);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', renderQuiz);
+    </script>
+</body>
+</html>
