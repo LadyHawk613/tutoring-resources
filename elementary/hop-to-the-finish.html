@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hop to the Finish</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    /* Strict single-screen lock and high-contrast parkour/rover theme */
+    * {
+      box-sizing: border-box;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100vw;
+      height: 100vh;
+      max-height: 100vh;
+      overflow: hidden;
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background: linear-gradient(155deg, #0b2229 0%, #0f2c34 55%, #163a44 100%);
+      color: #f8fafc;
+    }
+
+    /* Tactile hop buttons */
+    .hop-btn {
+      transition: transform 0.11s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.11s ease, filter 0.12s ease;
+      cursor: pointer;
+    }
+
+    .hop-btn:hover:not(:disabled) {
+      transform: translateY(-2px) scale(1.03);
+      filter: brightness(1.06);
+    }
+
+    .hop-btn:active:not(:disabled) {
+      transform: translateY(2px) scale(0.97);
+    }
+
+    .hop-btn:disabled {
+      opacity: 0.38;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+      /* Number Line Rail & Tick Labels Container */
+      #number-line-axis {
+        position: relative;
+        width: 100%;
+        height: 46px;
+        border-top: 3px solid rgba(153, 246, 228, 0.9);
+        flex-shrink: 0;
+      }
+
+      .axis-tick {
+        position: absolute;
+        top: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        transform: translateX(-50%);
+        cursor: pointer;
+        padding-top: 1px;
+      }
+
+      .axis-tick:hover .tick-label {
+        color: #F07167;
+        transform: scale(1.2);
+      }
+
+      .tick-label {
+        display: inline-block;
+        line-height: 1;
+        font-weight: 800;
+        letter-spacing: -0.04em;
+        transition: transform 0.1s ease, color 0.1s ease;
+      }
+    </style>
+</head>
+<body class="flex flex-col justify-between p-2.5 sm:p-3.5 gap-2.5">
+
+  <!-- TOP HEADER: BRAND + 3 LEVEL MODES + MINI-ROUND STREAK -->
+  <header class="w-full max-w-6xl mx-auto bg-[#163a44]/95 border border-teal-700/60 rounded-2xl px-3 py-2 flex flex-wrap items-center justify-between gap-2 shadow-lg shrink-0">
+    <!-- Title & Skater Badge -->
+    <div class="flex items-center gap-2.5">
+      <div class="w-9 h-9 rounded-xl bg-[#F07167] text-white flex items-center justify-center shadow-md shrink-0">
+        <!-- Parkour / Skateboard Bolt SVG -->
+        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M5 18h14" />
+          <circle cx="8" cy="20.5" r="1.5" fill="currentColor" stroke="none" />
+          <circle cx="16" cy="20.5" r="1.5" fill="currentColor" stroke="none" />
+          <path d="M9 14l3-7 4 3-2 4" />
+        </svg>
+      </div>
+      <div>
+        <h1 class="text-base sm:text-lg font-black tracking-tight text-white leading-none">
+          Hop to the Finish
+        </h1>
+        <p class="text-[11px] font-semibold text-teal-200/85 leading-tight mt-0.5">
+          Number Line Parkour &amp; Rover Track
+        </p>
+      </div>
+    </div>
+
+    <!-- 3 Difficulty Levels -->
+    <nav aria-label="Hop Levels" class="flex items-center bg-[#0c232a] p-1 rounded-xl border border-teal-800/80 gap-1">
+      <button
+        id="lvl-1"
+        type="button"
+        onclick="setLevel(1)"
+        class="px-2.5 sm:px-3 py-1.5 rounded-lg text-xs sm:text-sm font-extrabold transition cursor-pointer bg-[#F07167] text-white shadow"
+      >
+        Lv 1: 0–20
+      </button>
+      <button
+        id="lvl-2"
+        type="button"
+        onclick="setLevel(2)"
+        class="px-2.5 sm:px-3 py-1.5 rounded-lg text-xs sm:text-sm font-extrabold transition cursor-pointer text-teal-100 hover:bg-teal-900/70"
+      >
+        Lv 2: 0–50
+      </button>
+      <button
+        id="lvl-3"
+        type="button"
+        onclick="setLevel(3)"
+        class="px-2.5 sm:px-3 py-1.5 rounded-lg text-xs sm:text-sm font-extrabold transition cursor-pointer text-teal-100 hover:bg-teal-900/70"
+      >
+        Lv 3: 0–100
+      </button>
+    </nav>
+
+    <!-- Mini-Round Streak (0–5 Stars) -->
+    <div class="bg-[#0c232a] border border-teal-700/70 rounded-xl px-3 py-1.5 flex items-center gap-2">
+      <span class="text-[11px] sm:text-xs font-extrabold uppercase tracking-wider text-teal-200">
+        Streak
+      </span>
+      <div id="streak-stars" class="flex items-center gap-1" aria-label="Mini-round streak out of 5">
+        <!-- 5 stars rendered via JS -->
+      </div>
+      <span id="streak-label" class="text-xs font-black text-[#F07167]">0/5</span>
+    </div>
+  </header>
+
+  <!-- MISSION PROMPT & LIVE MATH READOUT BAR -->
+  <section
+    aria-label="Mission Prompt"
+    class="w-full max-w-6xl mx-auto bg-[#F8FAFC] text-[#0F2C34] rounded-2xl px-3.5 py-2.5 shadow-lg border-2 border-white flex flex-wrap items-center justify-between gap-2.5 shrink-0"
+  >
+    <div class="flex flex-wrap items-center gap-2 sm:gap-3">
+      <span id="mode-pill" class="px-2.5 py-1 rounded-full text-xs font-black uppercase tracking-wide bg-[#0F2C34] text-white">
+        Warm-Up Hops
+      </span>
+      <div id="mission-headline" class="text-base sm:text-xl font-black text-[#0F2C34] tracking-tight">
+        Start at 4 → Hop to 12
+      </div>
+    </div>
+
+    <!-- Live Math Equation Readout -->
+    <div class="flex items-center gap-2 bg-slate-100 border border-slate-300 rounded-xl px-3 py-1.5">
+      <span class="text-xs font-extrabold uppercase text-slate-500">Your Path:</span>
+      <span id="path-readout" class="text-sm sm:text-base font-black text-[#0F2C34]">
+        4 = 4
+      </span>
+      <span class="text-slate-300 font-bold">|</span>
+      <span class="text-xs font-extrabold uppercase text-slate-500">Goal:</span>
+      <span id="goal-badge" class="text-sm sm:text-base font-black text-[#d95348]">
+        12
+      </span>
+    </div>
+  </section>
+
+  <!-- CENTER STAGE: INTERACTIVE NUMBER LINE TRACK -->
+  <section
+    aria-label="Number Line Track"
+    class="w-full max-w-6xl mx-auto flex-1 min-h-0 bg-[#163a44]/95 border border-teal-700/60 rounded-2xl p-3 sm:p-4 flex flex-col justify-between shadow-xl relative"
+  >
+    <!-- Top Status Row inside Track -->
+    <div class="flex flex-wrap items-center justify-between gap-2 z-10">
+      <div class="flex items-center gap-2">
+        <span class="inline-flex items-center gap-1.5 bg-[#0c232a] border border-teal-600/60 text-white px-3 py-1 rounded-xl text-xs sm:text-sm font-extrabold">
+          <span class="w-2.5 h-2.5 rounded-full bg-[#F07167]"></span>
+          Current Spot:
+          <span id="current-spot-num" class="text-base sm:text-lg font-black text-[#F07167]">4</span>
+        </span>
+
+        <span class="inline-flex items-center gap-1.5 bg-[#0c232a] border border-amber-400/50 text-amber-200 px-3 py-1 rounded-xl text-xs sm:text-sm font-extrabold">
+          Finish Gate:
+          <span id="finish-spot-num" class="text-base sm:text-lg font-black text-amber-300">12</span>
+        </span>
+      </div>
+
+      <button
+        id="new-mission-btn"
+        type="button"
+        onclick="newMission()"
+        class="hop-btn px-3 py-1.5 rounded-xl bg-[#0c232a] hover:bg-teal-900 text-teal-100 border border-teal-600/70 font-extrabold text-xs sm:text-sm flex items-center gap-1.5"
+      >
+        <svg class="w-4 h-4 text-[#F07167]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 12a9 9 0 1 1-3-6.7L21 8" />
+          <path d="M21 3v5h-5" />
+        </svg>
+        <span>New Mission</span>
+      </button>
+    </div>
+
+    <!-- Track Viewport (Arcs + Finish Flag + Skater/Rover + Ticks) -->
+    <div id="track-stage" class="relative w-full flex-1 min-h-[145px] my-1 flex flex-col justify-end">
+      <!-- SVG Layer for Curved Hop Arcs -->
+      <svg
+        id="arcs-svg"
+        class="w-full h-full overflow-visible pointer-events-none"
+        viewBox="0 0 1000 180"
+        preserveAspectRatio="none"
+      >
+        <!-- Hop arcs drawn dynamically -->
+      </svg>
+
+      <!-- Finish Flag Marker -->
+      <div
+        id="finish-marker"
+        style="left: 60%; bottom: 34px;"
+        class="finish-pulse absolute z-10 flex flex-col items-center pointer-events-none transition-all duration-300"
+      >
+        <div class="bg-amber-400 text-[#0F2C34] font-black text-[11px] px-2 py-0.5 rounded-md shadow border border-amber-200 mb-0.5 whitespace-nowrap">
+          FINISH <span id="finish-flag-val">12</span>
+        </div>
+        <svg class="w-7 h-7 drop-shadow" viewBox="0 0 32 32">
+          <line x1="8" y1="4" x2="8" y2="29" stroke="#f8fafc" stroke-width="3" stroke-linecap="round" />
+          <path d="M9 5 L27 10.5 L9 16 Z" fill="#F07167" stroke="#ffffff" stroke-width="1.5" stroke-linejoin="round" />
+        </svg>
+      </div>
+
+      <!-- Animated Skater / Rover Marker -->
+      <div
+        id="rider-marker"
+        style="left: 20%; bottom: 34px; transform: translate(-50%, -50%);"
+        class="absolute z-20 flex flex-col items-center pointer-events-none transition-all duration-300 ease-out"
+      >
+        <div class="bg-[#F07167] text-white font-black text-[11px] px-2 py-0.5 rounded-full shadow border border-white/60 mb-0.5">
+          <span id="rider-pos-badge">4</span>
+        </div>
+        <!-- Crisp Inline SVG Skateboard Rover / Rider -->
+        <svg class="w-11 h-11 sm:w-12 sm:h-12 drop-shadow-lg" viewBox="0 0 64 64">
+          <!-- Rover / Rider body -->
+          <rect x="18" y="18" width="28" height="18" rx="7" fill="#F8FAFC" stroke="#0F2C34" stroke-width="3" />
+          <rect x="23" y="22" width="18" height="8" rx="3" fill="#0F2C34" />
+          <circle cx="28" cy="26" r="2" fill="#F07167" />
+          <circle cx="36" cy="26" r="2" fill="#38bdf8" />
+          <!-- Antenna -->
+          <line x1="40" y1="18" x2="46" y2="8" stroke="#F07167" stroke-width="2.5" stroke-linecap="round" />
+          <circle cx="46" cy="7" r="3" fill="#F07167" />
+          <!-- Deck & Wheels -->
+          <rect x="10" y="38" width="44" height="6" rx="3" fill="#F07167" stroke="#0F2C34" stroke-width="2.5" />
+          <circle cx="19" cy="48" r="5" fill="#0F2C34" stroke="#F8FAFC" stroke-width="2" />
+          <circle cx="45" cy="48" r="5" fill="#0F2C34" stroke="#F8FAFC" stroke-width="2" />
+        </svg>
+      </div>
+
+      <!-- Number Line Rail & Tick Labels Container -->
+      <div id="number-line-axis" aria-label="Number line values">
+        <!-- Every integer tick & number rendered cleanly via JS -->
+      </div>
+    </div>
+
+    <!-- FEEDBACK BANNER -->
+    <div
+      id="feedback-bar"
+      role="status"
+      aria-live="polite"
+      class="mt-1.5 rounded-xl px-3.5 py-2 bg-[#0c232a] border border-teal-600/70 text-white flex items-center justify-between gap-3 shrink-0"
+    >
+      <p id="feedback-msg" class="text-xs sm:text-sm font-extrabold text-teal-100 leading-snug">
+        Use the hop buttons below to ride from 4 to 12!
+      </p>
+      <button
+        id="next-mission-inline-btn"
+        type="button"
+        onclick="newMission()"
+        class="hidden hop-btn hop-plus shrink-0 px-3.5 py-1.5 rounded-xl font-black text-xs sm:text-sm"
+      >
+        Next Mission →
+      </button>
+    </div>
+  </section>
+
+  <!-- BOTTOM CONTROLS: HOP BUTTONS + UNDO + RESET -->
+  <footer class="w-full max-w-6xl mx-auto bg-[#F8FAFC] text-[#0F2C34] rounded-2xl px-3 py-2.5 shadow-lg border-2 border-white flex flex-wrap items-center justify-between gap-2 shrink-0">
+    <!-- Hop Buttons Container -->
+    <div id="hop-buttons-row" class="flex flex-wrap items-center justify-center sm:justify-start gap-2 sm:gap-2.5 flex-1">
+      <!-- Hop buttons rendered dynamically based on level & mission direction -->
+    </div>
+
+    <!-- Utility Controls: Undo Hop & Reset Round -->
+    <div class="flex items-center gap-2 shrink-0">
+      <button
+        id="undo-btn"
+        type="button"
+        onclick="undoHop()"
+        disabled
+        class="hop-btn px-3 py-2 rounded-xl bg-slate-200 hover:bg-slate-300 text-[#0F2C34] border border-slate-300 font-extrabold text-xs sm:text-sm flex items-center gap-1"
+      >
+        <span>↩ Undo Hop</span>
+      </button>
+      <button
+        id="reset-btn"
+        type="button"
+        onclick="resetRound()"
+        class="hop-btn px-3 py-2 rounded-xl bg-amber-100 hover:bg-amber-200 text-amber-950 border border-amber-300 font-extrabold text-xs sm:text-sm"
+      >
+        Reset Round
+      </button>
+    </div>
+  </footer>
+
+  <script>
+    /**
+     * HOP TO THE FINISH
+     * Single-screen interactive number line math game for an 11-year-old working at 1st-2nd grade level.
+     * Supports 3 levels (0-20, 0-50, 0-100), forward & backtrack missions, curved hop arcs,
+     * Undo Hop, Reset Round, New Mission, and a 0-5 streak tracker.
+     */
+
+    const LEVELS = {
+      1: {
+        name: 'Warm-Up Hops',
+        max: 20,
+        majorStep: 5,
+        forwardHops: [1, 2, 5],
+        backwardHops: [-1, -2, -5]
+      },
+      2: {
+        name: 'Turbo Hops',
+        max: 50,
+        majorStep: 10,
+        forwardHops: [10, 5, 2, 1],
+        backwardHops: [-10, -5, -1]
+      },
+      3: {
+        name: 'Pro Line',
+        max: 100,
+        majorStep: 10,
+        forwardHops: [10, 5, 2, 1],
+        backwardHops: [-10, -5, -1]
+      }
+    };
+
+    const state = {
+      level: 1,
+      start: 4,
+      target: 12,
+      current: 4,
+      direction: 'forward', // 'forward' or 'backward'
+      hopsHistory: [],    // Array of { from, to, delta }
+      streak: 0,          // 0 to 5
+      solved: false
+    };
+
+    /**
+     * Render every single integer (0..max) along the number line without skipping any numbers,
+     * scaling typography and tick heights cleanly so 0-20, 0-50, and 0-100 all fit on one screen.
+     */
+    function renderNumberLineAxis() {
+      const axis = document.getElementById('number-line-axis');
+      axis.innerHTML = '';
+
+      const { max, majorStep } = LEVELS[state.level];
+
+      // Adaptive sizing per range density (21 ticks vs 51 ticks vs 101 ticks)
+      let fontSizePx = 11;
+      let majorTickHeight = 10;
+      let minorTickHeight = 6;
+      let verticalStagger = false;
+
+      if (state.level === 2) {
+        // 0 to 50 (51 numbers)
+        fontSizePx = 8;
+        majorTickHeight = 9;
+        minorTickHeight = 5;
+        verticalStagger = true;
+      } else if (state.level === 3) {
+        // 0 to 100 (101 numbers)
+        fontSizePx = 6.5;
+        majorTickHeight = 8;
+        minorTickHeight = 4;
+        verticalStagger = true;
+      }
+
+      for (let val = 0; val <= max; val += 1) {
+        const isMajor = val % majorStep === 0 || val === 0 || val === max;
+        const pct = valueToPercent(val);
+
+        const tickWrap = document.createElement('button');
+        tickWrap.type = 'button';
+        tickWrap.className = 'axis-tick';
+        tickWrap.style.left = `${pct}%`;
+        tickWrap.title = `Spot ${val}`;
+        tickWrap.setAttribute('aria-label', `Number ${val}`);
+        tickWrap.onclick = () => handleAxisNumberClick(val);
+
+        const tickLine = document.createElement('div');
+        const hPx = isMajor ? majorTickHeight : minorTickHeight;
+        tickLine.style.height = `${hPx}px`;
+        tickLine.className = isMajor
+          ? 'w-[1.5px] bg-amber-300'
+          : 'w-[1px] bg-teal-300/55';
+
+        const label = document.createElement('span');
+        label.textContent = String(val);
+        label.style.fontSize = `${fontSizePx}px`;
+        if (verticalStagger && !isMajor) {
+          label.style.marginTop = val % 2 === 1 ? '4px' : '0px';
+        } else {
+          label.style.marginTop = '1px';
+        }
+        label.className = isMajor
+          ? 'tick-label text-amber-300 font-black'
+          : 'tick-label text-teal-100';
+
+        tickWrap.appendChild(tickLine);
+        tickWrap.appendChild(label);
+        axis.appendChild(tickWrap);
+      }
+    }
+
+    /**
+     * Allow clicking any number on the number line to hop directly to it if within 10 steps,
+     * or inspect/announce its distance from the current spot.
+     */
+    function handleAxisNumberClick(val) {
+      if (state.solved || val === state.current) return;
+      const diff = val - state.current;
+      if (Math.abs(diff) <= 10) {
+        applyHop(diff);
+      } else {
+        const stepsNeeded = Math.abs(state.target - state.current);
+        setFeedback(
+          `Number ${val} is ${Math.abs(diff)} away from ${state.current}. Use the hop buttons to move toward ${state.target} (${stepsNeeded} left).`,
+          'neutral'
+        );
+      }
+    }
+
+    /**
+     * Generate a fresh mission (forward hop or backward hop) appropriate for the active level
+     */
+    function newMission() {
+      const maxVal = LEVELS[state.level].max;
+      const allowBackward = state.level === 1 ? Math.random() < 0.35 : Math.random() < 0.45;
+      state.direction = allowBackward ? 'backward' : 'forward';
+
+      let start = 0;
+      let target = 0;
+
+      if (state.direction === 'forward') {
+        const minGap = state.level === 1 ? 3 : 6;
+        const maxGap = state.level === 1 ? 10 : state.level === 2 ? 22 : 35;
+        start = Math.floor(Math.random() * (maxVal - minGap - 1)) + 1;
+        const gap = Math.min(
+          maxVal - start,
+          Math.floor(Math.random() * (maxGap - minGap + 1)) + minGap
+        );
+        target = start + gap;
+      } else {
+        const minGap = state.level === 1 ? 3 : 6;
+        const maxGap = state.level === 1 ? 10 : state.level === 2 ? 22 : 35;
+        target = Math.floor(Math.random() * (maxVal - minGap - 2)) + 2;
+        const gap = Math.min(
+          maxVal - target,
+          Math.floor(Math.random() * (maxGap - minGap + 1)) + minGap
+        );
+        start = target + gap;
+      }
+
+      state.start = start;
+      state.target = target;
+      state.current = start;
+      state.hopsHistory = [];
+      state.solved = false;
+
+      document.getElementById('next-mission-inline-btn').classList.add('hidden');
+
+      const headline = document.getElementById('mission-headline');
+      headline.textContent = state.direction === 'forward'
+        ? `Start at ${start} → Hop to ${target}`
+        : `Start at ${start} → Backtrack to ${target}`;
+
+      document.getElementById('goal-badge').textContent = target;
+      document.getElementById('finish-spot-num').textContent = target;
+      document.getElementById('finish-flag-val').textContent = target;
+
+      const finishEl = document.getElementById('finish-marker');
+      finishEl.style.left = `${valueToPercent(target)}%`;
+
+      renderHopButtons();
+      updateTrackVisuals(false);
+      updatePathReadout();
+      setFeedback(
+        state.direction === 'forward'
+          ? `Hop forward from ${start} to land on ${target}!`
+          : `Hop backward from ${start} to land on ${target}!`,
+        'neutral'
+      );
+    }
+
+    /**
+     * Render tactile hop buttons for the current mission direction & level
+     */
+    function renderHopButtons() {
+      const row = document.getElementById('hop-buttons-row');
+      row.innerHTML = '';
+
+      const lvlCfg = LEVELS[state.level];
+      const deltas = state.direction === 'forward'
+        ? lvlCfg.forwardHops
+        : [...lvlCfg.backwardHops, 1]; // Include +1 rescue hop on backtrack rounds in case of overshoot
+
+      deltas.forEach((delta) => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        const isPlus = delta > 0;
+        btn.className = `hop-btn ${isPlus ? 'hop-plus' : 'hop-minus'} px-3.5 sm:px-4 py-2 rounded-xl text-sm sm:text-base font-black`;
+        btn.textContent = isPlus ? `+${delta}` : `${delta}`;
+        btn.setAttribute('aria-label', isPlus ? `Hop forward ${delta}` : `Hop backward ${Math.abs(delta)}`);
+        btn.onclick = () => applyHop(delta);
+        row.appendChild(btn);
+      });
+
+      refreshHopButtonStates();
+    }
+
+    /**
+     * Disable hop buttons that would go past 0 or past the level max, or after solving
+     */
+    function refreshHopButtonStates() {
+      const maxVal = LEVELS[state.level].max;
+      const buttons = document.querySelectorAll('#hop-buttons-row button');
+      buttons.forEach((btn) => {
+        const delta = parseInt(btn.textContent, 10);
+        const nextVal = state.current + delta;
+        btn.disabled = state.solved || nextVal < 0 || nextVal > maxVal;
+      });
+
+      document.getElementById('undo-btn').disabled = state.hopsHistory.length === 0 || state.solved;
+    }
+
+    /**
+     * Apply a hop delta (+10, +5, +2, +1, -10, -5, -1) and evaluate position
+     */
+    function applyHop(delta) {
+      if (state.solved) return;
+      const maxVal = LEVELS[state.level].max;
+      const nextPos = state.current + delta;
+      if (nextPos < 0 || nextPos > maxVal) return;
+
+      const prevPos = state.current;
+      state.current = nextPos;
+      state.hopsHistory.push({ from: prevPos, to: nextPos, delta });
+
+      updateTrackVisuals(true);
+      updatePathReadout();
+      refreshHopButtonStates();
+
+      if (state.current === state.target) {
+        state.solved = true;
+        refreshHopButtonStates();
+        state.streak = Math.min(5, state.streak + 1);
+        renderStreak();
+        document.getElementById('next-mission-inline-btn').classList.remove('hidden');
+        setFeedback(
+          `Finish line nailed! You landed right on ${state.target}!`,
+          'win'
+        );
+      } else {
+        const overshot =
+          (state.direction === 'forward' && state.current > state.target) ||
+          (state.direction === 'backward' && state.current < state.target);
+
+        if (overshot) {
+          setFeedback(
+            `Overshot ${state.target}! Try a smaller hop, a backward hop, or hit Undo Hop.`,
+            'over'
+          );
+        } else {
+          const remaining = Math.abs(state.target - state.current);
+          setFeedback(
+            `Nice hop to ${state.current}! ${remaining} away from ${state.target} — keep hopping!`,
+            'moving'
+          );
+        }
+      }
+    }
+
+    /**
+     * Undo the most recent hop
+     */
+    function undoHop() {
+      if (state.hopsHistory.length === 0 || state.solved) return;
+      const last = state.hopsHistory.pop();
+      state.current = last.from;
+
+      updateTrackVisuals(false);
+      updatePathReadout();
+      refreshHopButtonStates();
+      setFeedback(`Stepped back to ${state.current}. Pick your next hop!`, 'neutral');
+    }
+
+    /**
+     * Reset current round back to the starting number
+     */
+    function resetRound() {
+      state.current = state.start;
+      state.hopsHistory = [];
+      state.solved = false;
+      document.getElementById('next-mission-inline-btn').classList.add('hidden');
+
+      updateTrackVisuals(false);
+      updatePathReadout();
+      refreshHopButtonStates();
+      setFeedback(`Back at Start (${state.start})! Try another route to ${state.target}.`, 'neutral');
+    }
+
+    /**
+     * Update rider position, hop animation, and SVG curved jump arcs
+     */
+    function updateTrackVisuals(animateRider) {
+      document.getElementById('current-spot-num').textContent = state.current;
+      document.getElementById('rider-pos-badge').textContent = state.current;
+
+      const riderEl = document.getElementById('rider-marker');
+      riderEl.style.left = `${valueToPercent(state.current)}%`;
+
+      if (animateRider) {
+        riderEl.classList.remove('rider-hop-anim');
+        void riderEl.offsetWidth;
+        riderEl.classList.add('rider-hop-anim');
+      }
+
+      renderHopArcs();
+    }
+
+    /**
+     * Draw curved SVG arcs for each hop taken in the current mission
+     */
+    function renderHopArcs() {
+      const svg = document.getElementById('arcs-svg');
+      svg.innerHTML = '';
+
+      const baseY = 166;
+      state.hopsHistory.forEach((hop, index) => {
+        const x1 = valueToPercent(hop.from) * 10; // map 0..100% -> 0..1000 viewBox
+        const x2 = valueToPercent(hop.to) * 10;
+        const midX = (x1 + x2) / 2;
+        const span = Math.abs(x2 - x1);
+        const arcHeight = Math.min(115, Math.max(34, span * 0.42));
+        const peakY = Math.max(16, baseY - arcHeight);
+
+        const isLatest = index === state.hopsHistory.length - 1;
+        const strokeColor = hop.delta > 0 ? '#F07167' : '#38bdf8';
+
+        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        path.setAttribute('d', `M ${x1} ${baseY} Q ${midX} ${peakY} ${x2} ${baseY}`);
+        path.setAttribute('fill', 'none');
+        path.setAttribute('stroke', strokeColor);
+        path.setAttribute('stroke-width', isLatest ? '4.5' : '3');
+        path.setAttribute('stroke-linecap', 'round');
+        path.setAttribute('stroke-dasharray', isLatest ? 'none' : '7 5');
+        path.setAttribute('opacity', isLatest ? '1' : '0.55');
+
+        svg.appendChild(path);
+
+        // Landing dot
+        const dot = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        dot.setAttribute('cx', x2);
+        dot.setAttribute('cy', baseY);
+        dot.setAttribute('r', isLatest ? '5.5' : '3.5');
+        dot.setAttribute('fill', strokeColor);
+        svg.appendChild(dot);
+      });
+    }
+
+    /**
+     * Update live math equation readout (e.g., "4 + 5 + 3 = 12")
+     */
+    function updatePathReadout() {
+      const el = document.getElementById('path-readout');
+      if (state.hopsHistory.length === 0) {
+        el.textContent = `${state.start}`;
+        return;
+      }
+
+      const parts = [String(state.start)];
+      state.hopsHistory.forEach((h) => {
+        parts.push(h.delta > 0 ? `+ ${h.delta}` : `- ${Math.abs(h.delta)}`);
+      });
+      el.textContent = `${parts.join(' ')} = ${state.current}`;
+    }
+
+    /**
+     * Render 0–5 mini-round streak stars
+     */
+    function renderStreak() {
+      const container = document.getElementById('streak-stars');
+      const label = document.getElementById('streak-label');
+      container.innerHTML = '';
+
+      for (let i = 1; i <= 5; i++) {
+        const filled = i <= state.streak;
+        const star = document.createElement('span');
+        star.textContent = filled ? '★' : '☆';
+        star.className = filled
+          ? 'text-sm sm:text-base text-amber-400 leading-none'
+          : 'text-sm sm:text-base text-teal-600 leading-none';
+        container.appendChild(star);
+      }
+
+      label.textContent = `${state.streak}/5`;
+    }
+
+    /**
+     * Update encouraging feedback banner
+     */
+    function setFeedback(text, tone) {
+      const bar = document.getElementById('feedback-bar');
+      const msg = document.getElementById('feedback-msg');
+      msg.textContent = text;
+
+      const styles = {
+        neutral: 'mt-1.5 rounded-xl px-3.5 py-2 bg-[#0c232a] border border-teal-600/70 text-teal-100 flex items-center justify-between gap-3 shrink-0',
+        moving:  'mt-1.5 rounded-xl px-3.5 py-2 bg-teal-950/90 border border-sky-400/60 text-sky-100 flex items-center justify-between gap-3 shrink-0',
+        over:    'mt-1.5 rounded-xl px-3.5 py-2 bg-rose-950/80 border border-[#F07167]/70 text-rose-100 flex items-center justify-between gap-3 shrink-0',
+        win:     'mt-1.5 rounded-xl px-3.5 py-2 bg-emerald-950/90 border-2 border-emerald-400 text-emerald-100 flex items-center justify-between gap-3 shrink-0'
+      };
+
+      bar.className = styles[tone] || styles.neutral;
+    }
+
+    // Boot app on load
+    window.addEventListener('DOMContentLoaded', () => {
+      renderStreak();
+      renderNumberLineAxis();
+      newMission();
+    });
+  </script>
+</body>
+</html>
