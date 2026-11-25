@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gear &amp; Gadget Store</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    /* Base typography & viewport locking for distraction-free tutoring */
+    * {
+      box-sizing: border-box;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100vh;
+      max-height: 100vh;
+      overflow: hidden;
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background: linear-gradient(145deg, #fffbeb 0%, #fef3c7 45%, #e0f2fe 100%);
+      color: #0f172a;
+    }
+
+    /* Subtle tactile coin styling */
+    .coin-btn {
+      position: relative;
+      border-radius: 9999px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      cursor: pointer;
+      transition: transform 0.12s ease, box-shadow 0.12s ease, filter 0.12s ease;
+      border: 3px solid rgba(15, 23, 42, 0.18);
+    }
+
+    .coin-btn:hover {
+      transform: translateY(-3px) scale(1.03);
+      filter: brightness(1.03);
+    }
+
+    .coin-btn:active {
+      transform: translateY(1px) scale(0.97);
+    }
+
+    .coin-penny {
+      background: radial-gradient(circle at 30% 30%, #f59e0b 0%, #c26d3b 58%, #8c451e 100%);
+      color: #fffbeb;
+      box-shadow: 0 5px 0 #78350f, 0 8px 14px rgba(120, 53, 15, 0.25);
+    }
+
+    .coin-nickel {
+      background: radial-gradient(circle at 30% 30%, #f8fafc 0%, #cbd5e1 60%, #94a3b8 100%);
+      color: #0f172a;
+      box-shadow: 0 5px 0 #64748b, 0 8px 14px rgba(71, 85, 105, 0.25);
+    }
+
+    .coin-dime {
+      background: radial-gradient(circle at 30% 30%, #ffffff 0%, #e2e8f0 62%, #94a3b8 100%);
+      color: #0f172a;
+      box-shadow: 0 5px 0 #64748b, 0 8px 14px rgba(71, 85, 105, 0.25);
+    }
+
+    .coin-quarter {
+      background: radial-gradient(circle at 30% 30%, #ffffff 0%, #cbd5e1 58%, #64748b 100%);
+      color: #0f172a;
+      box-shadow: 0 6px 0 #475569, 0 10px 16px rgba(51, 65, 85, 0.28);
+    }
+
+    .coin-half {
+      background: radial-gradient(circle at 30% 30%, #fef9c3 0%, #e2e8f0 55%, #64748b 100%);
+      color: #0f172a;
+      box-shadow: 0 6px 0 #475569, 0 10px 16px rgba(51, 65, 85, 0.3);
+    }
+
+    .coin-dollar {
+      background: radial-gradient(circle at 30% 30%, #fde68a 0%, #eab308 58%, #a16207 100%);
+      color: #1e293b;
+      box-shadow: 0 6px 0 #854d0e, 0 10px 16px rgba(133, 77, 14, 0.32);
+    }
+
+    /* Inner coin rim ring */
+    .coin-rim {
+      position: absolute;
+      inset: 4px;
+      border-radius: 9999px;
+      border: 1.5px dashed rgba(15, 23, 42, 0.22);
+      pointer-events: none;
+    }
+
+    /* Tray token chip for easy tap-to-remove */
+    .tray-chip {
+      transition: transform 0.12s ease, opacity 0.15s ease;
+    }
+
+    .tray-chip:hover {
+      transform: scale(1.06);
+    }
+
+    @keyframes popIn {
+      0% { transform: scale(0.88); opacity: 0.4; }
+      70% { transform: scale(1.04); }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .animate-pop {
+      animation: popIn 0.28s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+  </style>
+</head>
+<body class="flex flex-col justify-between p-2 sm:p-3 gap-2 sm:gap-3">
+
+  <!-- TOP COMPACT HEADER BAR -->
+  <header class="w-full max-w-6xl mx-auto bg-white/95 backdrop-blur rounded-2xl shadow-md border-2 border-amber-200 px-3 py-2 flex flex-wrap items-center justify-between gap-2 shrink-0">
+    <!-- Store Identity -->
+    <div class="flex items-center gap-2.5">
+      <div class="w-9 h-9 rounded-xl bg-amber-500 text-white flex items-center justify-center shadow-sm shrink-0">
+        <!-- Shop / Bolt SVG -->
+        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
+        </svg>
+      </div>
+      <div>
+        <h1 class="text-base sm:text-lg font-black tracking-tight text-slate-900 leading-none">
+          Gear &amp; Gadget Store
+        </h1>
+        <p class="text-[11px] font-semibold text-amber-700 leading-tight mt-0.5">
+          Count the coins to buy your gear!
+        </p>
+      </div>
+    </div>
+
+    <!-- 3 Level Selector Tabs -->
+    <nav aria-label="Price Levels" class="flex items-center bg-amber-100/90 p-1 rounded-xl gap-1">
+      <button
+        id="lvl-1-btn"
+        type="button"
+        onclick="selectLevel(1)"
+        class="px-2.5 sm:px-3 py-1.5 rounded-lg text-xs sm:text-sm font-extrabold transition cursor-pointer bg-amber-600 text-white shadow-sm"
+      >
+        Lv 1: ≤ $0.25
+      </button>
+      <button
+        id="lvl-2-btn"
+        type="button"
+        onclick="selectLevel(2)"
+        class="px-2.5 sm:px-3 py-1.5 rounded-lg text-xs sm:text-sm font-extrabold transition cursor-pointer text-amber-950 hover:bg-amber-200/70"
+      >
+        Lv 2: $0.30–$0.95
+      </button>
+      <button
+        id="lvl-3-btn"
+        type="button"
+        onclick="selectLevel(3)"
+        class="px-2.5 sm:px-3 py-1.5 rounded-lg text-xs sm:text-sm font-extrabold transition cursor-pointer text-amber-950 hover:bg-amber-200/70"
+      >
+        Lv 3: $1.00–$2.95
+      </button>
+    </nav>
+
+    <!-- Wins Counter & New Item Controls -->
+    <div class="flex items-center gap-2">
+      <div class="bg-emerald-50 border-2 border-emerald-300 text-emerald-900 px-3 py-1 rounded-xl flex items-center gap-1.5 font-extrabold text-xs sm:text-sm">
+        <span class="text-emerald-600">★</span>
+        <span>Wins:</span>
+        <span id="wins-count" class="text-sm sm:text-base font-black text-emerald-700">0</span>
+      </div>
+
+      <button
+        id="new-item-btn"
+        type="button"
+        onclick="loadNewItem()"
+        title="Pick a different item"
+        class="px-3 py-1.5 rounded-xl bg-sky-100 hover:bg-sky-200 active:scale-95 text-sky-900 border-2 border-sky-300 font-extrabold text-xs sm:text-sm transition cursor-pointer flex items-center gap-1"
+      >
+        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 12a9 9 0 1 1-3-6.7L21 8" />
+          <path d="M21 3v5h-5" />
+        </svg>
+        <span>New Item</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- MAIN SINGLE-SCREEN WORKSPACE -->
+  <main class="w-full max-w-6xl mx-auto flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-12 gap-2.5 sm:gap-3">
+
+    <!-- LEFT COLUMN: STORE ITEM SHOWCASE & PRICE TAG (5 cols on lg) -->
+    <section
+      aria-label="Store Item"
+      class="lg:col-span-5 bg-white/95 rounded-2xl shadow-md border-2 border-amber-200 p-3 sm:p-4 flex flex-col justify-between min-h-0"
+    >
+      <div class="flex items-center justify-between gap-2">
+        <span id="level-badge" class="text-xs font-extrabold uppercase tracking-wider px-2.5 py-1 rounded-full bg-amber-100 text-amber-800">
+          Level 1 • Up to 25¢
+        </span>
+        <span class="text-xs font-bold text-slate-500">Shop Counter</span>
+      </div>
+
+      <!-- Item Artwork + Roleplay Prompt -->
+      <div id="item-card" class="flex flex-col items-center justify-center text-center my-auto py-1 animate-pop">
+        <div
+          id="item-art-box"
+          class="w-28 h-28 sm:w-36 sm:h-36 rounded-3xl bg-gradient-to-br from-slate-50 to-amber-50 border-2 border-slate-200 flex items-center justify-center shadow-inner mb-2.5"
+        >
+          <!-- Inline SVG rendered dynamically -->
+        </div>
+
+        <h2 id="item-name" class="text-xl sm:text-2xl font-black text-slate-900 leading-tight">
+          Mini Rocket Toy
+        </h2>
+        <p id="item-prompt" class="text-xs sm:text-sm font-semibold text-slate-600 mt-0.5 max-w-xs">
+          You're buying a Mini Rocket Toy at the shop!
+        </p>
+      </div>
+
+      <!-- Bold Price Tag -->
+      <div class="bg-slate-900 text-white rounded-2xl px-4 py-2.5 flex items-center justify-between shadow-inner">
+        <div class="text-left">
+          <div class="text-[11px] font-bold uppercase tracking-wider text-amber-300">Price Tag</div>
+          <div id="price-cents-hint" class="text-xs font-semibold text-slate-300">25 cents</div>
+        </div>
+        <div id="target-price" class="text-3xl sm:text-4xl font-black tracking-tight text-amber-400">
+          $0.25
+        </div>
+      </div>
+    </section>
+
+    <!-- RIGHT COLUMN: PAYMENT TRAY, FEEDBACK & COIN BANK (7 cols on lg) -->
+    <section
+      aria-label="Payment Counter"
+      class="lg:col-span-7 flex flex-col justify-between gap-2.5 min-h-0"
+    >
+      <!-- PAYMENT TRAY & STATUS CARD -->
+      <div class="bg-white/95 rounded-2xl shadow-md border-2 border-amber-200 p-3 sm:p-3.5 flex flex-col justify-between flex-1 min-h-0">
+        <!-- Top Row: Tray Total & Action Buttons -->
+        <div class="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-slate-100">
+          <div class="flex items-baseline gap-2.5">
+            <span class="text-xs sm:text-sm font-extrabold text-slate-600 uppercase tracking-wide">
+              Your Tray:
+            </span>
+            <span id="tray-total" class="text-2xl sm:text-3xl font-black text-slate-900">
+              $0.00
+            </span>
+            <span id="tray-cents" class="text-xs sm:text-sm font-bold text-slate-500">
+              (0¢)
+            </span>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <button
+              id="clear-tray-btn"
+              type="button"
+              onclick="clearTray()"
+              class="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 active:scale-95 text-slate-700 border border-slate-300 font-extrabold text-xs sm:text-sm transition cursor-pointer"
+            >
+              Clear Tray
+            </button>
+            <button
+              id="check-payment-btn"
+              type="button"
+              onclick="checkPayment()"
+              class="px-4 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-extrabold text-xs sm:text-sm shadow-sm transition cursor-pointer"
+            >
+              Check Payment
+            </button>
+          </div>
+        </div>
+
+        <!-- Selected Coins Inside Tray (Tap a coin to remove it) -->
+        <div class="my-2 flex-1 min-h-[64px] bg-amber-50/80 border-2 border-dashed border-amber-300 rounded-xl p-2 flex flex-col justify-center">
+          <div id="tray-empty-msg" class="text-center text-xs sm:text-sm font-bold text-amber-800/80">
+            Tap coins below to put them in your payment tray. (Tap a coin here to take it back!)
+          </div>
+          <div id="tray-coins-list" class="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2"></div>
+        </div>
+
+        <!-- Gentle, Encouraging Feedback Banner -->
+        <div
+          id="feedback-banner"
+          role="status"
+          aria-live="polite"
+          class="rounded-xl px-3 py-2 bg-sky-50 border-2 border-sky-200 text-sky-950 flex items-center justify-between gap-2"
+        >
+          <p id="feedback-text" class="text-xs sm:text-sm font-extrabold leading-snug">
+            Pick coins that add up to the price tag!
+          </p>
+          <button
+            id="next-item-btn"
+            type="button"
+            onclick="loadNewItem()"
+            class="hidden shrink-0 px-3.5 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-600 active:scale-95 text-white font-black text-xs sm:text-sm shadow transition cursor-pointer"
+          >
+            Next Item →
+          </button>
+        </div>
+      </div>
+
+      <!-- COIN BANK CARD -->
+      <div class="bg-white/95 rounded-2xl shadow-md border-2 border-amber-200 p-3 shrink-0">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-xs font-extrabold uppercase tracking-wider text-slate-600">
+            Coin Bank — Tap to Add
+          </span>
+          <span id="coin-bank-note" class="text-[11px] font-bold text-slate-500">
+            25¢ • 10¢ • 5¢ • 1¢
+          </span>
+        </div>
+
+        <!-- Coins Row (Dynamically adapts for Level 3 to include 50¢ & $1.00) -->
+        <div id="coin-bank-grid" class="flex flex-wrap items-center justify-center gap-3 sm:gap-5 py-0.5">
+          <!-- Coin buttons rendered via JS -->
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    /**
+     * GEAR & GADGET STORE ROLEPLAY GAME
+     * Designed for an 11-year-old working around a 1st-2nd grade attention span and coin-counting level.
+     * Single-screen, zero-scroll, touch-friendly, and supportive.
+     */
+
+    // Coin definitions (values in cents to avoid floating-point drift)
+    const ALL_COINS = [
+      { id: 'dollar',  label: '$1.00', short: '$1',  cents: 100, cssClass: 'coin-dollar',  sizeClass: 'w-16 h-16 sm:w-20 sm:h-20 text-sm sm:text-base' },
+      { id: 'half',    label: '50¢',   short: '50¢', cents: 50,  cssClass: 'coin-half',    sizeClass: 'w-16 h-16 sm:w-[76px] sm:h-[76px] text-sm sm:text-base' },
+      { id: 'quarter', label: '25¢',   short: '25¢', cents: 25,  cssClass: 'coin-quarter', sizeClass: 'w-16 h-16 sm:w-[74px] sm:h-[74px] text-sm sm:text-base' },
+      { id: 'dime',    label: '10¢',   short: '10¢', cents: 10,  cssClass: 'coin-dime',    sizeClass: 'w-12 h-12 sm:w-14 sm:h-14 text-xs sm:text-sm' },
+      { id: 'nickel',  label: '5¢',    short: '5¢',  cents: 5,   cssClass: 'coin-nickel',  sizeClass: 'w-14 h-14 sm:w-16 sm:h-16 text-xs sm:text-sm' },
+      { id: 'penny',   label: '1¢',    short: '1¢',  cents: 1,   cssClass: 'coin-penny',   sizeClass: 'w-[52px] h-[52px] sm:w-[60px] sm:h-[60px] text-xs sm:text-sm' }
+    ];
+
+    // Appeal-focused items for an 11-year-old boy with crisp custom inline SVGs
+    const STORE_ITEMS = [
+      {
+        name: 'Mini Rocket Toy',
+        svg: `
+          <svg viewBox="0 0 100 100" class="w-24 h-24 sm:w-28 sm:h-28">
+            <path d="M50 12 C66 28, 68 54, 62 72 L38 72 C32 54, 34 28, 50 12 Z" fill="#ef4444" stroke="#7f1d1d" stroke-width="3"/>
+            <circle cx="50" cy="42" r="10" fill="#bae6fd" stroke="#0369a1" stroke-width="3"/>
+            <path d="M36 56 L20 72 L36 70 Z" fill="#f97316" stroke="#9a3412" stroke-width="2.5" stroke-linejoin="round"/>
+            <path d="M64 56 L80 72 L64 70 Z" fill="#f97316" stroke="#9a3412" stroke-width="2.5" stroke-linejoin="round"/>
+            <path d="M42 74 Q50 92 58 74 Z" fill="#facc15"/>
+          </svg>`
+      },
+      {
+        name: 'Cyber Sticker Pack',
+        svg: `
+          <svg viewBox="0 0 100 100" class="w-24 h-24 sm:w-28 sm:h-28">
+            <rect x="22" y="16" width="56" height="68" rx="8" fill="#1e293b" stroke="#0f172a" stroke-width="3"/>
+            <rect x="28" y="22" width="44" height="56" rx="5" fill="#0ea5e9"/>
+            <polygon points="50,30 56,44 71,45 59,54 63,69 50,60 37,69 41,54 29,45 44,44" fill="#fde047" stroke="#b45309" stroke-width="2"/>
+          </svg>`
+      },
+      {
+        name: 'Stunt Fingerboard',
+        svg: `
+          <svg viewBox="0 0 100 100" class="w-24 h-24 sm:w-28 sm:h-28">
+            <path d="M16 44 Q50 58 84 44 L84 52 Q50 66 16 52 Z" fill="#f97316" stroke="#7c2d12" stroke-width="3" stroke-linejoin="round"/>
+            <circle cx="30" cy="58" r="7" fill="#334155" stroke="#0f172a" stroke-width="2.5"/>
+            <circle cx="70" cy="58" r="7" fill="#334155" stroke="#0f172a" stroke-width="2.5"/>
+            <rect x="26" y="49" width="48" height="4" rx="2" fill="#cbd5e1"/>
+          </svg>`
+      },
+      {
+        name: 'Glow Slime Tub',
+        svg: `
+          <svg viewBox="0 0 100 100" class="w-24 h-24 sm:w-28 sm:h-28">
+            <rect x="26" y="34" width="48" height="46" rx="8" fill="#e2e8f0" stroke="#475569" stroke-width="3"/>
+            <path d="M28 42 Q38 35 50 42 T72 42 L72 76 L28 76 Z" fill="#4ade80"/>
+            <rect x="22" y="24" width="56" height="12" rx="5" fill="#22c55e" stroke="#14532d" stroke-width="3"/>
+            <circle cx="40" cy="56" r="4" fill="#bbf7d0"/>
+            <circle cx="58" cy="64" r="3" fill="#bbf7d0"/>
+          </svg>`
+      },
+      {
+        name: 'Robo-Claw Keychain',
+        svg: `
+          <svg viewBox="0 0 100 100" class="w-24 h-24 sm:w-28 sm:h-28">
+            <circle cx="50" cy="22" r="9" fill="none" stroke="#64748b" stroke-width="4"/>
+            <rect x="44" y="31" width="12" height="18" rx="3" fill="#94a3b8" stroke="#334155" stroke-width="2.5"/>
+            <path d="M44 49 L26 68 L36 76 L50 60 L64 76 L74 68 L56 49 Z" fill="#38bdf8" stroke="#0369a1" stroke-width="2.5" stroke-linejoin="round"/>
+          </svg>`
+      },
+      {
+        name: 'Pixel Game Badge',
+        svg: `
+          <svg viewBox="0 0 100 100" class="w-24 h-24 sm:w-28 sm:h-28">
+            <rect x="18" y="32" width="64" height="38" rx="14" fill="#6366f1" stroke="#312e81" stroke-width="3"/>
+            <rect x="28" y="45" width="16" height="6" rx="2" fill="#e0e7ff"/>
+            <rect x="33" y="40" width="6" height="16" rx="2" fill="#e0e7ff"/>
+            <circle cx="63" cy="45" r="4.5" fill="#f43f5e"/>
+            <circle cx="72" cy="53" r="4.5" fill="#facc15"/>
+          </svg>`
+      },
+      {
+        name: 'Stealth Drone Prop',
+        svg: `
+          <svg viewBox="0 0 100 100" class="w-24 h-24 sm:w-28 sm:h-28">
+            <line x1="26" y1="36" x2="74" y2="64" stroke="#475569" stroke-width="5" stroke-linecap="round"/>
+            <line x1="74" y1="36" x2="26" y2="64" stroke="#475569" stroke-width="5" stroke-linecap="round"/>
+            <rect x="38" y="40" width="24" height="20" rx="6" fill="#0f172a" stroke="#38bdf8" stroke-width="2.5"/>
+            <line x1="14" y1="36" x2="38" y2="36" stroke="#0284c7" stroke-width="3.5" stroke-linecap="round"/>
+            <line x1="62" y1="36" x2="86" y2="36" stroke="#0284c7" stroke-width="3.5" stroke-linecap="round"/>
+            <line x1="14" y1="64" x2="38" y2="64" stroke="#0284c7" stroke-width="3.5" stroke-linecap="round"/>
+            <line x1="62" y1="64" x2="86" y2="64" stroke="#0284c7" stroke-width="3.5" stroke-linecap="round"/>
+          </svg>`
+      },
+      {
+        name: 'Lava Lamp Mini',
+        svg: `
+          <svg viewBox="0 0 100 100" class="w-24 h-24 sm:w-28 sm:h-28">
+            <polygon points="34,22 66,22 74,76 26,76" fill="#312e81" stroke="#1e1b4b" stroke-width="3" stroke-linejoin="round"/>
+            <circle cx="45" cy="44" r="8" fill="#f43f5e"/>
+            <circle cx="58" cy="58" r="9" fill="#fb923c"/>
+            <circle cx="48" cy="67" r="6" fill="#facc15"/>
+            <rect x="30" y="16" width="40" height="8" rx="4" fill="#64748b"/>
+            <rect x="22" y="76" width="56" height="9" rx="4" fill="#64748b"/>
+          </svg>`
+      },
+      {
+        name: 'Sports Card Pack',
+        svg: `
+          <svg viewBox="0 0 100 100" class="w-24 h-24 sm:w-28 sm:h-28">
+            <rect x="24" y="16" width="52" height="68" rx="6" fill="#f59e0b" stroke="#78350f" stroke-width="3"/>
+            <rect x="30" y="24" width="40" height="32" rx="4" fill="#fef3c7"/>
+            <path d="M50 29 L53 36 L61 37 L55 42 L57 50 L50 45 L43 50 L45 42 L39 37 L47 36 Z" fill="#ea580c"/>
+            <rect x="30" y="62" width="40" height="7" rx="3" fill="#78350f"/>
+            <rect x="36" y="72" width="28" height="5" rx="2" fill="#92400e"/>
+          </svg>`
+      },
+      {
+        name: 'Power Wristband',
+        svg: `
+          <svg viewBox="0 0 100 100" class="w-24 h-24 sm:w-28 sm:h-28">
+            <ellipse cx="50" cy="50" rx="26" ry="30" fill="#10b981" stroke="#064e3b" stroke-width="3.5"/>
+            <ellipse cx="50" cy="50" rx="14" ry="17" fill="#fef3c7" stroke="#064e3b" stroke-width="2.5"/>
+            <path d="M52 38 L44 52 L51 52 L48 63 L58 48 L50 48 Z" fill="#fde047"/>
+          </svg>`
+      },
+      {
+        name: 'Laser Tag Token',
+        svg: `
+          <svg viewBox="0 0 100 100" class="w-24 h-24 sm:w-28 sm:h-28">
+            <circle cx="50" cy="50" r="32" fill="#8b5cf6" stroke="#4c1d95" stroke-width="3.5"/>
+            <circle cx="50" cy="50" r="24" fill="none" stroke="#ddd6fe" stroke-width="2.5" stroke-dasharray="6 4"/>
+            <polygon points="50,31 55,44 69,45 58,54 62,68 50,60 38,68 42,54 31,45 45,44" fill="#f43f5e"/>
+          </svg>`
+      },
+      {
+        name: 'Mystery Crate',
+        svg: `
+          <svg viewBox="0 0 100 100" class="w-24 h-24 sm:w-28 sm:h-28">
+            <rect x="22" y="26" width="56" height="52" rx="7" fill="#d97706" stroke="#78350f" stroke-width="3"/>
+            <line x1="22" y1="45" x2="78" y2="45" stroke="#78350f" stroke-width="3"/>
+            <line x1="50" y1="26" x2="50" y2="78" stroke="#78350f" stroke-width="3"/>
+            <text x="50" y="66" text-anchor="middle" font-size="24" font-weight="900" fill="#fef08a">?</text>
+          </svg>`
+      }
+    ];
+
+    // Curated clean $0.05-increment price pools per level
+    const LEVEL_PRICES = {
+      1: [5, 10, 15, 20, 25], // $0.05 to $0.25
+      2: [30, 35, 40, 45, 50, 60, 65, 75, 80, 85, 90, 95], // $0.30 to $0.95
+      3: [100, 115, 125, 135, 150, 160, 175, 185, 200, 215, 235, 250, 275, 295] // $1.00 to $2.95
+    };
+
+    // Application state
+    const state = {
+      level: 1,
+      wins: 0,
+      targetCents: 25,
+      currentItem: STORE_ITEMS[0],
+      trayCoins: [], // Array of coin objects { id, label, short, cents, cssClass }
+      solvedCurrent: false
+    };
+
+    /**
+     * Format cents (integer) as currency string, e.g., 185 -> "$1.85"
+     */
+    function formatDollars(cents) {
+      return '$' + (cents / 100).toFixed(2);
+    }
+
+    /**
+     * Get sum of coins currently inside the payment tray in cents
+     */
+    function getTrayTotalCents() {
+      return state.trayCoins.reduce((sum, coin) => sum + coin.cents, 0);
+    }
+
+    /**
+     * Select difficulty level (1, 2, or 3), update tabs & coin bank, and load a fresh item
+     */
+    function selectLevel(lvl) {
+      state.level = lvl;
+
+      // Update active tab styling
+      [1, 2, 3].forEach((n) => {
+        const btn = document.getElementById(`lvl-${n}-btn`);
+        if (n === lvl) {
+          btn.className = 'px-2.5 sm:px-3 py-1.5 rounded-lg text-xs sm:text-sm font-extrabold transition cursor-pointer bg-amber-600 text-white shadow-sm';
+        } else {
+          btn.className = 'px-2.5 sm:px-3 py-1.5 rounded-lg text-xs sm:text-sm font-extrabold transition cursor-pointer text-amber-950 hover:bg-amber-200/70';
+        }
+      });
+
+      const badge = document.getElementById('level-badge');
+      if (lvl === 1) badge.textContent = 'Level 1 • $0.25 & Under';
+      if (lvl === 2) badge.textContent = 'Level 2 • $0.30 – $0.95';
+      if (lvl === 3) badge.textContent = 'Level 3 • $1.00 – $2.95';
+
+      renderCoinBank();
+      loadNewItem();
+    }
+
+    /**
+     * Render coin bank buttons appropriate for the active level
+     * Levels 1 & 2 show Quarter, Dime, Nickel, Penny; Level 3 adds $1.00 and 50¢ for faster building
+     */
+    function renderCoinBank() {
+      const grid = document.getElementById('coin-bank-grid');
+      const note = document.getElementById('coin-bank-note');
+      grid.innerHTML = '';
+
+      const availableCoins = state.level === 3
+        ? ALL_COINS
+        : ALL_COINS.filter((c) => ['quarter', 'dime', 'nickel', 'penny'].includes(c.id));
+
+      note.textContent = availableCoins.map((c) => c.label).join(' • ');
+
+      availableCoins.forEach((coin) => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = `coin-btn ${coin.cssClass} ${coin.sizeClass}`;
+        btn.setAttribute('aria-label', `Add ${coin.label}`);
+        btn.onclick = () => addCoinToTray(coin);
+
+        btn.innerHTML = `
+          <span class="coin-rim"></span>
+          <span class="leading-none">${coin.short}</span>
+        `;
+        grid.appendChild(btn);
+      });
+    }
+
+    /**
+     * Pick a new item and price from the current level (avoiding immediate repeats when possible)
+     */
+    function loadNewItem() {
+      const pool = LEVEL_PRICES[state.level];
+      let nextPrice = pool[Math.floor(Math.random() * pool.length)];
+      if (pool.length > 1 && nextPrice === state.targetCents) {
+        nextPrice = pool[(pool.indexOf(nextPrice) + 1) % pool.length];
+      }
+
+      let nextItem = STORE_ITEMS[Math.floor(Math.random() * STORE_ITEMS.length)];
+      if (STORE_ITEMS.length > 1 && nextItem.name === state.currentItem.name) {
+        const idx = STORE_ITEMS.findIndex((i) => i.name === nextItem.name);
+        nextItem = STORE_ITEMS[(idx + 1) % STORE_ITEMS.length];
+      }
+
+      state.targetCents = nextPrice;
+      state.currentItem = nextItem;
+      state.trayCoins = [];
+      state.solvedCurrent = false;
+
+      // Update item display with pop animation
+      const card = document.getElementById('item-card');
+      card.classList.remove('animate-pop');
+      void card.offsetWidth; // trigger reflow
+      card.classList.add('animate-pop');
+
+      document.getElementById('item-art-box').innerHTML = nextItem.svg;
+      document.getElementById('item-name').textContent = nextItem.name;
+      document.getElementById('item-prompt').textContent = `You're buying a ${nextItem.name} at the shop!`;
+      document.getElementById('target-price').textContent = formatDollars(nextPrice);
+      document.getElementById('price-cents-hint').textContent = `${nextPrice} cents total`;
+
+      document.getElementById('next-item-btn').classList.add('hidden');
+      renderTray();
+      setFeedback(
+        `Tap coins to make ${formatDollars(nextPrice)} for the ${nextItem.name}!`,
+        'neutral'
+      );
+    }
+
+    /**
+     * Add a coin to the payment tray
+     */
+    function addCoinToTray(coin) {
+      if (state.solvedCurrent) return;
+      state.trayCoins.push({ ...coin });
+      renderTray();
+
+      const total = getTrayTotalCents();
+      if (total > state.targetCents) {
+        setFeedback(
+          `A little too much (${formatDollars(total)}) — tap a coin in your tray to take it back, or hit Clear Tray.`,
+          'over'
+        );
+      } else if (total === state.targetCents) {
+        setFeedback(
+          `You hit ${formatDollars(total)}! Tap "Check Payment" to buy the ${state.currentItem.name}!`,
+          'ready'
+        );
+      } else {
+        setFeedback(
+          `Keep going! Your tray has ${formatDollars(total)} (${total}¢).`,
+          'under'
+        );
+      }
+    }
+
+    /**
+     * Remove a single coin at index from the payment tray
+     */
+    function removeCoinAt(index) {
+      if (state.solvedCurrent) return;
+      state.trayCoins.splice(index, 1);
+      renderTray();
+
+      const total = getTrayTotalCents();
+      if (total === 0) {
+        setFeedback(`Tap coins to make ${formatDollars(state.targetCents)}.`, 'neutral');
+      } else if (total > state.targetCents) {
+        setFeedback(
+          `Still a little over (${formatDollars(total)}) — tap a coin in your tray to remove it.`,
+          'over'
+        );
+      } else {
+        setFeedback(
+          `Tray now has ${formatDollars(total)} (${total}¢). Keep building!`,
+          'under'
+        );
+      }
+    }
+
+    /**
+     * Clear all coins from the payment tray
+     */
+    function clearTray() {
+      if (state.solvedCurrent) {
+        loadNewItem();
+        return;
+      }
+      state.trayCoins = [];
+      renderTray();
+      setFeedback(`Tray cleared! Build ${formatDollars(state.targetCents)} with coins.`, 'neutral');
+    }
+
+    /**
+     * Render coins inside the tray and update total displays
+     */
+    function renderTray() {
+      const total = getTrayTotalCents();
+      document.getElementById('tray-total').textContent = formatDollars(total);
+      document.getElementById('tray-cents').textContent = `(${total}¢)`;
+
+      const listEl = document.getElementById('tray-coins-list');
+      const emptyEl = document.getElementById('tray-empty-msg');
+      listEl.innerHTML = '';
+
+      if (state.trayCoins.length === 0) {
+        emptyEl.classList.remove('hidden');
+        return;
+      }
+
+      emptyEl.classList.add('hidden');
+      state.trayCoins.forEach((coin, idx) => {
+        const chip = document.createElement('button');
+        chip.type = 'button';
+        chip.title = `Remove ${coin.label}`;
+        chip.setAttribute('aria-label', `Remove ${coin.label} from tray`);
+        chip.onclick = () => removeCoinAt(idx);
+        chip.className = `tray-chip coin-btn ${coin.cssClass} w-11 h-11 sm:w-12 sm:h-12 text-xs font-black`;
+        chip.innerHTML = `<span class="leading-none">${coin.short}</span>`;
+        listEl.appendChild(chip);
+      });
+    }
+
+    /**
+     * Evaluate payment against the target price and give supportive feedback
+     */
+    function checkPayment() {
+      if (state.solvedCurrent) {
+        loadNewItem();
+        return;
+      }
+
+      const total = getTrayTotalCents();
+      const diff = Math.abs(state.targetCents - total);
+
+      if (total === state.targetCents) {
+        state.solvedCurrent = true;
+        state.wins += 1;
+        document.getElementById('wins-count').textContent = state.wins;
+        document.getElementById('next-item-btn').classList.remove('hidden');
+        setFeedback(
+          `Exact match! You bought the ${state.currentItem.name} for ${formatDollars(total)}!`,
+          'success'
+        );
+      } else if (total > state.targetCents) {
+        setFeedback(
+          `A little too much (${formatDollars(total)} is ${diff}¢ over) — tap a coin in your tray to take it back or hit Clear Tray.`,
+          'over'
+        );
+      } else {
+        setFeedback(
+          `Keep going! You have ${formatDollars(total)} so far — add ${diff}¢ more to reach ${formatDollars(state.targetCents)}.`,
+          'under'
+        );
+      }
+    }
+
+    /**
+     * Update feedback banner color & text cleanly
+     */
+    function setFeedback(message, tone) {
+      const banner = document.getElementById('feedback-banner');
+      const textEl = document.getElementById('feedback-text');
+      textEl.textContent = message;
+
+      const styles = {
+        neutral: 'rounded-xl px-3 py-2 bg-sky-50 border-2 border-sky-200 text-sky-950 flex items-center justify-between gap-2',
+        under:   'rounded-xl px-3 py-2 bg-amber-50 border-2 border-amber-300 text-amber-950 flex items-center justify-between gap-2',
+        ready:   'rounded-xl px-3 py-2 bg-teal-50 border-2 border-teal-300 text-teal-950 flex items-center justify-between gap-2',
+        over:    'rounded-xl px-3 py-2 bg-rose-50 border-2 border-rose-300 text-rose-950 flex items-center justify-between gap-2',
+        success: 'rounded-xl px-3 py-2 bg-emerald-100 border-2 border-emerald-400 text-emerald-950 flex items-center justify-between gap-2'
+      };
+
+      banner.className = styles[tone] || styles.neutral;
+    }
+
+    // Initialize game on load
+    window.addEventListener('DOMContentLoaded', () => {
+      selectLevel(1);
+    });
+  </script>
+</body>
+</html>
